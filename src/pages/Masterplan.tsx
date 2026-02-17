@@ -157,7 +157,7 @@ const LoadingScreen = ({ onFinished }: { onFinished: () => void }) => {
 // ==========================================
 
 const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
-  const { data, updateAnnual, addAreaItem } = useMasterplan();
+  const { data, updateAnnual, addAreaItem, deleteAreaItem } = useMasterplan();
   const [step, setStep] = useState(0);
   const [showIntro, setShowIntro] = useState(true);
   
@@ -176,12 +176,191 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
     const text = areaInputs[key];
     if (!text || !text.trim()) return;
     
-    // Chamada direta para o hook
     addAreaItem(key as any, text.trim());
-    
-    // Limpa o input específico
     setAreaInputs(prev => ({ ...prev, [key]: "" }));
   };
+
+  const renderStepContent = () => {
+    switch(step) {
+      case 0:
+        return (
+          <div className="space-y-6">
+            <p className="text-neutral-300 text-center text-lg leading-relaxed">
+              Um sistema japonês que transforma grandes sonhos em passos executáveis.
+            </p>
+            <div className="grid gap-4 my-6">
+              <div className="flex items-center gap-5 bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-red-500/30 transition-all duration-300 hover:translate-x-1">
+                  <div className="p-3 bg-red-500/10 rounded-xl"><Target className="text-red-500 w-6 h-6" /></div>
+                  <div className="text-left">
+                    <span className="block text-base font-bold text-white">1. Foco Absoluto</span>
+                    <span className="text-xs text-neutral-500 uppercase tracking-wide">Um grande objetivo.</span>
+                  </div>
+              </div>
+              <div className="flex items-center gap-5 bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-blue-500/30 transition-all duration-300 hover:translate-x-1">
+                  <div className="p-3 bg-blue-500/10 rounded-xl"><Calendar className="text-blue-500 w-6 h-6" /></div>
+                  <div className="text-left">
+                    <span className="block text-base font-bold text-white">2. Ritmo Semanal</span>
+                    <span className="text-xs text-neutral-500 uppercase tracking-wide">Planeje o ano, viva a semana.</span>
+                  </div>
+              </div>
+            </div>
+          </div>
+        );
+      case 1:
+        return (
+          <div className="space-y-6">
+            <div className="bg-red-950/20 border border-red-500/20 p-5 rounded-2xl space-y-4">
+              <h4 className="text-red-500 text-xs font-black uppercase tracking-widest flex items-center gap-2">
+                <Sparkles className="w-3 h-3 animate-pulse" /> Exemplos
+              </h4>
+              <div className="space-y-3">
+                <p className="text-sm text-neutral-300"><strong className="text-white">Financeiro:</strong> "Faturar R$ 100k"</p>
+                <p className="text-sm text-neutral-300"><strong className="text-white">Saúde:</strong> "Correr uma maratona"</p>
+              </div>
+            </div>
+            
+            <div className="space-y-5">
+              <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase tracking-widest text-neutral-400">Objetivo Anual</Label>
+                  <Input 
+                      placeholder="Sua missão principal..." 
+                      value={data.annual.objective}
+                      onChange={(e) => updateAnnual({ objective: e.target.value })}
+                      className="bg-black/40 border-white/10 h-14 text-lg font-bold focus-visible:ring-red-500 transition-all duration-300"
+                  />
+              </div>
+              <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase tracking-widest text-neutral-400">Critério de Sucesso</Label>
+                  <Textarea 
+                      placeholder="Como você saberá que venceu?" 
+                      value={data.annual.successCriteria}
+                      onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
+                      className="bg-black/40 border-white/10 focus-visible:ring-red-500 min-h-[100px] text-base transition-all duration-300"
+                  />
+              </div>
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-6">
+            <div className="grid gap-4">
+              {[
+                  { 
+                    id: 'work', 
+                    label: 'Trabalho & Dinheiro', 
+                    icon: Briefcase, 
+                    color: 'text-blue-500', 
+                    ring: 'focus:ring-blue-500/50', 
+                    items: data.areas.work,
+                    placeholder: "Ex: Faturar R$ 10k/mês" 
+                  },
+                  { 
+                    id: 'studies', 
+                    label: 'Estudos', 
+                    icon: GraduationCap, 
+                    color: 'text-purple-500', 
+                    ring: 'focus:ring-purple-500/50', 
+                    items: data.areas.studies,
+                    placeholder: "Ex: Ler 1 livro por mês" 
+                  },
+                  { 
+                    id: 'health', 
+                    label: 'Saúde', 
+                    icon: Heart, 
+                    color: 'text-red-500', 
+                    ring: 'focus:ring-red-500/50', 
+                    items: data.areas.health,
+                    placeholder: "Ex: Treinar 4x por semana" 
+                  },
+                  { 
+                    id: 'personal', 
+                    label: 'Pessoal', 
+                    icon: User, 
+                    color: 'text-yellow-500', 
+                    ring: 'focus:ring-yellow-500/50', 
+                    items: data.areas.personal,
+                    placeholder: "Ex: Viajar com a família" 
+                  },
+              ].map((area) => (
+                  <div key={area.id} className="space-y-2">
+                      <Label className={`flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest ${area.color}`}>
+                          <area.icon className="w-3 h-3" /> {area.label}
+                      </Label>
+                      <div className="flex gap-2">
+                          <Input 
+                              value={areaInputs[area.id as keyof typeof areaInputs]}
+                              onChange={(e) => handleAreaInputChange(area.id as keyof typeof areaInputs, e.target.value)}
+                              onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                      e.preventDefault();
+                                      handleAddAreaItem(area.id as keyof typeof areaInputs);
+                                  }
+                              }}
+                              placeholder={area.placeholder} 
+                              className={`bg-black/40 border-white/10 text-sm h-10 transition-all focus:ring-1 ${area.ring}`} 
+                          />
+                          <Button 
+                              type="button"
+                              size="icon" 
+                              className="h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0 transition-transform active:scale-90" 
+                              onClick={(e) => {
+                                  e.preventDefault();
+                                  handleAddAreaItem(area.id as keyof typeof areaInputs);
+                              }}
+                          >
+                              <Plus className="w-4 h-4"/>
+                          </Button>
+                      </div>
+                      {area.items && area.items.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-2">
+                              {area.items.map((i: any) => (
+                                  <div key={i.id} className="flex items-center gap-1 text-[10px] bg-white/5 px-2 py-1 rounded border border-white/5 text-neutral-400 animate-in zoom-in duration-200 group/tag">
+                                      <span>{i.text}</span>
+                                      <button 
+                                        onClick={() => deleteAreaItem(area.id as any, i.id)}
+                                        className="ml-1 text-neutral-600 hover:text-red-500 opacity-0 group-hover/tag:opacity-100 transition-opacity"
+                                      >
+                                        ×
+                                      </button>
+                                  </div>
+                              ))}
+                          </div>
+                      )}
+                  </div>
+              ))}
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="flex flex-col items-center justify-center py-8 space-y-8">
+            <div className="relative">
+              <div className="absolute inset-0 bg-green-500/20 blur-2xl rounded-full animate-pulse" />
+              <div className="w-24 h-24 bg-gradient-to-br from-green-900/40 to-black border border-green-500/30 rounded-full flex items-center justify-center relative z-10 shadow-2xl">
+                  <CheckCircle2 className="w-10 h-10 text-green-500" />
+              </div>
+            </div>
+            
+            <div className="text-center space-y-2">
+               <h3 className="text-xl font-bold text-white">Vamos começar a execução?</h3>
+               <p className="text-neutral-400 text-sm max-w-xs mx-auto">
+                  Lembre-se: O plano não é nada sem a ação diária. Fique focado.
+               </p>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const stepsData = [
+    { title: "Método Nenkan Mokuhyō", subtitle: "Simplifique o impossível." },
+    { title: "O Alvo Único", subtitle: "Seu foco principal para o ano." },
+    { title: "Os 4 Pilares", subtitle: "Equilíbrio é a chave da consistência." },
+    { title: "Tudo Pronto", subtitle: "Seu sistema está ativo." }
+  ];
 
   if (showIntro) {
     return (
@@ -220,202 +399,23 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
     );
   }
 
-  const steps = [
-    {
-      title: "Método Nenkan Mokuhyō",
-      subtitle: "Simplifique o impossível.",
-      content: (
-        <div className="space-y-6">
-          <p className="text-neutral-300 text-center text-lg leading-relaxed">
-            Um sistema japonês que transforma grandes sonhos em passos executáveis.
-          </p>
-          <div className="grid gap-4 my-6">
-            <div className="flex items-center gap-5 bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-red-500/30 transition-all duration-300 hover:translate-x-1">
-                <div className="p-3 bg-red-500/10 rounded-xl"><Target className="text-red-500 w-6 h-6" /></div>
-                <div className="text-left">
-                  <span className="block text-base font-bold text-white">1. Foco Absoluto</span>
-                  <span className="text-xs text-neutral-500 uppercase tracking-wide">Um grande objetivo.</span>
-                </div>
-            </div>
-            <div className="flex items-center gap-5 bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-blue-500/30 transition-all duration-300 hover:translate-x-1">
-                <div className="p-3 bg-blue-500/10 rounded-xl"><Calendar className="text-blue-500 w-6 h-6" /></div>
-                <div className="text-left">
-                  <span className="block text-base font-bold text-white">2. Ritmo Semanal</span>
-                  <span className="text-xs text-neutral-500 uppercase tracking-wide">Planeje o ano, viva a semana.</span>
-                </div>
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "O Alvo Único",
-      subtitle: "Seu foco principal para o ano.",
-      content: (
-        <div className="space-y-6">
-          <div className="bg-red-950/20 border border-red-500/20 p-5 rounded-2xl space-y-4">
-            <h4 className="text-red-500 text-xs font-black uppercase tracking-widest flex items-center gap-2">
-              <Sparkles className="w-3 h-3 animate-pulse" /> Exemplos
-            </h4>
-            <div className="space-y-3">
-              <p className="text-sm text-neutral-300"><strong className="text-white">Financeiro:</strong> "Faturar R$ 100k"</p>
-              <p className="text-sm text-neutral-300"><strong className="text-white">Saúde:</strong> "Correr uma maratona"</p>
-            </div>
-          </div>
-          
-          <div className="space-y-5">
-            <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase tracking-widest text-neutral-400">Objetivo Anual</Label>
-                <Input 
-                    placeholder="Sua missão principal..." 
-                    value={data.annual.objective}
-                    onChange={(e) => updateAnnual({ objective: e.target.value })}
-                    className="bg-black/40 border-white/10 h-14 text-lg font-bold focus-visible:ring-red-500 transition-all duration-300"
-                />
-            </div>
-            <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase tracking-widest text-neutral-400">Critério de Sucesso</Label>
-                <Textarea 
-                    placeholder="Como você saberá que venceu?" 
-                    value={data.annual.successCriteria}
-                    onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                    className="bg-black/40 border-white/10 focus-visible:ring-red-500 min-h-[100px] text-base transition-all duration-300"
-                />
-            </div>
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "Os 4 Pilares",
-      subtitle: "Equilíbrio é a chave da consistência.",
-      content: (
-        <div className="space-y-6">
-          <div className="grid gap-4">
-            {[
-                {
-                  id: 'work',
-                  label: 'Trabalho & Dinheiro',
-                  icon: Briefcase,
-                  color: 'text-blue-500',
-                  ring: 'focus:ring-blue-500/50',
-                  items: data.areas.work,
-                  placeholder: "Ex: Faturar R$ 10k/mês"
-                },
-                {
-                  id: 'studies',
-                  label: 'Estudos',
-                  icon: GraduationCap,
-                  color: 'text-purple-500',
-                  ring: 'focus:ring-purple-500/50',
-                  items: data.areas.studies,
-                  placeholder: "Ex: Ler 1 livro por mês"
-                },
-                {
-                  id: 'health',
-                  label: 'Saúde',
-                  icon: Heart,
-                  color: 'text-red-500',
-                  ring: 'focus:ring-red-500/50',
-                  items: data.areas.health,
-                  placeholder: "Ex: Treinar 4x por semana"
-                },
-                {
-                  id: 'personal',
-                  label: 'Pessoal',
-                  icon: User,
-                  color: 'text-yellow-500',
-                  ring: 'focus:ring-yellow-500/50',
-                  items: data.areas.personal,
-                  placeholder: "Ex: Viajar com a família"
-                },
-            ].map((area) => (
-                <div key={area.id} className="space-y-2">
-                    <Label className={`flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest ${area.color}`}>
-                        <area.icon className="w-3 h-3" /> {area.label}
-                    </Label>
-                    <div className="flex gap-2">
-                        <Input
-                            value={areaInputs[area.id as keyof typeof areaInputs]}
-                            onChange={(e) => handleAreaInputChange(area.id as any, e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    handleAddAreaItem(area.id as any);
-                                }
-                            }}
-                            placeholder={area.placeholder}
-                            className={`bg-black/40 border-white/10 text-sm h-10 transition-all focus:ring-1 ${area.ring}`}
-                        />
-                        <Button
-                            type="button"
-                            size="icon"
-                            className="h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0 transition-transform active:scale-90"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                handleAddAreaItem(area.id as any);
-                            }}
-                        >
-                            <Plus className="w-4 h-4"/>
-                        </Button>
-                    </div>
-                    {area.items && area.items.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-2">
-                            {area.items.map((i: any) => (
-                                <span key={i.id} className="text-[10px] bg-white/5 px-2 py-1 rounded border border-white/5 text-neutral-400 animate-in zoom-in duration-200">
-                                    {i.text}
-                                </span>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            ))}
-          </div>
-        </div>
-      )
-    },
-    {
-      title: "Tudo Pronto",
-      subtitle: "Seu sistema está ativo.",
-      content: (
-        <div className="flex flex-col items-center justify-center py-8 space-y-8">
-          <div className="relative">
-            <div className="absolute inset-0 bg-green-500/20 blur-2xl rounded-full animate-pulse" />
-            <div className="w-24 h-24 bg-gradient-to-br from-green-900/40 to-black border border-green-500/30 rounded-full flex items-center justify-center relative z-10 shadow-2xl">
-                <CheckCircle2 className="w-10 h-10 text-green-500" />
-            </div>
-          </div>
-          
-          <div className="text-center space-y-2">
-             <h3 className="text-xl font-bold text-white">Vamos começar a execução?</h3>
-             <p className="text-neutral-400 text-sm max-w-xs mx-auto">
-                Lembre-se: O plano não é nada sem a ação diária. Fique focado.
-             </p>
-          </div>
-        </div>
-      )
-    }
-  ];
-
-  const currentStep = steps[step];
+  const currentStepInfo = stepsData[step];
 
   return (
     <div className="fixed inset-0 z-50 bg-[#020202] flex items-center justify-center p-4">
       <Card className="w-full max-w-lg bg-[#0A0A0A] border-white/10 shadow-2xl relative overflow-hidden transition-all duration-500 h-[600px] flex flex-col">
         <div className="absolute top-0 left-0 w-full h-1 bg-neutral-900">
-            <div className="h-full bg-red-600 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(220,38,38,0.5)]" style={{ width: `${((step + 1) / steps.length) * 100}%` }} />
+            <div className="h-full bg-red-600 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(220,38,38,0.5)]" style={{ width: `${((step + 1) / stepsData.length) * 100}%` }} />
         </div>
 
         <CardHeader className="text-center pt-10 pb-2">
-          <CardTitle className="text-3xl font-black text-white uppercase tracking-tight">{currentStep.title}</CardTitle>
-          <CardDescription className="text-base font-medium text-neutral-500">{currentStep.subtitle}</CardDescription>
+          <CardTitle className="text-3xl font-black text-white uppercase tracking-tight">{currentStepInfo.title}</CardTitle>
+          <CardDescription className="text-base font-medium text-neutral-500">{currentStepInfo.subtitle}</CardDescription>
         </CardHeader>
 
         <CardContent className="flex-1 flex flex-col justify-center overflow-y-auto custom-scrollbar px-8 py-4">
             <div key={step} className="animate-in fade-in slide-in-from-right-8 duration-500 ease-out w-full">
-                {currentStep.content}
+                {renderStepContent()}
             </div>
         </CardContent>
 
@@ -429,7 +429,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                 Voltar
             </Button>
 
-            {step < steps.length - 1 ? (
+            {step < stepsData.length - 1 ? (
                 <Button 
                     onClick={() => setStep(s => s + 1)} 
                     className="bg-white text-black hover:bg-neutral-200 font-bold px-8 rounded-full"
