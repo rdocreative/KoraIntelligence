@@ -297,8 +297,8 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
     if (step === 1) {
         return (
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500">
-                <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-4 custom-scrollbar">
-                    <div className="space-y-4 text-center mb-8">
+                <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-6 custom-scrollbar pr-2">
+                    <div className="space-y-4 text-center mb-8 pt-2">
                          <div className="inline-flex items-center justify-center p-3 bg-red-500/10 rounded-full border border-red-500/20 mb-2 shadow-[0_0_15px_rgba(220,38,38,0.2)]">
                             <Target className="w-6 h-6 text-red-500" />
                          </div>
@@ -330,18 +330,18 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                                 placeholder="Como você saberá que venceu? Ex: Ter R$ 100k investidos." 
                                 value={data.annual.successCriteria}
                                 onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                                className="bg-[#0E0E0E] border-white/10 min-h-[100px] text-base px-4 py-4 focus-visible:ring-2 focus-visible:ring-red-500/50 transition-all duration-300 resize-none shadow-inner group-hover:border-white/20"
+                                className="bg-[#0E0E0E] border-white/10 min-h-[120px] text-base px-4 py-4 focus-visible:ring-2 focus-visible:ring-red-500/50 transition-all duration-300 resize-none shadow-inner group-hover:border-white/20"
                             />
                             <Feedback analysis={criteriaAnalysis} />
                         </div>
                     </div>
                 </div>
 
-                <div className="flex justify-end pt-6 border-t border-white/5 flex-shrink-0 mt-2 pb-2">
+                <div className="flex justify-end pt-6 border-t border-white/5 flex-shrink-0 mt-auto bg-[#0A0A0A]/90 backdrop-blur-sm -mx-8 px-8 pb-8">
                     <Button 
                         disabled={!isAnnualValid}
                         onClick={() => setStep(2)}
-                        className={`font-bold px-8 rounded-full h-12 transition-all duration-500 ${isAnnualValid ? 'bg-white text-black hover:bg-neutral-200 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105' : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'}`}
+                        className={`font-bold px-10 rounded-full h-12 transition-all duration-500 ${isAnnualValid ? 'bg-white text-black hover:bg-neutral-200 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105' : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'}`}
                     >
                         Próximo <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
@@ -353,110 +353,112 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
     if (step === 2) {
         return (
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500">
-                <div className="text-center space-y-2 mb-6 flex-shrink-0">
-                     <h2 className="text-2xl font-black text-white uppercase tracking-tight">Os 4 Pilares</h2>
-                     <p className="text-neutral-400 text-sm">
-                        Para o sistema funcionar, adicione ao menos <span className="text-white font-bold">1 meta</span>.
-                     </p>
-                </div>
+                <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-6 custom-scrollbar pr-2">
+                    <div className="text-center space-y-2 mb-8 pt-2">
+                         <h2 className="text-2xl font-black text-white uppercase tracking-tight">Os 4 Pilares</h2>
+                         <p className="text-neutral-400 text-sm">
+                            Para o sistema funcionar, adicione ao menos <span className="text-white font-bold">1 meta</span>.
+                         </p>
+                    </div>
 
-                <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-4 custom-scrollbar space-y-4">
-                    {[
-                      { 
-                        id: 'work', 
-                        label: 'Trabalho', 
-                        icon: Briefcase, 
-                        color: 'text-blue-500', 
-                        items: data.areas.work,
-                        placeholder: "Ex: Novo emprego" 
-                      },
-                      { 
-                        id: 'studies', 
-                        label: 'Estudos', 
-                        icon: GraduationCap, 
-                        color: 'text-purple-500', 
-                        items: data.areas.studies,
-                        placeholder: "Ex: Inglês fluente" 
-                      },
-                      { 
-                        id: 'health', 
-                        label: 'Saúde', 
-                        icon: Heart, 
-                        color: 'text-red-500', 
-                        items: data.areas.health,
-                        placeholder: "Ex: Correr 5km" 
-                      },
-                      { 
-                        id: 'personal', 
-                        label: 'Pessoal', 
-                        icon: User, 
-                        color: 'text-yellow-500', 
-                        items: data.areas.personal,
-                        placeholder: "Ex: Ler 12 livros" 
-                      },
-                    ].map((area) => {
-                        const hasItems = area.items.length > 0;
-                        return (
-                          <div 
-                            key={area.id} 
-                            className={`p-5 rounded-2xl border transition-all duration-300 group ${hasItems ? 'bg-[#0E0E0E] border-green-500/20' : 'bg-[#0A0A0A] border-white/5 hover:border-white/10'}`}
-                          >
-                              <div className="flex items-center justify-between mb-4">
-                                  <Label className={`flex items-center gap-2 text-xs uppercase font-black tracking-widest ${area.color}`}>
-                                      <area.icon className="w-4 h-4" /> {area.label}
-                                  </Label>
-                                  {hasItems && <CheckCircle2 className="w-4 h-4 text-green-500 animate-in zoom-in duration-300" />}
-                              </div>
-                              
-                              <div className="flex gap-3 mb-3">
-                                  <Input 
-                                      value={areaInputs[area.id as keyof typeof areaInputs]}
-                                      onChange={(e) => handleAreaInputChange(area.id as keyof typeof areaInputs, e.target.value)}
-                                      onKeyDown={(e) => {
-                                          if (e.key === 'Enter') {
+                    <div className="space-y-4">
+                        {[
+                          { 
+                            id: 'work', 
+                            label: 'Trabalho', 
+                            icon: Briefcase, 
+                            color: 'text-blue-500', 
+                            items: data.areas.work,
+                            placeholder: "Ex: Novo emprego" 
+                          },
+                          { 
+                            id: 'studies', 
+                            label: 'Estudos', 
+                            icon: GraduationCap, 
+                            color: 'text-purple-500', 
+                            items: data.areas.studies,
+                            placeholder: "Ex: Inglês fluente" 
+                          },
+                          { 
+                            id: 'health', 
+                            label: 'Saúde', 
+                            icon: Heart, 
+                            color: 'text-red-500', 
+                            items: data.areas.health,
+                            placeholder: "Ex: Correr 5km" 
+                          },
+                          { 
+                            id: 'personal', 
+                            label: 'Pessoal', 
+                            icon: User, 
+                            color: 'text-yellow-500', 
+                            items: data.areas.personal,
+                            placeholder: "Ex: Ler 12 livros" 
+                          },
+                        ].map((area) => {
+                            const hasItems = area.items.length > 0;
+                            return (
+                              <div 
+                                key={area.id} 
+                                className={`p-5 rounded-2xl border transition-all duration-300 group ${hasItems ? 'bg-[#0E0E0E] border-green-500/20' : 'bg-[#0A0A0A] border-white/5 hover:border-white/10'}`}
+                              >
+                                  <div className="flex items-center justify-between mb-4">
+                                      <Label className={`flex items-center gap-2 text-xs uppercase font-black tracking-widest ${area.color}`}>
+                                          <area.icon className="w-4 h-4" /> {area.label}
+                                      </Label>
+                                      {hasItems && <CheckCircle2 className="w-4 h-4 text-green-500 animate-in zoom-in duration-300" />}
+                                  </div>
+                                  
+                                  <div className="flex gap-3 mb-3">
+                                      <Input 
+                                          value={areaInputs[area.id as keyof typeof areaInputs]}
+                                          onChange={(e) => handleAreaInputChange(area.id as keyof typeof areaInputs, e.target.value)}
+                                          onKeyDown={(e) => {
+                                              if (e.key === 'Enter') {
+                                                  e.preventDefault();
+                                                  handleAddAreaItem(area.id as keyof typeof areaInputs);
+                                              }
+                                          }}
+                                          placeholder={area.placeholder} 
+                                          className="bg-black/40 border-white/10 text-sm h-11 focus:ring-1 focus:ring-white/20 focus:border-white/20 transition-all rounded-lg" 
+                                      />
+                                      <Button 
+                                          type="button"
+                                          size="icon" 
+                                          className="h-11 w-11 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0 transition-transform active:scale-95 rounded-lg" 
+                                          onClick={(e) => {
                                               e.preventDefault();
                                               handleAddAreaItem(area.id as keyof typeof areaInputs);
-                                          }
-                                      }}
-                                      placeholder={area.placeholder} 
-                                      className="bg-black/40 border-white/10 text-sm h-11 focus:ring-1 focus:ring-white/20 focus:border-white/20 transition-all rounded-lg" 
-                                  />
-                                  <Button 
-                                      type="button"
-                                      size="icon" 
-                                      className="h-11 w-11 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0 transition-transform active:scale-95 rounded-lg" 
-                                      onClick={(e) => {
-                                          e.preventDefault();
-                                          handleAddAreaItem(area.id as keyof typeof areaInputs);
-                                      }}
-                                  >
-                                      <Plus className="w-5 h-5"/>
-                                  </Button>
-                              </div>
-
-                              {hasItems && (
-                                  <div className="space-y-2 animate-in fade-in duration-300">
-                                      {area.items.map((i: any) => (
-                                          <div key={i.id} className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-white/5 to-transparent border border-white/5 animate-in slide-in-from-left-2 zoom-in-95 duration-300 group/item hover:border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.02)]">
-                                              <span className="text-sm font-medium text-neutral-200 pl-1">{i.text}</span>
-                                              <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="text-neutral-600 hover:text-red-500 transition-colors p-1">
-                                                  <X className="w-4 h-4" />
-                                              </button>
-                                          </div>
-                                      ))}
+                                          }}
+                                      >
+                                          <Plus className="w-5 h-5"/>
+                                      </Button>
                                   </div>
-                              )}
-                          </div>
-                        );
-                    })}
+
+                                  {hasItems && (
+                                      <div className="space-y-2 animate-in fade-in duration-300">
+                                          {area.items.map((i: any) => (
+                                              <div key={i.id} className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-white/5 to-transparent border border-white/5 animate-in slide-in-from-left-2 zoom-in-95 duration-300 group/item hover:border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.02)]">
+                                                  <span className="text-sm font-medium text-neutral-200 pl-1">{i.text}</span>
+                                                  <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="text-neutral-600 hover:text-red-500 transition-colors p-1">
+                                                      <X className="w-4 h-4" />
+                                                  </button>
+                                              </div>
+                                          ))}
+                                      </div>
+                                  )}
+                              </div>
+                            );
+                        })}
+                    </div>
                 </div>
 
-                <div className="flex justify-between items-center pt-6 border-t border-white/5 flex-shrink-0 mt-2 pb-2">
-                    <Button variant="ghost" onClick={() => setStep(1)} className="text-neutral-500 hover:text-white transition-colors">Voltar</Button>
+                <div className="flex justify-between items-center pt-6 border-t border-white/5 flex-shrink-0 mt-auto bg-[#0A0A0A]/90 backdrop-blur-sm -mx-8 px-8 pb-8">
+                    <Button variant="ghost" onClick={() => setStep(1)} className="text-neutral-500 hover:text-white transition-colors h-12 px-6 font-bold uppercase tracking-widest text-[10px]">Voltar</Button>
                     <Button 
                         disabled={!hasAtLeastOneItem}
                         onClick={() => setStep(3)}
-                        className={`font-bold px-8 rounded-full h-12 transition-all duration-500 ${hasAtLeastOneItem ? 'bg-white text-black hover:bg-neutral-200 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105' : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'}`}
+                        className={`font-bold px-10 rounded-full h-12 transition-all duration-500 ${hasAtLeastOneItem ? 'bg-white text-black hover:bg-neutral-200 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105' : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'}`}
                     >
                         Próximo <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
@@ -500,10 +502,10 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/5 blur-[100px] rounded-full" />
       </div>
 
-      <Card className="w-full max-w-lg bg-[#0A0A0A]/90 backdrop-blur-2xl border-white/10 shadow-2xl relative overflow-hidden h-[85vh] md:h-[720px] flex flex-col ring-1 ring-white/5">
+      <Card className="w-full max-w-lg bg-[#0A0A0A] border-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col ring-1 ring-white/5">
         
         {/* Step Indicator */}
-        <div className="px-8 pt-8 pb-2 flex justify-between items-end flex-shrink-0">
+        <div className="px-8 pt-8 pb-6 flex justify-between items-end flex-shrink-0 bg-[#0A0A0A]">
             <div className="space-y-1">
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">
                     Passo {step} de 3
@@ -522,7 +524,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
             {step === 3 && <span className="text-xs font-medium text-neutral-400">Ativação</span>}
         </div>
 
-        <CardContent className="flex-1 p-8 pb-10 h-full relative z-10 flex flex-col overflow-hidden">
+        <CardContent className="flex-1 px-8 relative z-10 flex flex-col overflow-hidden">
             {renderContent()}
         </CardContent>
       </Card>
