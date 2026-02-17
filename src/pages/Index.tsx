@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { useHabitTracker } from '@/hooks/useHabitTracker';
 import { HabitCard } from '@/components/features/habit-tracker/HabitCard';
-import { Gamification } from '@/components/features/habit-tracker/Gamification';
-import { ProgressChart } from '@/components/features/habit-tracker/ProgressChart';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { DailyVerse } from '@/components/features/dashboard/DailyVerse';
+import { MonthlyProgress } from '@/components/features/dashboard/MonthlyProgress';
+import { MonthlyChart } from '@/components/features/dashboard/MonthlyChart';
+import { FAQSection } from '@/components/features/dashboard/FAQSection';
 import { 
   Plus, 
   Download, 
@@ -20,8 +22,8 @@ import {
   Sun,
   Trash2,
   AlertTriangle,
-  Star,
-  Save
+  Save,
+  Zap
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
@@ -34,8 +36,7 @@ const Index = () => {
     streak, 
     completeHabit, 
     addCustomHabit,
-    getCurrentBadge,
-    getNextBadge
+    getCurrentBadge
   } = useHabitTracker();
 
   const { theme, setTheme } = useTheme();
@@ -81,139 +82,130 @@ const Index = () => {
   };
 
   const handleSaveSettings = () => {
-    // Como o next-themes e o localStorage já salvam em tempo real,
-    // este botão serve como confirmação para o usuário.
     toast.success('Configurações salvas com sucesso!');
   };
 
   const currentBadge = getCurrentBadge();
-  const nextBadge = getNextBadge();
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-20 font-sans text-slate-900 dark:text-slate-100 transition-colors duration-300">
       
-      <main className="container max-w-4xl mx-auto px-4 pt-12 space-y-8">
+      <main className="container max-w-4xl mx-auto px-4 pt-8 space-y-6">
         
-        {/* Header-less Title Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-8">
-          <div className="space-y-1">
-            <div className="flex items-center gap-3">
-              <div className="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/20">
-                <Trophy size={24} />
-              </div>
-              <h1 className="text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400">
-                Mindset Rewards
-              </h1>
+        {/* Simple Header */}
+        <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
+              Mindset Rewards
+            </h1>
+            <div className="flex items-center gap-2 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm">
+               <Zap className="h-4 w-4 text-amber-500 fill-amber-500" />
+               <span className="font-bold text-sm">{streak} dias</span>
             </div>
-            <p className="text-slate-500 dark:text-slate-400 font-medium">
-              Ganhe pontos por ações diárias positivas.
-            </p>
-          </div>
-          <div className="bg-white dark:bg-slate-900 px-6 py-3 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 flex items-center gap-4">
-             <div className="text-right">
-               <div className="text-[10px] text-slate-500 dark:text-slate-500 font-bold uppercase tracking-widest">Total Acumulado</div>
-               <div className="font-black text-indigo-600 dark:text-indigo-400 text-2xl">{totalPoints} pts</div>
-             </div>
-          </div>
         </div>
 
         <Tabs defaultValue="dashboard" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-8 bg-slate-200/50 dark:bg-slate-900 p-1 rounded-xl">
-            <TabsTrigger value="dashboard" className="rounded-lg py-2.5 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm">
-              <LayoutDashboard size={18} className="mr-2" />
-              Dashboard
+          <TabsList className="grid w-full grid-cols-2 mb-6 bg-slate-200/50 dark:bg-slate-900 p-1 rounded-xl">
+            <TabsTrigger value="dashboard" className="rounded-lg py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm font-bold">
+              <LayoutDashboard size={16} className="mr-2" />
+              Início
             </TabsTrigger>
-            <TabsTrigger value="settings" className="rounded-lg py-2.5 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm">
-              <Settings size={18} className="mr-2" />
+            <TabsTrigger value="settings" className="rounded-lg py-2 data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800 data-[state=active]:shadow-sm font-bold">
+              <Settings size={16} className="mr-2" />
               Configurações
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="dashboard" className="space-y-8 outline-none">
-            {/* Gamification Stats */}
-            <section className="animate-in slide-in-from-bottom-4 duration-700 fade-in">
-              <Gamification 
-                currentBadge={currentBadge} 
-                nextBadge={nextBadge} 
-                totalPoints={totalPoints}
-                streak={streak}
-              />
-            </section>
+          <TabsContent value="dashboard" className="space-y-8 animate-in fade-in duration-500 outline-none">
+            
+            {/* 1. Versículo do Dia */}
+            <DailyVerse />
+
+            {/* 2. Progresso Mensal Consolidado */}
+            <MonthlyProgress totalPoints={totalPoints} habitsCount={habits.length} />
 
             <div className="grid md:grid-cols-3 gap-8">
-              
-              {/* Main Content: Habits List */}
-              <section className="md:col-span-2 space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-                    <span className="w-1.5 h-6 bg-indigo-500 rounded-full inline-block"></span>
-                    Hoje
-                  </h2>
-                  <span className="text-xs font-bold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-sm uppercase tracking-wider">
-                    {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short' })}
-                  </span>
-                </div>
+              {/* Coluna Principal: Hábitos */}
+              <div className="md:col-span-2 space-y-6">
+                 {/* 3. Gráfico de Evolução (Em cima dos hábitos ou abaixo? Abaixo fica melhor em mobile, mas user pediu Evolucao nos requisitos) */}
+                 <MonthlyChart history={history} />
 
-                <div className="space-y-3">
-                  {habits.map((habit) => (
-                    <HabitCard 
-                      key={habit.id} 
-                      habit={habit} 
-                      onComplete={completeHabit} 
-                    />
-                  ))}
-                </div>
+                 <div className="pt-4 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                        <span className="w-1.5 h-6 bg-indigo-500 rounded-full inline-block"></span>
+                        Hábitos de Hoje
+                      </h2>
+                    </div>
 
-                {/* Custom Habit Form */}
-                <Card className="border-dashed border-2 border-slate-200 dark:border-slate-800 shadow-none bg-transparent hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
-                  <CardContent className="pt-6">
-                    <form onSubmit={handleAddCustomHabit} className="flex flex-col sm:flex-row gap-3 items-end">
-                      <div className="grid gap-2 flex-1 w-full">
-                        <Label htmlFor="habit-name" className="text-xs font-bold text-slate-500 uppercase tracking-wider">Nova tarefa</Label>
-                        <Input 
-                          id="habit-name"
-                          placeholder="Ex: Correr 5km..." 
-                          value={newHabitTitle}
-                          onChange={(e) => setNewHabitTitle(e.target.value)}
-                          className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
+                    <div className="space-y-3">
+                      {habits.map((habit) => (
+                        <HabitCard 
+                          key={habit.id} 
+                          habit={habit} 
+                          onComplete={completeHabit} 
                         />
-                      </div>
-                      <div className="grid gap-2 w-full sm:w-24">
-                        <Label htmlFor="habit-points" className="text-xs font-bold text-slate-500 uppercase tracking-wider">Pontos</Label>
-                        <Input 
-                          id="habit-points"
-                          type="number" 
-                          min="1" 
-                          max="100"
-                          value={newHabitPoints}
-                          onChange={(e) => setNewHabitPoints(e.target.value)}
-                          className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
-                        />
-                      </div>
-                      <Button type="submit" variant="secondary" className="w-full sm:w-auto bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 hover:bg-indigo-200 dark:hover:bg-indigo-900/50">
-                        <Plus size={18} className="mr-2" /> Adicionar
-                      </Button>
-                    </form>
+                      ))}
+                    </div>
+
+                    {/* Quick Add Form */}
+                    <Card className="border-dashed border-2 border-slate-200 dark:border-slate-800 shadow-none bg-transparent hover:bg-slate-50/50 dark:hover:bg-slate-900/50 transition-colors">
+                      <CardContent className="pt-6">
+                        <form onSubmit={handleAddCustomHabit} className="flex flex-col sm:flex-row gap-3 items-end">
+                          <div className="grid gap-2 flex-1 w-full">
+                            <Label htmlFor="habit-name" className="text-xs font-bold text-slate-500 uppercase tracking-wider">Nova tarefa</Label>
+                            <Input 
+                              id="habit-name"
+                              placeholder="Ex: Ler Bíblia..." 
+                              value={newHabitTitle}
+                              onChange={(e) => setNewHabitTitle(e.target.value)}
+                              className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
+                            />
+                          </div>
+                          <div className="grid gap-2 w-full sm:w-24">
+                            <Label htmlFor="habit-points" className="text-xs font-bold text-slate-500 uppercase tracking-wider">Pontos</Label>
+                            <Input 
+                              id="habit-points"
+                              type="number" 
+                              min="1" 
+                              max="100"
+                              value={newHabitPoints}
+                              onChange={(e) => setNewHabitPoints(e.target.value)}
+                              className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
+                            />
+                          </div>
+                          <Button type="submit" variant="secondary" className="w-full sm:w-auto bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-bold">
+                            <Plus size={18} className="mr-2" /> Add
+                          </Button>
+                        </form>
+                      </CardContent>
+                    </Card>
+                 </div>
+              </div>
+
+              {/* Sidebar / Coluna Direita */}
+              <div className="space-y-8">
+                {/* Badge Card */}
+                <Card className="bg-gradient-to-br from-indigo-600 to-purple-700 text-white border-none shadow-lg shadow-indigo-500/20">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium text-indigo-100">Nível Atual</CardTitle>
+                    <Trophy className="h-5 w-5 text-yellow-300" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{currentBadge.name}</div>
+                    <div className="text-4xl mt-2 mb-1">{currentBadge.icon}</div>
+                    <p className="text-xs text-indigo-200 mt-2">
+                      Continue evoluindo para alcançar novos níveis!
+                    </p>
                   </CardContent>
                 </Card>
-              </section>
 
-              {/* Sidebar: Charts */}
-              <aside className="space-y-6">
-                <ProgressChart history={history} />
-                
-                <div className="bg-indigo-50 dark:bg-indigo-950/30 p-5 rounded-2xl text-sm text-indigo-800 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-900/50 shadow-sm">
-                  <div className="font-bold mb-1 flex items-center gap-2">
-                    <Star size={16} className="text-indigo-500" />
-                    Dica do dia
-                  </div>
-                  Pequenos progressos diários somam grandes resultados. Mantenha a consistência!
-                </div>
-              </aside>
+                {/* 4. FAQ */}
+                <FAQSection />
+              </div>
             </div>
           </TabsContent>
 
-          <TabsContent value="settings" className="outline-none space-y-6">
+          <TabsContent value="settings" className="outline-none space-y-6 animate-in slide-in-from-right-4 duration-300">
             <div className="grid gap-6">
               <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
                 <CardHeader>
@@ -289,7 +281,7 @@ const Index = () => {
               </Card>
             </div>
 
-            <div className="flex justify-end pt-4">
+            <div className="flex justify-end pt-4 pb-8">
               <Button 
                 onClick={handleSaveSettings}
                 className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-6 rounded-xl shadow-lg shadow-indigo-500/20 transition-all hover:scale-105"
