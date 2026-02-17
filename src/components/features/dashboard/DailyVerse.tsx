@@ -12,7 +12,8 @@ const INSPIRATIONS = [
   { text: "A única maneira de fazer um excelente trabalho é amar o que você faz.", author: "Steve Jobs" },
 ];
 
-const STORAGE_KEY = "daily_verse_seen_indices";
+const INDICES_KEY = "daily_verse_seen_indices";
+const DATE_KEY = "daily_verse_last_date";
 const DISPLAY_DURATION = 15;
 
 export const DailyVerse = () => {
@@ -22,13 +23,22 @@ export const DailyVerse = () => {
   const [timeLeft, setTimeLeft] = useState(DISPLAY_DURATION);
 
   useEffect(() => {
-    // Se estiver desativado nas configurações, nem tenta mostrar
     if (!settings.showDailyVerse) {
         setIsVisible(false);
         return;
     }
 
-    const savedSeen = localStorage.getItem(STORAGE_KEY);
+    // Verificar se já foi exibido hoje
+    const today = new Date().toLocaleDateString('pt-BR'); // Formato DD/MM/YYYY
+    const lastDate = localStorage.getItem(DATE_KEY);
+
+    if (lastDate === today) {
+      setIsVisible(false);
+      return;
+    }
+
+    // Lógica de seleção da frase
+    const savedSeen = localStorage.getItem(INDICES_KEY);
     let seenIndices: number[] = savedSeen ? JSON.parse(savedSeen) : [];
     let availableIndices = INSPIRATIONS.map((_, i) => i).filter((i) => !seenIndices.includes(i));
 
@@ -39,7 +49,11 @@ export const DailyVerse = () => {
 
     const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
     setInspiration(INSPIRATIONS[randomIndex]);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([...seenIndices, randomIndex]));
+    
+    // Salvar estado: frase vista e data de hoje
+    localStorage.setItem(INDICES_KEY, JSON.stringify([...seenIndices, randomIndex]));
+    localStorage.setItem(DATE_KEY, today);
+    
     setIsVisible(true);
 
     const timer = setInterval(() => {
@@ -73,6 +87,7 @@ export const DailyVerse = () => {
         </button>
 
         <div className="flex flex-col items-center text-center space-y-3">
+          <Quote className="w-5 h-5 text-red-600/30 mb-1" />
           <p className="text-sm md:text-base font-light leading-relaxed text-neutral-100 font-serif italic tracking-wide px-4">
             "{inspiration.text}"
           </p>
