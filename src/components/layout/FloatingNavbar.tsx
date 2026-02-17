@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -26,19 +26,41 @@ const navItems = [
 
 export const FloatingNavbar = () => {
   const [isMinimized, setIsMinimized] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
+  const startTimer = () => {
+    stopTimer(); // Limpa qualquer timer anterior
+    timeoutRef.current = setTimeout(() => {
       setIsMinimized(true);
     }, 5000);
+  };
 
-    return () => clearTimeout(timer);
+  const stopTimer = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  };
+
+  // Inicia o timer ao carregar o componente
+  useEffect(() => {
+    startTimer();
+    return () => stopTimer();
   }, []);
+
+  const handleExpand = () => {
+    setIsMinimized(false);
+    startTimer();
+  };
 
   return (
     <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
-      {/* Container Principal com Animação */}
+      {/* Container Principal com Detecção de Mouse */}
       <div 
+        onMouseEnter={stopTimer}
+        onMouseLeave={() => {
+          if (!isMinimized) startTimer();
+        }}
         className={cn(
           "transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]",
           isMinimized ? "translate-y-[120%] opacity-0 pointer-events-none scale-90" : "translate-y-0 opacity-100 scale-100"
@@ -96,7 +118,7 @@ export const FloatingNavbar = () => {
 
       {/* Trigger Button (Seta para cima) */}
       <button
-        onClick={() => setIsMinimized(false)}
+        onClick={handleExpand}
         className={cn(
           "absolute bottom-0 p-3 bg-red-600/10 hover:bg-red-600/20 border border-red-500/30 rounded-full text-red-500 transition-all duration-500 shadow-lg shadow-red-500/10 backdrop-blur-md",
           isMinimized ? "translate-y-0 opacity-100 scale-100" : "translate-y-20 opacity-0 scale-50 pointer-events-none"
