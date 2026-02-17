@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useSettings } from "@/hooks/useSettings";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -12,12 +13,32 @@ import {
   Sparkles, 
   BookOpen,
   LogOut,
-  ShieldAlert
+  ShieldAlert,
+  Save
 } from "lucide-react";
 import { toast } from "sonner";
 
 const Settings = () => {
   const { settings, updateSettings, resetData } = useSettings();
+  const [localName, setLocalName] = useState(settings.userName);
+  const [hasChanges, setHasChanges] = useState(false);
+
+  useEffect(() => {
+    setLocalName(settings.userName);
+  }, [settings.userName]);
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalName(e.target.value);
+    setHasChanges(e.target.value !== settings.userName);
+  };
+
+  const handleSave = () => {
+    updateSettings({ userName: localName });
+    setHasChanges(false);
+    toast.success("Configurações salvas com sucesso!", {
+      description: "Suas preferências foram atualizadas."
+    });
+  };
 
   const handleReset = () => {
     if (confirm("Isso apagará todo o seu progresso, hábitos e configurações. Deseja continuar?")) {
@@ -25,18 +46,30 @@ const Settings = () => {
     }
   };
 
-  const handleSaveName = (e: React.FocusEvent<HTMLInputElement>) => {
-    updateSettings({ userName: e.target.value });
-    toast.success("Nome atualizado com sucesso!");
-  };
-
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-4xl font-black text-white glow-text uppercase italic tracking-tighter">
-          Configurações
-        </h1>
-        <p className="text-neutral-500 font-medium">Ajuste sua experiência e gerencie seus dados.</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-4xl font-black text-white glow-text uppercase italic tracking-tighter">
+            Configurações
+          </h1>
+          <p className="text-neutral-500 font-medium">Ajuste sua experiência e gerencie seus dados.</p>
+        </div>
+        
+        <Button 
+          onClick={handleSave}
+          disabled={!hasChanges}
+          className={`
+            font-bold px-6 shadow-lg transition-all duration-300
+            ${hasChanges 
+              ? "bg-red-600 hover:bg-red-500 text-white shadow-red-900/20 hover:shadow-red-500/30 scale-100" 
+              : "bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50 scale-95"
+            }
+          `}
+        >
+          <Save className="w-4 h-4 mr-2" />
+          Salvar Alterações
+        </Button>
       </div>
 
       <div className="grid gap-6">
@@ -56,9 +89,10 @@ const Settings = () => {
               <Label htmlFor="username" className="text-xs font-black uppercase text-neutral-400 tracking-widest">Nome de Exibição</Label>
               <Input 
                 id="username" 
-                defaultValue={settings.userName} 
-                onBlur={handleSaveName}
+                value={localName} 
+                onChange={handleNameChange}
                 className="bg-[#0a0a0a] border-white/10 rounded-xl focus:border-red-500/50 focus:ring-red-500/20 text-white"
+                placeholder="Digite seu nome..."
               />
             </div>
           </CardContent>
