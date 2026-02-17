@@ -10,7 +10,7 @@ import {
   Plus, Target, Briefcase, GraduationCap, Heart, User, 
   Calendar, CheckSquare, Trash2, ArrowRight, ArrowLeft, Play,
   BookOpen, HelpCircle, Save, CheckCircle2, Trophy, Clock, Sparkles, Crown, Loader2, Zap, LayoutDashboard,
-  TrendingUp, TrendingDown, Activity, BarChart3, AlertCircle, CalendarDays, Award, Check
+  TrendingUp, TrendingDown, Activity, BarChart3, AlertCircle, CalendarDays, Award, Check, ChevronRight
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
@@ -201,17 +201,25 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
   // Step 0 is the full screen welcome
   if (step === 0 && !hasShownWelcome) {
     return (
-      <div className="fixed inset-0 z-50 bg-[#050505] flex items-center justify-center p-4 animate-in fade-in duration-1000">
-        <div className="w-full max-w-lg text-center space-y-10 relative">
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-red-600/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="fixed inset-0 z-50 bg-[#020202] flex items-center justify-center p-4 animate-in fade-in duration-1000">
+        {/* Background Ambience */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-red-600/5 blur-[150px] rounded-full animate-pulse duration-[5000ms]" />
+            <div className="absolute top-0 right-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
+        </div>
+        
+        <div className="w-full max-w-lg text-center space-y-12 relative z-10">
            
-           <div className="relative z-10 flex flex-col items-center gap-8">
-              <div className="w-24 h-24 bg-gradient-to-br from-neutral-900 to-black border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-red-900/20 group">
-                  <Target className="w-10 h-10 text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.8)]" />
+           <div className="flex flex-col items-center gap-10">
+              <div className="relative group">
+                <div className="absolute inset-0 bg-red-600/20 blur-2xl rounded-full transition-all duration-700 group-hover:bg-red-600/30" />
+                <div className="w-24 h-24 bg-gradient-to-br from-neutral-900 to-black border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl transition-all duration-500 hover:scale-105 hover:border-red-500/30 hover:shadow-[0_0_30px_rgba(220,38,38,0.3)] relative z-10">
+                    <Target className="w-10 h-10 text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.8)]" />
+                </div>
               </div>
 
               <div className="space-y-6">
-                  <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter leading-tight animate-in slide-in-from-bottom-2 fade-in duration-700">
+                  <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter leading-tight animate-in slide-in-from-bottom-2 fade-in duration-700">
                     Seu novo sistema de foco<br/>está pronto para ser ativado.
                   </h1>
                   <p className="text-lg text-neutral-400 font-medium max-w-sm mx-auto leading-relaxed animate-in slide-in-from-bottom-3 fade-in duration-1000 delay-150">
@@ -219,15 +227,16 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                   </p>
               </div>
 
-              <div className="w-full max-w-xs mx-auto animate-in slide-in-from-bottom-4 fade-in duration-1000 delay-300 pt-4">
+              <div className="w-full max-w-xs mx-auto animate-in slide-in-from-bottom-4 fade-in duration-1000 delay-300 pt-6">
                 <Button 
                     onClick={() => {
                         setHasShownWelcome(true);
                         setStep(1);
                     }}
-                    className="w-full bg-white hover:bg-neutral-200 text-black font-black text-base h-14 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] transition-all duration-300 transform hover:-translate-y-1 active:scale-95"
+                    className="w-full bg-white hover:bg-neutral-200 text-black font-black text-base h-14 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_0_50px_rgba(255,255,255,0.3)] transition-all duration-300 transform hover:-translate-y-1 active:scale-95 group"
                 >
-                    INICIAR CONFIGURAÇÃO <ArrowRight className="w-5 h-5 ml-2" />
+                    INICIAR CONFIGURAÇÃO 
+                    <ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
                 </Button>
               </div>
            </div>
@@ -241,7 +250,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
         return (
             <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
                 <div className="space-y-4 text-center mb-8">
-                     <div className="inline-flex items-center justify-center p-3 bg-red-500/10 rounded-full border border-red-500/20 mb-2">
+                     <div className="inline-flex items-center justify-center p-3 bg-red-500/10 rounded-full border border-red-500/20 mb-2 shadow-[0_0_15px_rgba(220,38,38,0.2)]">
                         <Target className="w-6 h-6 text-red-500" />
                      </div>
                      <h2 className="text-2xl font-black text-white uppercase tracking-tight">O Alvo Único</h2>
@@ -251,22 +260,30 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                 </div>
 
                 <div className="space-y-6">
-                    <div className="space-y-3 group">
-                        <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors">Objetivo Anual</Label>
+                    <div className="space-y-3 group relative">
+                        <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Objetivo Anual</Label>
                         <Input 
+                            autoFocus
                             placeholder="Ex: Atingir liberdade financeira" 
                             value={data.annual.objective}
                             onChange={(e) => updateAnnual({ objective: e.target.value })}
-                            className="bg-[#0E0E0E] border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:border-red-500 transition-all duration-300 shadow-inner"
+                            className="bg-[#0E0E0E] border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-red-500/50 focus-visible:border-red-500 transition-all duration-300 shadow-inner group-hover:border-white/20"
                         />
+                        {/* Pulse Guide */}
+                        {!data.annual.objective && (
+                            <span className="absolute right-4 top-[42px] flex h-3 w-3">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                            </span>
+                        )}
                     </div>
                     <div className="space-y-3 group">
-                        <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors">Critério de Sucesso</Label>
+                        <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Critério de Sucesso</Label>
                         <Textarea 
                             placeholder="Como você saberá que venceu? Ex: Ter R$ 100k investidos." 
                             value={data.annual.successCriteria}
                             onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                            className="bg-[#0E0E0E] border-white/10 min-h-[120px] text-base px-4 py-4 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:border-red-500 transition-all duration-300 resize-none shadow-inner"
+                            className="bg-[#0E0E0E] border-white/10 min-h-[120px] text-base px-4 py-4 focus-visible:ring-2 focus-visible:ring-red-500/50 focus-visible:border-red-500 transition-all duration-300 resize-none shadow-inner group-hover:border-white/20"
                         />
                     </div>
                 </div>
@@ -275,9 +292,9 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                     <Button 
                         disabled={!isAnnualValid}
                         onClick={() => setStep(2)}
-                        className="bg-white text-black hover:bg-neutral-200 font-bold px-8 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`font-bold px-8 rounded-full h-12 transition-all duration-500 ${isAnnualValid ? 'bg-white text-black hover:bg-neutral-200 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105' : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'}`}
                     >
-                        Próximo
+                        Próximo <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
                 </div>
             </div>
@@ -294,7 +311,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                      </p>
                 </div>
 
-                <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4">
+                <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4 pb-4">
                     {[
                       { 
                         id: 'work', 
@@ -333,7 +350,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                         return (
                           <div 
                             key={area.id} 
-                            className={`p-4 rounded-xl border transition-all duration-300 ${hasItems ? 'bg-white/[0.03] border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.1)]' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
+                            className={`p-4 rounded-xl border transition-all duration-300 group ${hasItems ? 'bg-white/[0.03] border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.1)]' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
                           >
                               <div className="flex items-center justify-between mb-3">
                                   <Label className={`flex items-center gap-2 text-xs uppercase font-bold tracking-widest ${area.color}`}>
@@ -353,12 +370,12 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                                           }
                                       }}
                                       placeholder={area.placeholder} 
-                                      className="bg-black/40 border-white/10 text-sm h-10 focus:ring-1 focus:ring-white/20" 
+                                      className="bg-black/40 border-white/10 text-sm h-10 focus:ring-1 focus:ring-white/20 focus:border-white/20 transition-all" 
                                   />
                                   <Button 
                                       type="button"
                                       size="icon" 
-                                      className="h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0" 
+                                      className="h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0 transition-transform active:scale-95" 
                                       onClick={(e) => {
                                           e.preventDefault();
                                           handleAddAreaItem(area.id as keyof typeof areaInputs);
@@ -369,11 +386,11 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                               </div>
 
                               {hasItems && (
-                                  <div className="flex flex-wrap gap-2 mt-3">
+                                  <div className="flex flex-wrap gap-2 mt-3 animate-in fade-in duration-300">
                                       {area.items.map((i: any) => (
                                           <span key={i.id} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-white/5 border border-white/5 text-[10px] text-neutral-300">
                                               {i.text}
-                                              <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="hover:text-red-500 ml-1">×</button>
+                                              <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="hover:text-red-500 ml-1 transition-colors">×</button>
                                           </span>
                                       ))}
                                   </div>
@@ -384,13 +401,13 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                 </div>
 
                 <div className="flex justify-between items-center pt-4 border-t border-white/5 flex-shrink-0">
-                    <Button variant="ghost" onClick={() => setStep(1)} className="text-neutral-500 hover:text-white">Voltar</Button>
+                    <Button variant="ghost" onClick={() => setStep(1)} className="text-neutral-500 hover:text-white transition-colors">Voltar</Button>
                     <Button 
                         disabled={!hasAtLeastOneItem}
                         onClick={() => setStep(3)}
-                        className="bg-white text-black hover:bg-neutral-200 font-bold px-8 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`font-bold px-8 rounded-full h-12 transition-all duration-500 ${hasAtLeastOneItem ? 'bg-white text-black hover:bg-neutral-200 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:scale-105' : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'}`}
                     >
-                        Próximo
+                        Próximo <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
                 </div>
             </div>
@@ -402,8 +419,8 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
             <div className="flex flex-col items-center justify-center py-8 space-y-10 animate-in fade-in zoom-in duration-500 h-full">
                 <div className="relative">
                   <div className="absolute inset-0 bg-green-500/20 blur-3xl rounded-full animate-pulse" />
-                  <div className="w-32 h-32 bg-gradient-to-br from-green-900/40 to-black border border-green-500/30 rounded-full flex items-center justify-center relative z-10 shadow-2xl">
-                      <CheckCircle2 className="w-12 h-12 text-green-500" />
+                  <div className="w-32 h-32 bg-gradient-to-br from-green-900/40 to-black border border-green-500/30 rounded-full flex items-center justify-center relative z-10 shadow-2xl hover:scale-105 transition-transform duration-500">
+                      <CheckCircle2 className="w-12 h-12 text-green-500 drop-shadow-[0_0_15px_rgba(34,197,94,0.6)]" />
                   </div>
                 </div>
                 
@@ -416,7 +433,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
 
                 <Button 
                     onClick={onComplete} 
-                    className="w-full max-w-xs bg-red-600 hover:bg-red-500 text-white font-bold h-14 rounded-full shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_40px_rgba(220,38,38,0.6)] transition-all transform hover:-translate-y-1"
+                    className="w-full max-w-xs bg-red-600 hover:bg-red-500 text-white font-bold h-14 rounded-full shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_50px_rgba(220,38,38,0.6)] transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95"
                 >
                     ACESSAR DASHBOARD
                 </Button>
@@ -426,14 +443,35 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#020202]/95 backdrop-blur-sm flex items-center justify-center p-4">
-      <Card className="w-full max-w-lg bg-[#0A0A0A] border-white/10 shadow-2xl relative overflow-hidden h-[650px] flex flex-col">
-        {/* Progress Bar */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-neutral-900">
-            <div className="h-full bg-gradient-to-r from-red-600 to-red-400 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(220,38,38,0.5)]" style={{ width: `${(step / 3) * 100}%` }} />
+    <div className="fixed inset-0 z-50 bg-[#020202]/95 backdrop-blur-xl flex items-center justify-center p-4">
+      {/* Ambient background for the modal */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/5 blur-[100px] rounded-full" />
+      </div>
+
+      <Card className="w-full max-w-lg bg-[#0A0A0A]/90 backdrop-blur-2xl border-white/10 shadow-2xl relative overflow-hidden h-[700px] flex flex-col ring-1 ring-white/5">
+        
+        {/* Step Indicator */}
+        <div className="px-8 pt-8 pb-2 flex justify-between items-end">
+            <div className="space-y-1">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">
+                    Passo {step} de 3
+                </span>
+                <div className="flex gap-1.5">
+                    {[1, 2, 3].map((i) => (
+                        <div 
+                            key={i} 
+                            className={`h-1 rounded-full transition-all duration-500 ${step >= i ? 'w-8 bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.5)]' : 'w-2 bg-neutral-800'}`} 
+                        />
+                    ))}
+                </div>
+            </div>
+            {step === 1 && <span className="text-xs font-medium text-neutral-400">Definição do Alvo</span>}
+            {step === 2 && <span className="text-xs font-medium text-neutral-400">Estrutura Base</span>}
+            {step === 3 && <span className="text-xs font-medium text-neutral-400">Ativação</span>}
         </div>
 
-        <CardContent className="flex-1 p-8 h-full">
+        <CardContent className="flex-1 p-8 h-full relative z-10">
             {renderContent()}
         </CardContent>
       </Card>
