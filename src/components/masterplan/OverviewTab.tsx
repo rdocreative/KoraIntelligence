@@ -35,11 +35,11 @@ export const OverviewTab = ({
       
       {/* HEADER EXCLUSIVO DA ABA VISÃO */}
       <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pt-4">
-           <div className="space-y-2 max-w-2xl">
+           <div className="space-y-2 max-w-3xl">
               {/* Label Superior */}
-              <div className="flex items-center gap-4 mb-1">
-                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-[0.2em]">
-                  Objetivo Norteador do Ano
+              <div className="flex items-center gap-4 mb-2">
+                <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-[0.2em]">
+                  OBJETIVO NORTEADOR DO ANO
                 </span>
                 <Button variant="ghost" size="sm" onClick={onResetTutorial} className="h-5 px-2 text-[9px] text-neutral-600 hover:text-white uppercase tracking-widest hover:bg-white/5 rounded-full">
                     Setup
@@ -48,12 +48,12 @@ export const OverviewTab = ({
 
               {/* Título Principal */}
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">
+                <h1 className="text-3xl md:text-[2.5rem] font-bold text-white tracking-tight leading-tight">
                   {annualData.objective || "Objetivo Não Definido"}
                 </h1>
                 
                 {/* Descrição com hierarquia visual reduzida */}
-                <p className="mt-3 text-sm md:text-base text-neutral-500/80 font-medium max-w-lg leading-relaxed">
+                <p className="mt-4 text-base md:text-lg text-neutral-400/90 font-medium max-w-xl leading-relaxed">
                     {annualData.successCriteria || "Defina seu critério de sucesso na aba Anual."}
                 </p>
               </div>
