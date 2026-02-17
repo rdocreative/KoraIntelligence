@@ -9,7 +9,7 @@ import { Slider } from "@/components/ui/slider";
 import { 
   Plus, Target, Briefcase, GraduationCap, Heart, User, 
   Calendar, CheckSquare, Trash2, ArrowRight, ArrowLeft, Play,
-  BookOpen, HelpCircle, Save, CheckCircle2, Trophy, Clock
+  BookOpen, HelpCircle, Save, CheckCircle2, Trophy, Clock, Sparkles, Crown
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
@@ -77,64 +77,108 @@ const TaskList = ({
 const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
   const { data, updateAnnual, addAreaItem } = useMasterplan();
   const [step, setStep] = useState(0);
+  const [showIntro, setShowIntro] = useState(true);
+
+  // TELA DE INTRODUÇÃO (GAME START)
+  if (showIntro) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4 animate-in fade-in duration-1000">
+        <div className="w-full max-w-md text-center space-y-8 relative">
+           {/* Background Glow */}
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-red-600/20 blur-[100px] rounded-full pointer-events-none" />
+           
+           <div className="relative z-10 flex flex-col items-center gap-6">
+              <div className="w-24 h-24 bg-gradient-to-br from-neutral-800 to-black border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500">
+                  <Crown className="w-10 h-10 text-red-500" />
+              </div>
+
+              <div className="space-y-2">
+                  <h1 className="text-3xl font-black text-white tracking-tighter uppercase italic">
+                    Masterplan
+                  </h1>
+                  <p className="text-lg text-neutral-300 font-medium max-w-xs mx-auto leading-relaxed">
+                    Você quer participar do <span className="text-red-500 font-bold">melhor método de organização</span> da sua vida?
+                  </p>
+              </div>
+
+              <Button 
+                onClick={() => setShowIntro(false)}
+                className="group relative bg-white hover:bg-neutral-200 text-black font-black text-lg h-14 px-8 rounded-full shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.5)] transition-all duration-300 transform hover:-translate-y-1"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  SIM, QUERO COMEÇAR <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              </Button>
+
+              <button onClick={onComplete} className="text-xs text-neutral-600 hover:text-white uppercase font-bold tracking-widest transition-colors">
+                Pular Introdução
+              </button>
+           </div>
+        </div>
+      </div>
+    );
+  }
 
   const steps = [
     // 0: Introdução
     {
-      title: "Método Nenkan Mokuhyō",
-      subtitle: "Bem-vindo ao Masterplan",
+      title: "O Método Nenkan Mokuhyō",
+      subtitle: "A arte de simplificar o impossível.",
       content: (
-        <div className="space-y-4">
-          <p className="text-neutral-300">
-            Este é um método japonês de planejamento que transforma um grande objetivo anual em ações diárias simples.
+        <div className="space-y-6">
+          <p className="text-neutral-300 text-center">
+            Esqueça listas infinitas. Este é um sistema japonês que transforma um grande sonho em tarefas simples de executar.
           </p>
-          <div className="grid gap-3 my-6">
-            <div className="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
-                <Target className="text-red-500" /> 
-                <span className="text-sm font-medium">1 Objetivo Anual Claro</span>
+          <div className="grid gap-3 my-4">
+            <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-red-500/30 transition-colors">
+                <div className="p-2 bg-red-500/10 rounded-lg"><Target className="text-red-500 w-5 h-5" /></div>
+                <div className="text-left">
+                  <span className="block text-sm font-bold text-white">1. Foco Absoluto</span>
+                  <span className="text-xs text-neutral-500">Apenas um grande objetivo por vez.</span>
+                </div>
             </div>
-            <div className="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
-                <Target className="text-blue-500" /> 
-                <span className="text-sm font-medium">4 Áreas de Equilíbrio</span>
-            </div>
-            <div className="flex items-center gap-3 bg-white/5 p-3 rounded-xl border border-white/5">
-                <Target className="text-green-500" /> 
-                <span className="text-sm font-medium">Execução Semanal Focada</span>
+            <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-blue-500/30 transition-colors">
+                <div className="p-2 bg-blue-500/10 rounded-lg"><Calendar className="text-blue-500 w-5 h-5" /></div>
+                <div className="text-left">
+                  <span className="block text-sm font-bold text-white">2. Ritmo Semanal</span>
+                  <span className="text-xs text-neutral-500">Planeje o ano, mas viva a semana.</span>
+                </div>
             </div>
           </div>
-          <p className="text-sm text-neutral-500 italic">"Em vez de depender de motivação, crie um sistema que te force a avançar."</p>
         </div>
       )
     },
     // 1: Objetivo Anual
     {
-      title: "Passo 1: O Único Objetivo",
-      subtitle: "Elimine a confusão. Foque em um alvo.",
+      title: "Passo 1: O Alvo Único",
+      subtitle: "Se tudo fosse proibido, o que você faria?",
       content: (
         <div className="space-y-6">
           <div className="bg-red-900/10 border border-red-500/20 p-4 rounded-xl space-y-2">
-            <h4 className="text-red-500 text-xs font-black uppercase">Exemplo Prático</h4>
-            <p className="text-sm text-neutral-300"><strong>Objetivo:</strong> Atingir R$ 20.000/mês de faturamento.</p>
-            <p className="text-sm text-neutral-300"><strong>Sucesso:</strong> Receber esse valor por 3 meses seguidos até Dezembro.</p>
+            <h4 className="text-red-500 text-xs font-black uppercase flex items-center gap-2">
+              <Sparkles className="w-3 h-3" /> Exemplo
+            </h4>
+            <p className="text-sm text-neutral-300"><strong>Objetivo:</strong> "Liberdade Financeira (R$ 20k/mês)"</p>
+            <p className="text-sm text-neutral-300"><strong>Sucesso:</strong> Receber esse valor por 3 meses seguidos.</p>
           </div>
           
           <div className="space-y-4">
             <div className="space-y-2">
-                <Label>Qual é o seu Grande Objetivo do Ano?</Label>
+                <Label>Seu Grande Objetivo do Ano</Label>
                 <Input 
-                    placeholder="Escreva aqui..." 
+                    placeholder="Escreva sua missão principal..." 
                     value={data.annual.objective}
                     onChange={(e) => updateAnnual({ objective: e.target.value })}
-                    className="bg-neutral-900 border-white/10 h-12 text-lg"
+                    className="bg-neutral-900 border-white/10 h-12 text-lg focus-visible:ring-red-500"
                 />
             </div>
             <div className="space-y-2">
-                <Label>Como você saberá que deu certo? (Seja específico)</Label>
+                <Label>Como saberemos que você venceu?</Label>
                 <Textarea 
-                    placeholder="Critério mensurável de sucesso..." 
+                    placeholder="Seja específico (números, datas, eventos)..." 
                     value={data.annual.successCriteria}
                     onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                    className="bg-neutral-900 border-white/10"
+                    className="bg-neutral-900 border-white/10 focus-visible:ring-red-500"
                 />
             </div>
           </div>
@@ -144,17 +188,17 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
     // 2: Áreas Chave
     {
       title: "Passo 2: Os 4 Pilares",
-      subtitle: "O sucesso exige equilíbrio. Se a saúde falha, o objetivo cai.",
+      subtitle: "Uma mesa de 1 pé cai. Sua vida precisa de 4.",
       content: (
         <div className="space-y-6">
-          <p className="text-sm text-neutral-400">Adicione pelo menos 1 meta principal para cada área da sua vida.</p>
+          <p className="text-sm text-neutral-400 text-center">Defina 1 meta essencial para manter cada área em pé.</p>
           
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             <div className="space-y-2">
-                <Label className="flex items-center gap-2"><Briefcase className="w-3 h-3 text-blue-500" /> Trabalho & Dinheiro</Label>
+                <Label className="flex items-center gap-2 text-xs uppercase font-bold text-blue-500"><Briefcase className="w-3 h-3" /> Trabalho & Dinheiro</Label>
                 <div className="flex gap-2">
-                    <Input id="area-work" placeholder="Ex: Criar reserva de emergência" className="bg-neutral-900 border-white/10 text-sm" />
-                    <Button size="sm" onClick={() => {
+                    <Input id="area-work" placeholder="Ex: Guardar R$ 10k" className="bg-neutral-900 border-white/10 text-sm h-10" />
+                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => {
                         const el = document.getElementById('area-work') as HTMLInputElement;
                         if(el.value) { addAreaItem('work', el.value); el.value = ''; }
                     }}><Plus className="w-4 h-4"/></Button>
@@ -165,10 +209,10 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
             </div>
 
             <div className="space-y-2">
-                <Label className="flex items-center gap-2"><Heart className="w-3 h-3 text-red-500" /> Saúde & Energia</Label>
+                <Label className="flex items-center gap-2 text-xs uppercase font-bold text-red-500"><Heart className="w-3 h-3" /> Saúde & Energia</Label>
                 <div className="flex gap-2">
-                    <Input id="area-health" placeholder="Ex: Treinar 4x na semana" className="bg-neutral-900 border-white/10 text-sm" />
-                    <Button size="sm" onClick={() => {
+                    <Input id="area-health" placeholder="Ex: Academia 3x/semana" className="bg-neutral-900 border-white/10 text-sm h-10" />
+                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => {
                         const el = document.getElementById('area-health') as HTMLInputElement;
                         if(el.value) { addAreaItem('health', el.value); el.value = ''; }
                     }}><Plus className="w-4 h-4"/></Button>
@@ -187,17 +231,26 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
       subtitle: "A estrutura foi criada. Agora é execução.",
       content: (
         <div className="space-y-6 text-center py-4">
-          <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
-            <CheckCircle2 className="w-10 h-10 text-green-500" />
+          <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+            <div className="absolute inset-0 bg-green-500/20 rounded-full animate-ping opacity-20" />
+            <CheckCircle2 className="w-12 h-12 text-green-500" />
           </div>
-          <p className="text-neutral-300">
-             O Masterplan não é sobre planejar o ano todo de uma vez.<br/>
-             É sobre ter clareza do ano, mas focar na <strong>Semana Atual</strong>.
+          <p className="text-neutral-300 text-lg font-medium">
+             Você acaba de criar seu mapa para o ano.
           </p>
-          <div className="bg-white/5 p-4 rounded-xl text-left text-sm space-y-2 border border-white/5">
-             <p>👉 <strong>Mensalmente:</strong> Defina as metas do mês.</p>
-             <p>👉 <strong>Semanalmente:</strong> Crie um plano de ação (Domingo).</p>
-             <p>👉 <strong>Diariamente:</strong> Execute o que está no plano.</p>
+          <div className="bg-white/5 p-5 rounded-2xl text-left text-sm space-y-3 border border-white/5">
+             <div className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-[10px] font-bold">1</div>
+                <p>Abra a aba <strong>MENSAL</strong> e defina o foco do mês.</p>
+             </div>
+             <div className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-full bg-red-600 text-white flex items-center justify-center text-[10px] font-bold">2</div>
+                <p className="text-white">Vá em <strong>SEMANAL</strong> e crie sua sprint.</p>
+             </div>
+             <div className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-[10px] font-bold">3</div>
+                <p>Volte aqui todo Domingo para revisar.</p>
+             </div>
           </div>
         </div>
       )
@@ -207,7 +260,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
   const currentStep = steps[step];
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#050505] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 bg-[#050505] flex items-center justify-center p-4 animate-in fade-in duration-500">
       <Card className="w-full max-w-lg bg-[#121212] border-white/10 shadow-2xl relative overflow-hidden">
         {/* Progress Bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-neutral-900">
@@ -219,7 +272,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
           <CardDescription className="text-base font-medium text-neutral-500">{currentStep.subtitle}</CardDescription>
         </CardHeader>
 
-        <CardContent className="min-h-[300px] flex flex-col justify-center">
+        <CardContent className="min-h-[320px] flex flex-col justify-center">
             {currentStep.content}
         </CardContent>
 
@@ -228,7 +281,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                 variant="ghost" 
                 onClick={() => setStep(s => Math.max(0, s - 1))}
                 disabled={step === 0}
-                className="text-neutral-500"
+                className="text-neutral-500 hover:text-white"
             >
                 <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
             </Button>
@@ -236,14 +289,14 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
             {step < steps.length - 1 ? (
                 <Button 
                     onClick={() => setStep(s => s + 1)} 
-                    className="bg-white text-black hover:bg-neutral-200 font-bold"
+                    className="bg-white text-black hover:bg-neutral-200 font-bold px-6"
                 >
                     Próximo <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
             ) : (
                 <Button 
                     onClick={onComplete} 
-                    className="bg-red-600 hover:bg-red-500 text-white font-bold shadow-[0_0_20px_rgba(220,38,38,0.5)]"
+                    className="bg-red-600 hover:bg-red-500 text-white font-bold shadow-[0_0_20px_rgba(220,38,38,0.5)] px-6"
                 >
                     Começar a Executar <Play className="w-4 h-4 ml-2 fill-current" />
                 </Button>
