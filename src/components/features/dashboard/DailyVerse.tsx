@@ -1,66 +1,103 @@
-"use client";
+import { Quote, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
-import React, { useState, useEffect } from 'react';
-import { Quote, X } from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-
-const verses = [
-  { text: "Tudo posso naquele que me fortalece.", reference: "Filipenses 4:13" },
-  { text: "O Senhor é o meu pastor; nada me faltará.", reference: "Salmo 23:1" },
-  { text: "O que vem a mim jamais terá fome.", reference: "João 6:35" },
-  { text: "Seja forte e corajoso! Não se apavore nem desanime.", reference: "Josué 1:9" },
-  { text: "O amor é paciente, o amor é bondoso.", reference: "1 Coríntios 13:4" }
+const INSPIRATIONS = [
+  { text: "Tudo posso naquele que me fortalece.", author: "Filipenses 4:13" },
+  { text: "A imaginação é mais importante que o conhecimento. O conhecimento é limitado, a imaginação abraça o mundo.", author: "Albert Einstein" },
+  { text: "Não pare quando estiver cansado. Pare quando terminar.", author: "David Goggins" },
+  { text: "A felicidade da sua vida depende da qualidade dos seus pensamentos.", author: "Marco Aurélio" },
+  { text: "O Senhor é o meu pastor, nada me faltará.", author: "Salmos 23:1" },
+  { text: "A única maneira de fazer um excelente trabalho é amar o que você faz.", author: "Steve Jobs" },
+  { text: "Sorte é o que acontece quando a preparação encontra a oportunidade.", author: "Sêneca" },
+  { text: "Seja a mudança que você deseja ver no mundo.", author: "Mahatma Gandhi" },
+  { text: "O sucesso não é final, o fracasso não é fatal: é a coragem de continuar que conta.", author: "Winston Churchill" },
+  { text: "Não importa o quão devagar você vá, desde que você não pare.", author: "Confúcio" },
 ];
 
+const STORAGE_KEY = "daily_verse_seen_indices";
+const DISPLAY_DURATION = 60; // segundos
+
 export const DailyVerse = () => {
+  const [inspiration, setInspiration] = useState(INSPIRATIONS[0]);
   const [isVisible, setIsVisible] = useState(true);
-  const [verse, setVerse] = useState(verses[0]);
+  const [timeLeft, setTimeLeft] = useState(DISPLAY_DURATION);
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * verses.length);
-    setVerse(verses[randomIndex]);
+    const savedSeen = localStorage.getItem(STORAGE_KEY);
+    let seenIndices: number[] = savedSeen ? JSON.parse(savedSeen) : [];
+    let availableIndices = INSPIRATIONS.map((_, i) => i).filter((i) => !seenIndices.includes(i));
 
-    // Define o timer para esconder após 15 segundos (15000ms)
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-    }, 15000);
+    if (availableIndices.length === 0) {
+      seenIndices = [];
+      availableIndices = INSPIRATIONS.map((_, i) => i);
+    }
 
-    return () => clearTimeout(timer);
+    const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+    setInspiration(INSPIRATIONS[randomIndex]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...seenIndices, randomIndex]));
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setIsVisible(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, []);
 
   if (!isVisible) return null;
 
   return (
-    <div className="fixed top-24 right-6 z-50 animate-in slide-in-from-right-full duration-700">
-      <Card className="bg-gradient-to-br from-[#1E293B] to-[#0F172A] border-red-500/20 shadow-2xl shadow-red-500/10 p-5 max-w-sm relative group overflow-hidden">
-        {/* Glow Effect */}
-        <div className="absolute -top-10 -right-10 w-24 h-24 bg-red-500/10 blur-3xl rounded-full group-hover:bg-red-500/20 transition-all duration-500" />
-        
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="absolute top-2 right-2 h-6 w-6 text-slate-500 hover:text-white hover:bg-white/5"
-          onClick={() => setIsVisible(false)}
+    /* O componente agora é 'fixed', o que significa que ele flutua sobre a página sem ocupar espaço no grid */
+    <div className="fixed top-[10%] left-1/2 -translate-x-1/2 z-[999] w-full max-w-lg px-4 pointer-events-none">
+      <div className={cn(
+        "relative overflow-hidden rounded-2xl border border-red-900/40 bg-[#0a0a0a]/95 backdrop-blur-xl shadow-[0_20px_50px_-12px_rgba(220,38,38,0.2)] p-5 animate-in slide-in-from-top-8 fade-in duration-700 ease-out pointer-events-auto"
+      )}>
+        {/* Botão Fechar */}
+        <button 
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsVisible(false);
+          }}
+          className="absolute top-3 right-3 z-50 p-2 text-neutral-500 hover:text-red-500 transition-colors rounded-full hover:bg-red-500/10 cursor-pointer"
+          aria-label="Fechar notificação"
         >
-          <X className="h-3 w-3" />
-        </Button>
+          <X size={18} />
+        </button>
 
-        <div className="flex gap-4 items-start relative">
-          <div className="bg-red-500/10 p-2 rounded-xl border border-red-500/20">
-            <Quote className="h-5 w-5 text-red-500" />
+        {/* Conteúdo */}
+        <div className="flex flex-col items-center text-center space-y-3">
+          <div className="relative">
+            <Quote className="absolute -top-3 -left-5 h-5 w-5 text-red-500/10 rotate-180" />
+            <p className="text-sm md:text-base font-light leading-relaxed text-neutral-100 font-serif italic tracking-wide px-4">
+              "{inspiration.text}"
+            </p>
           </div>
-          <div className="space-y-2">
-            <p className="text-slate-200 font-medium leading-relaxed italic">
-              "{verse.text}"
-            </p>
-            <p className="text-red-500 text-xs font-bold uppercase tracking-widest">
-              — {verse.reference}
-            </p>
+
+          <div className="flex items-center gap-3 w-full max-w-[140px]">
+            <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent to-red-500/20"></div>
+            <span className="text-[8px] font-black tracking-[0.2em] text-red-500/60 uppercase whitespace-nowrap">
+              {inspiration.author}
+            </span>
+            <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent to-red-500/20"></div>
           </div>
         </div>
-      </Card>
+
+        {/* Barra de Tempo */}
+        <div className="absolute bottom-0 left-0 h-[2px] bg-red-900/20 w-full">
+          <div 
+            className="h-full bg-red-600 transition-all duration-1000 ease-linear shadow-[0_0_8px_rgba(220,38,38,0.8)]"
+            style={{ width: `${(timeLeft / DISPLAY_DURATION) * 100}%` }}
+          />
+        </div>
+      </div>
     </div>
   );
 };
