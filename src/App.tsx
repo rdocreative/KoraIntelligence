@@ -4,10 +4,21 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/providers/ThemeProvider";
+import { FloatingNavbar } from "./components/layout/FloatingNavbar";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+// Placeholder simples para as novas páginas
+const PlaceholderPage = ({ title }: { title: string }) => (
+  <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="text-center space-y-4">
+      <h1 className="text-4xl font-black text-indigo-600 dark:text-indigo-400">{title}</h1>
+      <p className="text-slate-500">Esta seção está em desenvolvimento...</p>
+    </div>
+  </div>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -21,10 +32,20 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <div className="pb-28"> {/* Espaço para não cobrir o conteúdo com a Navbar */}
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/habitos" element={<Index />} /> {/* Por enquanto aponta para Index que tem os hábitos */}
+              <Route path="/tarefas" element={<PlaceholderPage title="Tarefas" />} />
+              <Route path="/metas" element={<PlaceholderPage title="Metas" />} />
+              <Route path="/financa" element={<PlaceholderPage title="Finanças" />} />
+              <Route path="/loja" element={<PlaceholderPage title="Loja" />} />
+              <Route path="/inventario" element={<PlaceholderPage title="Inventário" />} />
+              <Route path="/configuracoes" element={<PlaceholderPage title="Configurações" />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <FloatingNavbar />
+          </div>
         </BrowserRouter>
       </TooltipProvider>
     </ThemeProvider>
