@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useHabitTracker } from '@/hooks/useHabitTracker';
-import { HabitCard } from '@/components/HabitCard';
-import { Gamification } from '@/components/Gamification';
-import { ProgressChart } from '@/components/ProgressChart';
+import { HabitCard } from '@/components/features/habit-tracker/HabitCard';
+import { Gamification } from '@/components/features/habit-tracker/Gamification';
+import { ProgressChart } from '@/components/features/habit-tracker/ProgressChart';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
