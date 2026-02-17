@@ -203,10 +203,11 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
       title: "Passo 2: Os 4 Pilares",
       subtitle: "Uma mesa de 1 pé cai. Sua vida precisa de 4.",
       content: (
-        <div className="space-y-6">
+        <div className="space-y-6 overflow-y-auto max-h-[350px] pr-2 custom-scrollbar">
           <p className="text-sm text-neutral-400 text-center">Defina 1 meta essencial para manter cada área em pé.</p>
           
-          <div className="grid gap-3">
+          <div className="grid gap-4">
+            {/* TRABALHO & DINHEIRO */}
             <div className="space-y-2">
                 <Label className="flex items-center gap-2 text-xs uppercase font-bold text-blue-500"><Briefcase className="w-3 h-3" /> Trabalho & Dinheiro</Label>
                 <div className="flex gap-2">
@@ -221,6 +222,22 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                 </div>
             </div>
 
+            {/* ESTUDOS & CRESCIMENTO */}
+            <div className="space-y-2">
+                <Label className="flex items-center gap-2 text-xs uppercase font-bold text-purple-500"><GraduationCap className="w-3 h-3" /> Estudos & Crescimento</Label>
+                <div className="flex gap-2">
+                    <Input id="area-studies" placeholder="Ex: Ler 12 livros" className="bg-neutral-900 border-white/10 text-sm h-10" />
+                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => {
+                        const el = document.getElementById('area-studies') as HTMLInputElement;
+                        if(el.value) { addAreaItem('studies', el.value); el.value = ''; }
+                    }}><Plus className="w-4 h-4"/></Button>
+                </div>
+                <div className="text-xs text-neutral-500 pl-2">
+                    {data.areas.studies.map(i => <div key={i.id}>• {i.text}</div>)}
+                </div>
+            </div>
+
+            {/* SAÚDE & ENERGIA */}
             <div className="space-y-2">
                 <Label className="flex items-center gap-2 text-xs uppercase font-bold text-red-500"><Heart className="w-3 h-3" /> Saúde & Energia</Label>
                 <div className="flex gap-2">
@@ -234,6 +251,22 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                     {data.areas.health.map(i => <div key={i.id}>• {i.text}</div>)}
                 </div>
             </div>
+
+            {/* VIDA PESSOAL */}
+            <div className="space-y-2">
+                <Label className="flex items-center gap-2 text-xs uppercase font-bold text-yellow-500"><User className="w-3 h-3" /> Vida Pessoal</Label>
+                <div className="flex gap-2">
+                    <Input id="area-personal" placeholder="Ex: Viagem em família" className="bg-neutral-900 border-white/10 text-sm h-10" />
+                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => {
+                        const el = document.getElementById('area-personal') as HTMLInputElement;
+                        if(el.value) { addAreaItem('personal', el.value); el.value = ''; }
+                    }}><Plus className="w-4 h-4"/></Button>
+                </div>
+                <div className="text-xs text-neutral-500 pl-2">
+                    {data.areas.personal.map(i => <div key={i.id}>• {i.text}</div>)}
+                </div>
+            </div>
+
           </div>
         </div>
       )
