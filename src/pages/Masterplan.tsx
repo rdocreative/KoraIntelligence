@@ -239,44 +239,54 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
     );
   };
 
+  // --- WELCOME SCREEN (STEP 0) ---
   if (step === 0 && !hasShownWelcome) {
     return (
-      <div className="fixed inset-0 z-50 bg-[#050505] flex items-center justify-center p-4 animate-in fade-in duration-1000">
+      <div className="fixed inset-0 z-50 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#1a1a1a] via-[#050505] to-black flex items-center justify-center p-6 animate-in fade-in duration-1000">
+        
+        {/* Ambient Effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-red-600/5 blur-[150px] rounded-full animate-pulse duration-[5000ms]" />
-            <div className="absolute top-0 right-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-red-600/5 blur-[150px] rounded-full animate-pulse duration-[6000ms]" />
+            <div className="absolute top-0 right-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.04] mix-blend-overlay" />
         </div>
         
-        <div className="w-full max-w-lg text-center space-y-12 relative z-10">
-           <div className="flex flex-col items-center gap-10">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-red-600/20 blur-2xl rounded-full transition-all duration-700 group-hover:bg-red-600/30" />
-                <div className="w-24 h-24 bg-gradient-to-br from-neutral-900 to-black border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl transition-all duration-500 hover:scale-105 hover:border-red-500/30 hover:shadow-[0_0_30px_rgba(220,38,38,0.3)] relative z-10">
-                    <Target className="w-10 h-10 text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.8)]" />
-                </div>
-              </div>
+        <div className="w-full max-w-xl text-center space-y-12 relative z-10 flex flex-col items-center">
+           
+           {/* Icon with Breathing Animation */}
+           <div className="relative group">
+             <div className="absolute inset-0 bg-red-500/20 blur-[60px] rounded-full animate-pulse" />
+             <div className="w-28 h-28 bg-gradient-to-br from-[#1E1E1E] to-black border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl relative z-10 animate-[bounce_3s_infinite]">
+                 <div className="absolute inset-0 rounded-3xl border border-white/5 mask-image-gradient" />
+                 <Target className="w-12 h-12 text-red-500 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]" />
+             </div>
+           </div>
 
-              <div className="space-y-6">
-                  <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter leading-tight animate-in slide-in-from-bottom-2 fade-in duration-700">
-                    Seu novo sistema de foco<br/>está pronto para ser ativado.
-                  </h1>
-                  <p className="text-lg text-neutral-400 font-medium max-w-sm mx-auto leading-relaxed animate-in slide-in-from-bottom-3 fade-in duration-1000 delay-150">
-                    Você está a poucos passos de criar o plano mais poderoso da sua vida.
-                  </p>
-              </div>
+           {/* Typography - Emotional Impact */}
+           <div className="space-y-6">
+               <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-[1.1] animate-in slide-in-from-bottom-4 fade-in duration-1000">
+                 Parabéns. Sua nova<br/>
+                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-300">fase começa agora.</span>
+               </h1>
+               <p className="text-lg md:text-xl text-neutral-400 font-medium max-w-md mx-auto leading-relaxed animate-in slide-in-from-bottom-5 fade-in duration-1000 delay-200">
+                 Em poucos minutos, você terá o plano mais claro e poderoso da sua vida.
+               </p>
+           </div>
 
-              <div className="w-full max-w-xs mx-auto animate-in slide-in-from-bottom-4 fade-in duration-1000 delay-300 pt-6">
-                <Button 
-                    onClick={() => {
-                        setHasShownWelcome(true);
-                        setStep(1);
-                    }}
-                    className="w-full bg-white hover:bg-neutral-200 text-black font-black text-base h-14 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_0_50px_rgba(255,255,255,0.3)] transition-all duration-300 transform hover:-translate-y-1 active:scale-95 group"
-                >
-                    INICIAR CONFIGURAÇÃO 
-                    <ArrowRight className="w-5 h-5 ml-2 transition-transform duration-300 group-hover:translate-x-1" />
-                </Button>
-              </div>
+           {/* Call to Action - System Activation */}
+           <div className="w-full max-w-sm mx-auto animate-in slide-in-from-bottom-6 fade-in duration-1000 delay-500 pt-8">
+             <Button 
+                 onClick={() => {
+                     setHasShownWelcome(true);
+                     setStep(1);
+                 }}
+                 className="w-full h-16 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-black text-lg tracking-wide rounded-full shadow-[0_0_40px_rgba(220,38,38,0.3)] hover:shadow-[0_0_60px_rgba(220,38,38,0.5)] transition-all duration-300 transform hover:-translate-y-1 active:scale-95 border border-white/10 group relative overflow-hidden"
+             >
+                 <span className="relative z-10 flex items-center justify-center gap-3">
+                    ATIVAR MEU SISTEMA
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                 </span>
+                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+             </Button>
            </div>
         </div>
       </div>
@@ -340,15 +350,16 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
 
     if (step === 2) {
         return (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-500 h-full flex flex-col">
-                <div className="text-center space-y-2 mb-2 flex-shrink-0">
+            <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500">
+                <div className="text-center space-y-2 mb-6 flex-shrink-0">
                      <h2 className="text-2xl font-black text-white uppercase tracking-tight">Os 4 Pilares</h2>
                      <p className="text-neutral-400 text-sm">
                         Para o sistema funcionar, adicione ao menos <span className="text-white font-bold">1 meta</span>.
                      </p>
                 </div>
 
-                <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4 pb-4">
+                {/* SCROLL AREA CORRECTION: Added padding bottom and negative margins to prevent clipping */}
+                <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-4 custom-scrollbar space-y-4">
                     {[
                       { 
                         id: 'work', 
@@ -387,16 +398,16 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                         return (
                           <div 
                             key={area.id} 
-                            className={`p-4 rounded-xl border transition-all duration-300 group ${hasItems ? 'bg-white/[0.03] border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.1)]' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
+                            className={`p-5 rounded-2xl border transition-all duration-300 group ${hasItems ? 'bg-[#0E0E0E] border-green-500/20' : 'bg-[#0A0A0A] border-white/5 hover:border-white/10'}`}
                           >
-                              <div className="flex items-center justify-between mb-3">
-                                  <Label className={`flex items-center gap-2 text-xs uppercase font-bold tracking-widest ${area.color}`}>
+                              <div className="flex items-center justify-between mb-4">
+                                  <Label className={`flex items-center gap-2 text-xs uppercase font-black tracking-widest ${area.color}`}>
                                       <area.icon className="w-4 h-4" /> {area.label}
                                   </Label>
-                                  {hasItems && <CheckCircle2 className="w-4 h-4 text-green-500 animate-in zoom-in" />}
+                                  {hasItems && <CheckCircle2 className="w-4 h-4 text-green-500 animate-in zoom-in duration-300" />}
                               </div>
                               
-                              <div className="flex gap-2">
+                              <div className="flex gap-3 mb-3">
                                   <Input 
                                       value={areaInputs[area.id as keyof typeof areaInputs]}
                                       onChange={(e) => handleAreaInputChange(area.id as keyof typeof areaInputs, e.target.value)}
@@ -407,28 +418,30 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                                           }
                                       }}
                                       placeholder={area.placeholder} 
-                                      className="bg-black/40 border-white/10 text-sm h-10 focus:ring-1 focus:ring-white/20 focus:border-white/20 transition-all" 
+                                      className="bg-black/40 border-white/10 text-sm h-11 focus:ring-1 focus:ring-white/20 focus:border-white/20 transition-all rounded-lg" 
                                   />
                                   <Button 
                                       type="button"
                                       size="icon" 
-                                      className="h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0 transition-transform active:scale-95" 
+                                      className="h-11 w-11 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0 transition-transform active:scale-95 rounded-lg" 
                                       onClick={(e) => {
                                           e.preventDefault();
                                           handleAddAreaItem(area.id as keyof typeof areaInputs);
                                       }}
                                   >
-                                      <Plus className="w-4 h-4"/>
+                                      <Plus className="w-5 h-5"/>
                                   </Button>
                               </div>
 
                               {hasItems && (
-                                  <div className="flex flex-wrap gap-2 mt-3 animate-in fade-in duration-300">
+                                  <div className="space-y-2 animate-in fade-in duration-300">
                                       {area.items.map((i: any) => (
-                                          <span key={i.id} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-white/5 border border-white/5 text-[10px] text-neutral-300">
-                                              {i.text}
-                                              <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="hover:text-red-500 ml-1 transition-colors">×</button>
-                                          </span>
+                                          <div key={i.id} className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-white/5 to-transparent border border-white/5 animate-in slide-in-from-left-2 zoom-in-95 duration-300 group/item hover:border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.02)]">
+                                              <span className="text-sm font-medium text-neutral-200 pl-1">{i.text}</span>
+                                              <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="text-neutral-600 hover:text-red-500 transition-colors p-1">
+                                                  <X className="w-4 h-4" />
+                                              </button>
+                                          </div>
                                       ))}
                                   </div>
                               )}
@@ -437,7 +450,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                     })}
                 </div>
 
-                <div className="flex justify-between items-center pt-4 border-t border-white/5 flex-shrink-0">
+                <div className="flex justify-between items-center pt-6 border-t border-white/5 flex-shrink-0 mt-2">
                     <Button variant="ghost" onClick={() => setStep(1)} className="text-neutral-500 hover:text-white transition-colors">Voltar</Button>
                     <Button 
                         disabled={!hasAtLeastOneItem}
@@ -486,10 +499,10 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/5 blur-[100px] rounded-full" />
       </div>
 
-      <Card className="w-full max-w-lg bg-[#0A0A0A]/90 backdrop-blur-2xl border-white/10 shadow-2xl relative overflow-hidden h-[700px] flex flex-col ring-1 ring-white/5">
+      <Card className="w-full max-w-lg bg-[#0A0A0A]/90 backdrop-blur-2xl border-white/10 shadow-2xl relative overflow-hidden h-[85vh] md:h-[700px] flex flex-col ring-1 ring-white/5">
         
         {/* Step Indicator */}
-        <div className="px-8 pt-8 pb-2 flex justify-between items-end">
+        <div className="px-8 pt-8 pb-2 flex justify-between items-end flex-shrink-0">
             <div className="space-y-1">
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">
                     Passo {step} de 3
@@ -508,7 +521,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
             {step === 3 && <span className="text-xs font-medium text-neutral-400">Ativação</span>}
         </div>
 
-        <CardContent className="flex-1 p-8 h-full relative z-10">
+        <CardContent className="flex-1 p-8 h-full relative z-10 flex flex-col overflow-hidden">
             {renderContent()}
         </CardContent>
       </Card>
