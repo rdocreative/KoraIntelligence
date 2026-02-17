@@ -78,6 +78,24 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
   const { data, updateAnnual, addAreaItem } = useMasterplan();
   const [step, setStep] = useState(0);
   const [showIntro, setShowIntro] = useState(true);
+  
+  // Estados locais para inputs das áreas
+  const [areaInputs, setAreaInputs] = useState({
+    work: "",
+    studies: "",
+    health: "",
+    personal: ""
+  });
+
+  const handleAreaInputChange = (key: keyof typeof areaInputs, value: string) => {
+    setAreaInputs(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleAddAreaItem = (key: keyof typeof areaInputs) => {
+    if (!areaInputs[key].trim()) return;
+    addAreaItem(key, areaInputs[key]);
+    handleAreaInputChange(key, "");
+  };
 
   // TELA DE INTRODUÇÃO (GAME START)
   if (showIntro) {
@@ -204,20 +222,25 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
       subtitle: "Uma mesa de 1 pé cai. Sua vida precisa de 4.",
       content: (
         <div className="space-y-6 overflow-y-auto max-h-[350px] pr-2 custom-scrollbar">
-          <p className="text-sm text-neutral-400 text-center">Defina 1 meta essencial para manter cada área em pé.</p>
+          <p className="text-sm text-neutral-400 text-center">Defina metas essenciais para manter cada área em pé.</p>
           
           <div className="grid gap-4">
             {/* TRABALHO & DINHEIRO */}
             <div className="space-y-2">
                 <Label className="flex items-center gap-2 text-xs uppercase font-bold text-blue-500"><Briefcase className="w-3 h-3" /> Trabalho & Dinheiro</Label>
                 <div className="flex gap-2">
-                    <Input id="area-work" placeholder="Ex: Guardar R$ 10k" className="bg-neutral-900 border-white/10 text-sm h-10" />
-                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => {
-                        const el = document.getElementById('area-work') as HTMLInputElement;
-                        if(el.value) { addAreaItem('work', el.value); el.value = ''; }
-                    }}><Plus className="w-4 h-4"/></Button>
+                    <Input 
+                        value={areaInputs.work}
+                        onChange={(e) => handleAreaInputChange('work', e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem('work')}
+                        placeholder="Ex: Guardar R$ 10k" 
+                        className="bg-neutral-900 border-white/10 text-sm h-10" 
+                    />
+                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => handleAddAreaItem('work')}>
+                        <Plus className="w-4 h-4"/>
+                    </Button>
                 </div>
-                <div className="text-xs text-neutral-500 pl-2">
+                <div className="text-xs text-neutral-500 pl-2 space-y-1">
                     {data.areas.work.map(i => <div key={i.id}>• {i.text}</div>)}
                 </div>
             </div>
@@ -226,13 +249,18 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
             <div className="space-y-2">
                 <Label className="flex items-center gap-2 text-xs uppercase font-bold text-purple-500"><GraduationCap className="w-3 h-3" /> Estudos & Crescimento</Label>
                 <div className="flex gap-2">
-                    <Input id="area-studies" placeholder="Ex: Ler 12 livros" className="bg-neutral-900 border-white/10 text-sm h-10" />
-                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => {
-                        const el = document.getElementById('area-studies') as HTMLInputElement;
-                        if(el.value) { addAreaItem('studies', el.value); el.value = ''; }
-                    }}><Plus className="w-4 h-4"/></Button>
+                    <Input 
+                        value={areaInputs.studies}
+                        onChange={(e) => handleAreaInputChange('studies', e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem('studies')}
+                        placeholder="Ex: Ler 12 livros" 
+                        className="bg-neutral-900 border-white/10 text-sm h-10" 
+                    />
+                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => handleAddAreaItem('studies')}>
+                        <Plus className="w-4 h-4"/>
+                    </Button>
                 </div>
-                <div className="text-xs text-neutral-500 pl-2">
+                <div className="text-xs text-neutral-500 pl-2 space-y-1">
                     {data.areas.studies.map(i => <div key={i.id}>• {i.text}</div>)}
                 </div>
             </div>
@@ -241,13 +269,18 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
             <div className="space-y-2">
                 <Label className="flex items-center gap-2 text-xs uppercase font-bold text-red-500"><Heart className="w-3 h-3" /> Saúde & Energia</Label>
                 <div className="flex gap-2">
-                    <Input id="area-health" placeholder="Ex: Academia 3x/semana" className="bg-neutral-900 border-white/10 text-sm h-10" />
-                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => {
-                        const el = document.getElementById('area-health') as HTMLInputElement;
-                        if(el.value) { addAreaItem('health', el.value); el.value = ''; }
-                    }}><Plus className="w-4 h-4"/></Button>
+                    <Input 
+                        value={areaInputs.health}
+                        onChange={(e) => handleAreaInputChange('health', e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem('health')}
+                        placeholder="Ex: Academia 3x/semana" 
+                        className="bg-neutral-900 border-white/10 text-sm h-10" 
+                    />
+                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => handleAddAreaItem('health')}>
+                        <Plus className="w-4 h-4"/>
+                    </Button>
                 </div>
-                <div className="text-xs text-neutral-500 pl-2">
+                <div className="text-xs text-neutral-500 pl-2 space-y-1">
                     {data.areas.health.map(i => <div key={i.id}>• {i.text}</div>)}
                 </div>
             </div>
@@ -256,13 +289,18 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
             <div className="space-y-2">
                 <Label className="flex items-center gap-2 text-xs uppercase font-bold text-yellow-500"><User className="w-3 h-3" /> Vida Pessoal</Label>
                 <div className="flex gap-2">
-                    <Input id="area-personal" placeholder="Ex: Viagem em família" className="bg-neutral-900 border-white/10 text-sm h-10" />
-                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => {
-                        const el = document.getElementById('area-personal') as HTMLInputElement;
-                        if(el.value) { addAreaItem('personal', el.value); el.value = ''; }
-                    }}><Plus className="w-4 h-4"/></Button>
+                    <Input 
+                        value={areaInputs.personal}
+                        onChange={(e) => handleAreaInputChange('personal', e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem('personal')}
+                        placeholder="Ex: Viagem em família" 
+                        className="bg-neutral-900 border-white/10 text-sm h-10" 
+                    />
+                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => handleAddAreaItem('personal')}>
+                        <Plus className="w-4 h-4"/>
+                    </Button>
                 </div>
-                <div className="text-xs text-neutral-500 pl-2">
+                <div className="text-xs text-neutral-500 pl-2 space-y-1">
                     {data.areas.personal.map(i => <div key={i.id}>• {i.text}</div>)}
                 </div>
             </div>
