@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -7,7 +8,8 @@ import {
   Swords,
   Users,
   ShoppingBag, 
-  Settings 
+  Settings,
+  ChevronUp
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -23,57 +25,85 @@ const navItems = [
 ];
 
 export const FloatingNavbar = () => {
+  const [isMinimized, setIsMinimized] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsMinimized(true);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-full max-w-fit px-6">
-      <nav className="flex items-center gap-1 bg-[#121212]/90 backdrop-blur-2xl border border-white/10 px-3 py-3 rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.9)]">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) => cn(
-              "relative group flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300",
-              isActive ? "text-white" : "text-neutral-500 hover:text-neutral-300"
-            )}
-          >
-            {({ isActive }) => (
-              <>
-                {/* Tooltip Pop-up */}
-                <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-[#181818] border border-white/10 rounded-xl opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none shadow-2xl z-[60]">
-                  <span className="text-[10px] font-bold tracking-widest text-white whitespace-nowrap uppercase">
-                    {item.label}
-                  </span>
-                  {/* Tooltip Arrow */}
-                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#181818] border-r border-b border-white/10 rotate-45"></div>
-                </div>
+    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
+      {/* Container Principal com Animação */}
+      <div 
+        className={cn(
+          "transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]",
+          isMinimized ? "translate-y-[120%] opacity-0 pointer-events-none scale-90" : "translate-y-0 opacity-100 scale-100"
+        )}
+      >
+        <nav className="flex items-center gap-1 bg-[#121212]/90 backdrop-blur-2xl border border-white/10 px-3 py-3 rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.9)]">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) => cn(
+                "relative group flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300",
+                isActive ? "text-white" : "text-neutral-500 hover:text-neutral-300"
+              )}
+            >
+              {({ isActive }) => (
+                <>
+                  {/* Tooltip Pop-up */}
+                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-[#181818] border border-white/10 rounded-xl opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none shadow-2xl z-[60]">
+                    <span className="text-[10px] font-bold tracking-widest text-white whitespace-nowrap uppercase">
+                      {item.label}
+                    </span>
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#181818] border-r border-b border-white/10 rotate-45"></div>
+                  </div>
 
-                {/* Icon */}
-                <div className={cn(
-                    "relative flex items-center justify-center transition-transform duration-300",
-                    isActive && "scale-110"
-                )}>
-                    <item.icon 
-                        size={20} 
-                        className={cn(
-                            "transition-all duration-300",
-                            isActive && "drop-shadow-[0_0_12px_rgba(239,68,68,0.6)] fill-red-500/10"
-                        )} 
-                        strokeWidth={isActive ? 2.5 : 2}
-                    />
-                </div>
+                  {/* Icon */}
+                  <div className={cn(
+                      "relative flex items-center justify-center transition-transform duration-300",
+                      isActive && "scale-110"
+                  )}>
+                      <item.icon 
+                          size={20} 
+                          className={cn(
+                              "transition-all duration-300",
+                              isActive && "drop-shadow-[0_0_12px_rgba(239,68,68,0.6)] fill-red-500/10"
+                          )} 
+                          strokeWidth={isActive ? 2.5 : 2}
+                      />
+                  </div>
 
-                {/* Active Dot Indicator */}
-                <span className={cn(
-                  "absolute -bottom-0.5 w-1 h-1 rounded-full bg-red-500 transition-all duration-300 shadow-[0_0_10px_rgba(239,68,68,1)]",
-                  isActive ? "opacity-100 scale-100" : "opacity-0 scale-0"
-                )} />
+                  {/* Active Dot Indicator */}
+                  <span className={cn(
+                    "absolute -bottom-0.5 w-1 h-1 rounded-full bg-red-500 transition-all duration-300 shadow-[0_0_10px_rgba(239,68,68,1)]",
+                    isActive ? "opacity-100 scale-100" : "opacity-0 scale-0"
+                  )} />
 
-                {/* Hover Background Glow */}
-                <div className="absolute inset-0 bg-white/5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-              </>
-            )}
-          </NavLink>
-        ))}
-      </nav>
+                  {/* Hover Background Glow */}
+                  <div className="absolute inset-0 bg-white/5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                </>
+              )}
+            </NavLink>
+          ))}
+        </nav>
+      </div>
+
+      {/* Trigger Button (Seta para cima) */}
+      <button
+        onClick={() => setIsMinimized(false)}
+        className={cn(
+          "absolute bottom-0 p-3 bg-red-600/10 hover:bg-red-600/20 border border-red-500/30 rounded-full text-red-500 transition-all duration-500 shadow-lg shadow-red-500/10 backdrop-blur-md",
+          isMinimized ? "translate-y-0 opacity-100 scale-100" : "translate-y-20 opacity-0 scale-50 pointer-events-none"
+        )}
+      >
+        <ChevronUp size={24} className="animate-bounce-slow" />
+      </button>
     </div>
   );
 };
