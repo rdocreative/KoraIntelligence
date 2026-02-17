@@ -54,24 +54,28 @@ export const DailyVerse = () => {
   if (!isVisible) return null;
 
   return (
-    /* Posicionamento: top-[10%] para ficar a 10% do topo da viewport */
-    <div className="fixed top-[10%] left-1/2 -translate-x-1/2 z-[40] w-full max-w-lg px-4 animate-in slide-in-from-top-8 fade-in duration-700 ease-out">
+    <div className="fixed top-[10%] left-1/2 -translate-x-1/2 z-[999] w-full max-w-lg px-4 animate-in slide-in-from-top-8 fade-in duration-700 ease-out">
       <div className={cn(
         "relative overflow-hidden rounded-2xl border border-red-900/40 bg-[#0a0a0a]/95 backdrop-blur-xl shadow-[0_20px_50px_-12px_rgba(220,38,38,0.2)] p-5"
       )}>
-        {/* Botão Fechar */}
+        {/* Botão Fechar - Adicionado z-50 e cursor-pointer para garantir clique */}
         <button 
-          onClick={() => setIsVisible(false)}
-          className="absolute top-3 right-3 p-1.5 text-neutral-500 hover:text-red-500 transition-colors rounded-full hover:bg-red-500/10"
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsVisible(false);
+          }}
+          className="absolute top-3 right-3 z-50 p-2 text-neutral-500 hover:text-red-500 transition-colors rounded-full hover:bg-red-500/10 cursor-pointer"
+          aria-label="Fechar notificação"
         >
-          <X size={14} />
+          <X size={18} />
         </button>
 
         {/* Conteúdo */}
         <div className="flex flex-col items-center text-center space-y-3">
           <div className="relative">
             <Quote className="absolute -top-3 -left-5 h-5 w-5 text-red-500/10 rotate-180" />
-            <p className="text-sm md:text-base font-light leading-relaxed text-neutral-100 font-serif italic tracking-wide">
+            <p className="text-sm md:text-base font-light leading-relaxed text-neutral-100 font-serif italic tracking-wide px-4">
               "{inspiration.text}"
             </p>
           </div>
@@ -85,7 +89,7 @@ export const DailyVerse = () => {
           </div>
         </div>
 
-        {/* Barra de Tempo (Timer Minimalista) */}
+        {/* Barra de Tempo */}
         <div className="absolute bottom-0 left-0 h-[2px] bg-red-900/20 w-full">
           <div 
             className="h-full bg-red-600 transition-all duration-1000 ease-linear shadow-[0_0_8px_rgba(220,38,38,0.8)]"
