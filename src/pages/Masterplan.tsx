@@ -10,7 +10,7 @@ import {
   Plus, Target, Briefcase, GraduationCap, Heart, User, 
   Calendar, CheckSquare, Trash2, ArrowRight, ArrowLeft, Play,
   BookOpen, HelpCircle, Save, CheckCircle2, Trophy, Clock, Sparkles, Crown, Loader2, Zap, LayoutDashboard,
-  TrendingUp, TrendingDown, Activity, BarChart3, AlertCircle, CalendarDays, Award, Check, ChevronRight
+  TrendingUp, TrendingDown, Activity, BarChart3, AlertCircle, CalendarDays, Award, Check, ChevronRight, X
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
@@ -167,7 +167,7 @@ const LoadingScreen = ({ onFinished }: { onFinished: () => void }) => {
 
 const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
   const { data, updateAnnual, addAreaItem, deleteAreaItem } = useMasterplan();
-  const [step, setStep] = useState(0); // 0: Welcome, 1: Annual, 2: Pillars, 3: Final
+  const [step, setStep] = useState(0); 
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
   
   const [areaInputs, setAreaInputs] = useState({
@@ -189,8 +189,38 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
     setAreaInputs(prev => ({ ...prev, [key]: "" }));
   };
 
-  // Validation Checkers
-  const isAnnualValid = data.annual.objective.trim().length > 0 && data.annual.successCriteria.trim().length > 0;
+  // Smart Validation Logic
+  const objectiveAnalysis = useMemo(() => {
+    const text = data.annual.objective.trim();
+    const length = text.length;
+    
+    if (length === 0) return null;
+    if (length < 8) return { status: 'weak', message: 'Muito curto. Seja mais específico.', color: 'text-red-500', icon: AlertCircle };
+    
+    const vagueWords = ['melhor', 'sucesso', 'feliz', 'rico', 'vida', 'coisas'];
+    const hasVagueWords = vagueWords.some(w => text.toLowerCase().includes(w));
+    
+    if (hasVagueWords && length < 20) return { status: 'medium', message: 'Tente definir o que isso significa na prática.', color: 'text-yellow-500', icon: AlertCircle };
+    
+    return { status: 'strong', message: 'Excelente objetivo.', color: 'text-green-500', icon: Check };
+  }, [data.annual.objective]);
+
+  const criteriaAnalysis = useMemo(() => {
+    const text = data.annual.successCriteria.trim();
+    const length = text.length;
+    
+    if (length === 0) return null;
+    
+    const hasNumbers = /\d/.test(text);
+    if (!hasNumbers) return { status: 'medium', message: 'Dica: Inclua números ou valores (R$, kg, %).', color: 'text-blue-400', icon: Sparkles };
+    
+    return { status: 'strong', message: 'Critério mensurável. Ótimo.', color: 'text-green-500', icon: Check };
+  }, [data.annual.successCriteria]);
+  
+  // Strict Blocking
+  const isAnnualValid = 
+    data.annual.objective.trim().length > 5 && 
+    data.annual.successCriteria.trim().length > 5;
   
   const hasAtLeastOneItem = 
     data.areas.work.length > 0 || 
@@ -198,18 +228,26 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
     data.areas.health.length > 0 || 
     data.areas.personal.length > 0;
 
-  // Step 0 is the full screen welcome
+  // Render Helpers
+  const Feedback = ({ analysis }: { analysis: any }) => {
+    if (!analysis) return null;
+    const Icon = analysis.icon;
+    return (
+        <div className={`flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-wider mt-2 animate-in slide-in-from-left-2 ${analysis.color}`}>
+            <Icon className="w-3 h-3" /> {analysis.message}
+        </div>
+    );
+  };
+
   if (step === 0 && !hasShownWelcome) {
     return (
-      <div className="fixed inset-0 z-50 bg-[#020202] flex items-center justify-center p-4 animate-in fade-in duration-1000">
-        {/* Background Ambience */}
+      <div className="fixed inset-0 z-50 bg-[#050505] flex items-center justify-center p-4 animate-in fade-in duration-1000">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-red-600/5 blur-[150px] rounded-full animate-pulse duration-[5000ms]" />
             <div className="absolute top-0 right-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]" />
         </div>
         
         <div className="w-full max-w-lg text-center space-y-12 relative z-10">
-           
            <div className="flex flex-col items-center gap-10">
               <div className="relative group">
                 <div className="absolute inset-0 bg-red-600/20 blur-2xl rounded-full transition-all duration-700 group-hover:bg-red-600/30" />
@@ -259,32 +297,31 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                      </p>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-8">
                     <div className="space-y-3 group relative">
-                        <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Objetivo Anual</Label>
+                        <div className="flex justify-between items-baseline">
+                           <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Objetivo Anual</Label>
+                           {objectiveAnalysis?.status === 'strong' && <span className="text-[10px] text-green-500 font-bold uppercase tracking-wider animate-in fade-in">Validado</span>}
+                        </div>
                         <Input 
                             autoFocus
                             placeholder="Ex: Atingir liberdade financeira" 
                             value={data.annual.objective}
                             onChange={(e) => updateAnnual({ objective: e.target.value })}
-                            className="bg-[#0E0E0E] border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-red-500/50 focus-visible:border-red-500 transition-all duration-300 shadow-inner group-hover:border-white/20"
+                            className={`bg-[#0E0E0E] border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-red-500/50 transition-all duration-300 shadow-inner group-hover:border-white/20 ${objectiveAnalysis?.status === 'strong' ? 'border-green-500/30' : ''}`}
                         />
-                        {/* Pulse Guide */}
-                        {!data.annual.objective && (
-                            <span className="absolute right-4 top-[42px] flex h-3 w-3">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                            </span>
-                        )}
+                        <Feedback analysis={objectiveAnalysis} />
                     </div>
+                    
                     <div className="space-y-3 group">
                         <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Critério de Sucesso</Label>
                         <Textarea 
                             placeholder="Como você saberá que venceu? Ex: Ter R$ 100k investidos." 
                             value={data.annual.successCriteria}
                             onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                            className="bg-[#0E0E0E] border-white/10 min-h-[120px] text-base px-4 py-4 focus-visible:ring-2 focus-visible:ring-red-500/50 focus-visible:border-red-500 transition-all duration-300 resize-none shadow-inner group-hover:border-white/20"
+                            className="bg-[#0E0E0E] border-white/10 min-h-[100px] text-base px-4 py-4 focus-visible:ring-2 focus-visible:ring-red-500/50 transition-all duration-300 resize-none shadow-inner group-hover:border-white/20"
                         />
+                        <Feedback analysis={criteriaAnalysis} />
                     </div>
                 </div>
 
@@ -307,7 +344,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                 <div className="text-center space-y-2 mb-2 flex-shrink-0">
                      <h2 className="text-2xl font-black text-white uppercase tracking-tight">Os 4 Pilares</h2>
                      <p className="text-neutral-400 text-sm">
-                        Para seu sistema funcionar, defina pelo menos <span className="text-white font-bold">1 meta</span> em um dos pilares.
+                        Para o sistema funcionar, adicione ao menos <span className="text-white font-bold">1 meta</span>.
                      </p>
                 </div>
 
