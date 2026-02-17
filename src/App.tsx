@@ -7,6 +7,7 @@ import { ThemeProvider } from "./components/providers/ThemeProvider";
 import { FloatingNavbar } from "./components/layout/FloatingNavbar";
 import { TopBar } from "./components/layout/TopBar";
 import Index from "./pages/Index";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,7 +48,7 @@ const App = () => (
                 <Route path="/financa" element={<PlaceholderPage title="Finanças" />} />
                 <Route path="/loja" element={<PlaceholderPage title="Loja" />} />
                 <Route path="/inventario" element={<PlaceholderPage title="Inventário" />} />
-                <Route path="/configuracoes" element={<Index />} />
+                <Route path="/configuracoes" element={<Settings />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
