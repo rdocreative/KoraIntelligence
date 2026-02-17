@@ -1,5 +1,6 @@
-import { Quote } from "lucide-react";
+import { Quote, Minimize2, Maximize2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 const INSPIRATIONS = [
   { text: "Tudo posso naquele que me fortalece.", author: "Filipenses 4:13" },
@@ -16,16 +17,40 @@ const INSPIRATIONS = [
 
 export const DailyVerse = () => {
   const [inspiration, setInspiration] = useState(INSPIRATIONS[0]);
+  const [isMinimized, setIsMinimized] = useState(false);
 
   useEffect(() => {
-    // Seleção baseada no dia para manter a mesma frase durante 24h
-    const today = Math.floor(Date.now() / 86400000);
-    const index = today % INSPIRATIONS.length;
-    setInspiration(INSPIRATIONS[index]);
+    // Sorteia uma frase aleatória toda vez que o componente monta (F5/Reset)
+    const randomIndex = Math.floor(Math.random() * INSPIRATIONS.length);
+    setInspiration(INSPIRATIONS[randomIndex]);
   }, []);
 
+  if (isMinimized) {
+    return (
+      <button 
+        onClick={() => setIsMinimized(false)}
+        className="group flex items-center gap-3 bg-[#121212] border border-red-900/30 p-4 rounded-2xl hover:border-red-500/50 transition-all duration-300 shadow-xl"
+      >
+        <div className="bg-red-500/10 p-2 rounded-lg group-hover:bg-red-500/20 transition-colors">
+            <Maximize2 className="h-4 w-4 text-red-500" />
+        </div>
+        <span className="text-xs font-bold tracking-widest text-neutral-400 uppercase">Ver Inspiração</span>
+      </button>
+    );
+  }
+
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-red-900/30 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-900/20 via-[#121212] to-[#0a0a0a] p-8 shadow-2xl min-h-[220px] flex flex-col justify-center">
+    <div className={cn(
+        "relative overflow-hidden rounded-2xl border border-red-900/30 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-900/20 via-[#121212] to-[#0a0a0a] p-8 shadow-2xl min-h-[220px] flex flex-col justify-center transition-all duration-500 animate-in fade-in zoom-in-95"
+    )}>
+      {/* Botão Minimizar */}
+      <button 
+        onClick={() => setIsMinimized(true)}
+        className="absolute top-4 right-4 p-2 text-neutral-500 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-all z-20"
+      >
+        <Minimize2 size={18} />
+      </button>
+
       {/* Decorative Glow */}
       <div className="absolute -top-10 -right-10 w-40 h-40 bg-red-600/20 rounded-full blur-[60px]"></div>
       <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-red-900/10 rounded-full blur-[50px]"></div>
