@@ -14,11 +14,60 @@ interface OverviewTabProps {
     personal: TaskItem[];
   };
   onNavigateToWeekly: () => void;
+  annualData: {
+    objective: string;
+    successCriteria: string;
+    progress: number;
+  };
+  onResetTutorial: () => void;
 }
 
-export const OverviewTab = ({ activeWeeks, currentMonth, areas, onNavigateToWeekly }: OverviewTabProps) => {
+export const OverviewTab = ({ 
+  activeWeeks, 
+  currentMonth, 
+  areas, 
+  onNavigateToWeekly,
+  annualData,
+  onResetTutorial
+}: OverviewTabProps) => {
   return (
-    <div className="space-y-8 outline-none animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
+    <div className="space-y-10 outline-none animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
+      
+      {/* HEADER EXCLUSIVO DA ABA VISÃO */}
+      <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pt-4">
+           <div className="space-y-4 max-w-2xl">
+              <div className="flex items-center gap-3">
+                  <div className="bg-red-500/10 backdrop-blur-md border border-red-500/20 text-red-500 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(220,38,38,0.2)]">
+                      Masterplan 2.0
+                  </div>
+                  <Button variant="ghost" size="sm" onClick={onResetTutorial} className="h-6 text-[10px] text-neutral-500 hover:text-white uppercase tracking-widest hover:bg-white/5 rounded-full">
+                      Revisar Setup
+                  </Button>
+              </div>
+              <div>
+                <h1 className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-500 uppercase italic tracking-tighter leading-[0.9]">
+                  {annualData.objective || "Objetivo Não Definido"}
+                </h1>
+                <p className="mt-2 text-neutral-400 font-medium text-lg max-w-lg">
+                    {annualData.successCriteria || "Defina seu critério de sucesso na aba Anual."}
+                </p>
+              </div>
+           </div>
+           
+           <div className="flex flex-col items-end gap-3 w-full lg:w-auto">
+              <div className="flex justify-between w-full lg:w-72 text-xs font-bold uppercase tracking-[0.15em] text-neutral-500">
+                  <span>Conclusão Anual</span>
+                  <span className="text-white text-shadow-sm">{annualData.progress}%</span>
+              </div>
+              <div className="w-full lg:w-72 h-3 bg-neutral-900 rounded-full border border-white/5 relative overflow-hidden shadow-inner">
+                 <div 
+                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-red-700 via-red-500 to-red-400 rounded-full shadow-[0_0_20px_rgba(220,38,38,0.6)] transition-all duration-1000 ease-out"
+                    style={{ width: `${annualData.progress}%` }}
+                 />
+              </div>
+           </div>
+      </header>
+
       <div className="grid lg:grid-cols-3 gap-6">
         {/* HERO CARD - WEEKLY FOCUS */}
         <Card className="lg:col-span-2 bg-gradient-to-br from-[#121212] to-black border-white/10 shadow-2xl relative overflow-hidden group hover:border-red-500/30 transition-all duration-500">
