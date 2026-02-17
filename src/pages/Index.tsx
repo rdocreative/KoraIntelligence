@@ -20,7 +20,8 @@ import {
   Sun,
   Trash2,
   AlertTriangle,
-  Star
+  Star,
+  Save
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
@@ -77,6 +78,12 @@ const Index = () => {
       toast.success('Todos os dados foram resetados.');
       window.location.reload();
     }
+  };
+
+  const handleSaveSettings = () => {
+    // Como o next-themes e o localStorage já salvam em tempo real,
+    // este botão serve como confirmação para o usuário.
+    toast.success('Configurações salvas com sucesso!');
   };
 
   const currentBadge = getCurrentBadge();
@@ -206,7 +213,7 @@ const Index = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="settings" className="outline-none">
+          <TabsContent value="settings" className="outline-none space-y-6">
             <div className="grid gap-6">
               <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
                 <CardHeader>
@@ -280,6 +287,16 @@ const Index = () => {
                   </div>
                 </CardContent>
               </Card>
+            </div>
+
+            <div className="flex justify-end pt-4">
+              <Button 
+                onClick={handleSaveSettings}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-6 rounded-xl shadow-lg shadow-indigo-500/20 transition-all hover:scale-105"
+              >
+                <Save size={20} className="mr-2" />
+                Salvar Alterações
+              </Button>
             </div>
           </TabsContent>
         </Tabs>
