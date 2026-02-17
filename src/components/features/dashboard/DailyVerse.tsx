@@ -1,4 +1,4 @@
-import { Quote, Sparkles } from "lucide-react";
+import { Quote } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const INSPIRATIONS = [
@@ -30,14 +30,9 @@ export const DailyVerse = () => {
       <div className="absolute -top-10 -right-10 w-40 h-40 bg-red-600/20 rounded-full blur-[60px]"></div>
       <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-red-900/10 rounded-full blur-[50px]"></div>
       
-      <div className="relative z-10 flex flex-col items-center text-center space-y-5">
-        <div className="flex items-center gap-2 bg-red-500/10 px-4 py-1.5 rounded-full mb-2 border border-red-500/20">
-            <Sparkles className="h-3.5 w-3.5 text-red-500" />
-            <span className="text-[10px] font-black tracking-[0.2em] text-red-500 uppercase">Inspiração Diária</span>
-        </div>
-        
+      <div className="relative z-10 flex flex-col items-center text-center space-y-6">
         <div className="relative">
-          <Quote className="absolute -top-4 -left-6 h-8 w-8 text-red-500/10 rotate-180" />
+          <Quote className="absolute -top-6 -left-8 h-10 w-10 text-red-500/10 rotate-180" />
           <p className="text-xl md:text-2xl font-light leading-relaxed text-neutral-100 font-serif italic tracking-wide max-w-2xl">
             "{inspiration.text}"
           </p>
