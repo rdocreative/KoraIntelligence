@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/providers/ThemeProvider";
 import { FloatingNavbar } from "./components/layout/FloatingNavbar";
 import Index from "./pages/Index";
+import Habitos from "./pages/Habitos";
+import Configuracoes from "./pages/Configuracoes";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,30 +23,21 @@ const PlaceholderPage = ({ title }: { title: string }) => (
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    {/* 
-      enableSystem={false} garante que o tema do Windows/Mac não mude o app sozinho.
-      defaultTheme="light" define o ponto de partida se for a primeira vez do usuário.
-    */}
-    <ThemeProvider 
-      attribute="class" 
-      defaultTheme="light" 
-      enableSystem={false}
-      storageKey="app-user-theme"
-    >
+    <ThemeProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 pb-28">
+          <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/habitos" element={<Index />} />
+              <Route path="/habitos" element={<Habitos />} />
               <Route path="/tarefas" element={<PlaceholderPage title="Tarefas" />} />
               <Route path="/metas" element={<PlaceholderPage title="Metas" />} />
               <Route path="/financa" element={<PlaceholderPage title="Finanças" />} />
               <Route path="/loja" element={<PlaceholderPage title="Loja" />} />
               <Route path="/inventario" element={<PlaceholderPage title="Inventário" />} />
-              <Route path="/configuracoes" element={<PlaceholderPage title="Configurações" />} />
+              <Route path="/configuracoes" element={<Configuracoes />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <FloatingNavbar />
