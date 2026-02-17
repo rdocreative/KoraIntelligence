@@ -173,9 +173,14 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
   };
 
   const handleAddAreaItem = (key: keyof typeof areaInputs) => {
-    if (!areaInputs[key].trim()) return;
-    addAreaItem(key, areaInputs[key]);
-    handleAreaInputChange(key, "");
+    const text = areaInputs[key];
+    if (!text || !text.trim()) return;
+    
+    // Chamada direta para o hook
+    addAreaItem(key as any, text.trim());
+    
+    // Limpa o input específico
+    setAreaInputs(prev => ({ ...prev, [key]: "" }));
   };
 
   if (showIntro) {
@@ -287,33 +292,47 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
       content: (
         <div className="space-y-6">
           <div className="grid gap-4">
-            {/* INPUTS DE ÁREAS - MANTENDO O CÓDIGO FUNCIONAL MAS COM DESIGN MELHORADO */}
             {[
-                { id: 'work', label: 'Trabalho & Dinheiro', icon: Briefcase, color: 'text-blue-500', bg: 'bg-blue-500/10', ring: 'focus:ring-blue-500/50', items: data.areas.work, val: areaInputs.work },
-                { id: 'studies', label: 'Estudos', icon: GraduationCap, color: 'text-purple-500', bg: 'bg-purple-500/10', ring: 'focus:ring-purple-500/50', items: data.areas.studies, val: areaInputs.studies },
-                { id: 'health', label: 'Saúde', icon: Heart, color: 'text-red-500', bg: 'bg-red-500/10', ring: 'focus:ring-red-500/50', items: data.areas.health, val: areaInputs.health },
-                { id: 'personal', label: 'Pessoal', icon: User, color: 'text-yellow-500', bg: 'bg-yellow-500/10', ring: 'focus:ring-yellow-500/50', items: data.areas.personal, val: areaInputs.personal },
-            ].map((area: any) => (
+                { id: 'work', label: 'Trabalho & Dinheiro', icon: Briefcase, color: 'text-blue-500', bg: 'bg-blue-500/10', ring: 'focus:ring-blue-500/50', items: data.areas.work },
+                { id: 'studies', label: 'Estudos', icon: GraduationCap, color: 'text-purple-500', bg: 'bg-purple-500/10', ring: 'focus:ring-purple-500/50', items: data.areas.studies },
+                { id: 'health', label: 'Saúde', icon: Heart, color: 'text-red-500', bg: 'bg-red-500/10', ring: 'focus:ring-red-500/50', items: data.areas.health },
+                { id: 'personal', label: 'Pessoal', icon: User, color: 'text-yellow-500', bg: 'bg-yellow-500/10', ring: 'focus:ring-yellow-500/50', items: data.areas.personal },
+            ].map((area) => (
                 <div key={area.id} className="space-y-2">
                     <Label className={`flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest ${area.color}`}>
                         <area.icon className="w-3 h-3" /> {area.label}
                     </Label>
                     <div className="flex gap-2">
                         <Input 
-                            value={area.val}
-                            onChange={(e) => handleAreaInputChange(area.id, e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem(area.id)}
+                            value={areaInputs[area.id as keyof typeof areaInputs]}
+                            onChange={(e) => handleAreaInputChange(area.id as any, e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    handleAddAreaItem(area.id as any);
+                                }
+                            }}
                             placeholder="Adicionar meta..." 
                             className={`bg-black/40 border-white/10 text-sm h-10 transition-all focus:ring-1 ${area.ring}`} 
                         />
-                        <Button size="icon" className="h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/5" onClick={() => handleAddAreaItem(area.id)}>
+                        <Button 
+                            type="button"
+                            size="icon" 
+                            className="h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0" 
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleAddAreaItem(area.id as any);
+                            }}
+                        >
                             <Plus className="w-4 h-4"/>
                         </Button>
                     </div>
-                    {area.items.length > 0 && (
+                    {area.items && area.items.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-2">
                             {area.items.map((i: any) => (
-                                <span key={i.id} className="text-[10px] bg-white/5 px-2 py-1 rounded border border-white/5 text-neutral-400">{i.text}</span>
+                                <span key={i.id} className="text-[10px] bg-white/5 px-2 py-1 rounded border border-white/5 text-neutral-400 animate-in zoom-in duration-200">
+                                    {i.text}
+                                </span>
                             ))}
                         </div>
                     )}
