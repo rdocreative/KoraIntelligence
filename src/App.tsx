@@ -9,6 +9,7 @@ import { HabitProvider } from "./hooks/useHabitTracker";
 import { FloatingNavbar } from "./components/layout/FloatingNavbar";
 import { TopBar } from "./components/layout/TopBar";
 import Index from "./pages/Index";
+import HabitsPage from "./pages/Habits";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -42,9 +43,11 @@ const App = () => (
                 <main className="flex-1 p-6 pb-32 max-w-5xl mx-auto w-full">
                   <Routes>
                     <Route path="/" element={<Index />} />
-                    <Route path="/habitos" element={<Index />} />
+                    <Route path="/habitos" element={<HabitsPage />} />
                     <Route path="/tarefas" element={<PlaceholderPage title="Tarefas" />} />
                     <Route path="/metas" element={<PlaceholderPage title="Metas" />} />
+                    <Route path="/missoes" element={<PlaceholderPage title="Missões" />} />
+                    <Route path="/comunidade" element={<PlaceholderPage title="Comunidade" />} />
                     <Route path="/financa" element={<PlaceholderPage title="Finanças" />} />
                     <Route path="/loja" element={<PlaceholderPage title="Loja" />} />
                     <Route path="/inventario" element={<PlaceholderPage title="Inventário" />} />
