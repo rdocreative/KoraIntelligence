@@ -20,7 +20,7 @@ const Index = () => {
   const nextBadge = getNextBadge();
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700 outline-none relative">
+    <div className="space-y-8 outline-none relative">
       {/* Componente flutuante de frase do dia */}
       <DailyVerse />
       

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/providers/ThemeProvider";
 import { SettingsProvider } from "./hooks/useSettings"; 
+import { HabitProvider } from "./hooks/useHabitTracker";
 import { FloatingNavbar } from "./components/layout/FloatingNavbar";
 import { TopBar } from "./components/layout/TopBar";
 import Index from "./pages/Index";
@@ -31,29 +32,31 @@ const App = () => (
       storageKey="app-theme"
     >
       <SettingsProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner theme="dark" />
-          <BrowserRouter>
-            <div className="min-h-screen bg-[#080808] text-foreground font-sans flex flex-col">
-              <TopBar />
-              <main className="flex-1 p-6 pb-32 max-w-5xl mx-auto w-full">
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/habitos" element={<Index />} />
-                  <Route path="/tarefas" element={<PlaceholderPage title="Tarefas" />} />
-                  <Route path="/metas" element={<PlaceholderPage title="Metas" />} />
-                  <Route path="/financa" element={<PlaceholderPage title="Finanças" />} />
-                  <Route path="/loja" element={<PlaceholderPage title="Loja" />} />
-                  <Route path="/inventario" element={<PlaceholderPage title="Inventário" />} />
-                  <Route path="/configuracoes" element={<Settings />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-              <FloatingNavbar />
-            </div>
-          </BrowserRouter>
-        </TooltipProvider>
+        <HabitProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner theme="dark" />
+            <BrowserRouter>
+              <div className="min-h-screen bg-[#080808] text-foreground font-sans flex flex-col">
+                <TopBar />
+                <main className="flex-1 p-6 pb-32 max-w-5xl mx-auto w-full">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/habitos" element={<Index />} />
+                    <Route path="/tarefas" element={<PlaceholderPage title="Tarefas" />} />
+                    <Route path="/metas" element={<PlaceholderPage title="Metas" />} />
+                    <Route path="/financa" element={<PlaceholderPage title="Finanças" />} />
+                    <Route path="/loja" element={<PlaceholderPage title="Loja" />} />
+                    <Route path="/inventario" element={<PlaceholderPage title="Inventário" />} />
+                    <Route path="/configuracoes" element={<Settings />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+                <FloatingNavbar />
+              </div>
+            </BrowserRouter>
+          </TooltipProvider>
+        </HabitProvider>
       </SettingsProvider>
     </ThemeProvider>
   </QueryClientProvider>

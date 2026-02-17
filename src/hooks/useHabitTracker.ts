@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 
 export type Habit = {
@@ -32,11 +32,26 @@ export const BADGES = [
   { name: 'Mestre Mindset', threshold: 500, color: 'text-purple-600', icon: '👑' },
 ];
 
-export const useHabitTracker = () => {
-  const [habits, setHabits] = useState<Habit[]>(FIXED_HABITS);
+interface HabitContextType {
+  habits: Habit[];
+  totalPoints: number;
+  history: DailyRecord[];
+  streak: number;
+  completeHabit: (id: string) => void;
+  addCustomHabit: (title: string, points: number) => void;
+  getCurrentBadge: () => typeof BADGES[0];
+  getNextBadge: () => typeof BADGES[0] | null;
+  badges: typeof BADGES;
+}
+
+const HabitContext = createContext<HabitContextType | undefined>(undefined);
+
+export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [habits, setHabits] = useState<Habit[]>([]); // Start empty to prevent hydration mismatch if possible, but handled in effect
   const [totalPoints, setTotalPoints] = useState(0);
   const [history, setHistory] = useState<DailyRecord[]>([]);
   const [streak, setStreak] = useState(0);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Helper to calculate streak
   const calculateStreak = (historyData: DailyRecord[]) => {
@@ -56,15 +71,16 @@ export const useHabitTracker = () => {
     let checkDate = new Date();
     
     // Start checking from today if we have points, otherwise from yesterday
-    if (!dateMap.has(today) || dateMap.get(today) === 0) {
+    if (!dateMap.has(today) || (dateMap.get(today) || 0) === 0) {
         // If no points today, check if we have points yesterday to maintain streak
-        if (!dateMap.has(yesterday) || dateMap.get(yesterday) === 0) {
+        if (!dateMap.has(yesterday) || (dateMap.get(yesterday) || 0) === 0) {
             return 0;
         }
         checkDate = yesterdayDate;
     }
 
-    while (true) {
+    // Safety loop limit
+    for(let i = 0; i < 365; i++) {
         const dateStr = checkDate.toISOString().split('T')[0];
         if (dateMap.has(dateStr) && (dateMap.get(dateStr) || 0) > 0) {
             currentStreak++;
@@ -118,7 +134,7 @@ export const useHabitTracker = () => {
     }));
     
     setHabits(initialHabits);
-
+    setIsInitialized(true);
   }, []);
 
   const completeHabit = (id: string) => {
@@ -138,6 +154,7 @@ export const useHabitTracker = () => {
     setHistory(prevHistory => {
         const newHistory = [...prevHistory];
         const todayIndex = newHistory.findIndex(d => d.date === today);
+        
         let newPoints = totalPoints;
 
         if (todayIndex >= 0) {
@@ -230,15 +247,30 @@ export const useHabitTracker = () => {
     return BADGES.find(b => b.threshold > totalPoints) || null;
   };
 
-  return {
-    habits,
-    totalPoints,
-    history,
-    streak,
-    completeHabit,
-    addCustomHabit,
-    getCurrentBadge,
-    getNextBadge,
-    badges: BADGES
-  };
+  // Only render children when initialized to avoid flashes of empty content
+  if (!isInitialized) return null;
+
+  return (
+    <HabitContext.Provider value={{
+      habits,
+      totalPoints,
+      history,
+      streak,
+      completeHabit,
+      addCustomHabit,
+      getCurrentBadge,
+      getNextBadge,
+      badges: BADGES
+    }}>
+      {children}
+    </HabitContext.Provider>
+  );
+};
+
+export const useHabitTracker = () => {
+  const context = useContext(HabitContext);
+  if (!context) {
+    throw new Error("useHabitTracker deve ser usado dentro de um HabitProvider");
+  }
+  return context;
 };
