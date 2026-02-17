@@ -21,15 +21,11 @@ const Index = () => {
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700 outline-none relative">
-      {/* 
-        O DailyVerse agora fica 'solto' aqui. 
-        Como ele é fixed, ele flutua sobre a página e não ocupa espaço no layout. 
-      */}
       <DailyVerse />
       
-      {/* Top Row: Apenas o Gamification agora, ocupando o lado direito ou a linha toda se preferir */}
-      <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-start-3 lg:col-span-1">
+      {/* Top Row: Alinhado à direita sem criar colunas vazias à esquerda */}
+      <div className="flex justify-end">
+          <div className="w-full lg:w-1/3">
             <Gamification 
               currentBadge={currentBadge} 
               nextBadge={nextBadge} 
