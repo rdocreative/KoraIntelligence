@@ -59,14 +59,23 @@ const TaskList = ({
         <Input 
           value={newItem}
           onChange={(e) => setNewItem(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleAdd();
+            }
+          }}
           placeholder={placeholder}
           className="h-11 pl-4 pr-10 text-sm bg-black/40 border-white/10 focus:border-red-500/50 transition-all duration-300 focus:ring-1 focus:ring-red-500/20 rounded-xl placeholder:text-neutral-600"
         />
         <Button 
-            size="sm" 
-            onClick={handleAdd} 
-            className="absolute right-1 top-1 h-9 w-9 p-0 bg-neutral-800 hover:bg-red-600 text-neutral-400 hover:text-white transition-all duration-300 rounded-lg"
+            type="button"
+            size="icon" 
+            onClick={(e) => {
+              e.preventDefault();
+              handleAdd();
+            }}
+            className="absolute right-1 top-1 h-9 w-9 p-0 bg-neutral-800 hover:bg-red-600 text-neutral-400 hover:text-white transition-all duration-300 rounded-lg z-10"
         >
           <Plus className="w-4 h-4" />
         </Button>
