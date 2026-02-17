@@ -18,28 +18,29 @@ export const TaskList = ({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
+    <div className="space-y-3">
+      <div className="space-y-1">
         {items.map(item => (
-          <div key={item.id} className="flex items-start gap-4 group animate-in slide-in-from-left-2 duration-300 hover:bg-white/5 p-3 -mx-3 rounded-xl transition-all border border-transparent hover:border-white/5">
+          <div key={item.id} className="flex items-start gap-3 group animate-in slide-in-from-left-2 duration-300 hover:bg-white/5 p-2 -mx-2 rounded-lg transition-all border border-transparent">
             <div 
               onClick={() => onToggle(item.id)}
-              className={`w-5 h-5 mt-0.5 rounded-md border flex items-center justify-center cursor-pointer transition-all duration-300 ease-out active:scale-75 shadow-sm ${item.completed ? 'bg-red-600 border-red-600 shadow-[0_0_10px_rgba(220,38,38,0.4)]' : 'border-neutral-700 hover:border-red-500 hover:scale-110 bg-neutral-900'}`}
+              className={`w-4 h-4 mt-1 rounded border flex items-center justify-center cursor-pointer transition-all duration-300 ease-out active:scale-75 shadow-sm flex-shrink-0 ${item.completed ? 'bg-red-600 border-red-600 shadow-[0_0_8px_rgba(220,38,38,0.4)]' : 'border-neutral-700 hover:border-red-500 hover:bg-neutral-900'}`}
             >
-              {item.completed && <CheckSquare className="w-3.5 h-3.5 text-white animate-in zoom-in duration-300" />}
+              {item.completed && <CheckSquare className="w-3 h-3 text-white animate-in zoom-in duration-300" />}
             </div>
-            <span className={`flex-1 text-sm font-medium transition-all duration-300 ${item.completed ? 'text-neutral-600 line-through' : 'text-neutral-200'}`}>
+            <span className={`flex-1 text-sm font-medium transition-all duration-300 leading-tight ${item.completed ? 'text-neutral-600 line-through' : 'text-neutral-300'}`}>
               {item.text}
             </span>
             {onDelete && (
-              <button onClick={() => onDelete(item.id)} className="opacity-0 group-hover:opacity-100 text-neutral-500 hover:text-red-500 transition-all duration-300 hover:scale-110 p-1">
-                <Trash2 className="w-4 h-4" />
+              <button onClick={() => onDelete(item.id)} className="opacity-0 group-hover:opacity-100 text-neutral-600 hover:text-red-500 transition-all duration-300 p-0.5">
+                <Trash2 className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
         ))}
       </div>
-      <div className="relative group">
+      
+      <div className="relative group flex items-end gap-2 pt-2">
         <Input 
           value={newItem}
           onChange={(e) => setNewItem(e.target.value)}
@@ -50,16 +51,17 @@ export const TaskList = ({
             }
           }}
           placeholder={placeholder}
-          className="h-11 pl-4 pr-10 text-sm bg-black/40 border-white/10 focus:border-red-500/50 transition-all duration-300 focus:ring-1 focus:ring-red-500/20 rounded-xl placeholder:text-neutral-600"
+          className="h-8 py-0 pl-0 pr-8 text-sm bg-transparent border-0 border-b border-white/10 rounded-none focus-visible:ring-0 focus-visible:border-red-500 transition-all placeholder:text-neutral-700 text-neutral-300"
         />
         <Button 
             type="button"
+            variant="ghost"
             size="icon" 
             onClick={(e) => {
               e.preventDefault();
               handleAdd();
             }}
-            className="absolute right-1 top-1 h-9 w-9 p-0 bg-neutral-800 hover:bg-red-600 text-neutral-400 hover:text-white transition-all duration-300 rounded-lg z-10"
+            className="h-8 w-8 text-neutral-600 hover:text-white hover:bg-transparent"
         >
           <Plus className="w-4 h-4" />
         </Button>
