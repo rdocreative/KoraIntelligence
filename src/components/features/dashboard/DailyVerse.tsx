@@ -73,7 +73,7 @@ export const DailyVerse = () => {
   if (!isVisible || !settings.showDailyVerse) return null;
 
   return (
-    <div className="fixed top-[10%] left-1/2 -translate-x-1/2 z-[999] w-full max-w-lg px-4 pointer-events-none">
+    <div className="fixed top-24 md:top-32 left-1/2 -translate-x-1/2 z-[999] w-full max-w-lg px-4 pointer-events-none">
       <div className={cn(
         "relative overflow-hidden rounded-2xl border border-red-900/40 bg-[#0a0a0a]/95 backdrop-blur-xl shadow-[0_20px_50px_-12px_rgba(220,38,38,0.2)] p-5 animate-in slide-in-from-top-8 fade-in duration-700 ease-out pointer-events-auto",
         !settings.glowEffects && "shadow-none border-white/10"

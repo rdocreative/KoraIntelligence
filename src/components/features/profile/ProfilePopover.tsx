@@ -13,7 +13,7 @@ export const ProfilePopover = () => {
     .substring(0, 2);
 
   return (
-    <div className="w-72 p-5 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200">
+    <div className="w-72 max-w-[90vw] p-5 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200">
       <div className="flex flex-col items-center text-center space-y-4">
         <div className="relative">
           <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-red-600 to-red-900 p-[2px]">
