@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type UserSettings = {
   userName: string;
@@ -14,7 +14,15 @@ const DEFAULT_SETTINGS: UserSettings = {
   notificationsEnabled: true,
 };
 
-export const useSettings = () => {
+interface SettingsContextType {
+  settings: UserSettings;
+  updateSettings: (newSettings: Partial<UserSettings>) => void;
+  resetData: () => void;
+}
+
+const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
+
+export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS);
 
   useEffect(() => {
@@ -29,18 +37,20 @@ export const useSettings = () => {
   }, []);
 
   const updateSettings = (newSettings: Partial<UserSettings>) => {
-    const updated = { ...settings, ...newSettings };
-    setSettings(updated);
-    localStorage.setItem('app_settings', JSON.stringify(updated));
-    
-    // Aplicar classes globais para efeitos de brilho
-    if (newSettings.glowEffects !== undefined) {
-      if (newSettings.glowEffects) {
-        document.documentElement.classList.remove('no-glow');
-      } else {
-        document.documentElement.classList.add('no-glow');
+    setSettings((prev) => {
+      const updated = { ...prev, ...newSettings };
+      localStorage.setItem('app_settings', JSON.stringify(updated));
+      
+      if (newSettings.glowEffects !== undefined) {
+        if (newSettings.glowEffects) {
+          document.documentElement.classList.remove('no-glow');
+        } else {
+          document.documentElement.classList.add('no-glow');
+        }
       }
-    }
+      
+      return updated;
+    });
   };
 
   const resetData = () => {
@@ -48,5 +58,17 @@ export const useSettings = () => {
     window.location.reload();
   };
 
-  return { settings, updateSettings, resetData };
+  return (
+    <SettingsContext.Provider value={{ settings, updateSettings, resetData }}>
+      {children}
+    </SettingsContext.Provider>
+  );
+};
+
+export const useSettings = () => {
+  const context = useContext(SettingsContext);
+  if (!context) {
+    throw new Error("useSettings deve ser usado dentro de um SettingsProvider");
+  }
+  return context;
 };
