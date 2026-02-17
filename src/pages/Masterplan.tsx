@@ -296,46 +296,48 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
   const renderContent = () => {
     if (step === 1) {
         return (
-            <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
-                <div className="space-y-4 text-center mb-8">
-                     <div className="inline-flex items-center justify-center p-3 bg-red-500/10 rounded-full border border-red-500/20 mb-2 shadow-[0_0_15px_rgba(220,38,38,0.2)]">
-                        <Target className="w-6 h-6 text-red-500" />
-                     </div>
-                     <h2 className="text-2xl font-black text-white uppercase tracking-tight">O Alvo Único</h2>
-                     <p className="text-neutral-400 text-sm max-w-xs mx-auto">
-                        O sucesso vem da clareza. Escolha um único objetivo central para o seu ano.
-                     </p>
-                </div>
+            <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500">
+                <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-4 custom-scrollbar">
+                    <div className="space-y-4 text-center mb-8">
+                         <div className="inline-flex items-center justify-center p-3 bg-red-500/10 rounded-full border border-red-500/20 mb-2 shadow-[0_0_15px_rgba(220,38,38,0.2)]">
+                            <Target className="w-6 h-6 text-red-500" />
+                         </div>
+                         <h2 className="text-2xl font-black text-white uppercase tracking-tight">O Alvo Único</h2>
+                         <p className="text-neutral-400 text-sm max-w-xs mx-auto">
+                            O sucesso vem da clareza. Escolha um único objetivo central para o seu ano.
+                         </p>
+                    </div>
 
-                <div className="space-y-8">
-                    <div className="space-y-3 group relative">
-                        <div className="flex justify-between items-baseline">
-                           <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Objetivo Anual</Label>
-                           {objectiveAnalysis?.status === 'strong' && <span className="text-[10px] text-green-500 font-bold uppercase tracking-wider animate-in fade-in">Validado</span>}
+                    <div className="space-y-8">
+                        <div className="space-y-3 group relative">
+                            <div className="flex justify-between items-baseline">
+                               <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Objetivo Anual</Label>
+                               {objectiveAnalysis?.status === 'strong' && <span className="text-[10px] text-green-500 font-bold uppercase tracking-wider animate-in fade-in">Validado</span>}
+                            </div>
+                            <Input 
+                                autoFocus
+                                placeholder="Ex: Atingir liberdade financeira" 
+                                value={data.annual.objective}
+                                onChange={(e) => updateAnnual({ objective: e.target.value })}
+                                className={`bg-[#0E0E0E] border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-red-500/50 transition-all duration-300 shadow-inner group-hover:border-white/20 ${objectiveAnalysis?.status === 'strong' ? 'border-green-500/30' : ''}`}
+                            />
+                            <Feedback analysis={objectiveAnalysis} />
                         </div>
-                        <Input 
-                            autoFocus
-                            placeholder="Ex: Atingir liberdade financeira" 
-                            value={data.annual.objective}
-                            onChange={(e) => updateAnnual({ objective: e.target.value })}
-                            className={`bg-[#0E0E0E] border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-red-500/50 transition-all duration-300 shadow-inner group-hover:border-white/20 ${objectiveAnalysis?.status === 'strong' ? 'border-green-500/30' : ''}`}
-                        />
-                        <Feedback analysis={objectiveAnalysis} />
-                    </div>
-                    
-                    <div className="space-y-3 group">
-                        <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Critério de Sucesso</Label>
-                        <Textarea 
-                            placeholder="Como você saberá que venceu? Ex: Ter R$ 100k investidos." 
-                            value={data.annual.successCriteria}
-                            onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                            className="bg-[#0E0E0E] border-white/10 min-h-[100px] text-base px-4 py-4 focus-visible:ring-2 focus-visible:ring-red-500/50 transition-all duration-300 resize-none shadow-inner group-hover:border-white/20"
-                        />
-                        <Feedback analysis={criteriaAnalysis} />
+                        
+                        <div className="space-y-3 group">
+                            <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Critério de Sucesso</Label>
+                            <Textarea 
+                                placeholder="Como você saberá que venceu? Ex: Ter R$ 100k investidos." 
+                                value={data.annual.successCriteria}
+                                onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
+                                className="bg-[#0E0E0E] border-white/10 min-h-[100px] text-base px-4 py-4 focus-visible:ring-2 focus-visible:ring-red-500/50 transition-all duration-300 resize-none shadow-inner group-hover:border-white/20"
+                            />
+                            <Feedback analysis={criteriaAnalysis} />
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex justify-end pt-4">
+                <div className="flex justify-end pt-6 border-t border-white/5 flex-shrink-0 mt-2 pb-2">
                     <Button 
                         disabled={!isAnnualValid}
                         onClick={() => setStep(2)}
@@ -358,7 +360,6 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                      </p>
                 </div>
 
-                {/* SCROLL AREA CORRECTION: Added padding bottom and negative margins to prevent clipping */}
                 <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-4 custom-scrollbar space-y-4">
                     {[
                       { 
@@ -450,7 +451,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                     })}
                 </div>
 
-                <div className="flex justify-between items-center pt-6 border-t border-white/5 flex-shrink-0 mt-2">
+                <div className="flex justify-between items-center pt-6 border-t border-white/5 flex-shrink-0 mt-2 pb-2">
                     <Button variant="ghost" onClick={() => setStep(1)} className="text-neutral-500 hover:text-white transition-colors">Voltar</Button>
                     <Button 
                         disabled={!hasAtLeastOneItem}
@@ -499,7 +500,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/5 blur-[100px] rounded-full" />
       </div>
 
-      <Card className="w-full max-w-lg bg-[#0A0A0A]/90 backdrop-blur-2xl border-white/10 shadow-2xl relative overflow-hidden h-[85vh] md:h-[700px] flex flex-col ring-1 ring-white/5">
+      <Card className="w-full max-w-lg bg-[#0A0A0A]/90 backdrop-blur-2xl border-white/10 shadow-2xl relative overflow-hidden h-[85vh] md:h-[720px] flex flex-col ring-1 ring-white/5">
         
         {/* Step Indicator */}
         <div className="px-8 pt-8 pb-2 flex justify-between items-end flex-shrink-0">
@@ -521,7 +522,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
             {step === 3 && <span className="text-xs font-medium text-neutral-400">Ativação</span>}
         </div>
 
-        <CardContent className="flex-1 p-8 h-full relative z-10 flex flex-col overflow-hidden">
+        <CardContent className="flex-1 p-8 pb-10 h-full relative z-10 flex flex-col overflow-hidden">
             {renderContent()}
         </CardContent>
       </Card>
