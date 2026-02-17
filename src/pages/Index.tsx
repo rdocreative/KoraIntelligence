@@ -19,7 +19,8 @@ import {
   Moon, 
   Sun,
   Trash2,
-  AlertTriangle
+  AlertTriangle,
+  Star
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
