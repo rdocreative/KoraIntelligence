@@ -1,6 +1,6 @@
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Target, CheckCircle2, ListTodo, Zap } from "lucide-react";
+import { Target, CheckCircle2, ListTodo, Zap, ChevronRight } from "lucide-react";
 
 interface MonthlyProgressProps {
   totalPoints: number;
@@ -8,43 +8,54 @@ interface MonthlyProgressProps {
 }
 
 export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressProps) => {
-  // Mock targets for visualization since backend isn't fully ready for goals/tasks
   const MONTHLY_XP_TARGET = 1000;
   const progressPercentage = Math.min(100, (totalPoints / MONTHLY_XP_TARGET) * 100);
   
-  const currentMonth = new Date().toLocaleDateString('pt-BR', { month: 'long' });
-
   const stats = [
-    { label: "Hábitos", value: habitsCount, icon: CheckCircle2, color: "text-green-500", bg: "bg-green-50 dark:bg-green-900/20" },
-    { label: "Tarefas", value: "0", icon: ListTodo, color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/20" },
-    { label: "Metas", value: "0", icon: Target, color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-900/20" },
-    { label: "XP Total", value: totalPoints, icon: Zap, color: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-900/20" },
+    { label: "Hábitos", value: habitsCount, icon: CheckCircle2, color: "text-red-500" },
+    { label: "Tarefas", value: "0", icon: ListTodo, color: "text-neutral-500" },
+    { label: "Metas", value: "0", icon: Target, color: "text-neutral-500" },
+    { label: "XP Total", value: totalPoints, icon: Zap, color: "text-yellow-500" },
   ];
 
   return (
-    <Card className="border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-      <CardHeader className="pb-2">
+    <Card className="glass-card border-none bg-[#121212]">
+      <CardHeader className="pb-4 border-b border-white/5">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-bold capitalize text-slate-700 dark:text-slate-200">
-            Progresso de {currentMonth}
+          <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+            Status Mensal
           </CardTitle>
-          <span className="text-sm font-medium text-slate-500">{Math.round(progressPercentage)}%</span>
+          <span className="text-xs font-mono text-red-500 bg-red-950/30 px-2 py-1 rounded border border-red-900/50">
+            {Math.round(progressPercentage)}% COMPLETADO
+          </span>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 pt-6">
         <div className="space-y-2">
-          <Progress value={progressPercentage} className="h-3 bg-slate-100 dark:bg-slate-800" indicatorClassName="bg-gradient-to-r from-blue-500 to-indigo-600" />
-          <p className="text-xs text-center text-slate-400">
-            {totalPoints} / {MONTHLY_XP_TARGET} XP para a meta mensal
-          </p>
+          <div className="flex justify-between text-xs text-neutral-400 mb-1">
+             <span>Progresso de Nível</span>
+             <span>{totalPoints} / {MONTHLY_XP_TARGET} XP</span>
+          </div>
+          <div className="h-2 w-full bg-[#1a1a1a] rounded-full overflow-hidden border border-white/5">
+            <div 
+                className="h-full bg-gradient-to-r from-red-600 to-orange-500 shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-1000 ease-out"
+                style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((stat, i) => (
-            <div key={i} className={`flex flex-col items-center justify-center p-3 rounded-xl ${stat.bg} transition-transform hover:scale-105`}>
-              <stat.icon className={`h-5 w-5 ${stat.color} mb-2`} />
-              <span className="text-xl font-bold text-slate-800 dark:text-slate-100">{stat.value}</span>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{stat.label}</span>
+            <div key={i} className="group relative flex flex-col justify-between p-4 rounded-xl bg-[#181818] border border-white/5 hover:border-red-500/30 hover:bg-[#1c1c1c] transition-all cursor-default">
+              <div className="flex justify-between items-start mb-2">
+                 <stat.icon className={`h-5 w-5 ${stat.color} opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-transform`} />
+                 <ChevronRight className="h-3 w-3 text-neutral-700 group-hover:text-neutral-500" />
+              </div>
+              <div>
+                <span className="block text-2xl font-black text-white group-hover:text-red-100 transition-colors">{stat.value}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500">{stat.label}</span>
+              </div>
             </div>
           ))}
         </div>

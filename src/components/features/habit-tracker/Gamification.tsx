@@ -1,7 +1,6 @@
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trophy, Star, Medal, Zap } from 'lucide-react';
+import { Trophy, Zap, Crown } from 'lucide-react';
 
 interface GamificationProps {
   currentBadge: { name: string; icon: string; color: string; threshold: number };
@@ -16,57 +15,46 @@ export const Gamification = ({ currentBadge, nextBadge, totalPoints, streak }: G
     : 100;
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
-      <Card className="bg-gradient-to-br from-indigo-50 to-white border-indigo-100 shadow-sm">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-indigo-900">Nível Atual</CardTitle>
-          <span className="text-2xl">{currentBadge.icon}</span>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-indigo-700">{currentBadge.name}</div>
-          <p className="text-xs text-indigo-500 mt-1">
-            {totalPoints} pontos totais
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-gradient-to-br from-amber-50 to-white border-amber-100 shadow-sm">
-         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-amber-900">Sequência (Streak)</CardTitle>
-          <Zap className="h-5 w-5 text-amber-500 fill-amber-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-amber-700">{streak} dias</div>
-          <p className="text-xs text-amber-600 mt-1">
-            Mantenha o ritmo!
-          </p>
-        </CardContent>
-      </Card>
-
-      <Card className="md:col-span-2 bg-white border-slate-100 shadow-sm">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-slate-700">Próximo Nível: {nextBadge ? nextBadge.name : 'Mestre Supremo'}</CardTitle>
-          {nextBadge && <span className="text-xl opacity-50">{nextBadge.icon}</span>}
-        </CardHeader>
-        <CardContent>
-          {nextBadge ? (
-            <div className="space-y-2">
-               <div className="flex justify-between text-xs text-slate-500">
-                  <span>{totalPoints} pts</span>
-                  <span>{nextBadge.threshold} pts</span>
-               </div>
-               <Progress value={progress} className="h-3 bg-slate-100" indicatorClassName="bg-gradient-to-r from-indigo-500 to-purple-500" />
-               <p className="text-xs text-slate-400 text-center mt-2">
-                 Faltam {nextBadge.threshold - totalPoints} pontos para subir de nível!
-               </p>
+    <Card className="glass-card bg-gradient-to-br from-[#121212] to-[#0a0a0a] border border-white/5 h-full">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 border-b border-white/5">
+        <CardTitle className="text-sm font-bold text-neutral-400 uppercase tracking-widest">Seu Nível</CardTitle>
+        <Crown className="h-5 w-5 text-yellow-500" />
+      </CardHeader>
+      <CardContent className="pt-6 space-y-6">
+        <div className="flex items-center gap-4">
+            <div className="h-16 w-16 rounded-2xl bg-[#1a1a1a] flex items-center justify-center text-3xl shadow-inner border border-white/5">
+                {currentBadge.icon}
             </div>
-          ) : (
-            <div className="flex items-center justify-center h-full text-purple-600 font-medium">
-              Você atingiu o nível máximo! 🚀
+            <div>
+                <div className="text-2xl font-black text-white glow-text">{currentBadge.name}</div>
+                <div className="text-xs text-red-500 font-bold uppercase tracking-wider mt-1 flex items-center gap-1">
+                    <Zap size={10} fill="currentColor" /> {streak} Dias de Streak
+                </div>
             </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+
+        {nextBadge ? (
+          <div className="space-y-2">
+             <div className="flex justify-between text-[10px] font-bold text-neutral-500 uppercase">
+                <span>XP Atual: {totalPoints}</span>
+                <span>Próximo: {nextBadge.threshold}</span>
+             </div>
+             <div className="h-1.5 w-full bg-[#1a1a1a] rounded-full overflow-hidden">
+                <div 
+                    className="h-full bg-red-600 shadow-[0_0_8px_rgba(239,68,68,0.8)]" 
+                    style={{ width: `${progress}%` }} 
+                />
+             </div>
+             <p className="text-xs text-neutral-600 text-center mt-2">
+               Faltam <span className="text-white">{nextBadge.threshold - totalPoints} XP</span> para {nextBadge.name}
+             </p>
+          </div>
+        ) : (
+          <div className="text-center text-yellow-500 font-bold text-sm">
+            Nível Máximo Atingido!
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };

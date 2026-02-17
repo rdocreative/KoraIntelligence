@@ -1,13 +1,13 @@
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DailyRecord } from "@/hooks/useHabitTracker";
+import { Activity } from "lucide-react";
 
 interface MonthlyChartProps {
   history: DailyRecord[];
 }
 
 export const MonthlyChart = ({ history }: MonthlyChartProps) => {
-  // Fill data for the last 30 days
   const data = [];
   const today = new Date();
   
@@ -24,43 +24,51 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
   }
 
   return (
-    <Card className="border-slate-200 dark:border-slate-800 shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-lg font-bold text-slate-700 dark:text-slate-200">Evolução Mensal (XP)</CardTitle>
+    <Card className="glass-card bg-[#121212] border-none">
+      <CardHeader className="border-b border-white/5 pb-4">
+        <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
+            <Activity className="w-5 h-5 text-red-500" />
+            Evolução de XP
+        </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <div className="h-[250px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={data}>
               <defs>
                 <linearGradient id="colorXp" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.2}/>
+                  <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" opacity={0.5} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#262626" />
               <XAxis 
                 dataKey="date" 
                 tickLine={false} 
                 axisLine={false} 
-                tick={{ fill: '#94a3b8', fontSize: 10 }} 
+                tick={{ fill: '#525252', fontSize: 10, fontWeight: 700 }} 
                 minTickGap={30}
+                dy={10}
               />
               <Tooltip 
                 contentStyle={{ 
                   borderRadius: '12px', 
-                  border: 'none', 
-                  boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)'
+                  border: '1px solid #333', 
+                  backgroundColor: '#0a0a0a',
+                  color: '#fff',
+                  boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.5)'
                 }}
+                itemStyle={{ color: '#ef4444' }}
+                cursor={{ stroke: '#333', strokeWidth: 1 }}
               />
               <Area 
                 type="monotone" 
                 dataKey="xp" 
-                stroke="#6366f1" 
-                strokeWidth={3}
+                stroke="#ef4444" 
+                strokeWidth={2}
                 fillOpacity={1} 
                 fill="url(#colorXp)" 
+                activeDot={{ r: 6, fill: '#ef4444', stroke: '#fff', strokeWidth: 2 }}
               />
             </AreaChart>
           </ResponsiveContainer>
