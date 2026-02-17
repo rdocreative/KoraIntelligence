@@ -54,8 +54,8 @@ export const DailyVerse = () => {
   if (!isVisible) return null;
 
   return (
-    /* Posicionamento: top-[80px] para ficar logo abaixo de uma TopBar padrão */
-    <div className="fixed top-[80px] left-1/2 -translate-x-1/2 z-[40] w-full max-w-lg px-4 animate-in slide-in-from-top-8 fade-in duration-700 ease-out">
+    /* Posicionamento: top-[10%] para ficar a 10% do topo da viewport */
+    <div className="fixed top-[10%] left-1/2 -translate-x-1/2 z-[40] w-full max-w-lg px-4 animate-in slide-in-from-top-8 fade-in duration-700 ease-out">
       <div className={cn(
         "relative overflow-hidden rounded-2xl border border-red-900/40 bg-[#0a0a0a]/95 backdrop-blur-xl shadow-[0_20px_50px_-12px_rgba(220,38,38,0.2)] p-5"
       )}>
