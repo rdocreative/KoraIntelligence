@@ -1,4 +1,4 @@
-import { Quote, Minimize2, Maximize2 } from "lucide-react";
+import { Quote, ChevronUp, ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -20,35 +20,35 @@ export const DailyVerse = () => {
   const [isMinimized, setIsMinimized] = useState(false);
 
   useEffect(() => {
-    // Sorteia uma frase aleatória toda vez que o componente monta (F5/Reset)
     const randomIndex = Math.floor(Math.random() * INSPIRATIONS.length);
     setInspiration(INSPIRATIONS[randomIndex]);
   }, []);
 
   if (isMinimized) {
     return (
-      <button 
-        onClick={() => setIsMinimized(false)}
-        className="group flex items-center gap-3 bg-[#121212] border border-red-900/30 p-4 rounded-2xl hover:border-red-500/50 transition-all duration-300 shadow-xl"
-      >
-        <div className="bg-red-500/10 p-2 rounded-lg group-hover:bg-red-500/20 transition-colors">
-            <Maximize2 className="h-4 w-4 text-red-500" />
-        </div>
-        <span className="text-xs font-bold tracking-widest text-neutral-400 uppercase">Ver Inspiração</span>
-      </button>
+      <div className="flex justify-center w-full mb-4 animate-in slide-in-from-top duration-300">
+        <button 
+          onClick={() => setIsMinimized(false)}
+          className="group flex items-center gap-2 bg-[#121212]/80 backdrop-blur-md border border-red-900/30 px-6 py-2 rounded-full hover:border-red-500/50 transition-all duration-300 shadow-lg"
+        >
+          <ChevronDown className="h-4 w-4 text-red-500 group-hover:translate-y-0.5 transition-transform" />
+          <span className="text-[10px] font-black tracking-[0.2em] text-neutral-400 uppercase">Ver Inspiração</span>
+        </button>
+      </div>
     );
   }
 
   return (
     <div className={cn(
-        "relative overflow-hidden rounded-2xl border border-red-900/30 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-900/20 via-[#121212] to-[#0a0a0a] p-8 shadow-2xl min-h-[220px] flex flex-col justify-center transition-all duration-500 animate-in fade-in zoom-in-95"
+        "relative overflow-hidden rounded-2xl border border-red-900/30 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-900/20 via-[#121212] to-[#0a0a0a] p-8 shadow-2xl min-h-[200px] flex flex-col justify-center transition-all duration-500 animate-in fade-in slide-in-from-top-4"
     )}>
-      {/* Botão Minimizar */}
+      {/* Botão Minimizar (Seta para cima) */}
       <button 
         onClick={() => setIsMinimized(true)}
-        className="absolute top-4 right-4 p-2 text-neutral-500 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-all z-20"
+        className="absolute top-4 right-4 p-2 text-neutral-500 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-all z-20 group"
+        title="Minimizar"
       >
-        <Minimize2 size={18} />
+        <ChevronUp size={20} className="group-hover:-translate-y-0.5 transition-transform" />
       </button>
 
       {/* Decorative Glow */}
