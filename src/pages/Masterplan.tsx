@@ -293,34 +293,68 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
         <div className="space-y-6">
           <div className="grid gap-4">
             {[
-                { id: 'work', label: 'Trabalho & Dinheiro', icon: Briefcase, color: 'text-blue-500', bg: 'bg-blue-500/10', ring: 'focus:ring-blue-500/50', items: data.areas.work },
-                { id: 'studies', label: 'Estudos', icon: GraduationCap, color: 'text-purple-500', bg: 'bg-purple-500/10', ring: 'focus:ring-purple-500/50', items: data.areas.studies },
-                { id: 'health', label: 'Saúde', icon: Heart, color: 'text-red-500', bg: 'bg-red-500/10', ring: 'focus:ring-red-500/50', items: data.areas.health },
-                { id: 'personal', label: 'Pessoal', icon: User, color: 'text-yellow-500', bg: 'bg-yellow-500/10', ring: 'focus:ring-yellow-500/50', items: data.areas.personal },
+                {
+                  id: 'work',
+                  label: 'Trabalho & Dinheiro',
+                  icon: Briefcase,
+                  color: 'text-blue-500',
+                  ring: 'focus:ring-blue-500/50',
+                  items: data.areas.work,
+                  placeholder: "Ex: Faturar R$ 10k/mês"
+                },
+                {
+                  id: 'studies',
+                  label: 'Estudos',
+                  icon: GraduationCap,
+                  color: 'text-purple-500',
+                  ring: 'focus:ring-purple-500/50',
+                  items: data.areas.studies,
+                  placeholder: "Ex: Ler 1 livro por mês"
+                },
+                {
+                  id: 'health',
+                  label: 'Saúde',
+                  icon: Heart,
+                  color: 'text-red-500',
+                  ring: 'focus:ring-red-500/50',
+                  items: data.areas.health,
+                  placeholder: "Ex: Treinar 4x por semana"
+                },
+                {
+                  id: 'personal',
+                  label: 'Pessoal',
+                  icon: User,
+                  color: 'text-yellow-500',
+                  ring: 'focus:ring-yellow-500/50',
+                  items: data.areas.personal,
+                  placeholder: "Ex: Viajar com a família"
+                },
             ].map((area) => (
                 <div key={area.id} className="space-y-2">
                     <Label className={`flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest ${area.color}`}>
                         <area.icon className="w-3 h-3" /> {area.label}
                     </Label>
                     <div className="flex gap-2">
-                        <Input 
+                        <Input
                             value={areaInputs[area.id as keyof typeof areaInputs]}
                             onChange={(e) => handleAreaInputChange(area.id as any, e.target.value)}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     e.preventDefault();
+                                    e.stopPropagation();
                                     handleAddAreaItem(area.id as any);
                                 }
                             }}
-                            placeholder="Adicionar meta..." 
-                            className={`bg-black/40 border-white/10 text-sm h-10 transition-all focus:ring-1 ${area.ring}`} 
+                            placeholder={area.placeholder}
+                            className={`bg-black/40 border-white/10 text-sm h-10 transition-all focus:ring-1 ${area.ring}`}
                         />
-                        <Button 
+                        <Button
                             type="button"
-                            size="icon" 
-                            className="h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0" 
+                            size="icon"
+                            className="h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0 transition-transform active:scale-90"
                             onClick={(e) => {
                                 e.preventDefault();
+                                e.stopPropagation();
                                 handleAddAreaItem(area.id as any);
                             }}
                         >
