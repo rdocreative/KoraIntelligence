@@ -17,10 +17,10 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const PlaceholderPage = ({ title }: { title: string }) => (
-  <div className="min-h-[80vh] flex items-center justify-center p-4 bg-[#080808]">
-    <div className="text-center space-y-4 max-w-md mx-auto w-full px-4">
-      <h1 className="text-3xl sm:text-4xl font-black text-white glow-text break-words">{title}</h1>
-      <p className="text-neutral-500 text-sm sm:text-base">Módulo em desenvolvimento...</p>
+  <div className="min-h-screen flex items-center justify-center p-4 bg-[#080808]">
+    <div className="text-center space-y-4">
+      <h1 className="text-4xl font-black text-white glow-text">{title}</h1>
+      <p className="text-neutral-500">Módulo em desenvolvimento...</p>
     </div>
   </div>
 );
@@ -40,17 +40,9 @@ const App = () => (
               <Toaster />
               <Sonner theme="dark" />
               <BrowserRouter>
-                <div className="min-h-[100dvh] bg-[#080808] text-foreground font-sans flex flex-col overflow-hidden relative">
+                <div className="min-h-screen bg-[#080808] text-foreground font-sans flex flex-col">
                   <TopBar />
-                  
-                  {/* 
-                      Main Content Wrapper 
-                      - pt-0 because TopBar is sticky (or we might need pt if it was fixed)
-                      - pb-32 to account for FloatingNavbar + spacing
-                      - px-4 sm:px-6 for responsive horizontal padding
-                      - max-w-7xl to prevent content from stretching too wide on large screens
-                  */}
-                  <main className="flex-1 w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 pb-32 md:pb-40 overflow-x-hidden">
+                  <main className="flex-1 p-6 pb-32 max-w-5xl mx-auto w-full">
                     <Routes>
                       <Route path="/" element={<Index />} />
                       <Route path="/masterplan" element={<MasterplanPage />} /> {/* Rota Atualizada */}
@@ -66,7 +58,6 @@ const App = () => (
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </main>
-                  
                   <FloatingNavbar />
                 </div>
               </BrowserRouter>

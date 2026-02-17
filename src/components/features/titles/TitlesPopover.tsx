@@ -8,7 +8,7 @@ export const TitlesPopover = () => {
   ];
 
   return (
-    <div className="w-72 max-w-[90vw] p-5 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200">
+    <div className="w-72 p-5 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200">
       <div className="space-y-4">
         <header className="flex items-center gap-2 border-b border-white/5 pb-3">
           <Medal className="w-4 h-4 text-red-500" />

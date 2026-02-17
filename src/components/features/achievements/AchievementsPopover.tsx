@@ -13,7 +13,7 @@ export const AchievementsPopover = () => {
   ];
 
   return (
-    <div className="w-80 max-w-[90vw] p-5 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200">
+    <div className="w-80 p-5 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-200">
       <div className="space-y-6">
         <header className="flex items-center justify-between border-b border-white/5 pb-3">
           <div className="flex items-center gap-2">

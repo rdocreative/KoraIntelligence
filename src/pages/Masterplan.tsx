@@ -643,17 +643,16 @@ const MasterplanPage = () => {
   const activeWeeks = data.weeks.filter(w => new Date(w.endDate) >= new Date());
 
   return (
-    <>
-      {/* Background Ambience - Fixed to viewport */}
-      <div className="fixed inset-0 pointer-events-none z-0">
+    <div className="min-h-screen bg-[#020202] text-white selection:bg-red-900/30 selection:text-white pb-32">
+      {/* Background Ambience */}
+      <div className="fixed inset-0 pointer-events-none">
           <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-neutral-900/20 to-transparent" />
           <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-red-600/5 rounded-full blur-[150px]" />
       </div>
 
-      <div className="relative z-10 space-y-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-10">
         
         {/* HEADER PREMIUM */}
-
         <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 animate-in slide-in-from-top-4 duration-700">
            <div className="space-y-4 max-w-2xl">
               <div className="flex items-center gap-3">
@@ -1174,7 +1173,7 @@ const MasterplanPage = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </>
+    </div>
   );
 };
 
