@@ -10,7 +10,7 @@ import {
   Plus, Target, Briefcase, GraduationCap, Heart, User, 
   Calendar, CheckSquare, Trash2, ArrowRight, ArrowLeft, Play,
   BookOpen, HelpCircle, Save, CheckCircle2, Trophy, Clock, Sparkles, Crown, Loader2, Zap, LayoutDashboard,
-  TrendingUp, TrendingDown, Activity, BarChart3, AlertCircle, CalendarDays, Award
+  TrendingUp, TrendingDown, Activity, BarChart3, AlertCircle, CalendarDays, Award, Check
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
@@ -162,13 +162,13 @@ const LoadingScreen = ({ onFinished }: { onFinished: () => void }) => {
 };
 
 // ==========================================
-// WIZARD / TUTORIAL STEP-BY-STEP
+// PRIMEIRA VEZ (ATIVACÃO DO SISTEMA)
 // ==========================================
 
 const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
   const { data, updateAnnual, addAreaItem, deleteAreaItem } = useMasterplan();
-  const [step, setStep] = useState(0);
-  const [showIntro, setShowIntro] = useState(true);
+  const [step, setStep] = useState(0); // 0: Welcome, 1: Annual, 2: Pillars, 3: Final
+  const [hasShownWelcome, setHasShownWelcome] = useState(false);
   
   const [areaInputs, setAreaInputs] = useState({
     work: "",
@@ -189,218 +189,46 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
     setAreaInputs(prev => ({ ...prev, [key]: "" }));
   };
 
-  const renderStepContent = () => {
-    switch(step) {
-      case 0:
-        return (
-          <div className="space-y-6">
-            <p className="text-neutral-300 text-center text-lg leading-relaxed">
-              Um sistema japonês que transforma grandes sonhos em passos executáveis.
-            </p>
-            <div className="grid gap-4 my-6">
-              <div className="flex items-center gap-5 bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-red-500/30 transition-all duration-300 hover:translate-x-1">
-                  <div className="p-3 bg-red-500/10 rounded-xl"><Target className="text-red-500 w-6 h-6" /></div>
-                  <div className="text-left">
-                    <span className="block text-base font-bold text-white">1. Foco Absoluto</span>
-                    <span className="text-xs text-neutral-500 uppercase tracking-wide">Um grande objetivo.</span>
-                  </div>
-              </div>
-              <div className="flex items-center gap-5 bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-blue-500/30 transition-all duration-300 hover:translate-x-1">
-                  <div className="p-3 bg-blue-500/10 rounded-xl"><Calendar className="text-blue-500 w-6 h-6" /></div>
-                  <div className="text-left">
-                    <span className="block text-base font-bold text-white">2. Ritmo Semanal</span>
-                    <span className="text-xs text-neutral-500 uppercase tracking-wide">Planeje o ano, viva a semana.</span>
-                  </div>
-              </div>
-            </div>
-          </div>
-        );
-      case 1:
-        return (
-          <div className="space-y-6">
-            <div className="bg-red-950/20 border border-red-500/20 p-5 rounded-2xl space-y-4">
-              <h4 className="text-red-500 text-xs font-black uppercase tracking-widest flex items-center gap-2">
-                <Sparkles className="w-3 h-3 animate-pulse" /> Exemplos
-              </h4>
-              <div className="space-y-3">
-                <p className="text-sm text-neutral-300"><strong className="text-white">Financeiro:</strong> "Faturar R$ 100k"</p>
-                <p className="text-sm text-neutral-300"><strong className="text-white">Saúde:</strong> "Correr uma maratona"</p>
-              </div>
-            </div>
-            
-            <div className="space-y-5">
-              <div className="space-y-2">
-                  <Label className="text-xs font-bold uppercase tracking-widest text-neutral-400">Objetivo Anual</Label>
-                  <Input 
-                      placeholder="Sua missão principal..." 
-                      value={data.annual.objective}
-                      onChange={(e) => updateAnnual({ objective: e.target.value })}
-                      className="bg-black/40 border-white/10 h-14 text-lg font-bold focus-visible:ring-red-500 transition-all duration-300"
-                  />
-              </div>
-              <div className="space-y-2">
-                  <Label className="text-xs font-bold uppercase tracking-widest text-neutral-400">Critério de Sucesso</Label>
-                  <Textarea 
-                      placeholder="Como você saberá que venceu?" 
-                      value={data.annual.successCriteria}
-                      onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                      className="bg-black/40 border-white/10 focus-visible:ring-red-500 min-h-[100px] text-base transition-all duration-300"
-                  />
-              </div>
-            </div>
-          </div>
-        );
-      case 2:
-        return (
-          <div className="space-y-6">
-            <div className="grid gap-4">
-              {[
-                  { 
-                    id: 'work', 
-                    label: 'Trabalho & Dinheiro', 
-                    icon: Briefcase, 
-                    color: 'text-blue-500', 
-                    ring: 'focus:ring-blue-500/50', 
-                    items: data.areas.work,
-                    placeholder: "Ex: Faturar R$ 10k/mês" 
-                  },
-                  { 
-                    id: 'studies', 
-                    label: 'Estudos', 
-                    icon: GraduationCap, 
-                    color: 'text-purple-500', 
-                    ring: 'focus:ring-purple-500/50', 
-                    items: data.areas.studies,
-                    placeholder: "Ex: Ler 1 livro por mês" 
-                  },
-                  { 
-                    id: 'health', 
-                    label: 'Saúde', 
-                    icon: Heart, 
-                    color: 'text-red-500', 
-                    ring: 'focus:ring-red-500/50', 
-                    items: data.areas.health,
-                    placeholder: "Ex: Treinar 4x por semana" 
-                  },
-                  { 
-                    id: 'personal', 
-                    label: 'Pessoal', 
-                    icon: User, 
-                    color: 'text-yellow-500', 
-                    ring: 'focus:ring-yellow-500/50', 
-                    items: data.areas.personal,
-                    placeholder: "Ex: Viajar com a família" 
-                  },
-              ].map((area) => (
-                  <div key={area.id} className="space-y-2">
-                      <Label className={`flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest ${area.color}`}>
-                          <area.icon className="w-3 h-3" /> {area.label}
-                      </Label>
-                      <div className="flex gap-2">
-                          <Input 
-                              value={areaInputs[area.id as keyof typeof areaInputs]}
-                              onChange={(e) => handleAreaInputChange(area.id as keyof typeof areaInputs, e.target.value)}
-                              onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                      e.preventDefault();
-                                      handleAddAreaItem(area.id as keyof typeof areaInputs);
-                                  }
-                              }}
-                              placeholder={area.placeholder} 
-                              className={`bg-black/40 border-white/10 text-sm h-10 transition-all focus:ring-1 ${area.ring}`} 
-                          />
-                          <Button 
-                              type="button"
-                              size="icon" 
-                              className="h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0 transition-transform active:scale-90" 
-                              onClick={(e) => {
-                                  e.preventDefault();
-                                  handleAddAreaItem(area.id as keyof typeof areaInputs);
-                              }}
-                          >
-                              <Plus className="w-4 h-4"/>
-                          </Button>
-                      </div>
-                      {area.items && area.items.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mt-2">
-                              {area.items.map((i: any) => (
-                                  <div key={i.id} className="flex items-center gap-1 text-[10px] bg-white/5 px-2 py-1 rounded border border-white/5 text-neutral-400 animate-in zoom-in duration-200 group/tag">
-                                      <span>{i.text}</span>
-                                      <button 
-                                        onClick={() => deleteAreaItem(area.id as any, i.id)}
-                                        className="ml-1 text-neutral-600 hover:text-red-500 opacity-0 group-hover/tag:opacity-100 transition-opacity"
-                                      >
-                                        ×
-                                      </button>
-                                  </div>
-                              ))}
-                          </div>
-                      )}
-                  </div>
-              ))}
-            </div>
-          </div>
-        );
-      case 3:
-        return (
-          <div className="flex flex-col items-center justify-center py-8 space-y-8">
-            <div className="relative">
-              <div className="absolute inset-0 bg-green-500/20 blur-2xl rounded-full animate-pulse" />
-              <div className="w-24 h-24 bg-gradient-to-br from-green-900/40 to-black border border-green-500/30 rounded-full flex items-center justify-center relative z-10 shadow-2xl">
-                  <CheckCircle2 className="w-10 h-10 text-green-500" />
-              </div>
-            </div>
-            
-            <div className="text-center space-y-2">
-               <h3 className="text-xl font-bold text-white">Vamos começar a execução?</h3>
-               <p className="text-neutral-400 text-sm max-w-xs mx-auto">
-                  Lembre-se: O plano não é nada sem a ação diária. Fique focado.
-               </p>
-            </div>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
+  // Validation Checkers
+  const isAnnualValid = data.annual.objective.trim().length > 0 && data.annual.successCriteria.trim().length > 0;
+  
+  const hasAtLeastOneItem = 
+    data.areas.work.length > 0 || 
+    data.areas.studies.length > 0 || 
+    data.areas.health.length > 0 || 
+    data.areas.personal.length > 0;
 
-  const stepsData = [
-    { title: "Método Nenkan Mokuhyō", subtitle: "Simplifique o impossível." },
-    { title: "O Alvo Único", subtitle: "Seu foco principal para o ano." },
-    { title: "Os 4 Pilares", subtitle: "Equilíbrio é a chave da consistência." },
-    { title: "Tudo Pronto", subtitle: "Seu sistema está ativo." }
-  ];
-
-  if (showIntro) {
+  // Step 0 is the full screen welcome
+  if (step === 0 && !hasShownWelcome) {
     return (
       <div className="fixed inset-0 z-50 bg-[#050505] flex items-center justify-center p-4 animate-in fade-in duration-1000">
         <div className="w-full max-w-lg text-center space-y-10 relative">
            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-red-600/10 blur-[120px] rounded-full pointer-events-none" />
            
            <div className="relative z-10 flex flex-col items-center gap-8">
-              <div className="w-24 h-24 bg-gradient-to-br from-neutral-900 to-black border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl rotate-6 transition-all duration-500 hover:rotate-0 hover:scale-105 hover:shadow-red-900/20 group">
-                  <Crown className="w-10 h-10 text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.8)]" />
+              <div className="w-24 h-24 bg-gradient-to-br from-neutral-900 to-black border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-red-900/20 group">
+                  <Target className="w-10 h-10 text-red-600 drop-shadow-[0_0_10px_rgba(220,38,38,0.8)]" />
               </div>
 
-              <div className="space-y-4">
-                  <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase italic animate-in slide-in-from-bottom-2 fade-in duration-700">
-                    Masterplan
+              <div className="space-y-6">
+                  <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter leading-tight animate-in slide-in-from-bottom-2 fade-in duration-700">
+                    Seu novo sistema de foco<br/>está pronto para ser ativado.
                   </h1>
                   <p className="text-lg text-neutral-400 font-medium max-w-sm mx-auto leading-relaxed animate-in slide-in-from-bottom-3 fade-in duration-1000 delay-150">
-                    Sua vida, organizada no <span className="text-red-500 font-bold">melhor método</span> do mundo.
+                    Você está a poucos passos de criar o plano mais poderoso da sua vida.
                   </p>
               </div>
 
-              <div className="space-y-4 w-full max-w-xs mx-auto animate-in slide-in-from-bottom-4 fade-in duration-1000 delay-300">
+              <div className="w-full max-w-xs mx-auto animate-in slide-in-from-bottom-4 fade-in duration-1000 delay-300 pt-4">
                 <Button 
-                    onClick={() => setShowIntro(false)}
+                    onClick={() => {
+                        setHasShownWelcome(true);
+                        setStep(1);
+                    }}
                     className="w-full bg-white hover:bg-neutral-200 text-black font-black text-base h-14 rounded-full shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] transition-all duration-300 transform hover:-translate-y-1 active:scale-95"
                 >
                     INICIAR CONFIGURAÇÃO <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
-                <button onClick={onComplete} className="text-[10px] text-neutral-600 hover:text-white uppercase font-bold tracking-[0.2em] transition-colors duration-300">
-                    Pular Introdução
-                </button>
               </div>
            </div>
         </div>
@@ -408,52 +236,206 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
     );
   }
 
-  const currentStepInfo = stepsData[step];
+  const renderContent = () => {
+    if (step === 1) {
+        return (
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
+                <div className="space-y-4 text-center mb-8">
+                     <div className="inline-flex items-center justify-center p-3 bg-red-500/10 rounded-full border border-red-500/20 mb-2">
+                        <Target className="w-6 h-6 text-red-500" />
+                     </div>
+                     <h2 className="text-2xl font-black text-white uppercase tracking-tight">O Alvo Único</h2>
+                     <p className="text-neutral-400 text-sm max-w-xs mx-auto">
+                        O sucesso vem da clareza. Escolha um único objetivo central para o seu ano.
+                     </p>
+                </div>
 
-  return (
-    <div className="fixed inset-0 z-50 bg-[#020202] flex items-center justify-center p-4">
-      <Card className="w-full max-w-lg bg-[#0A0A0A] border-white/10 shadow-2xl relative overflow-hidden transition-all duration-500 h-[600px] flex flex-col">
-        <div className="absolute top-0 left-0 w-full h-1 bg-neutral-900">
-            <div className="h-full bg-red-600 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(220,38,38,0.5)]" style={{ width: `${((step + 1) / stepsData.length) * 100}%` }} />
-        </div>
+                <div className="space-y-6">
+                    <div className="space-y-3 group">
+                        <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors">Objetivo Anual</Label>
+                        <Input 
+                            placeholder="Ex: Atingir liberdade financeira" 
+                            value={data.annual.objective}
+                            onChange={(e) => updateAnnual({ objective: e.target.value })}
+                            className="bg-[#0E0E0E] border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:border-red-500 transition-all duration-300 shadow-inner"
+                        />
+                    </div>
+                    <div className="space-y-3 group">
+                        <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors">Critério de Sucesso</Label>
+                        <Textarea 
+                            placeholder="Como você saberá que venceu? Ex: Ter R$ 100k investidos." 
+                            value={data.annual.successCriteria}
+                            onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
+                            className="bg-[#0E0E0E] border-white/10 min-h-[120px] text-base px-4 py-4 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:border-red-500 transition-all duration-300 resize-none shadow-inner"
+                        />
+                    </div>
+                </div>
 
-        <CardHeader className="text-center pt-10 pb-2">
-          <CardTitle className="text-3xl font-black text-white uppercase tracking-tight">{currentStepInfo.title}</CardTitle>
-          <CardDescription className="text-base font-medium text-neutral-500">{currentStepInfo.subtitle}</CardDescription>
-        </CardHeader>
-
-        <CardContent className="flex-1 flex flex-col justify-center overflow-y-auto custom-scrollbar px-8 py-4">
-            <div key={step} className="animate-in fade-in slide-in-from-right-8 duration-500 ease-out w-full">
-                {renderStepContent()}
+                <div className="flex justify-end pt-4">
+                    <Button 
+                        disabled={!isAnnualValid}
+                        onClick={() => setStep(2)}
+                        className="bg-white text-black hover:bg-neutral-200 font-bold px-8 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Próximo
+                    </Button>
+                </div>
             </div>
-        </CardContent>
+        );
+    }
 
-        <CardFooter className="flex justify-between border-t border-white/5 p-8 bg-black/20">
-            <Button 
-                variant="ghost" 
-                onClick={() => setStep(s => Math.max(0, s - 1))}
-                disabled={step === 0}
-                className="text-neutral-500 hover:text-white hover:bg-white/5"
-            >
-                Voltar
-            </Button>
+    if (step === 2) {
+        return (
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-500 h-full flex flex-col">
+                <div className="text-center space-y-2 mb-2 flex-shrink-0">
+                     <h2 className="text-2xl font-black text-white uppercase tracking-tight">Os 4 Pilares</h2>
+                     <p className="text-neutral-400 text-sm">
+                        Para seu sistema funcionar, defina pelo menos <span className="text-white font-bold">1 meta</span> em um dos pilares.
+                     </p>
+                </div>
 
-            {step < stepsData.length - 1 ? (
-                <Button 
-                    onClick={() => setStep(s => s + 1)} 
-                    className="bg-white text-black hover:bg-neutral-200 font-bold px-8 rounded-full"
-                >
-                    Próximo
-                </Button>
-            ) : (
+                <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar space-y-4">
+                    {[
+                      { 
+                        id: 'work', 
+                        label: 'Trabalho', 
+                        icon: Briefcase, 
+                        color: 'text-blue-500', 
+                        items: data.areas.work,
+                        placeholder: "Ex: Novo emprego" 
+                      },
+                      { 
+                        id: 'studies', 
+                        label: 'Estudos', 
+                        icon: GraduationCap, 
+                        color: 'text-purple-500', 
+                        items: data.areas.studies,
+                        placeholder: "Ex: Inglês fluente" 
+                      },
+                      { 
+                        id: 'health', 
+                        label: 'Saúde', 
+                        icon: Heart, 
+                        color: 'text-red-500', 
+                        items: data.areas.health,
+                        placeholder: "Ex: Correr 5km" 
+                      },
+                      { 
+                        id: 'personal', 
+                        label: 'Pessoal', 
+                        icon: User, 
+                        color: 'text-yellow-500', 
+                        items: data.areas.personal,
+                        placeholder: "Ex: Ler 12 livros" 
+                      },
+                    ].map((area) => {
+                        const hasItems = area.items.length > 0;
+                        return (
+                          <div 
+                            key={area.id} 
+                            className={`p-4 rounded-xl border transition-all duration-300 ${hasItems ? 'bg-white/[0.03] border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.1)]' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
+                          >
+                              <div className="flex items-center justify-between mb-3">
+                                  <Label className={`flex items-center gap-2 text-xs uppercase font-bold tracking-widest ${area.color}`}>
+                                      <area.icon className="w-4 h-4" /> {area.label}
+                                  </Label>
+                                  {hasItems && <CheckCircle2 className="w-4 h-4 text-green-500 animate-in zoom-in" />}
+                              </div>
+                              
+                              <div className="flex gap-2">
+                                  <Input 
+                                      value={areaInputs[area.id as keyof typeof areaInputs]}
+                                      onChange={(e) => handleAreaInputChange(area.id as keyof typeof areaInputs, e.target.value)}
+                                      onKeyDown={(e) => {
+                                          if (e.key === 'Enter') {
+                                              e.preventDefault();
+                                              handleAddAreaItem(area.id as keyof typeof areaInputs);
+                                          }
+                                      }}
+                                      placeholder={area.placeholder} 
+                                      className="bg-black/40 border-white/10 text-sm h-10 focus:ring-1 focus:ring-white/20" 
+                                  />
+                                  <Button 
+                                      type="button"
+                                      size="icon" 
+                                      className="h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0" 
+                                      onClick={(e) => {
+                                          e.preventDefault();
+                                          handleAddAreaItem(area.id as keyof typeof areaInputs);
+                                      }}
+                                  >
+                                      <Plus className="w-4 h-4"/>
+                                  </Button>
+                              </div>
+
+                              {hasItems && (
+                                  <div className="flex flex-wrap gap-2 mt-3">
+                                      {area.items.map((i: any) => (
+                                          <span key={i.id} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-white/5 border border-white/5 text-[10px] text-neutral-300">
+                                              {i.text}
+                                              <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="hover:text-red-500 ml-1">×</button>
+                                          </span>
+                                      ))}
+                                  </div>
+                              )}
+                          </div>
+                        );
+                    })}
+                </div>
+
+                <div className="flex justify-between items-center pt-4 border-t border-white/5 flex-shrink-0">
+                    <Button variant="ghost" onClick={() => setStep(1)} className="text-neutral-500 hover:text-white">Voltar</Button>
+                    <Button 
+                        disabled={!hasAtLeastOneItem}
+                        onClick={() => setStep(3)}
+                        className="bg-white text-black hover:bg-neutral-200 font-bold px-8 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Próximo
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    if (step === 3) {
+        return (
+            <div className="flex flex-col items-center justify-center py-8 space-y-10 animate-in fade-in zoom-in duration-500 h-full">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-green-500/20 blur-3xl rounded-full animate-pulse" />
+                  <div className="w-32 h-32 bg-gradient-to-br from-green-900/40 to-black border border-green-500/30 rounded-full flex items-center justify-center relative z-10 shadow-2xl">
+                      <CheckCircle2 className="w-12 h-12 text-green-500" />
+                  </div>
+                </div>
+                
+                <div className="text-center space-y-4">
+                   <h3 className="text-3xl font-black text-white uppercase tracking-tight">Tudo pronto.<br/>Sistema ativo.</h3>
+                   <p className="text-neutral-400 font-medium text-base max-w-xs mx-auto">
+                      Vamos começar a execução?
+                   </p>
+                </div>
+
                 <Button 
                     onClick={onComplete} 
-                    className="bg-red-600 hover:bg-red-500 text-white font-bold px-8 rounded-full shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] transition-all"
+                    className="w-full max-w-xs bg-red-600 hover:bg-red-500 text-white font-bold h-14 rounded-full shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_40px_rgba(220,38,38,0.6)] transition-all transform hover:-translate-y-1"
                 >
                     ACESSAR DASHBOARD
                 </Button>
-            )}
-        </CardFooter>
+            </div>
+        );
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-[#020202]/95 backdrop-blur-sm flex items-center justify-center p-4">
+      <Card className="w-full max-w-lg bg-[#0A0A0A] border-white/10 shadow-2xl relative overflow-hidden h-[650px] flex flex-col">
+        {/* Progress Bar */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-neutral-900">
+            <div className="h-full bg-gradient-to-r from-red-600 to-red-400 transition-all duration-500 ease-out shadow-[0_0_10px_rgba(220,38,38,0.5)]" style={{ width: `${(step / 3) * 100}%` }} />
+        </div>
+
+        <CardContent className="flex-1 p-8 h-full">
+            {renderContent()}
+        </CardContent>
       </Card>
     </div>
   );
@@ -590,7 +572,7 @@ const MasterplanPage = () => {
                       Masterplan 2.0
                   </div>
                   <Button variant="ghost" size="sm" onClick={resetTutorial} className="h-6 text-[10px] text-neutral-500 hover:text-white uppercase tracking-widest hover:bg-white/5 rounded-full">
-                      Tutorial
+                      Revisar Setup
                   </Button>
               </div>
               <div>
