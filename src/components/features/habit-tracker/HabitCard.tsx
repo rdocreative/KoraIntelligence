@@ -1,5 +1,5 @@
-import { Habit } from '../hooks/useHabitTracker';
-import { Button } from './ui/button';
+import { Habit } from '@/hooks/useHabitTracker';
+import { Button } from '@/components/ui/button';
 import { CheckCircle2, Circle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
