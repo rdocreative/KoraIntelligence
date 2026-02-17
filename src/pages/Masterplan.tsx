@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMasterplan, MasterplanData, TaskItem } from "@/hooks/useMasterplan";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -9,7 +9,7 @@ import { Slider } from "@/components/ui/slider";
 import { 
   Plus, Target, Briefcase, GraduationCap, Heart, User, 
   Calendar, CheckSquare, Trash2, ArrowRight, ArrowLeft, Play,
-  BookOpen, HelpCircle, Save, CheckCircle2, Trophy, Clock, Sparkles, Crown
+  BookOpen, HelpCircle, Save, CheckCircle2, Trophy, Clock, Sparkles, Crown, Loader2
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
@@ -66,6 +66,88 @@ const TaskList = ({
           <Plus className="w-4 h-4" />
         </Button>
       </div>
+    </div>
+  );
+};
+
+// ==========================================
+// PREMIUM LOADING SCREEN
+// ==========================================
+
+const LoadingScreen = ({ onFinished }: { onFinished: () => void }) => {
+  const [progress, setProgress] = useState(0);
+  const [phrase, setPhrase] = useState("");
+
+  const phrases = [
+    "Parabéns. Sua nova fase começa agora.",
+    "Você acabou de ativar o melhor método para mudar sua vida.",
+    "Preparando seu novo sistema de foco.",
+    "Construindo sua melhor versão...",
+    "Seu plano está sendo ativado.",
+    "Bem-vindo ao controle total."
+  ];
+
+  useEffect(() => {
+    // Escolhe uma frase aleatória
+    setPhrase(phrases[Math.floor(Math.random() * phrases.length)]);
+
+    const duration = 1800; // Tempo total em ms (1.8s)
+    const interval = 20;
+    const steps = duration / interval;
+    let currentStep = 0;
+
+    const timer = setInterval(() => {
+      currentStep++;
+      // Curva de easing suave
+      const easeOutQuad = (t: number) => t * (2 - t);
+      const rawProgress = currentStep / steps;
+      const easedProgress = easeOutQuad(rawProgress) * 100;
+      
+      setProgress(Math.min(easedProgress, 100));
+
+      if (currentStep >= steps) {
+        clearInterval(timer);
+        setTimeout(onFinished, 300); // Pequeno delay no final para suavidade
+      }
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-[100] bg-[#050505] flex flex-col items-center justify-center p-8 animate-in fade-in duration-500">
+       {/* Background Glow */}
+       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-red-600/5 blur-[120px] rounded-full pointer-events-none animate-pulse duration-[3000ms]" />
+       
+       <div className="relative z-10 w-full max-w-sm flex flex-col items-center gap-8">
+          {/* Logo Minimalista */}
+          <div className="relative">
+             <div className="w-16 h-16 bg-gradient-to-br from-neutral-800 to-black border border-white/10 rounded-2xl flex items-center justify-center shadow-2xl rotate-45 transform transition-transform duration-1000 ease-out scale-100">
+                <Crown className="w-6 h-6 text-red-500 -rotate-45" />
+             </div>
+             <div className="absolute inset-0 bg-red-500/20 blur-xl rounded-full -z-10" />
+          </div>
+
+          {/* Texto e Progresso */}
+          <div className="w-full space-y-6 text-center">
+             <h2 className="text-xl md:text-2xl font-black text-white tracking-tight leading-tight animate-in slide-in-from-bottom-2 fade-in duration-700">
+                {phrase}
+             </h2>
+             
+             <div className="space-y-2">
+                <div className="h-1 w-full bg-neutral-900 rounded-full overflow-hidden">
+                   <div 
+                      className="h-full bg-gradient-to-r from-red-600 to-red-400 transition-all duration-75 ease-out rounded-full shadow-[0_0_10px_rgba(220,38,38,0.5)]"
+                      style={{ width: `${progress}%` }}
+                   />
+                </div>
+                <div className="flex justify-between items-center text-[10px] uppercase font-bold text-neutral-600 tracking-widest">
+                   <span>Carregando Sistema</span>
+                   <span>{Math.round(progress)}%</span>
+                </div>
+             </div>
+          </div>
+       </div>
     </div>
   );
 };
@@ -403,6 +485,8 @@ const MasterplanPage = () => {
     addMonthGoal, toggleMonthGoal, updateMonthReview, updateMonth,
     addWeek, deleteWeek, addWeekTask, toggleWeekTask, updateWeekReview 
   } = useMasterplan();
+  
+  const [isLoading, setIsLoading] = useState(true);
 
   const [newWeekStart, setNewWeekStart] = useState("");
   const [newWeekEnd, setNewWeekEnd] = useState("");
@@ -422,7 +506,12 @@ const MasterplanPage = () => {
     setNewWeekGoal("");
   };
 
-  // Se o tutorial não foi completado, mostra o Wizard
+  // 1. Mostrar Loading Screen
+  if (isLoading) {
+    return <LoadingScreen onFinished={() => setIsLoading(false)} />;
+  }
+
+  // 2. Se o tutorial não foi completado, mostra o Wizard
   if (!data.isTutorialCompleted) {
     return <OnboardingWizard onComplete={completeTutorial} />;
   }
@@ -432,7 +521,7 @@ const MasterplanPage = () => {
   const activeWeeks = data.weeks.filter(w => new Date(w.endDate) >= new Date());
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700 pb-24">
+    <div className="space-y-8 animate-in fade-in duration-1000 pb-24">
       
       {/* HEADER DE STATUS */}
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-6">
