@@ -8,23 +8,45 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, LayoutGrid, CalendarDays, Activity, CheckCircle2, Zap } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { cn } from "@/lib/utils";
 
 const HabitsPage = () => {
   const { habits, completeHabit, history, addCustomHabit, totalPoints } = useHabitTracker();
   const [newHabitTitle, setNewHabitTitle] = useState("");
+  const [newHabitDesc, setNewHabitDesc] = useState("");
   const [newHabitPoints, setNewHabitPoints] = useState([5]);
+  const [selectedDays, setSelectedDays] = useState<number[]>([1, 2, 3, 4, 5]); // Padrão: dias de semana
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleAddHabit = () => {
-    if (!newHabitTitle.trim()) return;
-    addCustomHabit(newHabitTitle, newHabitPoints[0]);
+    if (!newHabitTitle.trim() || selectedDays.length === 0) return;
+    addCustomHabit(newHabitTitle, newHabitPoints[0], selectedDays, newHabitDesc);
     setNewHabitTitle("");
+    setNewHabitDesc("");
     setNewHabitPoints([5]);
+    setSelectedDays([1, 2, 3, 4, 5]);
     setIsDialogOpen(false);
   };
+
+  const toggleDay = (day: number) => {
+    setSelectedDays(prev => 
+      prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
+    );
+  };
+
+  const DAY_NAMES = [
+    { label: 'D', value: 0 },
+    { label: 'S', value: 1 },
+    { label: 'T', value: 2 },
+    { label: 'Q', value: 3 },
+    { label: 'Q', value: 4 },
+    { label: 'S', value: 5 },
+    { label: 'S', value: 6 },
+  ];
 
   // Dashboard calculations
   const totalCompletions = history.reduce((acc, day) => acc + day.completedHabitIds.length, 0);
@@ -46,38 +68,68 @@ const HabitsPage = () => {
               <Plus className="w-5 h-5 mr-2" /> NOVO HÁBITO
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-[#121212] border-white/10 text-white sm:max-w-md">
+          <DialogContent className="bg-[#121212] border-white/10 text-white sm:max-w-md overflow-hidden">
             <DialogHeader>
               <DialogTitle className="text-xl font-black uppercase italic">Criar Novo Hábito</DialogTitle>
             </DialogHeader>
-            <div className="space-y-6 pt-4">
+            <div className="space-y-5 pt-4">
               <div className="space-y-2">
-                <Label className="text-xs uppercase font-bold text-neutral-400">Nome do Hábito</Label>
+                <Label className="text-[10px] uppercase font-black text-neutral-500 tracking-widest">Nome do Hábito</Label>
                 <Input 
                   value={newHabitTitle}
                   onChange={(e) => setNewHabitTitle(e.target.value)}
-                  placeholder="Ex: Beber água, Ler 10 páginas..."
-                  className="bg-[#0a0a0a] border-white/10 focus:border-red-500/50"
+                  placeholder="Ex: Treinar, Meditar..."
+                  className="bg-[#0a0a0a] border-white/10 focus:border-red-500/50 h-12 rounded-xl"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[10px] uppercase font-black text-neutral-500 tracking-widest">Descrição (Opcional)</Label>
+                <Textarea 
+                  value={newHabitDesc}
+                  onChange={(e) => setNewHabitDesc(e.target.value)}
+                  placeholder="Detalhes sobre este hábito..."
+                  className="bg-[#0a0a0a] border-white/10 focus:border-red-500/50 min-h-[80px] rounded-xl resize-none"
+                />
+              </div>
+
+              <div className="space-y-3">
+                <Label className="text-[10px] uppercase font-black text-neutral-500 tracking-widest">Dias da Semana</Label>
+                <div className="flex justify-between gap-1">
+                  {DAY_NAMES.map((day) => (
+                    <button
+                      key={day.value}
+                      onClick={() => toggleDay(day.value)}
+                      className={cn(
+                        "w-10 h-10 rounded-xl font-black text-xs transition-all border",
+                        selectedDays.includes(day.value) 
+                          ? "bg-red-600 border-red-500 text-white shadow-[0_0_10px_rgba(220,38,38,0.4)]" 
+                          : "bg-[#0a0a0a] border-white/5 text-neutral-600 hover:border-white/20"
+                      )}
+                    >
+                      {day.label}
+                    </button>
+                  ))}
+                </div>
               </div>
               
               <div className="space-y-4">
                  <div className="flex justify-between items-center">
-                    <Label className="text-xs uppercase font-bold text-neutral-400">Recompensa (XP)</Label>
+                    <Label className="text-[10px] uppercase font-black text-neutral-500 tracking-widest">Recompensa</Label>
                     <span className="text-red-500 font-black text-lg">{newHabitPoints[0]} XP</span>
                  </div>
                  <Slider 
                     value={newHabitPoints} 
                     onValueChange={setNewHabitPoints} 
                     max={20} 
+                    min={1}
                     step={1} 
                     className="py-2"
                  />
-                 <p className="text-[10px] text-neutral-500">Defina o valor baseado na dificuldade do hábito.</p>
               </div>
 
-              <Button onClick={handleAddHabit} className="w-full bg-red-600 hover:bg-red-500 font-bold h-12">
-                CONFIRMAR CRIAÇÃO
+              <Button onClick={handleAddHabit} className="w-full bg-red-600 hover:bg-red-500 font-black h-14 rounded-2xl shadow-xl shadow-red-900/20">
+                FORJAR HÁBITO
               </Button>
             </div>
           </DialogContent>
@@ -103,9 +155,9 @@ const HabitsPage = () => {
            ))}
            {habits.length === 0 && (
              <div className="text-center py-20 bg-[#121212] rounded-3xl border border-white/5 border-dashed">
-               <p className="text-neutral-500 mb-4">Você ainda não tem hábitos cadastrados.</p>
-               <Button variant="outline" onClick={() => setIsDialogOpen(true)} className="border-red-500/50 text-red-500 hover:bg-red-500/10">
-                 Começar Agora
+               <p className="text-neutral-500 mb-4 font-medium">Você ainda não tem hábitos cadastrados.</p>
+               <Button variant="outline" onClick={() => setIsDialogOpen(true)} className="border-red-500/50 text-red-500 hover:bg-red-500/10 rounded-xl font-bold">
+                 Criar Primeiro Hábito
                </Button>
              </div>
            )}

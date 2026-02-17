@@ -4,9 +4,11 @@ import confetti from 'canvas-confetti';
 export type Habit = {
   id: string;
   title: string;
+  description?: string;
   points: number;
   completed: boolean;
   type: 'fixed' | 'custom';
+  days: number[]; // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
 };
 
 export type DailyRecord = {
@@ -15,7 +17,6 @@ export type DailyRecord = {
   completedHabitIds: string[];
 };
 
-// Removidos todos os hábitos pré-definidos para começar do zero
 export const FIXED_HABITS: Habit[] = [];
 
 export const BADGES = [
@@ -32,7 +33,7 @@ interface HabitContextType {
   history: DailyRecord[];
   streak: number;
   completeHabit: (id: string) => void;
-  addCustomHabit: (title: string, points: number) => void;
+  addCustomHabit: (title: string, points: number, days: number[], description?: string) => void;
   getCurrentBadge: () => typeof BADGES[0];
   getNextBadge: () => typeof BADGES[0] | null;
   badges: typeof BADGES;
@@ -156,11 +157,13 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
   };
 
-  const addCustomHabit = (title: string, points: number) => {
+  const addCustomHabit = (title: string, points: number, days: number[], description?: string) => {
     const newHabit: Habit = {
       id: `custom-${Date.now()}`,
       title,
+      description,
       points,
+      days,
       completed: false,
       type: 'custom'
     };
@@ -176,7 +179,6 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setTotalPoints(0);
     setHistory([]);
     setStreak(0);
-    // Recarregar para garantir estado limpo
     window.location.reload();
   };
 
