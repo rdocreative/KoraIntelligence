@@ -40,6 +40,7 @@ export type WeeklyData = {
 };
 
 export type MasterplanData = {
+  isTutorialCompleted: boolean; // Novo campo
   annual: {
     objective: string;
     successCriteria: string;
@@ -61,6 +62,7 @@ const MONTH_NAMES = [
 ];
 
 const DEFAULT_DATA: MasterplanData = {
+  isTutorialCompleted: false,
   annual: { objective: "", successCriteria: "", progress: 0 },
   areas: { work: [], studies: [], health: [], personal: [] },
   months: MONTH_NAMES.map((name, i) => ({
@@ -75,6 +77,8 @@ const DEFAULT_DATA: MasterplanData = {
 
 interface MasterplanContextType {
   data: MasterplanData;
+  completeTutorial: () => void;
+  resetTutorial: () => void;
   updateAnnual: (updates: Partial<MasterplanData['annual']>) => void;
   addAreaItem: (area: keyof MasterplanData['areas'], text: string) => void;
   toggleAreaItem: (area: keyof MasterplanData['areas'], id: string) => void;
@@ -102,7 +106,6 @@ export const MasterplanProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Merge with default to ensure structure exists even if old data is partial
         setData({ ...DEFAULT_DATA, ...parsed });
       } catch (e) {
         console.error("Failed to load masterplan", e);
@@ -117,6 +120,14 @@ export const MasterplanProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       localStorage.setItem('dyad_masterplan', JSON.stringify(data));
     }
   }, [data, loaded]);
+
+  const completeTutorial = () => {
+    setData(prev => ({ ...prev, isTutorialCompleted: true }));
+  };
+
+  const resetTutorial = () => {
+    setData(prev => ({ ...prev, isTutorialCompleted: false }));
+  };
 
   const updateAnnual = (updates: Partial<MasterplanData['annual']>) => {
     setData(prev => ({ ...prev, annual: { ...prev.annual, ...updates } }));
@@ -195,7 +206,6 @@ export const MasterplanProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       tasks: [],
       review: { worked: "", didntWork: "", improve: "" }
     };
-    // Add to beginning of list
     setData(prev => ({ ...prev, weeks: [newWeek, ...prev.weeks] }));
   };
 
@@ -234,7 +244,7 @@ export const MasterplanProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   return (
     <MasterplanContext.Provider value={{
-      data, updateAnnual, addAreaItem, toggleAreaItem, deleteAreaItem, updateMonth, addMonthGoal, toggleMonthGoal, updateMonthReview,
+      data, completeTutorial, resetTutorial, updateAnnual, addAreaItem, toggleAreaItem, deleteAreaItem, updateMonth, addMonthGoal, toggleMonthGoal, updateMonthReview,
       addWeek, deleteWeek, addWeekTask, toggleWeekTask, updateWeekReview
     }}>
       {children}
