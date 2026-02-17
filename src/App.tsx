@@ -6,10 +6,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/providers/ThemeProvider";
 import { SettingsProvider } from "./hooks/useSettings"; 
 import { HabitProvider } from "./hooks/useHabitTracker";
+import { MasterplanProvider } from "./hooks/useMasterplan"; // Novo provider
 import { FloatingNavbar } from "./components/layout/FloatingNavbar";
 import { TopBar } from "./components/layout/TopBar";
 import Index from "./pages/Index";
-import HabitsPage from "./pages/Habits";
+import MasterplanPage from "./pages/Masterplan"; // Nova página
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -33,32 +34,35 @@ const App = () => (
       storageKey="app-theme"
     >
       <SettingsProvider>
-        <HabitProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner theme="dark" />
-            <BrowserRouter>
-              <div className="min-h-screen bg-[#080808] text-foreground font-sans flex flex-col">
-                <TopBar />
-                <main className="flex-1 p-6 pb-32 max-w-5xl mx-auto w-full">
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/habitos" element={<HabitsPage />} />
-                    <Route path="/tarefas" element={<PlaceholderPage title="Tarefas" />} />
-                    <Route path="/metas" element={<PlaceholderPage title="Metas" />} />
-                    <Route path="/missoes" element={<PlaceholderPage title="Missões" />} />
-                    <Route path="/comunidade" element={<PlaceholderPage title="Comunidade" />} />
-                    <Route path="/financa" element={<PlaceholderPage title="Finanças" />} />
-                    <Route path="/loja" element={<PlaceholderPage title="Loja" />} />
-                    <Route path="/inventario" element={<PlaceholderPage title="Inventário" />} />
-                    <Route path="/configuracoes" element={<Settings />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </main>
-                <FloatingNavbar />
-              </div>
-            </BrowserRouter>
-          </TooltipProvider>
+        <HabitProvider> {/* Mantido pois Index.tsx ainda usa */}
+          <MasterplanProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner theme="dark" />
+              <BrowserRouter>
+                <div className="min-h-screen bg-[#080808] text-foreground font-sans flex flex-col">
+                  <TopBar />
+                  <main className="flex-1 p-6 pb-32 max-w-5xl mx-auto w-full">
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/masterplan" element={<MasterplanPage />} /> {/* Rota Atualizada */}
+                      <Route path="/habitos" element={<MasterplanPage />} /> {/* Redirecionamento de segurança */}
+                      <Route path="/tarefas" element={<PlaceholderPage title="Tarefas" />} />
+                      <Route path="/metas" element={<PlaceholderPage title="Metas" />} />
+                      <Route path="/missoes" element={<PlaceholderPage title="Missões" />} />
+                      <Route path="/comunidade" element={<PlaceholderPage title="Comunidade" />} />
+                      <Route path="/financa" element={<PlaceholderPage title="Finanças" />} />
+                      <Route path="/loja" element={<PlaceholderPage title="Loja" />} />
+                      <Route path="/inventario" element={<PlaceholderPage title="Inventário" />} />
+                      <Route path="/configuracoes" element={<Settings />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </main>
+                  <FloatingNavbar />
+                </div>
+              </BrowserRouter>
+            </TooltipProvider>
+          </MasterplanProvider>
         </HabitProvider>
       </SettingsProvider>
     </ThemeProvider>

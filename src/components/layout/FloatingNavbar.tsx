@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, 
-  CheckCircle2, 
+  Crown, // Trocado CheckCircle2 por Crown para representar Masterplan
   ClipboardList,
   Target, 
   Swords,
@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'INÍCIO', path: '/' },
-  { icon: CheckCircle2, label: 'HÁBITOS', path: '/habitos' },
+  { icon: Crown, label: 'MASTERPLAN', path: '/masterplan' }, // Rota e ícone atualizados
   { icon: ClipboardList, label: 'TAREFAS', path: '/tarefas' },
   { icon: Target, label: 'METAS', path: '/metas' },
   { icon: Swords, label: 'MISSÕES', path: '/missoes' },
