@@ -35,20 +35,25 @@ export const OverviewTab = ({
       
       {/* HEADER EXCLUSIVO DA ABA VISÃO */}
       <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pt-4">
-           <div className="space-y-4 max-w-2xl">
-              <div className="flex items-center gap-3">
-                  <div className="bg-red-500/10 backdrop-blur-md border border-red-500/20 text-red-500 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(220,38,38,0.2)]">
-                      Masterplan 2.0
-                  </div>
-                  <Button variant="ghost" size="sm" onClick={onResetTutorial} className="h-6 text-[10px] text-neutral-500 hover:text-white uppercase tracking-widest hover:bg-white/5 rounded-full">
-                      Revisar Setup
-                  </Button>
+           <div className="space-y-2 max-w-2xl">
+              {/* Label Superior */}
+              <div className="flex items-center gap-4 mb-1">
+                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-[0.2em]">
+                  Objetivo Norteador do Ano
+                </span>
+                <Button variant="ghost" size="sm" onClick={onResetTutorial} className="h-5 px-2 text-[9px] text-neutral-600 hover:text-white uppercase tracking-widest hover:bg-white/5 rounded-full">
+                    Setup
+                </Button>
               </div>
+
+              {/* Título Principal */}
               <div>
-                <h1 className="text-5xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-neutral-500 uppercase italic tracking-tighter leading-[0.9]">
+                <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight leading-tight">
                   {annualData.objective || "Objetivo Não Definido"}
                 </h1>
-                <p className="mt-2 text-neutral-400 font-medium text-lg max-w-lg">
+                
+                {/* Descrição com hierarquia visual reduzida */}
+                <p className="mt-3 text-sm md:text-base text-neutral-500/80 font-medium max-w-lg leading-relaxed">
                     {annualData.successCriteria || "Defina seu critério de sucesso na aba Anual."}
                 </p>
               </div>
@@ -59,9 +64,9 @@ export const OverviewTab = ({
                   <span>Conclusão Anual</span>
                   <span className="text-white text-shadow-sm">{annualData.progress}%</span>
               </div>
-              <div className="w-full lg:w-72 h-3 bg-neutral-900 rounded-full border border-white/5 relative overflow-hidden shadow-inner">
+              <div className="w-full lg:w-72 h-2 bg-neutral-900 rounded-full border border-white/5 relative overflow-hidden shadow-inner">
                  <div 
-                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-red-700 via-red-500 to-red-400 rounded-full shadow-[0_0_20px_rgba(220,38,38,0.6)] transition-all duration-1000 ease-out"
+                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-red-800 via-red-600 to-red-500 rounded-full shadow-[0_0_20px_rgba(220,38,38,0.4)] transition-all duration-1000 ease-out"
                     style={{ width: `${annualData.progress}%` }}
                  />
               </div>
