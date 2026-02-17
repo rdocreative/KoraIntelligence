@@ -153,33 +153,46 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
       title: "Passo 1: O Alvo Único",
       subtitle: "Se tudo fosse proibido, o que você faria?",
       content: (
-        <div className="space-y-6">
-          <div className="bg-red-900/10 border border-red-500/20 p-4 rounded-xl space-y-2">
+        <div className="space-y-6 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
+          <div className="bg-red-900/10 border border-red-500/20 p-4 rounded-xl space-y-3">
             <h4 className="text-red-500 text-xs font-black uppercase flex items-center gap-2">
-              <Sparkles className="w-3 h-3" /> Exemplo
+              <Sparkles className="w-3 h-3" /> Exemplos para te inspirar
             </h4>
-            <p className="text-sm text-neutral-300"><strong>Objetivo:</strong> "Liberdade Financeira (R$ 20k/mês)"</p>
-            <p className="text-sm text-neutral-300"><strong>Sucesso:</strong> Receber esse valor por 3 meses seguidos.</p>
+            <div className="space-y-3">
+              <div className="border-l-2 border-red-500/30 pl-3">
+                <p className="text-xs text-neutral-200"><strong>Financeiro:</strong> "Faturar R$ 20k/mês"</p>
+                <p className="text-[10px] text-neutral-500 italic">Vencerei quando: Receber esse valor por 3 meses seguidos.</p>
+              </div>
+              <div className="border-l-2 border-red-500/30 pl-3">
+                <p className="text-xs text-neutral-200"><strong>Saúde:</strong> "Correr minha primeira maratona"</p>
+                <p className="text-[10px] text-neutral-500 italic">Vencerei quando: Cruzar a linha de chegada de uma prova de 42km.</p>
+              </div>
+              <div className="border-l-2 border-red-500/30 pl-3">
+                <p className="text-xs text-neutral-200"><strong>Carreira:</strong> "Ser promovido a Gerente"</p>
+                <p className="text-[10px] text-neutral-500 italic">Vencerei quando: Assinar o contrato da nova posição na empresa.</p>
+              </div>
+            </div>
           </div>
           
           <div className="space-y-4">
             <div className="space-y-2">
-                <Label>Seu Grande Objetivo do Ano</Label>
+                <Label className="text-sm font-bold">Seu Grande Objetivo do Ano</Label>
                 <Input 
-                    placeholder="Escreva sua missão principal..." 
+                    placeholder="Qual é a sua missão principal?" 
                     value={data.annual.objective}
                     onChange={(e) => updateAnnual({ objective: e.target.value })}
-                    className="bg-neutral-900 border-white/10 h-12 text-lg focus-visible:ring-red-500"
+                    className="bg-neutral-900 border-white/10 h-11 focus-visible:ring-red-500"
                 />
             </div>
             <div className="space-y-2">
-                <Label>Como saberemos que você venceu?</Label>
+                <Label className="text-sm font-bold">Como saberemos que você venceu?</Label>
                 <Textarea 
-                    placeholder="Seja específico (números, datas, eventos)..." 
+                    placeholder="Seja específico. O que exatamente precisa acontecer?" 
                     value={data.annual.successCriteria}
                     onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                    className="bg-neutral-900 border-white/10 focus-visible:ring-red-500"
+                    className="bg-neutral-900 border-white/10 focus-visible:ring-red-500 min-h-[80px]"
                 />
+                <p className="text-[10px] text-neutral-500">Dica: Se você não consegue medir, não é um critério de sucesso.</p>
             </div>
           </div>
         </div>
