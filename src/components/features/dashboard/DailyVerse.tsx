@@ -15,19 +15,40 @@ const INSPIRATIONS = [
   { text: "Não importa o quão devagar você vá, desde que você não pare.", author: "Confúcio" },
 ];
 
+const STORAGE_KEY = "daily_verse_seen_indices";
+
 export const DailyVerse = () => {
   const [inspiration, setInspiration] = useState(INSPIRATIONS[0]);
   const [isMinimized, setIsMinimized] = useState(false);
 
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * INSPIRATIONS.length);
+    // Carrega os índices já vistos do localStorage
+    const savedSeen = localStorage.getItem(STORAGE_KEY);
+    let seenIndices: number[] = savedSeen ? JSON.parse(savedSeen) : [];
+
+    // Identifica quais índices ainda não foram usados
+    let availableIndices = INSPIRATIONS.map((_, i) => i).filter(
+      (i) => !seenIndices.includes(i)
+    );
+
+    // Se todos foram vistos, reseta a lista para começar de novo
+    if (availableIndices.length === 0) {
+      seenIndices = [];
+      availableIndices = INSPIRATIONS.map((_, i) => i);
+    }
+
+    // Sorteia um índice entre os disponíveis
+    const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+    
+    // Atualiza o estado e salva o novo índice no histórico
     setInspiration(INSPIRATIONS[randomIndex]);
+    const updatedSeen = [...seenIndices, randomIndex];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedSeen));
   }, []);
 
   return (
     <div className="w-full transition-all duration-500 ease-in-out">
       {isMinimized ? (
-        /* Estado Minimizado: Apenas a pílula fina, sem margens extras */
         <div className="flex justify-center w-full animate-in fade-in slide-in-from-top-2 duration-300">
           <button 
             onClick={() => setIsMinimized(false)}
@@ -38,11 +59,9 @@ export const DailyVerse = () => {
           </button>
         </div>
       ) : (
-        /* Estado Expandido */
         <div className={cn(
             "relative overflow-hidden rounded-2xl border border-red-900/30 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-900/20 via-[#121212] to-[#0a0a0a] p-8 shadow-2xl min-h-[180px] flex flex-col justify-center transition-all duration-500 animate-in fade-in slide-in-from-top-4"
         )}>
-          {/* Botão Minimizar (Seta para cima) */}
           <button 
             onClick={() => setIsMinimized(true)}
             className="absolute top-3 right-3 p-1.5 text-neutral-600 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-all z-20 group"
@@ -51,7 +70,6 @@ export const DailyVerse = () => {
             <ChevronUp size={18} className="group-hover:-translate-y-0.5 transition-transform" />
           </button>
 
-          {/* Brilhos decorativos discretos */}
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-red-600/10 rounded-full blur-[60px]"></div>
           
           <div className="relative z-10 flex flex-col items-center text-center space-y-5">
