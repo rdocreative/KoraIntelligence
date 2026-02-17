@@ -4,7 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/providers/ThemeProvider";
-import { SettingsProvider } from "./hooks/useSettings"; // Importando o Provider
+import { SettingsProvider } from "./hooks/useSettings"; 
 import { FloatingNavbar } from "./components/layout/FloatingNavbar";
 import { TopBar } from "./components/layout/TopBar";
 import Index from "./pages/Index";
@@ -30,7 +30,7 @@ const App = () => (
       enableSystem={false}
       storageKey="app-theme"
     >
-      <SettingsProvider> {/* Provider adicionado aqui */}
+      <SettingsProvider>
         <TooltipProvider>
           <Toaster />
           <Sonner theme="dark" />
