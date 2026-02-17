@@ -36,18 +36,18 @@ const TaskList = ({
     <div className="space-y-3">
       <div className="space-y-2">
         {items.map(item => (
-          <div key={item.id} className="flex items-start gap-3 group animate-in slide-in-from-left-2 duration-300">
+          <div key={item.id} className="flex items-start gap-3 group animate-in slide-in-from-left-2 duration-300 hover:bg-white/5 p-1.5 rounded-lg transition-colors">
             <div 
               onClick={() => onToggle(item.id)}
-              className={`w-5 h-5 mt-0.5 rounded border flex items-center justify-center cursor-pointer transition-colors ${item.completed ? 'bg-red-600 border-red-600' : 'border-neutral-600 hover:border-red-500'}`}
+              className={`w-5 h-5 mt-0.5 rounded border flex items-center justify-center cursor-pointer transition-all duration-300 ease-out active:scale-75 ${item.completed ? 'bg-red-600 border-red-600' : 'border-neutral-600 hover:border-red-500 hover:scale-110'}`}
             >
-              {item.completed && <CheckSquare className="w-3.5 h-3.5 text-white" />}
+              {item.completed && <CheckSquare className="w-3.5 h-3.5 text-white animate-in zoom-in duration-300" />}
             </div>
-            <span className={`flex-1 text-sm ${item.completed ? 'text-neutral-500 line-through' : 'text-neutral-200'}`}>
+            <span className={`flex-1 text-sm transition-all duration-300 ${item.completed ? 'text-neutral-500 line-through opacity-50' : 'text-neutral-200'}`}>
               {item.text}
             </span>
             {onDelete && (
-              <button onClick={() => onDelete(item.id)} className="opacity-0 group-hover:opacity-100 text-neutral-600 hover:text-red-500 transition-opacity">
+              <button onClick={() => onDelete(item.id)} className="opacity-0 group-hover:opacity-100 text-neutral-600 hover:text-red-500 transition-all duration-300 hover:scale-110 hover:rotate-12">
                 <Trash2 className="w-4 h-4" />
               </button>
             )}
@@ -60,9 +60,9 @@ const TaskList = ({
           onChange={(e) => setNewItem(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
           placeholder={placeholder}
-          className="h-9 text-sm bg-neutral-900 border-neutral-800 focus:border-red-500/50"
+          className="h-9 text-sm bg-neutral-900 border-neutral-800 focus:border-red-500/50 transition-all duration-300 focus:ring-1 focus:ring-red-500/20"
         />
-        <Button size="sm" onClick={handleAdd} className="h-9 w-9 p-0 bg-neutral-800 hover:bg-neutral-700">
+        <Button size="sm" onClick={handleAdd} className="h-9 w-9 p-0 bg-neutral-800 hover:bg-neutral-700 transition-all duration-300 active:scale-90">
           <Plus className="w-4 h-4" />
         </Button>
       </div>
@@ -106,29 +106,29 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-red-600/20 blur-[100px] rounded-full pointer-events-none" />
            
            <div className="relative z-10 flex flex-col items-center gap-6">
-              <div className="w-24 h-24 bg-gradient-to-br from-neutral-800 to-black border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500">
-                  <Crown className="w-10 h-10 text-red-500" />
+              <div className="w-24 h-24 bg-gradient-to-br from-neutral-800 to-black border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl rotate-3 hover:rotate-0 transition-all duration-500 hover:scale-105 hover:shadow-red-900/20">
+                  <Crown className="w-10 h-10 text-red-500 animate-pulse" />
               </div>
 
               <div className="space-y-2">
-                  <h1 className="text-3xl font-black text-white tracking-tighter uppercase italic">
+                  <h1 className="text-3xl font-black text-white tracking-tighter uppercase italic animate-in slide-in-from-bottom-2 fade-in duration-700">
                     Masterplan
                   </h1>
-                  <p className="text-lg text-neutral-300 font-medium max-w-xs mx-auto leading-relaxed">
+                  <p className="text-lg text-neutral-300 font-medium max-w-xs mx-auto leading-relaxed animate-in slide-in-from-bottom-3 fade-in duration-1000 delay-150">
                     Você quer participar do <span className="text-red-500 font-bold">melhor método de organização</span> da sua vida?
                   </p>
               </div>
 
               <Button 
                 onClick={() => setShowIntro(false)}
-                className="group relative bg-white hover:bg-neutral-200 text-black font-black text-lg h-14 px-8 rounded-full shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.5)] transition-all duration-300 transform hover:-translate-y-1"
+                className="group relative bg-white hover:bg-neutral-200 text-black font-black text-lg h-14 px-8 rounded-full shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.5)] transition-all duration-300 transform hover:-translate-y-1 active:scale-95"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   SIM, QUERO COMEÇAR <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </span>
               </Button>
 
-              <button onClick={onComplete} className="text-xs text-neutral-600 hover:text-white uppercase font-bold tracking-widest transition-colors">
+              <button onClick={onComplete} className="text-xs text-neutral-600 hover:text-white uppercase font-bold tracking-widest transition-colors duration-300">
                 Pular Introdução
               </button>
            </div>
@@ -148,14 +148,14 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
             Esqueça listas infinitas. Este é um sistema japonês que transforma um grande sonho em tarefas simples de executar.
           </p>
           <div className="grid gap-3 my-4">
-            <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-red-500/30 transition-colors">
+            <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-red-500/30 transition-all duration-300 hover:translate-x-1">
                 <div className="p-2 bg-red-500/10 rounded-lg"><Target className="text-red-500 w-5 h-5" /></div>
                 <div className="text-left">
                   <span className="block text-sm font-bold text-white">1. Foco Absoluto</span>
                   <span className="text-xs text-neutral-500">Apenas um grande objetivo por vez.</span>
                 </div>
             </div>
-            <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-blue-500/30 transition-colors">
+            <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-blue-500/30 transition-all duration-300 hover:translate-x-1">
                 <div className="p-2 bg-blue-500/10 rounded-lg"><Calendar className="text-blue-500 w-5 h-5" /></div>
                 <div className="text-left">
                   <span className="block text-sm font-bold text-white">2. Ritmo Semanal</span>
@@ -174,7 +174,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
         <div className="space-y-6 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
           <div className="bg-red-900/10 border border-red-500/20 p-4 rounded-xl space-y-3">
             <h4 className="text-red-500 text-xs font-black uppercase flex items-center gap-2">
-              <Sparkles className="w-3 h-3" /> Exemplos para te inspirar
+              <Sparkles className="w-3 h-3 animate-pulse" /> Exemplos para te inspirar
             </h4>
             <div className="space-y-3">
               <div className="border-l-2 border-red-500/30 pl-3">
@@ -199,7 +199,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                     placeholder="Qual é a sua missão principal?" 
                     value={data.annual.objective}
                     onChange={(e) => updateAnnual({ objective: e.target.value })}
-                    className="bg-neutral-900 border-white/10 h-11 focus-visible:ring-red-500"
+                    className="bg-neutral-900 border-white/10 h-11 focus-visible:ring-red-500 transition-all duration-300"
                 />
             </div>
             <div className="space-y-2">
@@ -208,7 +208,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                     placeholder="Seja específico. O que exatamente precisa acontecer?" 
                     value={data.annual.successCriteria}
                     onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                    className="bg-neutral-900 border-white/10 focus-visible:ring-red-500 min-h-[80px]"
+                    className="bg-neutral-900 border-white/10 focus-visible:ring-red-500 min-h-[80px] transition-all duration-300"
                 />
                 <p className="text-[10px] text-neutral-500">Dica: Se você não consegue medir, não é um critério de sucesso.</p>
             </div>
@@ -234,14 +234,14 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                         onChange={(e) => handleAreaInputChange('work', e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem('work')}
                         placeholder="Ex: Guardar R$ 10k" 
-                        className="bg-neutral-900 border-white/10 text-sm h-10" 
+                        className="bg-neutral-900 border-white/10 text-sm h-10 transition-all focus:ring-1 focus:ring-blue-500/50" 
                     />
-                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => handleAddAreaItem('work')}>
+                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700 transition-all active:scale-95" onClick={() => handleAddAreaItem('work')}>
                         <Plus className="w-4 h-4"/>
                     </Button>
                 </div>
                 <div className="text-xs text-neutral-500 pl-2 space-y-1">
-                    {data.areas.work.map(i => <div key={i.id}>• {i.text}</div>)}
+                    {data.areas.work.map(i => <div key={i.id} className="animate-in slide-in-from-left-2 duration-300">• {i.text}</div>)}
                 </div>
             </div>
 
@@ -254,14 +254,14 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                         onChange={(e) => handleAreaInputChange('studies', e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem('studies')}
                         placeholder="Ex: Ler 12 livros" 
-                        className="bg-neutral-900 border-white/10 text-sm h-10" 
+                        className="bg-neutral-900 border-white/10 text-sm h-10 transition-all focus:ring-1 focus:ring-purple-500/50" 
                     />
-                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => handleAddAreaItem('studies')}>
+                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700 transition-all active:scale-95" onClick={() => handleAddAreaItem('studies')}>
                         <Plus className="w-4 h-4"/>
                     </Button>
                 </div>
                 <div className="text-xs text-neutral-500 pl-2 space-y-1">
-                    {data.areas.studies.map(i => <div key={i.id}>• {i.text}</div>)}
+                    {data.areas.studies.map(i => <div key={i.id} className="animate-in slide-in-from-left-2 duration-300">• {i.text}</div>)}
                 </div>
             </div>
 
@@ -274,14 +274,14 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                         onChange={(e) => handleAreaInputChange('health', e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem('health')}
                         placeholder="Ex: Academia 3x/semana" 
-                        className="bg-neutral-900 border-white/10 text-sm h-10" 
+                        className="bg-neutral-900 border-white/10 text-sm h-10 transition-all focus:ring-1 focus:ring-red-500/50" 
                     />
-                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => handleAddAreaItem('health')}>
+                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700 transition-all active:scale-95" onClick={() => handleAddAreaItem('health')}>
                         <Plus className="w-4 h-4"/>
                     </Button>
                 </div>
                 <div className="text-xs text-neutral-500 pl-2 space-y-1">
-                    {data.areas.health.map(i => <div key={i.id}>• {i.text}</div>)}
+                    {data.areas.health.map(i => <div key={i.id} className="animate-in slide-in-from-left-2 duration-300">• {i.text}</div>)}
                 </div>
             </div>
 
@@ -294,14 +294,14 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                         onChange={(e) => handleAreaInputChange('personal', e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem('personal')}
                         placeholder="Ex: Viagem em família" 
-                        className="bg-neutral-900 border-white/10 text-sm h-10" 
+                        className="bg-neutral-900 border-white/10 text-sm h-10 transition-all focus:ring-1 focus:ring-yellow-500/50" 
                     />
-                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700" onClick={() => handleAddAreaItem('personal')}>
+                    <Button size="icon" className="h-10 w-10 bg-neutral-800 hover:bg-neutral-700 transition-all active:scale-95" onClick={() => handleAddAreaItem('personal')}>
                         <Plus className="w-4 h-4"/>
                     </Button>
                 </div>
                 <div className="text-xs text-neutral-500 pl-2 space-y-1">
-                    {data.areas.personal.map(i => <div key={i.id}>• {i.text}</div>)}
+                    {data.areas.personal.map(i => <div key={i.id} className="animate-in slide-in-from-left-2 duration-300">• {i.text}</div>)}
                 </div>
             </div>
 
@@ -315,7 +315,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
       subtitle: "A estrutura foi criada. Agora é execução.",
       content: (
         <div className="space-y-6 text-center py-4">
-          <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 relative">
+          <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-6 relative animate-in zoom-in duration-500">
             <div className="absolute inset-0 bg-green-500/20 rounded-full animate-ping opacity-20" />
             <CheckCircle2 className="w-12 h-12 text-green-500" />
           </div>
@@ -345,10 +345,10 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-[#050505] flex items-center justify-center p-4 animate-in fade-in duration-500">
-      <Card className="w-full max-w-lg bg-[#121212] border-white/10 shadow-2xl relative overflow-hidden">
+      <Card className="w-full max-w-lg bg-[#121212] border-white/10 shadow-2xl relative overflow-hidden transition-all duration-500">
         {/* Progress Bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-neutral-900">
-            <div className="h-full bg-red-600 transition-all duration-300" style={{ width: `${((step + 1) / steps.length) * 100}%` }} />
+            <div className="h-full bg-red-600 transition-all duration-500 ease-out" style={{ width: `${((step + 1) / steps.length) * 100}%` }} />
         </div>
 
         <CardHeader className="text-center pt-8">
@@ -356,8 +356,10 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
           <CardDescription className="text-base font-medium text-neutral-500">{currentStep.subtitle}</CardDescription>
         </CardHeader>
 
-        <CardContent className="min-h-[320px] flex flex-col justify-center">
-            {currentStep.content}
+        <CardContent className="min-h-[320px] flex flex-col justify-center relative overflow-hidden">
+            <div key={step} className="animate-in fade-in slide-in-from-right-8 duration-500 ease-out w-full">
+                {currentStep.content}
+            </div>
         </CardContent>
 
         <CardFooter className="flex justify-between border-t border-white/5 pt-6 bg-black/20">
@@ -365,7 +367,7 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
                 variant="ghost" 
                 onClick={() => setStep(s => Math.max(0, s - 1))}
                 disabled={step === 0}
-                className="text-neutral-500 hover:text-white"
+                className="text-neutral-500 hover:text-white transition-all hover:-translate-x-1"
             >
                 <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
             </Button>
@@ -373,14 +375,14 @@ const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
             {step < steps.length - 1 ? (
                 <Button 
                     onClick={() => setStep(s => s + 1)} 
-                    className="bg-white text-black hover:bg-neutral-200 font-bold px-6"
+                    className="bg-white text-black hover:bg-neutral-200 font-bold px-6 transition-all hover:translate-x-1 active:scale-95"
                 >
                     Próximo <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
             ) : (
                 <Button 
                     onClick={onComplete} 
-                    className="bg-red-600 hover:bg-red-500 text-white font-bold shadow-[0_0_20px_rgba(220,38,38,0.5)] px-6"
+                    className="bg-red-600 hover:bg-red-500 text-white font-bold shadow-[0_0_20px_rgba(220,38,38,0.5)] px-6 transition-all hover:scale-105 active:scale-95"
                 >
                     Começar a Executar <Play className="w-4 h-4 ml-2 fill-current" />
                 </Button>
@@ -439,46 +441,46 @@ const MasterplanPage = () => {
                 <span className="bg-red-500/10 text-red-500 text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-widest border border-red-500/20">
                     Nenkan Mokuhyō
                 </span>
-                <Button variant="ghost" size="sm" onClick={resetTutorial} className="h-5 text-[10px] text-neutral-600 hover:text-white px-2">
+                <Button variant="ghost" size="sm" onClick={resetTutorial} className="h-5 text-[10px] text-neutral-600 hover:text-white px-2 transition-colors">
                     <HelpCircle className="w-3 h-3 mr-1" /> Ver Tutorial
                 </Button>
             </div>
-            <h1 className="text-4xl font-black text-white glow-text uppercase italic tracking-tighter">Masterplan</h1>
-            <p className="text-neutral-500 font-medium max-w-md">
+            <h1 className="text-4xl font-black text-white glow-text uppercase italic tracking-tighter animate-in slide-in-from-left-2 duration-700">Masterplan</h1>
+            <p className="text-neutral-500 font-medium max-w-md animate-in slide-in-from-left-2 duration-700 delay-100">
                 {data.annual.objective || "Defina seu objetivo anual..."}
             </p>
          </div>
          
-         <div className="flex flex-col items-end gap-2 w-full md:w-auto">
+         <div className="flex flex-col items-end gap-2 w-full md:w-auto animate-in slide-in-from-right-2 duration-700 delay-200">
             <div className="flex justify-between w-full md:w-48 text-xs font-bold uppercase text-neutral-400">
                 <span>Progresso do Ano</span>
                 <span className="text-white">{data.annual.progress}%</span>
             </div>
-            <Progress value={data.annual.progress} className="h-2 w-full md:w-48 bg-neutral-900" indicatorClassName="bg-red-600" />
+            <Progress value={data.annual.progress} className="h-2 w-full md:w-48 bg-neutral-900" indicatorClassName="bg-red-600 transition-all duration-1000 ease-out" />
          </div>
       </header>
 
       <Tabs defaultValue="overview" className="w-full">
         <TabsList className="w-full grid grid-cols-4 bg-[#121212] p-1 border border-white/5 rounded-2xl mb-6 h-12">
-          <TabsTrigger value="overview" className="rounded-xl font-bold data-[state=active]:bg-white data-[state=active]:text-black text-[10px] md:text-xs">
+          <TabsTrigger value="overview" className="rounded-xl font-bold data-[state=active]:bg-white data-[state=active]:text-black text-[10px] md:text-xs transition-all duration-300">
              VISÃO GERAL
           </TabsTrigger>
-          <TabsTrigger value="weekly" className="rounded-xl font-bold data-[state=active]:bg-red-600 data-[state=active]:text-white text-[10px] md:text-xs">
+          <TabsTrigger value="weekly" className="rounded-xl font-bold data-[state=active]:bg-red-600 data-[state=active]:text-white text-[10px] md:text-xs transition-all duration-300">
              SEMANAL <span className="hidden md:inline ml-1">(Foco)</span>
           </TabsTrigger>
-          <TabsTrigger value="monthly" className="rounded-xl font-bold data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-[10px] md:text-xs">
+          <TabsTrigger value="monthly" className="rounded-xl font-bold data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-[10px] md:text-xs transition-all duration-300">
              MENSAL
           </TabsTrigger>
-          <TabsTrigger value="annual" className="rounded-xl font-bold data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-[10px] md:text-xs">
+          <TabsTrigger value="annual" className="rounded-xl font-bold data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-[10px] md:text-xs transition-all duration-300">
              ANUAL
           </TabsTrigger>
         </TabsList>
 
         {/* --- 1. VISÃO GERAL (DASHBOARD) --- */}
-        <TabsContent value="overview" className="space-y-6 outline-none animate-in slide-in-from-bottom-4 duration-500">
+        <TabsContent value="overview" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out">
            {/* Cartão de Foco Atual */}
            <div className="grid md:grid-cols-3 gap-6">
-              <Card className="md:col-span-2 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] border-red-900/20 shadow-2xl relative overflow-hidden">
+              <Card className="md:col-span-2 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] border-red-900/20 shadow-2xl relative overflow-hidden transition-all duration-500 hover:shadow-red-900/10 hover:border-red-900/40">
                  <div className="absolute top-0 right-0 p-8 opacity-5">
                     <Clock className="w-32 h-32" />
                  </div>
@@ -495,7 +497,7 @@ const MasterplanPage = () => {
                                 <span>{activeWeeks[0].tasks.filter(t => t.completed).length} Concluídas</span>
                                 <span>{activeWeeks[0].tasks.length} Total</span>
                             </div>
-                            <Progress value={(activeWeeks[0].tasks.filter(t => t.completed).length / (activeWeeks[0].tasks.length || 1)) * 100} className="h-1.5" />
+                            <Progress value={(activeWeeks[0].tasks.filter(t => t.completed).length / (activeWeeks[0].tasks.length || 1)) * 100} className="h-1.5" indicatorClassName="bg-white transition-all duration-1000 ease-out" />
                         </div>
                     ) : (
                         <div className="text-neutral-500 italic py-4">
@@ -505,7 +507,7 @@ const MasterplanPage = () => {
                  </CardContent>
               </Card>
 
-              <Card className="bg-[#121212] border-white/5">
+              <Card className="bg-[#121212] border-white/5 transition-all duration-300 hover:border-white/10">
                  <CardHeader>
                     <CardTitle className="text-sm font-bold text-neutral-400 uppercase">Mês Atual: {currentMonth.name}</CardTitle>
                  </CardHeader>
@@ -528,9 +530,9 @@ const MasterplanPage = () => {
                     { title: "Saúde", items: data.areas.health, icon: Heart, color: "text-red-500" },
                     { title: "Pessoal", items: data.areas.personal, icon: User, color: "text-yellow-500" },
                 ].map((area, i) => (
-                    <Card key={i} className="bg-[#121212] border-white/5 hover:border-white/10 transition-colors">
+                    <Card key={i} className="bg-[#121212] border-white/5 hover:border-white/20 transition-all duration-300 hover:-translate-y-1">
                         <CardContent className="pt-6 flex flex-col items-center text-center gap-2">
-                            <area.icon className={`w-6 h-6 ${area.color}`} />
+                            <area.icon className={`w-6 h-6 ${area.color} transition-transform duration-300 group-hover:scale-110`} />
                             <span className="font-bold text-sm text-white">{area.title}</span>
                             <span className="text-xs text-neutral-500">{area.items.filter(i => i.completed).length}/{area.items.length} Concluídos</span>
                         </CardContent>
@@ -540,7 +542,7 @@ const MasterplanPage = () => {
         </TabsContent>
 
         {/* --- 2. WEEKLY (EXECUÇÃO) --- */}
-        <TabsContent value="weekly" className="space-y-8 outline-none">
+        <TabsContent value="weekly" className="space-y-8 outline-none animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out">
            <Card className="bg-[#121212] border-white/5">
              <CardHeader className="border-b border-white/5 pb-4">
                 <CardTitle className="text-lg font-black uppercase text-white flex items-center gap-2">
@@ -556,7 +558,7 @@ const MasterplanPage = () => {
                         value={newWeekGoal}
                         onChange={(e) => setNewWeekGoal(e.target.value)}
                         placeholder="Ex: Finalizar o módulo X..." 
-                        className="bg-neutral-900 border-white/5 h-12" 
+                        className="bg-neutral-900 border-white/5 h-12 transition-all focus:ring-1 focus:ring-red-500/50" 
                       />
                    </div>
                    <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
@@ -566,7 +568,7 @@ const MasterplanPage = () => {
                           type="date" 
                           value={newWeekStart}
                           onChange={(e) => setNewWeekStart(e.target.value)}
-                          className="bg-neutral-900 border-white/5 h-12" 
+                          className="bg-neutral-900 border-white/5 h-12 transition-all focus:ring-1 focus:ring-red-500/50" 
                         />
                       </div>
                       <div className="space-y-2">
@@ -575,11 +577,11 @@ const MasterplanPage = () => {
                           type="date" 
                           value={newWeekEnd}
                           onChange={(e) => setNewWeekEnd(e.target.value)}
-                          className="bg-neutral-900 border-white/5 h-12" 
+                          className="bg-neutral-900 border-white/5 h-12 transition-all focus:ring-1 focus:ring-red-500/50" 
                         />
                       </div>
                    </div>
-                   <Button onClick={handleCreateWeek} className="w-full md:w-auto h-12 bg-red-600 hover:bg-red-500 font-bold px-8">
+                   <Button onClick={handleCreateWeek} className="w-full md:w-auto h-12 bg-red-600 hover:bg-red-500 font-bold px-8 transition-all active:scale-95 shadow-lg shadow-red-900/20 hover:shadow-red-900/40">
                      CRIAR
                    </Button>
                 </div>
@@ -588,14 +590,14 @@ const MasterplanPage = () => {
 
            <div className="space-y-6">
               {data.weeks.length === 0 && (
-                <div className="text-center py-20 opacity-50">
+                <div className="text-center py-20 opacity-50 animate-in fade-in duration-500">
                     <Calendar className="w-16 h-16 mx-auto mb-4 text-neutral-600" />
                     <p>Nenhuma semana planejada.</p>
                 </div>
               )}
 
               {data.weeks.map((week) => (
-                <Card key={week.id} className="bg-[#121212] border-white/5 overflow-hidden animate-in slide-in-from-bottom-2">
+                <Card key={week.id} className="bg-[#121212] border-white/5 overflow-hidden animate-in slide-in-from-bottom-4 duration-500">
                   <CardHeader className="bg-neutral-900/30 border-b border-white/5 pb-3">
                      <div className="flex justify-between items-start">
                         <div>
@@ -604,7 +606,7 @@ const MasterplanPage = () => {
                            </div>
                            <CardTitle className="text-xl text-white font-black uppercase italic">{week.goal}</CardTitle>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => deleteWeek(week.id)} className="text-neutral-600 hover:text-red-500">
+                        <Button variant="ghost" size="icon" onClick={() => deleteWeek(week.id)} className="text-neutral-600 hover:text-red-500 transition-all hover:scale-110 active:scale-90">
                           <Trash2 className="w-4 h-4" />
                         </Button>
                      </div>
@@ -632,7 +634,7 @@ const MasterplanPage = () => {
                                <Input 
                                   value={week.review.worked}
                                   onChange={(e) => updateWeekReview(week.id, 'worked', e.target.value)}
-                                  className="bg-neutral-900/50 border-white/5 text-xs h-8"
+                                  className="bg-neutral-900/50 border-white/5 text-xs h-8 transition-all focus:ring-1 focus:ring-green-500/50"
                                />
                            </div>
                            <div className="space-y-1">
@@ -640,7 +642,7 @@ const MasterplanPage = () => {
                                <Input 
                                   value={week.review.didntWork}
                                   onChange={(e) => updateWeekReview(week.id, 'didntWork', e.target.value)}
-                                  className="bg-neutral-900/50 border-white/5 text-xs h-8"
+                                  className="bg-neutral-900/50 border-white/5 text-xs h-8 transition-all focus:ring-1 focus:ring-red-500/50"
                                />
                            </div>
                            <div className="space-y-1">
@@ -648,7 +650,7 @@ const MasterplanPage = () => {
                                <Input 
                                   value={week.review.improve}
                                   onChange={(e) => updateWeekReview(week.id, 'improve', e.target.value)}
-                                  className="bg-neutral-900/50 border-white/5 text-xs h-8"
+                                  className="bg-neutral-900/50 border-white/5 text-xs h-8 transition-all focus:ring-1 focus:ring-yellow-500/50"
                                />
                            </div>
                         </div>
@@ -660,24 +662,24 @@ const MasterplanPage = () => {
         </TabsContent>
 
         {/* --- 3. MONTHLY (PLANEJAMENTO) --- */}
-        <TabsContent value="monthly" className="space-y-6 outline-none">
+        <TabsContent value="monthly" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out">
            <Accordion type="single" collapsible className="w-full space-y-4" defaultValue={`month-${currentMonth.id}`}>
              {data.months.map((month, index) => {
                const isCurrent = index === currentMonthIndex;
                return (
-                <AccordionItem key={month.id} value={`month-${month.id}`} className={`border ${isCurrent ? 'border-red-500/30 bg-red-900/5' : 'border-white/5 bg-[#121212]'} rounded-2xl px-4 transition-all`}>
+                <AccordionItem key={month.id} value={`month-${month.id}`} className={`border ${isCurrent ? 'border-red-500/30 bg-red-900/5' : 'border-white/5 bg-[#121212]'} rounded-2xl px-4 transition-all duration-300`}>
                   <AccordionTrigger className="hover:no-underline py-4">
                     <div className="flex items-center gap-4">
                       <span className={`text-xl font-black uppercase ${isCurrent ? 'text-red-500' : 'text-neutral-400'}`}>
                         {month.name}
                       </span>
-                      {isCurrent && <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Atual</span>}
+                      {isCurrent && <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase animate-pulse">Atual</span>}
                       <span className="text-xs font-medium text-neutral-600">
                          {month.goals.filter(g => g.completed).length}/{month.goals.length} Metas
                       </span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="pb-6 pt-2">
+                  <AccordionContent className="pb-6 pt-2 animate-in slide-in-from-top-2 duration-300">
                     <div className="grid md:grid-cols-2 gap-8">
                       <div className="space-y-3">
                          <Label className="text-xs font-black uppercase text-neutral-500">Metas do Mês</Label>
@@ -692,7 +694,7 @@ const MasterplanPage = () => {
                          <Textarea 
                             value={month.notes}
                             onChange={(e) => updateMonth(index, { notes: e.target.value })}
-                            className="bg-neutral-900/50 border-white/5 h-[150px] resize-none"
+                            className="bg-neutral-900/50 border-white/5 h-[150px] resize-none transition-all focus:ring-1 focus:ring-white/20"
                             placeholder="Ideias..."
                          />
                       </div>
@@ -705,13 +707,13 @@ const MasterplanPage = () => {
         </TabsContent>
 
         {/* --- 4. ANNUAL (ESTRUTURA) --- */}
-        <TabsContent value="annual" className="space-y-8 outline-none">
+        <TabsContent value="annual" className="space-y-8 outline-none animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out">
             <div className="space-y-2">
                 <Label className="text-red-500 font-black tracking-widest uppercase text-xs">Objetivo Principal do Ano</Label>
                 <Input 
                     value={data.annual.objective}
                     onChange={(e) => updateAnnual({ objective: e.target.value })}
-                    className="text-2xl font-black bg-transparent border-none border-b border-white/10 rounded-none focus-visible:ring-0 px-0 h-auto py-2 placeholder:text-neutral-700 text-white"
+                    className="text-2xl font-black bg-transparent border-none border-b border-white/10 rounded-none focus-visible:ring-0 px-0 h-auto py-2 placeholder:text-neutral-700 text-white transition-all focus:border-red-500"
                 />
             </div>
 
@@ -720,7 +722,7 @@ const MasterplanPage = () => {
                 <Textarea 
                     value={data.annual.successCriteria}
                     onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                    className="bg-neutral-900/50 border-white/5 resize-none h-20 text-sm"
+                    className="bg-neutral-900/50 border-white/5 resize-none h-20 text-sm transition-all focus:ring-1 focus:ring-red-500/20"
                 />
             </div>
 
