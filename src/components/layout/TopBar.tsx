@@ -1,10 +1,10 @@
-import { Bell, Search, Trophy, Medal, UserCircle } from 'lucide-react';
+import { Bell, Search, Trophy, Medal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ProfilePopover } from '../features/profile/ProfilePopover';
 import { AchievementsPopover } from '../features/achievements/AchievementsPopover';
 import { TitlesPopover } from '../features/titles/TitlesPopover';
@@ -26,28 +26,28 @@ export const TopBar = () => {
         {/* Grupo de Ações */}
         <div className="flex items-center gap-2">
             {/* Títulos */}
-            <Popover>
-              <PopoverTrigger asChild>
+            <Dialog>
+              <DialogTrigger asChild>
                 <Button variant="ghost" size="icon" className="w-11 h-11 text-neutral-400 hover:text-white hover:bg-white/5 rounded-2xl transition-all">
                     <Medal className="w-5 h-5" />
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent className="p-0 border-none bg-transparent shadow-none" align="center" sideOffset={15}>
+              </DialogTrigger>
+              <DialogContent className="p-0 border-none bg-transparent shadow-none sm:max-w-fit">
                 <TitlesPopover />
-              </PopoverContent>
-            </Popover>
+              </DialogContent>
+            </Dialog>
 
             {/* Conquistas */}
-            <Popover>
-              <PopoverTrigger asChild>
+            <Dialog>
+              <DialogTrigger asChild>
                 <Button variant="ghost" size="icon" className="w-11 h-11 text-neutral-400 hover:text-white hover:bg-white/5 rounded-2xl transition-all">
                     <Trophy className="w-5 h-5" />
                 </Button>
-              </PopoverTrigger>
-              <PopoverContent className="p-0 border-none bg-transparent shadow-none" align="center" sideOffset={15}>
+              </DialogTrigger>
+              <DialogContent className="p-0 border-none bg-transparent shadow-none sm:max-w-fit">
                 <AchievementsPopover />
-              </PopoverContent>
-            </Popover>
+              </DialogContent>
+            </Dialog>
 
             {/* Notificações */}
             <Button 
@@ -63,16 +63,16 @@ export const TopBar = () => {
             <div className="w-[1px] h-6 bg-white/10 mx-1" />
 
             {/* Perfil */}
-            <Popover>
-              <PopoverTrigger asChild>
+            <Dialog>
+              <DialogTrigger asChild>
                 <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#1a1a1a] to-[#2a2a2a] border border-white/10 flex items-center justify-center text-white font-bold text-xs shadow-lg cursor-pointer hover:border-red-500/50 hover:scale-105 transition-all">
                   ME
                 </div>
-              </PopoverTrigger>
-              <PopoverContent className="p-0 border-none bg-transparent shadow-none" align="end" sideOffset={15}>
+              </DialogTrigger>
+              <DialogContent className="p-0 border-none bg-transparent shadow-none sm:max-w-fit">
                 <ProfilePopover />
-              </PopoverContent>
-            </Popover>
+              </DialogContent>
+            </Dialog>
         </div>
       </div>
     </header>
