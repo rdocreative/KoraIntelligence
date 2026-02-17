@@ -54,11 +54,12 @@ export const DailyVerse = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed top-[10%] left-1/2 -translate-x-1/2 z-[999] w-full max-w-lg px-4 animate-in slide-in-from-top-8 fade-in duration-700 ease-out">
+    /* O componente agora é 'fixed', o que significa que ele flutua sobre a página sem ocupar espaço no grid */
+    <div className="fixed top-[10%] left-1/2 -translate-x-1/2 z-[999] w-full max-w-lg px-4 pointer-events-none">
       <div className={cn(
-        "relative overflow-hidden rounded-2xl border border-red-900/40 bg-[#0a0a0a]/95 backdrop-blur-xl shadow-[0_20px_50px_-12px_rgba(220,38,38,0.2)] p-5"
+        "relative overflow-hidden rounded-2xl border border-red-900/40 bg-[#0a0a0a]/95 backdrop-blur-xl shadow-[0_20px_50px_-12px_rgba(220,38,38,0.2)] p-5 animate-in slide-in-from-top-8 fade-in duration-700 ease-out pointer-events-auto"
       )}>
-        {/* Botão Fechar - Adicionado z-50 e cursor-pointer para garantir clique */}
+        {/* Botão Fechar */}
         <button 
           type="button"
           onClick={(e) => {
