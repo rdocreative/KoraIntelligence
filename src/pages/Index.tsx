@@ -1,65 +1,113 @@
-import { useHabitTracker } from '@/hooks/useHabitTracker';
-import { HabitCard } from '@/components/features/habit-tracker/HabitCard';
-import { DailyVerse } from '@/components/features/dashboard/DailyVerse';
-import { MonthlyProgress } from '@/components/features/dashboard/MonthlyProgress';
-import { MonthlyChart } from '@/components/features/dashboard/MonthlyChart';
-import { Gamification } from '@/components/features/habit-tracker/Gamification';
+import React, { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useMasterplan } from "@/hooks/useMasterplan";
+import { OverviewTab } from "@/components/masterplan/OverviewTab";
+import { WeeklyTab } from "@/components/masterplan/WeeklyTab";
+import { MonthlyTab } from "@/components/masterplan/MonthlyTab";
+import { AnnualTab } from "@/components/masterplan/AnnualTab";
+import { LoadingScreen } from "@/components/masterplan/LoadingScreen";
+import { OnboardingWizard } from "@/components/masterplan/OnboardingWizard";
 
 const Index = () => {
   const { 
-    habits, 
-    totalPoints, 
-    history, 
-    streak, 
-    completeHabit, 
-    getCurrentBadge,
-    getNextBadge
-  } = useHabitTracker();
+    data, 
+    loading, 
+    updateAnnual, 
+    addAreaItem, 
+    toggleAreaItem, 
+    deleteAreaItem,
+    addWeek,
+    deleteWeek,
+    addWeekTask,
+    toggleWeekTask,
+    updateWeekReview,
+    addMonthGoal,
+    toggleMonthGoal,
+    updateMonth,
+    resetData,
+    analytics 
+  } = useMasterplan();
 
-  const currentBadge = getCurrentBadge();
-  const nextBadge = getNextBadge();
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("overview");
+
+  if (loading || isLoading) {
+    return <LoadingScreen onFinished={() => setIsLoading(false)} />;
+  }
+
+  if (!data.onboardingCompleted) {
+    return <OnboardingWizard onComplete={() => window.location.reload()} />;
+  }
 
   return (
-    <div className="space-y-8 outline-none relative">
-      {/* Componente flutuante de frase do dia */}
-      <DailyVerse />
-      
-      {/* Status Mensal no Topo (Full Width) */}
-      <MonthlyProgress totalPoints={totalPoints} habitsCount={habits.length} />
-
-      <div className="grid lg:grid-cols-3 gap-8 items-start">
-          {/* Coluna da Esquerda: Gráficos e Detalhes */}
-          <div className="lg:col-span-2 space-y-8">
-            <MonthlyChart history={history} />
-          </div>
-
-          {/* Coluna da Direita: Gamificação e Hábitos */}
-          <div className="lg:col-span-1 space-y-8">
-            <Gamification 
-              currentBadge={currentBadge} 
-              nextBadge={nextBadge} 
-              totalPoints={totalPoints}
-              streak={streak}
-            />
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between px-1">
-                  <h3 className="font-bold text-lg text-white">Tarefas Prioritárias</h3>
-                  <span className="text-xs text-red-500 font-bold cursor-pointer hover:underline">Ver todas</span>
-              </div>
-              <div className="space-y-4">
-                {habits.slice(0, 5).map((habit, index) => (
-                  <HabitCard 
-                    key={habit.id} 
-                    habit={habit} 
-                    onComplete={completeHabit}
-                    index={index} 
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-red-500/30">
+      {/* Background Decor */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-red-900/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-900/5 blur-[120px] rounded-full" />
       </div>
+
+      <main className="relative z-10 container mx-auto px-4 md:px-8 py-8 md:py-12 max-w-7xl">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="flex justify-center mb-12">
+            <TabsList className="bg-neutral-900/50 border border-white/5 p-1 rounded-full backdrop-blur-md">
+              <TabsTrigger value="overview" className="rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-black transition-all">Visão</TabsTrigger>
+              <TabsTrigger value="weekly" className="rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-black transition-all">Foco</TabsTrigger>
+              <TabsTrigger value="monthly" className="rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-black transition-all">Mês</TabsTrigger>
+              <TabsTrigger value="annual" className="rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-black transition-all">Ano</TabsTrigger>
+            </TabsList>
+          </div>
+
+          <div className="bg-transparent border-none shadow-none p-0">
+            <TabsContent value="overview" className="mt-0 outline-none">
+              <OverviewTab 
+                activeWeeks={data.weeks} 
+                currentMonth={data.months[analytics.currentMonthIndex]} 
+                areas={data.areas}
+                onNavigateToWeekly={() => setActiveTab("weekly")}
+                annualData={{
+                  objective: data.annual.objective,
+                  successCriteria: data.annual.successCriteria,
+                  progress: data.annual.progress
+                }}
+                onResetTutorial={resetData}
+              />
+            </TabsContent>
+
+            <TabsContent value="weekly" className="mt-0 outline-none">
+              <WeeklyTab 
+                weeks={data.weeks}
+                addWeek={addWeek}
+                deleteWeek={deleteWeek}
+                addWeekTask={addWeekTask}
+                toggleWeekTask={toggleWeekTask}
+                updateWeekReview={updateWeekReview}
+              />
+            </TabsContent>
+
+            <TabsContent value="monthly" className="mt-0 outline-none">
+              <MonthlyTab 
+                months={data.months}
+                currentMonthIndex={analytics.currentMonthIndex}
+                addMonthGoal={addMonthGoal}
+                toggleMonthGoal={toggleMonthGoal}
+                updateMonth={updateMonth}
+              />
+            </TabsContent>
+
+            <TabsContent value="annual" className="mt-0 outline-none">
+              <AnnualTab 
+                data={data}
+                analytics={analytics}
+                updateAnnual={updateAnnual}
+                addAreaItem={addAreaItem}
+                toggleAreaItem={toggleAreaItem}
+                deleteAreaItem={deleteAreaItem}
+              />
+            </TabsContent>
+          </div>
+        </Tabs>
+      </main>
     </div>
   );
 };
