@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DailyRecord } from "@/hooks/useHabitTracker";
+import { DailyRecord } from "../../../hooks/useHabitTracker";
 
 interface ProgressChartProps {
   data: DailyRecord[];
