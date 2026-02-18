@@ -20,20 +20,20 @@ function Calendar({
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
-        caption: "flex justify-center pt-1 relative items-center mb-4",
+        caption: "flex justify-center pt-1 relative items-center mb-4", // Mais espaço abaixo do título
         caption_label: "text-sm font-bold text-white uppercase tracking-wider",
-        nav: "space-x-1 flex items-center absolute inset-x-0 justify-between px-1",
+        nav: "space-x-1 flex items-center absolute inset-x-0 justify-between px-1", // Botões nos extremos
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
           "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 border-white/10 text-white hover:bg-white/10 transition-all rounded-lg z-10"
         ),
-        nav_button_previous: "relative",
+        nav_button_previous: "relative", // Removido absolute para usar flex no container 'nav'
         nav_button_next: "relative",
-        table: "w-full border-collapse space-y-1 block",
-        head_row: "hidden", // Ocultando a linha dos dias da semana (Mo, Tu, We...)
+        table: "w-full border-collapse space-y-1 block", // Block para permitir que os filhos sejam Grid
+        head_row: "grid grid-cols-7 w-full mb-2", // GRID DE 7 COLUNAS NO CABEÇALHO
         head_cell:
-          "text-neutral-500 font-bold text-[0.7rem] uppercase tracking-wider text-center w-full",
-        row: "grid grid-cols-7 w-full mt-1",
+          "text-neutral-500 font-bold text-[0.7rem] uppercase tracking-wider text-center w-full", // Centralizado e largura total da célula do grid
+        row: "grid grid-cols-7 w-full mt-1", // GRID DE 7 COLUNAS NAS LINHAS
         cell: "h-9 w-full text-center text-sm p-0 relative flex items-center justify-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
         day: cn(
           buttonVariants({ variant: "ghost" }),
