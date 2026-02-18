@@ -1,3 +1,6 @@
+import { Home, Bell } from "lucide-react";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { Button } from "@/components/ui/button";
 import { useHabitTracker } from '@/hooks/useHabitTracker';
 import { HabitCard } from '@/components/features/habit-tracker/HabitCard';
 import { DailyVerse } from '@/components/features/dashboard/DailyVerse';
@@ -20,7 +23,21 @@ const Index = () => {
   const nextBadge = getNextBadge();
 
   return (
-    <div className="space-y-8 outline-none relative">
+    <div className="space-y-6 outline-none relative animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* Page Header - Vermelho Início */}
+      <PageHeader
+        title="Início"
+        subtitle="Visão geral da sua produtividade"
+        icon={Home}
+        hexColor="#e8283a"
+        rightAction={
+            <Button size="icon" variant="ghost" className="h-9 w-9 text-neutral-400 hover:text-white hover:bg-white/5 rounded-full">
+                <Bell size={20} />
+                <span className="absolute top-2 right-2.5 w-2 h-2 bg-[#e8283a] rounded-full border border-[#141418]"></span>
+            </Button>
+        }
+      />
+
       {/* Componente flutuante de frase do dia */}
       <DailyVerse />
       

@@ -8,22 +8,20 @@ import { SettingsProvider } from "./hooks/useSettings";
 import { HabitProvider } from "./hooks/useHabitTracker";
 import { MasterplanProvider } from "./hooks/useMasterplan";
 import { FloatingNavbar } from "./components/layout/FloatingNavbar";
-import { TopBar } from "./components/layout/TopBar";
+import { TopBar } from "./components/layout/TopBar"; // Mantendo TopBar global, mas o PageHeader estará no conteúdo
 import Index from "./pages/Index";
 import MasterplanPage from "./pages/Masterplan";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+// New Pages
+import TasksPage from "./pages/Tasks";
+import GoalsPage from "./pages/Goals";
+import MissionsPage from "./pages/Missions";
+import CommunityPage from "./pages/Community";
+import StorePage from "./pages/Store";
 
-const PlaceholderPage = ({ title }: { title: string }) => (
-  <div className="min-h-screen flex items-center justify-center p-4">
-    <div className="text-center space-y-4">
-      <h1 className="text-4xl font-black text-white glow-text">{title}</h1>
-      <p className="text-neutral-500">Módulo em desenvolvimento...</p>
-    </div>
-  </div>
-);
+const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -55,13 +53,13 @@ const App = () => (
                         <Route path="/" element={<Index />} />
                         <Route path="/masterplan" element={<MasterplanPage />} />
                         <Route path="/habitos" element={<MasterplanPage />} />
-                        <Route path="/tarefas" element={<PlaceholderPage title="Tarefas" />} />
-                        <Route path="/metas" element={<PlaceholderPage title="Metas" />} />
-                        <Route path="/missoes" element={<PlaceholderPage title="Missões" />} />
-                        <Route path="/comunidade" element={<PlaceholderPage title="Comunidade" />} />
-                        <Route path="/financa" element={<PlaceholderPage title="Finanças" />} />
-                        <Route path="/loja" element={<PlaceholderPage title="Loja" />} />
-                        <Route path="/inventario" element={<PlaceholderPage title="Inventário" />} />
+                        <Route path="/tarefas" element={<TasksPage />} />
+                        <Route path="/metas" element={<GoalsPage />} />
+                        <Route path="/missoes" element={<MissionsPage />} />
+                        <Route path="/comunidade" element={<CommunityPage />} />
+                        <Route path="/financa" element={<StorePage />} /> {/* Usando StorePage temporariamente ou criar FinancePage? O prompt não pediu Finance, mas Store. Vou usar Store para /loja */}
+                        <Route path="/loja" element={<StorePage />} />
+                        <Route path="/inventario" element={<StorePage />} /> {/* Usando StorePage como placeholder melhorado */}
                         <Route path="/configuracoes" element={<Settings />} />
                         <Route path="*" element={<NotFound />} />
                       </Routes>
