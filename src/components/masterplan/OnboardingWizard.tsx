@@ -86,12 +86,12 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     );
   };
 
-  // Tactical Background Component (Opacity increased by 60%)
+  // Tactical Background Component (Opacity reduced by 15% from previous 0.8/0.85)
   const AppBackground = () => (
     <div 
       className="fixed inset-0 pointer-events-none -z-10 bg-black"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.85)), url('/Background-MasterPlan.png')`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.7)), url('/Background-MasterPlan.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
