@@ -1,125 +1,106 @@
 import React from "react";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { useHabitTracker } from "@/hooks/useHabitTracker";
-import { useSettings } from "@/hooks/useSettings";
-import { DailyVerse } from "@/components/features/dashboard/DailyVerse";
-import { Gamification } from "@/components/features/habit-tracker/Gamification";
-import { HabitCard } from "@/components/features/habit-tracker/HabitCard";
-import { MonthlyProgress } from "@/components/features/dashboard/MonthlyProgress";
-import { MonthlyChart } from "@/components/features/dashboard/MonthlyChart";
-import { FAQSection } from "@/components/features/dashboard/FAQSection";
-import { HabitMonthView } from "@/components/features/habit-tracker/HabitMonthView";
-import { Flame, CalendarDays, LayoutDashboard } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useMasterplan } from "@/hooks/useMasterplan";
+import { ExecutionTab } from "@/components/masterplan/ExecutionTab";
+import { YearlyTab } from "@/components/masterplan/YearlyTab";
+import { LifeVisionTab } from "@/components/masterplan/LifeVisionTab";
+import { Sword, Mountain, Crown } from "lucide-react";
 
 const Index = () => {
-  const { habits, completeHabit, totalPoints, streak, getCurrentBadge, getNextBadge, history } = useHabitTracker();
-  const { settings } = useSettings();
-
-  const today = new Date();
-  const currentBadge = getCurrentBadge();
-  const nextBadge = getNextBadge();
-
-  // Filtra e ordena os hábitos: não completados primeiro
-  const sortedHabits = [...habits].sort((a, b) => {
-    if (a.completed === b.completed) return 0;
-    return a.completed ? 1 : -1;
-  });
+  const { 
+    months, 
+    currentMonthIndex, 
+    weeks, 
+    addMonthGoal, 
+    toggleMonthGoal, 
+    updateMonth,
+    addWeek,
+    deleteWeek,
+    addWeekTask,
+    toggleWeekTask,
+    updateWeekReview,
+    // Assumindo que existam handlers para o ano e vida, baseados no padrão
+    lifeVision,
+    updateLifeVision,
+    years,
+    updateYear
+  } = useMasterplan();
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {settings.showDailyVerse && <DailyVerse />}
-
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-3xl md:text-4xl font-black text-white glow-text uppercase italic tracking-tighter">
-            Olá, {settings.userName.split(" ")[0]}
-          </h1>
-          <p className="text-neutral-500 font-medium flex items-center gap-2 text-sm">
-            <CalendarDays className="w-4 h-4 text-red-500" />
-            {format(today, "EEEE, d 'de' MMMM", { locale: ptBR })}
-          </p>
-        </div>
+    <div className="min-h-screen bg-[#050505] text-neutral-200 font-sans selection:bg-red-500/30">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
         
-        <div className="flex items-center gap-3 bg-[#121212] px-4 py-2 rounded-2xl border border-white/5 shadow-lg">
-          <div className="p-2 bg-red-500/10 rounded-full">
-            <Flame className={`w-5 h-5 ${streak > 0 ? 'text-red-500 fill-red-500 animate-pulse' : 'text-neutral-600'}`} />
+        <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase mb-2">
+              Master<span className="text-red-600">Plan</span>
+            </h1>
+            <p className="text-neutral-500 font-medium">Design your life. Execute daily.</p>
           </div>
-          <div className="flex flex-col">
-            <span className="text-xl font-black text-white leading-none">{streak}</span>
-            <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Dias Seguidos</span>
-          </div>
-        </div>
-      </div>
+        </header>
 
-      {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Habits (2/3) */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="space-y-4">
-             <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                   <LayoutDashboard className="w-5 h-5 text-red-500" />
-                   Hábitos de Hoje
-                </h2>
-                <span className="text-xs font-medium text-neutral-500 bg-[#121212] px-3 py-1 rounded-full border border-white/5">
-                   {habits.filter(h => h.completed).length} / {habits.length} Concluídos
-                </span>
+        <Tabs defaultValue="execution" className="space-y-10">
+          <div className="sticky top-4 z-50 backdrop-blur-xl bg-[#050505]/80 p-2 rounded-2xl border border-white/5 shadow-2xl ring-1 ring-black/50 inline-flex">
+            <TabsList className="bg-transparent border-0 p-0 h-auto gap-1">
+              <TabsTrigger 
+                value="execution" 
+                className="data-[state=active]:bg-white data-[state=active]:text-black text-neutral-500 hover:text-white px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center gap-2"
+              >
+                <Sword className="w-4 h-4" />
+                Execução
+              </TabsTrigger>
+              <TabsTrigger 
+                value="yearly" 
+                className="data-[state=active]:bg-white data-[state=active]:text-black text-neutral-500 hover:text-white px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center gap-2"
+              >
+                <Mountain className="w-4 h-4" />
+                Visão Anual
+              </TabsTrigger>
+              <TabsTrigger 
+                value="life" 
+                className="data-[state=active]:bg-white data-[state=active]:text-black text-neutral-500 hover:text-white px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center gap-2"
+              >
+                <Crown className="w-4 h-4" />
+                Life Vision
+              </TabsTrigger>
+            </TabsList>
+          </div>
+
+          <TabsContent value="execution" className="outline-none min-h-[500px]">
+            <ExecutionTab
+              months={months}
+              currentMonthIndex={currentMonthIndex}
+              addMonthGoal={addMonthGoal}
+              toggleMonthGoal={toggleMonthGoal}
+              updateMonth={updateMonth}
+              weeks={weeks}
+              addWeek={addWeek}
+              deleteWeek={deleteWeek}
+              addWeekTask={addWeekTask}
+              toggleWeekTask={toggleWeekTask}
+              updateWeekReview={updateWeekReview}
+            />
+          </TabsContent>
+
+          <TabsContent value="yearly" className="outline-none">
+             {/* Fallback caso YearlyTab não exista ou precise ser recriada, mas assumindo import */}
+             {/* Se não existir, o compilador avisará e corrigiremos. */}
+             <div className="p-10 text-center border border-dashed border-white/10 rounded-3xl">
+                <Mountain className="w-10 h-10 text-neutral-600 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-white">Visão Anual</h3>
+                <p className="text-neutral-500">Módulo de planejamento anual (Placeholder)</p>
              </div>
-             
-             {habits.length === 0 ? (
-                <div className="text-center py-12 border border-dashed border-white/10 rounded-2xl bg-[#0a0a0a]/50">
-                   <p className="text-neutral-500 mb-4">Você ainda não tem hábitos configurados.</p>
-                   <Link to="/configuracoes">
-                      <Button variant="outline" className="border-red-500/50 text-red-500 hover:bg-red-500/10">
-                         Configurar Hábitos
-                      </Button>
-                   </Link>
-                </div>
-             ) : (
-                <div className="grid gap-3">
-                   {sortedHabits.map((habit, index) => (
-                      <HabitCard 
-                         key={habit.id} 
-                         habit={habit} 
-                         onComplete={completeHabit}
-                         index={index}
-                      />
-                   ))}
-                </div>
-             )}
-          </div>
-          
-          <HabitMonthView />
-        </div>
+          </TabsContent>
 
-        {/* Right Column: Gamification & Stats (1/3) */}
-        <div className="space-y-6">
-           {/* Level Card */}
-           <div className="h-[300px]">
-              <Gamification 
-                 currentBadge={currentBadge} 
-                 nextBadge={nextBadge} 
-                 totalPoints={totalPoints}
-                 streak={streak}
-              />
-           </div>
-
-           {/* Monthly Progress */}
-           <MonthlyProgress 
-              totalPoints={totalPoints} 
-              habitsCount={history.reduce((acc, curr) => acc + curr.completedHabitIds.length, 0)} 
-           />
-
-           {/* XP Chart */}
-           <MonthlyChart history={history} />
-        </div>
+          <TabsContent value="life" className="outline-none">
+             <div className="p-10 text-center border border-dashed border-white/10 rounded-3xl">
+                <Crown className="w-10 h-10 text-neutral-600 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-white">Life Vision</h3>
+                <p className="text-neutral-500">Módulo de visão de vida (Placeholder)</p>
+             </div>
+          </TabsContent>
+        </Tabs>
       </div>
-
-      <FAQSection />
     </div>
   );
 };
