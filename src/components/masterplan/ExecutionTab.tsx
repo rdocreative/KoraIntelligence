@@ -1,61 +1,37 @@
 "use client";
 
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import { MonthData, WeekData } from "@/hooks/useMasterplan";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { 
-  Plus, Calendar, ChevronRight, CheckCircle2, AlertCircle, 
-  Target, Zap, ArrowDown, Terminal, HelpCircle, Trash2, X
+  Calendar, 
+  Plus, 
+  Target, 
+  ChevronRight,
+  Trash2,
+  CheckCircle2,
+  Circle,
+  Lightbulb
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 
 interface ExecutionTabProps {
-  currentMonth: any;
+  currentMonth: MonthData;
   currentMonthIndex: number;
-  addMonthGoal: (monthIndex: number, text: string) => void;
+  addMonthGoal: (monthIndex: number, goal: string) => void;
   toggleMonthGoal: (monthIndex: number, goalId: string) => void;
-  updateMonth: (monthIndex: number, data: any) => void;
-  weeks: any[];
-  addWeek: (weekData: any) => void;
+  updateMonth: (monthIndex: number, updates: Partial<MonthData>) => void;
+  weeks: WeekData[];
+  addWeek: (week: Omit<WeekData, 'id'>) => void;
   deleteWeek: (weekId: string) => void;
-  addWeekTask: (weekId: string, text: string) => void;
+  addWeekTask: (weekId: string, task: string) => void;
   toggleWeekTask: (weekId: string, taskId: string) => void;
-  updateWeekReview: (weekId: string, field: "worked" | "didntWork" | "improve", value: string) => void;
+  updateWeekReview: (weekId: string, review: string) => void;
 }
-
-// Reusable Helper Component for the Tooltip
-const InfoTooltip = ({ text }: { text: string }) => (
-  <TooltipProvider>
-    <Tooltip delayDuration={300}>
-      <TooltipTrigger asChild>
-        <button className="outline-none ml-2">
-            <HelpCircle className="w-[14px] h-[14px] text-[#555] hover:text-[#E8251A] transition-colors" />
-        </button>
-      </TooltipTrigger>
-      <TooltipContent side="top" className="bg-[#1A1A1A] border-[#333] text-[#AAAAAA] max-w-[220px] rounded-lg p-3 text-xs leading-relaxed">
-        <p>{text}</p>
-      </TooltipContent>
-    </Tooltip>
-  </TooltipProvider>
-);
 
 export const ExecutionTab = ({
   currentMonth,
@@ -70,351 +46,343 @@ export const ExecutionTab = ({
   toggleWeekTask,
   updateWeekReview
 }: ExecutionTabProps) => {
+  const [newGoal, setNewGoal] = useState("");
+  const [newWeekTask, setNewWeekTask] = useState<Record<string, string>>({});
+  const [expandedWeek, setExpandedWeek] = useState<string | null>(null);
 
-  const [newMonthGoal, setNewMonthGoal] = useState("");
-  const [newWeekTask, setNewWeekTask] = useState("");
-  const [activeWeekId, setActiveWeekId] = useState<string | null>(null);
-  const [weekToDelete, setWeekToDelete] = useState<string | null>(null);
+  const monthNames = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
 
-  // Helper to find current active week
-  React.useEffect(() => {
-    if (weeks && weeks.length > 0 && !activeWeekId) {
-      const now = new Date();
-      const current = weeks.find(w => new Date(w.endDate) >= now);
-      if (current) setActiveWeekId(current.id);
-      else setActiveWeekId(weeks[0].id); // Fallback to first week if none is active
+  const handleAddGoal = () => {
+    if (newGoal.trim()) {
+      addMonthGoal(currentMonthIndex, newGoal.trim());
+      setNewGoal("");
     }
-  }, [weeks, activeWeekId]);
-
-  const activeWeek = weeks.find(w => w.id === activeWeekId);
-
-  // LIMITS
-  const MAX_WEEKS = 4;
-  const MAX_TASKS = 7;
-  const canCreateWeek = weeks.length < MAX_WEEKS;
-  const canAddTask = activeWeek ? activeWeek.tasks.length < MAX_TASKS : false;
-
-  const handleAddMonthGoal = () => {
-    if (!newMonthGoal.trim()) return;
-    addMonthGoal(currentMonthIndex, newMonthGoal);
-    setNewMonthGoal("");
   };
 
-  const handleAddWeekTask = () => {
-    if (!newWeekTask.trim() || !activeWeekId || !canAddTask) return;
-    addWeekTask(activeWeekId, newWeekTask);
-    setNewWeekTask("");
+  const handleAddWeekTask = (weekId: string) => {
+    const task = newWeekTask[weekId];
+    if (task?.trim()) {
+      addWeekTask(weekId, task.trim());
+      setNewWeekTask(prev => ({ ...prev, [weekId]: "" }));
+    }
   };
 
   const handleCreateWeek = () => {
-    if (!canCreateWeek) return;
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay() + 1);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
 
-    const now = new Date();
-    const end = new Date();
-    end.setDate(now.getDate() + 7);
-    
     addWeek({
-        title: `Semana ${weeks.length + 1}`,
-        startDate: now.toISOString(),
-        endDate: end.toISOString(),
-        tasks: [],
-        review: ""
+      startDate: startOfWeek.toISOString().split('T')[0],
+      endDate: endOfWeek.toISOString().split('T')[0],
+      focus: "",
+      tasks: [],
+      review: ""
     });
   };
 
-  const confirmDeleteWeek = () => {
-    if (weekToDelete) {
-      deleteWeek(weekToDelete);
-      if (activeWeekId === weekToDelete) {
-        setActiveWeekId(null);
-      }
-      setWeekToDelete(null);
-    }
-  };
+  const completedGoals = currentMonth.goals.filter(g => g.completed).length;
+  const totalGoals = currentMonth.goals.length;
+  const monthProgress = totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      
-      {/* LEFT COLUMN: MONTHLY STRATEGY */}
-      <div className="space-y-6 lg:col-span-1">
-        <div className="sticky top-24 space-y-6">
-            <Card className="bg-[#111111] border-white/5 shadow-xl">
-                <CardHeader className="border-b border-white/5 pb-4">
-                    <CardTitle className="flex items-center justify-between">
-                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#E8251A] flex items-center gap-2">
-                           <Target className="w-4 h-4" /> Estratégia Mensal
-                        </span>
-                        <div className="flex items-center gap-2">
-                            <span className="text-xs font-mono text-neutral-500">{currentMonth?.name}</span>
-                            <InfoTooltip text="As metas que você quer conquistar neste mês. Elas devem alimentar os seus pilares." />
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-2">
+        <h1 className="text-3xl font-black tracking-tight">Execução</h1>
+        <p className="text-neutral-400 text-sm">Metas do mês e tarefas da semana</p>
+      </div>
+
+      {/* Monthly Section */}
+      <Card className="bg-[#0A0A0A] border-neutral-800/50 overflow-hidden">
+        <CardHeader className="border-b border-neutral-800/50 pb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#E8251A] to-red-700 flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <CardTitle className="text-lg font-bold text-white">
+                  {monthNames[currentMonthIndex]}
+                </CardTitle>
+                <p className="text-xs text-neutral-500">
+                  {completedGoals} de {totalGoals} metas concluídas
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <span className="text-2xl font-black text-white">{monthProgress}%</span>
+            </div>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="mt-4 h-2 bg-neutral-800 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-[#E8251A] to-red-500 transition-all duration-500"
+              style={{ width: `${monthProgress}%` }}
+            />
+          </div>
+        </CardHeader>
+
+        <CardContent className="p-4 space-y-4">
+          {/* Month Focus */}
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+              Foco do Mês
+            </label>
+            <Input
+              value={currentMonth.focus}
+              onChange={(e) => updateMonth(currentMonthIndex, { focus: e.target.value })}
+              placeholder="Qual é o tema principal deste mês?"
+              className="bg-neutral-900/50 border-neutral-700 text-white placeholder:text-neutral-600"
+            />
+          </div>
+
+          {/* Goals List */}
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+              Metas do Mês
+            </label>
+            
+            {currentMonth.goals.length === 0 ? (
+              <div className="text-center py-8 text-neutral-500">
+                <Target className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p className="text-sm">Nenhuma meta definida ainda.</p>
+                <p className="text-xs text-neutral-600">Adicione suas metas abaixo.</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {currentMonth.goals.map((goal) => (
+                  <div 
+                    key={goal.id}
+                    className={cn(
+                      "flex items-center gap-3 p-3 rounded-lg transition-all",
+                      goal.completed 
+                        ? "bg-emerald-500/10 border border-emerald-500/20" 
+                        : "bg-neutral-900/50 border border-neutral-800"
+                    )}
+                  >
+                    <Checkbox
+                      checked={goal.completed}
+                      onCheckedChange={() => toggleMonthGoal(currentMonthIndex, goal.id)}
+                      className="border-neutral-600 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
+                    />
+                    <span className={cn(
+                      "flex-1 text-sm",
+                      goal.completed ? "text-neutral-400 line-through" : "text-white"
+                    )}>
+                      {goal.text}
+                    </span>
+                    {goal.completed && (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Add Goal Input */}
+            <div className="flex gap-2 mt-4">
+              <Input
+                value={newGoal}
+                onChange={(e) => setNewGoal(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleAddGoal()}
+                placeholder="Adicionar nova meta..."
+                className="bg-neutral-900/50 border-neutral-700 text-white placeholder:text-neutral-600"
+              />
+              <Button 
+                onClick={handleAddGoal}
+                className="bg-[#E8251A] hover:bg-red-700 text-white px-4"
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Tip Card */}
+      <div className="bg-neutral-900/30 border border-neutral-800/50 rounded-xl p-4 flex items-start gap-3">
+        <Lightbulb className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+        <div>
+          <p className="text-xs font-semibold text-amber-500 uppercase tracking-wider mb-1">Dica</p>
+          <p className="text-sm text-neutral-400">
+            Cada tarefa do dia deve estar conectada a uma meta do mês. Isso é o que cria progresso real.
+          </p>
+        </div>
+      </div>
+
+      {/* Weekly Section */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-white">Semanas do Mês</h2>
+          <Button 
+            onClick={handleCreateWeek}
+            variant="outline"
+            className="border-neutral-700 text-white hover:bg-neutral-800"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Nova Semana
+          </Button>
+        </div>
+
+        {weeks.length === 0 ? (
+          <Card className="bg-[#0A0A0A] border-neutral-800/50">
+            <CardContent className="p-8 text-center">
+              <Calendar className="w-10 h-10 mx-auto mb-3 text-neutral-600" />
+              <p className="text-neutral-400 mb-1">Nenhuma semana criada ainda.</p>
+              <p className="text-sm text-neutral-600">Crie sua primeira semana para começar a planejar.</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-3">
+            {weeks.map((week) => {
+              const isExpanded = expandedWeek === week.id;
+              const weekCompleted = week.tasks.filter(t => t.completed).length;
+              const weekTotal = week.tasks.length;
+              const weekProgress = weekTotal > 0 ? Math.round((weekCompleted / weekTotal) * 100) : 0;
+
+              return (
+                <Card 
+                  key={week.id}
+                  className={cn(
+                    "bg-[#0A0A0A] border-neutral-800/50 overflow-hidden transition-all",
+                    isExpanded && "ring-1 ring-[#E8251A]/30"
+                  )}
+                >
+                  <div 
+                    className="p-4 cursor-pointer hover:bg-neutral-900/50 transition-colors"
+                    onClick={() => setExpandedWeek(isExpanded ? null : week.id)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-neutral-800 flex items-center justify-center">
+                          <Calendar className="w-4 h-4 text-neutral-400" />
                         </div>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-6 space-y-6">
-                    <div className="space-y-3">
-                        {currentMonth?.goals.map((goal: any) => (
-                            <div key={goal.id} className="group flex items-start gap-3 p-3 rounded-lg bg-[#0A0A0A] border border-white/5 hover:border-[#E8251A]/30 transition-all">
-                                <Checkbox 
-                                    checked={goal.completed}
-                                    onCheckedChange={() => toggleMonthGoal(currentMonthIndex, goal.id)}
-                                    className="mt-0.5 border-neutral-600 data-[state=checked]:bg-[#E8251A] data-[state=checked]:border-[#E8251A]"
+                        <div>
+                          <p className="text-sm font-semibold text-white">
+                            {new Date(week.startDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })} - {new Date(week.endDate).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}
+                          </p>
+                          <p className="text-xs text-neutral-500">
+                            {weekCompleted}/{weekTotal} tarefas • {weekProgress}%
+                          </p>
+                        </div>
+                      </div>
+                      <ChevronRight className={cn(
+                        "w-5 h-5 text-neutral-500 transition-transform",
+                        isExpanded && "rotate-90"
+                      )} />
+                    </div>
+                  </div>
+
+                  {isExpanded && (
+                    <div className="border-t border-neutral-800/50 p-4 space-y-4">
+                      {/* Week Focus */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+                          Foco da Semana
+                        </label>
+                        <Input
+                          value={week.focus}
+                          onChange={(e) => {
+                            // This would need a new function in the hook
+                          }}
+                          placeholder="Qual é o foco principal desta semana?"
+                          className="bg-neutral-900/50 border-neutral-700 text-white placeholder:text-neutral-600"
+                        />
+                      </div>
+
+                      {/* Week Tasks */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+                          Tarefas da Semana
+                        </label>
+                        
+                        {week.tasks.length === 0 ? (
+                          <p className="text-sm text-neutral-500 py-2">Nenhuma tarefa para esta semana ainda.</p>
+                        ) : (
+                          <div className="space-y-2">
+                            {week.tasks.map((task) => (
+                              <div 
+                                key={task.id}
+                                className={cn(
+                                  "flex items-center gap-3 p-3 rounded-lg transition-all",
+                                  task.completed 
+                                    ? "bg-emerald-500/10 border border-emerald-500/20" 
+                                    : "bg-neutral-900/50 border border-neutral-800"
+                                )}
+                              >
+                                <Checkbox
+                                  checked={task.completed}
+                                  onCheckedChange={() => toggleWeekTask(week.id, task.id)}
+                                  className="border-neutral-600 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
                                 />
                                 <span className={cn(
-                                    "text-sm font-medium leading-relaxed transition-colors",
-                                    goal.completed ? "text-neutral-600 line-through" : "text-neutral-200"
+                                  "flex-1 text-sm",
+                                  task.completed ? "text-neutral-400 line-through" : "text-white"
                                 )}>
-                                    {goal.text}
+                                  {task.text}
                                 </span>
-                            </div>
-                        ))}
-                        {(!currentMonth?.goals || currentMonth.goals.length === 0) && (
-                            <div className="text-center py-8 px-4 border border-dashed border-neutral-800 rounded-lg">
-                                <p className="text-xs text-neutral-500 font-mono">Nenhuma diretriz estratégica para este mês.</p>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="flex gap-2">
-                        <Input 
-                            placeholder="Adicionar objetivo chave..." 
-                            value={newMonthGoal}
-                            onChange={(e) => setNewMonthGoal(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleAddMonthGoal()}
-                            className="bg-[#0A0A0A] border-white/10 text-xs h-10 focus-visible:ring-[#E8251A]/50"
-                        />
-                        <Button size="icon" onClick={handleAddMonthGoal} className="h-10 w-10 bg-[#E8251A] hover:bg-[#c91e14] text-white rounded-md shrink-0">
-                            <Plus className="w-4 h-4" />
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
-
-            <div className="p-4 rounded-xl bg-[#E8251A]/5 border border-[#E8251A]/10">
-                <h4 className="text-[10px] font-bold text-[#E8251A] uppercase tracking-widest mb-2 flex items-center gap-2">
-                    <AlertCircle className="w-3 h-3" /> Lembrete Tático
-                </h4>
-                <p className="text-xs text-neutral-400 leading-relaxed">
-                    Não confunda movimento com progresso. Suas ações diárias devem servir diretamente aos objetivos mensais acima.
-                </p>
-            </div>
-        </div>
-      </div>
-
-      {/* RIGHT COLUMN: WEEKLY EXECUTION (MAIN) */}
-      <div className="space-y-6 lg:col-span-2">
-        
-        {/* Week Selector */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar">
-            {weeks.map((week) => (
-                <div key={week.id} className="relative group/week">
-                    <button
-                        onClick={() => setActiveWeekId(week.id)}
-                        className={cn(
-                            "flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-bold uppercase tracking-wide transition-all whitespace-nowrap pr-8",
-                            activeWeekId === week.id 
-                                ? "bg-[#E8251A] text-white border-[#E8251A] shadow-[0_4px_20px_rgba(232,37,26,0.3)]" 
-                                : "bg-[#111111] text-neutral-500 border-white/5 hover:border-white/20 hover:text-neutral-300"
-                        )}
-                    >
-                        {week.title}
-                    </button>
-                    {/* Delete Week Button */}
-                    <button
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setWeekToDelete(week.id);
-                        }}
-                        className={cn(
-                            "absolute right-1 top-1 bottom-1 w-6 flex items-center justify-center rounded hover:bg-black/20 transition-all opacity-0 group-hover/week:opacity-100",
-                            activeWeekId === week.id ? "text-white/80 hover:text-white" : "text-neutral-500 hover:text-[#E8251A]"
-                        )}
-                    >
-                        <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                </div>
-            ))}
-            
-            <TooltipProvider>
-                <Tooltip delayDuration={0}>
-                    <TooltipTrigger asChild>
-                        <div>
-                            <button 
-                                onClick={handleCreateWeek}
-                                disabled={!canCreateWeek}
-                                className={cn(
-                                    "flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-dashed border-neutral-700 text-xs font-bold uppercase tracking-wide transition-all whitespace-nowrap ml-2",
-                                    canCreateWeek 
-                                        ? "text-neutral-500 hover:text-white hover:border-white/30 cursor-pointer" 
-                                        : "opacity-40 cursor-not-allowed text-neutral-600"
-                                )}
-                            >
-                                <Plus className="w-3 h-3" /> Nova Semana
-                            </button>
-                        </div>
-                    </TooltipTrigger>
-                    {!canCreateWeek && (
-                        <TooltipContent className="bg-[#1A1A1A] border-[#333] text-white text-xs">
-                            Um mês tem no máximo 4 semanas. Gerencie as existentes antes de criar uma nova.
-                        </TooltipContent>
-                    )}
-                </Tooltip>
-            </TooltipProvider>
-        </div>
-
-        {activeWeek ? (
-            <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-500">
-                
-                {/* Tactical Header */}
-                <div className="flex items-center justify-between bg-[#111111] p-4 rounded-xl border border-white/5">
-                    <div>
-                        <div className="flex items-center gap-2">
-                            <h2 className="text-xl font-black text-white uppercase tracking-tight flex items-center gap-3">
-                                <Zap className="w-5 h-5 text-[#E8251A] fill-current" />
-                                Foco de Hoje
-                            </h2>
-                            <InfoTooltip text="Suas tarefas de hoje. Devem estar conectadas ao foco da semana." />
-                        </div>
-                        <p className="text-[10px] text-neutral-500 font-mono mt-1 uppercase tracking-widest pl-8">
-                            {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
-                        </p>
-                    </div>
-                    <div className="text-right">
-                        <span className="text-xs font-bold text-neutral-500 uppercase tracking-wider block">Conclusão</span>
-                        <span className="text-2xl font-black text-white tracking-tighter">
-                            {activeWeek.tasks.length > 0 
-                                ? Math.round((activeWeek.tasks.filter((t: any) => t.completed).length / activeWeek.tasks.length) * 100) 
-                                : 0}%
-                        </span>
-                    </div>
-                </div>
-
-                {/* TASK LIST OR EMPTY STATE */}
-                <div className="space-y-1">
-                    {activeWeek.tasks.length > 0 ? (
-                        <div className="space-y-3 min-h-[200px]">
-                            {activeWeek.tasks.map((task: any) => (
-                                <div 
-                                    key={task.id} 
-                                    className={cn(
-                                        "group flex items-center gap-4 p-4 rounded-xl border transition-all duration-300",
-                                        task.completed 
-                                            ? "bg-[#0A0A0A]/50 border-white/5 opacity-60" 
-                                            : "bg-[#161616] border-white/10 hover:border-[#E8251A]/50 hover:shadow-[0_0_20px_rgba(232,37,26,0.1)] hover:-translate-y-0.5"
-                                    )}
-                                >
-                                    <button 
-                                        onClick={() => toggleWeekTask(activeWeek.id, task.id)}
-                                        className={cn(
-                                            "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
-                                            task.completed 
-                                                ? "bg-[#E8251A] border-[#E8251A] text-white" 
-                                                : "border-neutral-600 group-hover:border-[#E8251A]"
-                                        )}
-                                    >
-                                        {task.completed && <CheckCircle2 className="w-3.5 h-3.5" />}
-                                    </button>
-                                    
-                                    <span className={cn(
-                                        "flex-1 text-sm font-medium transition-all",
-                                        task.completed ? "text-neutral-500 line-through decoration-2" : "text-white"
-                                    )}>
-                                        {task.text}
-                                    </span>
-                                </div>
+                              </div>
                             ))}
-                        </div>
-                    ) : (
-                        // EMPTY STATE
-                        <div className="flex flex-col items-center justify-center py-16 px-4 border border-dashed border-neutral-800 rounded-xl bg-[#0A0A0A] relative overflow-hidden group">
-                            <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(232,37,26,0.03)_50%,transparent_75%,transparent_100%)] bg-[length:20px_20px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
-                            
-                            <div className="relative z-10 text-center space-y-6 max-w-sm">
-                                <div className="space-y-2">
-                                    <h3 className="text-lg font-bold text-neutral-300 uppercase tracking-widest">
-                                        Nenhuma batalha definida
-                                    </h3>
-                                    <p className="text-xs text-neutral-500 font-mono leading-relaxed">
-                                        O inimigo avança enquanto você hesita. Defina suas ordens para o dia agora.
-                                    </p>
-                                </div>
-                                
-                                <div className="flex flex-col items-center gap-2 animate-bounce pt-4 opacity-60">
-                                    <span className="text-[9px] font-bold text-[#E8251A] uppercase tracking-[0.2em]">
-                                        Iniciar Protocolo
-                                    </span>
-                                    <ArrowDown className="w-4 h-4 text-[#E8251A]" />
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                          </div>
+                        )}
 
-                {/* Input Area */}
-                <div className="relative pt-2">
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent -z-10" />
-                    <div className={cn(
-                        "flex gap-0 group rounded-xl transition-all shadow-2xl",
-                        canAddTask ? "focus-within:ring-2 focus-within:ring-[#E8251A]/30" : "opacity-70 cursor-not-allowed"
-                    )}>
-                        <div className="bg-[#1A1A1A] flex items-center justify-center pl-4 rounded-l-xl border-y border-l border-white/10 group-focus-within:border-[#E8251A]/50 transition-colors">
-                            <Terminal className="w-5 h-5 text-neutral-500 group-focus-within:text-[#E8251A] transition-colors" />
+                        {/* Add Task Input */}
+                        <div className="flex gap-2 mt-3">
+                          <Input
+                            value={newWeekTask[week.id] || ""}
+                            onChange={(e) => setNewWeekTask(prev => ({ ...prev, [week.id]: e.target.value }))}
+                            onKeyDown={(e) => e.key === 'Enter' && handleAddWeekTask(week.id)}
+                            placeholder="O que você vai fazer hoje?"
+                            className="bg-neutral-900/50 border-neutral-700 text-white placeholder:text-neutral-600"
+                          />
+                          <Button 
+                            onClick={() => handleAddWeekTask(week.id)}
+                            className="bg-[#E8251A] hover:bg-red-700 text-white px-4"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </Button>
                         </div>
-                        <Input 
-                            value={newWeekTask}
-                            disabled={!canAddTask}
-                            onChange={(e) => setNewWeekTask(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleAddWeekTask()}
-                            placeholder={canAddTask ? "Comando: Adicionar tarefa tática..." : "7 batalhas por dia é o limite. Foco é sobre escolher, não acumular."}
-                            className={cn(
-                                "h-14 bg-[#1A1A1A] border-y border-r border-l-0 border-white/10 rounded-l-none rounded-r-xl focus-visible:ring-0 focus-visible:border-[#E8251A]/50 text-base font-medium shadow-none transition-all",
-                                canAddTask ? "text-white placeholder:text-neutral-600" : "text-red-500 placeholder:text-red-500/60 cursor-not-allowed"
-                            )}
+                      </div>
+
+                      {/* Week Review */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+                          Revisão da Semana
+                        </label>
+                        <Textarea
+                          value={week.review}
+                          onChange={(e) => updateWeekReview(week.id, e.target.value)}
+                          placeholder="O que funcionou? O que pode melhorar?"
+                          className="bg-neutral-900/50 border-neutral-700 text-white placeholder:text-neutral-600 min-h-[80px]"
                         />
+                      </div>
+
+                      {/* Delete Week */}
+                      <div className="pt-2 border-t border-neutral-800/50">
                         <Button 
-                            onClick={handleAddWeekTask}
-                            disabled={!canAddTask}
-                            className={cn(
-                                "absolute right-2 top-2 bottom-2 px-6 font-bold text-xs uppercase tracking-widest rounded-lg shadow-[0_0_15px_rgba(232,37,26,0.3)] transition-all",
-                                canAddTask 
-                                    ? "bg-[#E8251A] hover:bg-[#c91e14] text-white transform active:scale-95" 
-                                    : "bg-neutral-800 text-neutral-500 cursor-not-allowed shadow-none"
-                            )}
+                          onClick={() => deleteWeek(week.id)}
+                          variant="ghost"
+                          className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
                         >
-                            Executar
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Excluir Semana
                         </Button>
+                      </div>
                     </div>
-                </div>
-
-            </div>
-        ) : (
-            <div className="flex flex-col items-center justify-center h-[400px] border border-dashed border-neutral-800 rounded-xl bg-[#0A0A0A]">
-                <Calendar className="w-12 h-12 text-neutral-800 mb-4" />
-                <h3 className="text-lg font-bold text-neutral-400 uppercase tracking-widest mb-2">Semana Inativa</h3>
-                <p className="text-xs text-neutral-600 max-w-xs text-center mb-6">Você não tem um ciclo semanal ativo. Inicie uma nova semana para começar a operar.</p>
-                <Button onClick={handleCreateWeek} variant="outline" className="border-[#E8251A] text-[#E8251A] hover:bg-[#E8251A] hover:text-white uppercase text-xs font-bold tracking-widest">
-                    Iniciar Ciclo Semanal
-                </Button>
-            </div>
+                  )}
+                </Card>
+              );
+            })}
+          </div>
         )}
-
       </div>
-
-      {/* Delete Confirmation Modal */}
-      <AlertDialog open={!!weekToDelete} onOpenChange={(open) => !open && setWeekToDelete(null)}>
-        <AlertDialogContent className="bg-[#111111] border border-white/10 text-white">
-            <AlertDialogHeader>
-                <AlertDialogTitle className="text-white font-bold">Tem certeza?</AlertDialogTitle>
-                <AlertDialogDescription className="text-neutral-400">
-                    Excluir a semana selecionada vai apagar todas as tarefas vinculadas a ela. Essa ação não pode ser desfeita.
-                </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-                <AlertDialogCancel className="bg-transparent border-white/10 text-white hover:bg-white/5 hover:text-white">Cancelar</AlertDialogCancel>
-                <AlertDialogAction onClick={confirmDeleteWeek} className="bg-[#E8251A] hover:bg-[#c91e14] text-white border-0">Confirmar Exclusão</AlertDialogAction>
-            </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
     </div>
   );
 };
