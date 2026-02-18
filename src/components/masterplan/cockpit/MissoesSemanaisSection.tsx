@@ -87,8 +87,8 @@ export const MissoesSemanaisSection = ({
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-transparent border border-red-600/50 hover:border-red-600 text-red-500 hover:bg-red-600 hover:text-white font-bold text-[10px] uppercase tracking-widest px-4 h-8 rounded-lg transition-all shadow-[0_0_0_rgba(220,38,38,0)] hover:shadow-[0_0_15px_rgba(220,38,38,0.4)]">
-              <Plus className="w-3.5 h-3.5 mr-1.5" /> Nova Missão
+            <Button className="bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider px-5 h-9 rounded-lg shadow-[0_0_15px_rgba(220,38,38,0.2)] hover:shadow-[0_0_25px_rgba(220,38,38,0.4)] transition-all">
+              <Plus className="w-4 h-4 mr-1.5" /> Nova Missão
             </Button>
           </DialogTrigger>
           <DialogContent className="bg-[#0A0A0A]/95 backdrop-blur-xl border-white/10 sm:max-w-[480px]">
