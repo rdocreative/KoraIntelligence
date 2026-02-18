@@ -30,13 +30,20 @@ export const OverviewTab = ({
   annualData,
   onResetTutorial
 }: OverviewTabProps) => {
+
+  // Helper para obter texto seguro
+  const getSafeText = (item: any) => {
+    if (!item) return "";
+    if (typeof item === 'string') return item;
+    return item.text || "";
+  };
+
   return (
-    <div className="space-y-10 outline-none animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
+    <div className="space-y-12 outline-none animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
       
-      {/* HEADER EXCLUSIVO DA ABA VISÃO */}
+      {/* HEADER */}
       <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pt-4">
            <div className="space-y-2 max-w-3xl">
-              {/* Label Superior */}
               <div className="flex items-center gap-4 mb-2">
                 <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-[0.2em]">
                   OBJETIVO NORTEADOR DO ANO
@@ -46,13 +53,10 @@ export const OverviewTab = ({
                 </Button>
               </div>
 
-              {/* Título Principal */}
               <div>
                 <h1 className="text-3xl md:text-[2.5rem] font-bold text-white tracking-tight leading-tight">
                   {annualData.objective || "Objetivo Não Definido"}
                 </h1>
-                
-                {/* Descrição com hierarquia visual reduzida */}
                 <p className="mt-4 text-base md:text-lg text-neutral-400/90 font-medium max-w-xl leading-relaxed">
                     {annualData.successCriteria || "Defina seu critério de sucesso na aba Anual."}
                 </p>
@@ -72,6 +76,36 @@ export const OverviewTab = ({
               </div>
            </div>
       </header>
+
+      {/* OS 4 PILARES DA EVOLUÇÃO (NOVA SEÇÃO) */}
+      <div className="space-y-4">
+        <h3 className="text-xs font-black uppercase text-neutral-500 tracking-[0.2em] pl-1">Os 4 Pilares da Evolução</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+           {[
+             { label: 'Trabalho', items: areas.work, icon: Briefcase, color: 'text-blue-500', bg: 'bg-blue-500/5', border: 'border-blue-500/10' },
+             { label: 'Estudos', items: areas.studies, icon: GraduationCap, color: 'text-purple-500', bg: 'bg-purple-500/5', border: 'border-purple-500/10' },
+             { label: 'Saúde', items: areas.health, icon: Heart, color: 'text-red-500', bg: 'bg-red-500/5', border: 'border-red-500/10' },
+             { label: 'Pessoal', items: areas.personal, icon: User, color: 'text-yellow-500', bg: 'bg-yellow-500/5', border: 'border-yellow-500/10' },
+           ].map((area) => (
+             <div key={area.label} className={`relative flex items-center gap-4 p-5 rounded-2xl border ${area.border} ${area.bg} transition-all duration-300 hover:bg-white/5 hover:border-white/10 group overflow-hidden`}>
+                <div className={`absolute right-0 top-0 p-4 opacity-0 group-hover:opacity-10 transition-opacity transform translate-x-2 -translate-y-2`}>
+                   <area.icon className={`w-16 h-16 ${area.color}`} />
+                </div>
+                
+                <div className={`w-10 h-10 rounded-xl bg-[#0A0A0A] border border-white/5 flex items-center justify-center shrink-0 shadow-lg`}>
+                   <area.icon className={`w-5 h-5 ${area.color}`} />
+                </div>
+                
+                <div className="flex-1 min-w-0 relative z-10">
+                   <div className={`text-[10px] font-black uppercase tracking-wider mb-1 ${area.color}`}>{area.label}</div>
+                   <div className="text-sm font-bold text-white truncate leading-tight">
+                      {area.items.length > 0 ? getSafeText(area.items[0]) : <span className="text-neutral-600 font-normal italic">Sem metas definidas</span>}
+                   </div>
+                </div>
+             </div>
+           ))}
+        </div>
+      </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* HERO CARD - WEEKLY FOCUS */}
@@ -143,28 +177,6 @@ export const OverviewTab = ({
             </p>
           </CardContent>
         </Card>
-      </div>
-
-      {/* AREAS GRID */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { title: "Trabalho", items: areas.work, icon: Briefcase, color: "text-blue-500", border: "hover:border-blue-500/30" },
-          { title: "Estudos", items: areas.studies, icon: GraduationCap, color: "text-purple-500", border: "hover:border-purple-500/30" },
-          { title: "Saúde", items: areas.health, icon: Heart, color: "text-red-500", border: "hover:border-red-500/30" },
-          { title: "Pessoal", items: areas.personal, icon: User, color: "text-yellow-500", border: "hover:border-yellow-500/30" },
-        ].map((area, i) => (
-          <Card key={i} className={`bg-[#0A0A0A] border-white/5 transition-all duration-300 ${area.border} group`}>
-            <CardContent className="pt-6 flex flex-col items-center text-center gap-3">
-              <div className={`p-3 rounded-xl bg-white/5 group-hover:bg-white/10 transition-colors`}>
-                <area.icon className={`w-6 h-6 ${area.color}`} />
-              </div>
-              <div>
-                <span className="block font-bold text-sm text-white uppercase tracking-wider">{area.title}</span>
-                <span className="text-xs text-neutral-500 mt-1 block">{area.items.filter(i => i.completed).length}/{area.items.length} Concluídos</span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Activity, BarChart3, Award, Target, LayoutDashboard } from "lucide-react";
+import { Activity, BarChart3, Award, Target, LayoutDashboard, Briefcase, GraduationCap, Heart, User } from "lucide-react";
 import { TaskList } from "@/components/masterplan/TaskList";
 import { TaskItem } from "@/hooks/useMasterplan";
 
@@ -20,6 +20,18 @@ interface AnnualTabProps {
 }
 
 export const AnnualTab = ({ data, analytics, updateAnnual, addAreaItem, toggleAreaItem, deleteAreaItem }: AnnualTabProps) => {
+  
+  // Helper para ícones
+  const getIcon = (id: string) => {
+    switch(id) {
+      case 'work': return Briefcase;
+      case 'studies': return GraduationCap;
+      case 'health': return Heart;
+      case 'personal': return User;
+      default: return Target;
+    }
+  };
+
   return (
     <div className="space-y-10 outline-none animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
 
@@ -95,25 +107,53 @@ export const AnnualTab = ({ data, analytics, updateAnnual, addAreaItem, toggleAr
         </Card>
       </div>
 
-      {/* 2. ÁREAS DETALHADAS */}
+      {/* 2. ÁREAS DETALHADAS COM METAS ESTRATÉGICAS */}
       <div className="space-y-4">
         <Label className="text-xs font-black uppercase text-neutral-500 tracking-[0.2em] pl-1">Progresso por Pilar</Label>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {analytics.areaStats.map((area: any) => (
-            <Card key={area.id} className="bg-[#0A0A0A] border-white/5 hover:border-white/20 transition-all duration-300 group">
-              <CardContent className="pt-6 space-y-4">
-                <div className="flex justify-between items-start">
-                  <span className={`text-xs font-bold uppercase tracking-wider ${area.color}`}>{area.label}</span>
-                  <span className="text-xl font-black text-white">{Math.round(area.percentage)}%</span>
-                </div>
-                <Progress value={area.percentage} className="h-1.5 bg-neutral-900" indicatorClassName={`${area.barColor} transition-all duration-1000`} />
-                <div className="flex justify-between text-[10px] text-neutral-500 font-medium">
-                  <span>{area.completed} Feitos</span>
-                  <span>{area.total} Total</span>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="grid lg:grid-cols-2 gap-6">
+          {analytics.areaStats.map((area: any) => {
+            const Icon = getIcon(area.id);
+            const areaItems = (data.areas as any)[area.id] || [];
+
+            return (
+              <Card key={area.id} className="bg-[#0A0A0A] border-white/5 hover:border-white/20 transition-all duration-300 group flex flex-col h-full">
+                <CardContent className="pt-6 space-y-6 flex-1 flex flex-col">
+                  {/* Header do Card */}
+                  <div className="space-y-4">
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-lg bg-white/5 ${area.color}`}>
+                                <Icon className="w-5 h-5" />
+                            </div>
+                            <span className={`text-sm font-black uppercase tracking-wider ${area.color}`}>{area.label}</span>
+                        </div>
+                        <span className="text-2xl font-black text-white">{Math.round(area.percentage)}%</span>
+                      </div>
+                      <Progress value={area.percentage} className="h-1.5 bg-neutral-900" indicatorClassName={`${area.barColor} transition-all duration-1000`} />
+                  </div>
+                  
+                  {/* Lista de Metas Estratégicas */}
+                  <div className="flex-1 space-y-3 pt-2">
+                     <div className="flex items-center gap-2 mb-2 opacity-50">
+                        <div className="h-px bg-white/20 flex-1" />
+                        <span className="text-[9px] font-bold uppercase tracking-widest text-white">Metas Estratégicas</span>
+                        <div className="h-px bg-white/20 flex-1" />
+                     </div>
+                     
+                     <div className="bg-[#050505] rounded-xl border border-white/5 p-1">
+                        <TaskList
+                          items={areaItems}
+                          onAdd={(text) => addAreaItem(area.id, { id: Date.now().toString(), text, completed: false })}
+                          onToggle={(id) => toggleAreaItem(area.id, id)}
+                          onDelete={(id) => deleteAreaItem(area.id, id)}
+                          placeholder={`Adicionar meta em ${area.label}...`}
+                        />
+                     </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </div>
 
@@ -148,8 +188,8 @@ export const AnnualTab = ({ data, analytics, updateAnnual, addAreaItem, toggleAr
         </div>
       </div>
 
-      {/* 4. OBJETIVO & EDIÇÃO */}
-      <div className="grid lg:grid-cols-2 gap-10 border-t border-white/5 pt-10">
+      {/* 4. OBJETIVO & CONFIGS */}
+      <div className="grid lg:grid-cols-1 gap-10 border-t border-white/5 pt-10">
         <div className="space-y-6">
           <div className="flex items-center gap-2">
             <Target className="text-red-500 w-5 h-5" />
@@ -167,51 +207,6 @@ export const AnnualTab = ({ data, analytics, updateAnnual, addAreaItem, toggleAr
               onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
               className="bg-[#0E0E0E] border-white/10 resize-none h-32 text-sm transition-all focus:ring-1 focus:ring-red-500/20 p-4 leading-relaxed"
               placeholder="Critérios de sucesso..."
-            />
-          </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="flex items-center gap-2">
-            <LayoutDashboard className="text-blue-500 w-5 h-5" />
-            <Label className="text-white font-bold uppercase tracking-widest text-sm">Gestão Rápida de Áreas</Label>
-          </div>
-          <div className="grid gap-3">
-            {['work', 'studies', 'health', 'personal'].map((areaId) => {
-              const areaLabel = { work: 'Trabalho', studies: 'Estudos', health: 'Saúde', personal: 'Pessoal' }[areaId as keyof typeof data.areas];
-              const areaColor = { work: 'text-blue-500', studies: 'text-purple-500', health: 'text-red-500', personal: 'text-yellow-500' }[areaId as keyof typeof data.areas];
-
-              return (
-                <Accordion type="single" collapsible key={areaId} className="bg-[#0E0E0E] border border-white/5 rounded-lg px-4">
-                  <AccordionItem value="item-1" className="border-none">
-                    <AccordionTrigger className="hover:no-underline py-3">
-                      <span className={`text-xs font-bold uppercase ${areaColor}`}>{areaLabel}</span>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <TaskList
-                        items={(data.areas as any)[areaId]}
-                        onAdd={(t) => addAreaItem(areaId as any, t)}
-                        onToggle={(id) => toggleAreaItem(areaId as any, id)}
-                        onDelete={(id) => deleteAreaItem(areaId as any, id)}
-                      />
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              );
-            })}
-          </div>
-
-          <div className="pt-4">
-            <div className="flex justify-between items-end mb-4">
-              <Label className="text-neutral-500 font-bold uppercase tracking-[0.2em] text-xs">Ajuste Manual de Progresso</Label>
-              <span className="text-2xl font-black text-white">{data.annual.progress}%</span>
-            </div>
-            <Slider
-              value={[data.annual.progress]}
-              onValueChange={(vals) => updateAnnual({ progress: vals[0] })}
-              max={100}
-              step={1}
-              className="cursor-pointer"
             />
           </div>
         </div>
