@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  PieChart, Pie, Cell, ResponsiveContainer,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend
+} from 'recharts';
 
 interface AnnualTabProps {
   data: any;
@@ -40,6 +44,23 @@ const InfoTooltip = ({ text }: { text: string }) => (
     </Tooltip>
   </TooltipProvider>
 );
+
+// Custom Tooltip for Charts
+const CustomChartTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-[#1A1A1A] border border-[#333] p-3 rounded-lg shadow-xl">
+        <p className="text-xs font-bold text-white mb-1">{label}</p>
+        {payload.map((entry: any, index: number) => (
+          <p key={index} className="text-xs" style={{ color: entry.color }}>
+            {entry.name}: {entry.value}%
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
 
 export const AnnualTab = ({ 
   data, 
@@ -95,6 +116,70 @@ export const AnnualTab = ({
   ];
 
   const currentArea = areas.find(a => a.id === activeArea)!;
+
+  // --- CHART DATA PREPARATION ---
+
+  // 1. Distribution Data (Pie Chart)
+  const distributionData = useMemo(() => {
+    const totalCompleted = areas.reduce((acc, area) => acc + area.items.filter((i:any) => i.completed).length, 0);
+    
+    if (totalCompleted === 0) return [];
+
+    return areas.map(area => ({
+      name: area.label,
+      value: area.items.filter((i:any) => i.completed).length,
+      color: area.color,
+      total: area.items.length
+    })).filter(item => item.value > 0);
+  }, [data.areas]);
+
+  const totalCompletedGoals = distributionData.reduce((acc, curr) => acc + curr.value, 0);
+
+  // 2. Evolution Data (Line Chart)
+  const evolutionData = useMemo(() => {
+    const months = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
+    
+    // Calcular total de metas planejadas no ano (soma de todas as metas mensais existentes)
+    const allMonthlyGoals = data.months.flatMap((m: any) => m.goals);
+    const totalGoalsCount = allMonthlyGoals.length;
+
+    if (totalGoalsCount === 0) {
+        // Fallback para estado vazio ou projeção ideal apenas
+        return months.map((m, i) => ({
+            name: m,
+            ideal: Math.round(((i + 1) / 12) * 100),
+            real: 0
+        }));
+    }
+
+    let accumulatedCompleted = 0;
+    
+    return months.map((monthName, index) => {
+        // Encontrar o mês correspondente nos dados (assumindo que data.months está ordenado ou indexado corretamente)
+        // Se data.months tiver menos itens ou estrutura diferente, ajustamos. 
+        // Aqui assumo data.months[0] é Janeiro.
+        const monthData = data.months[index];
+        
+        // Contar metas completas neste mês específico
+        const completedInMonth = monthData ? monthData.goals.filter((g: any) => g.completed).length : 0;
+        
+        accumulatedCompleted += completedInMonth;
+
+        // Calcular % acumulada em relação ao total do ano
+        // Se não houver metas no totalGoalsCount, evitamos divisão por zero
+        const realProgress = totalGoalsCount > 0 ? Math.round((accumulatedCompleted / totalGoalsCount) * 100) : 0;
+
+        // Só mostramos o "real" até o mês atual para não desenhar linha zero no futuro
+        const isFuture = index > new Date().getMonth();
+
+        return {
+            name: monthName,
+            ideal: Math.round(((i: number) => (i + 1) / 12 * 100)(index)), // Ritmo linear ideal
+            real: isFuture && realProgress === 0 && accumulatedCompleted === 0 ? null : realProgress // null interrompe a linha
+        };
+    });
+  }, [data.months]);
+
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -159,6 +244,150 @@ export const AnnualTab = ({
                   </div>
               </CardContent>
           </Card>
+      </div>
+
+      {/* NEW CHARTS SECTION */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        {/* GRAPH 1: PIE CHART (Distribution) */}
+        <Card className="bg-[#111111] border-white/5">
+            <CardHeader>
+                <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
+                    DISTRIBUIÇÃO DE ESFORÇO
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="h-[250px] w-full relative">
+                    {distributionData.length > 0 ? (
+                        <>
+                            <ResponsiveContainer width="100%" height="100%">
+                                <PieChart>
+                                    <Pie
+                                        data={distributionData}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        paddingAngle={5}
+                                        dataKey="value"
+                                        stroke="none"
+                                    >
+                                        {distributionData.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={entry.color} />
+                                        ))}
+                                    </Pie>
+                                    <RechartsTooltip 
+                                        content={({ active, payload }) => {
+                                            if (active && payload && payload.length) {
+                                                const data = payload[0].payload;
+                                                return (
+                                                    <div className="bg-[#1A1A1A] border border-[#333] p-2 rounded shadow-xl text-xs">
+                                                        <span style={{ color: data.color }} className="font-bold">{data.name}</span>
+                                                        <span className="text-white ml-2">{data.value} metas</span>
+                                                    </div>
+                                                );
+                                            }
+                                            return null;
+                                        }}
+                                    />
+                                </PieChart>
+                            </ResponsiveContainer>
+                            {/* Center Label */}
+                            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                <span className="text-3xl font-bold text-white">{totalCompletedGoals}</span>
+                                <span className="text-[10px] uppercase text-neutral-500 tracking-widest">Concluídas</span>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
+                             <div className="w-24 h-24 rounded-full border-4 border-neutral-800 mb-4" />
+                             <p className="text-xs text-neutral-500 max-w-[180px]">Conclua metas para ver sua distribuição de esforço.</p>
+                        </div>
+                    )}
+                </div>
+                
+                {/* Legend */}
+                {distributionData.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-4 mt-4">
+                        {distributionData.map((item, index) => (
+                            <div key={index} className="flex items-center gap-1.5">
+                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
+                                <span className="text-[10px] font-bold text-neutral-400 uppercase">{item.name}</span>
+                                <span className="text-[10px] text-neutral-600 font-mono">
+                                    {Math.round((item.value / totalCompletedGoals) * 100)}%
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+
+        {/* GRAPH 2: LINE CHART (Evolution) */}
+        <Card className="bg-[#111111] border-white/5">
+            <CardHeader>
+                <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
+                    EVOLUÇÃO AO LONGO DO ANO
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="h-[250px] w-full bg-[#0D0D0D] rounded-lg p-2 border border-white/5 relative">
+                     <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={evolutionData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#1A1A1A" vertical={false} />
+                            <XAxis 
+                                dataKey="name" 
+                                stroke="#444" 
+                                fontSize={10} 
+                                tickLine={false} 
+                                axisLine={false}
+                                dy={10}
+                            />
+                            <YAxis 
+                                stroke="#444" 
+                                fontSize={10} 
+                                tickLine={false} 
+                                axisLine={false}
+                                tickFormatter={(value) => `${value}%`}
+                            />
+                            <RechartsTooltip content={<CustomChartTooltip />} cursor={{ stroke: '#333', strokeWidth: 1 }} />
+                            
+                            {/* Reference Line (Time Elapsed / Ideal) */}
+                            <Line 
+                                type="monotone" 
+                                dataKey="ideal" 
+                                name="Tempo Decorrido"
+                                stroke="#444" 
+                                strokeWidth={2} 
+                                strokeDasharray="4 4" 
+                                dot={false}
+                                activeDot={false}
+                            />
+                            
+                            {/* Actual Progress Line */}
+                            <Line 
+                                type="monotone" 
+                                dataKey="real" 
+                                name="Progresso Real"
+                                stroke="#E8251A" 
+                                strokeWidth={2} 
+                                dot={{ r: 3, fill: '#E8251A', strokeWidth: 0 }}
+                                activeDot={{ r: 5, fill: '#fff', stroke: '#E8251A', strokeWidth: 2 }}
+                                connectNulls={true}
+                            />
+                            <Legend 
+                                verticalAlign="bottom" 
+                                height={36} 
+                                iconType="circle"
+                                iconSize={8}
+                                wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }}
+                            />
+                        </LineChart>
+                     </ResponsiveContainer>
+                </div>
+            </CardContent>
+        </Card>
+
       </div>
 
       {/* Main Annual Goal Editor */}
