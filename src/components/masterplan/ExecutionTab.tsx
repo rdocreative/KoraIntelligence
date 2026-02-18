@@ -21,6 +21,9 @@ interface ExecutionTabProps {
   addWeekTask: (weekId: string, task: TaskItem) => void;
   toggleWeekTask: (weekId: string, taskId: string) => void;
   updateWeekReview: (weekId: string, field: string, value: string) => void;
+
+  // Context Data
+  annualObjective?: string;
 }
 
 export const ExecutionTab = ({
@@ -34,7 +37,8 @@ export const ExecutionTab = ({
   deleteWeek,
   addWeekTask,
   toggleWeekTask,
-  updateWeekReview
+  updateWeekReview,
+  annualObjective
 }: ExecutionTabProps) => {
   const [isMonthExpanded, setIsMonthExpanded] = useState(false);
 
@@ -134,14 +138,6 @@ export const ExecutionTab = ({
 
       {/* --- BATALHA: SPRINTS SEMANAIS --- */}
       <div>
-          <div className="flex items-center gap-3 mb-8 px-1">
-             <div className="p-1.5 rounded bg-white/5">
-                <Trophy className="w-3.5 h-3.5 text-neutral-400" />
-             </div>
-             <span className="text-xs font-bold text-neutral-400 uppercase tracking-[0.2em]">Sprints Semanais</span>
-             <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
-          </div>
-          
           <WeeklyTab 
             weeks={weeks}
             addWeek={addWeek}
@@ -149,6 +145,8 @@ export const ExecutionTab = ({
             addWeekTask={addWeekTask}
             toggleWeekTask={toggleWeekTask}
             updateWeekReview={updateWeekReview}
+            annualObjective={annualObjective}
+            monthName={currentMonth.name}
           />
       </div>
 

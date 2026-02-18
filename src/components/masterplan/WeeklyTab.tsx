@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Zap, LayoutDashboard, Trash2, Calendar as CalendarIcon, Briefcase, GraduationCap, Heart, User, Sparkles, Brain } from "lucide-react";
+import { Zap, LayoutDashboard, Trash2, Calendar as CalendarIcon, Briefcase, GraduationCap, Heart, User, Sparkles, Brain, Target, ChevronRight } from "lucide-react";
 import { TaskList } from "@/components/masterplan/TaskList";
 import { TaskItem } from "@/hooks/useMasterplan";
 import { cn } from "@/lib/utils";
@@ -21,9 +21,20 @@ interface WeeklyTabProps {
   addWeekTask: (weekId: string, task: TaskItem) => void;
   toggleWeekTask: (weekId: string, taskId: string) => void;
   updateWeekReview: (weekId: string, field: string, value: string) => void;
+  annualObjective?: string;
+  monthName?: string;
 }
 
-export const WeeklyTab = ({ weeks, addWeek, deleteWeek, addWeekTask, toggleWeekTask, updateWeekReview }: WeeklyTabProps) => {
+export const WeeklyTab = ({ 
+  weeks, 
+  addWeek, 
+  deleteWeek, 
+  addWeekTask, 
+  toggleWeekTask, 
+  updateWeekReview,
+  annualObjective = "Objetivo Anual",
+  monthName = "Mês Atual"
+}: WeeklyTabProps) => {
   const [newWeekStart, setNewWeekStart] = useState<Date>();
   const [newWeekEnd, setNewWeekEnd] = useState<Date>();
   const [newWeekGoal, setNewWeekGoal] = useState("");
@@ -213,7 +224,7 @@ export const WeeklyTab = ({ weeks, addWeek, deleteWeek, addWeekTask, toggleWeekT
           </div>
         )}
 
-        {weeks.map((week) => {
+        {weeks.map((week, idx) => {
             const pillarStyle = getPillarStyles(week.pillar);
             const completedTasks = week.tasks?.filter((t: any) => t.completed).length || 0;
             const totalTasks = week.tasks?.length || 0;
@@ -231,6 +242,19 @@ export const WeeklyTab = ({ weeks, addWeek, deleteWeek, addWeekTask, toggleWeekT
                   </div>
 
                   <CardHeader className="bg-white/[0.02] border-b border-white/5 py-5 px-6 relative z-10">
+                    
+                    {/* BREADCRUMBS CONTEXTO */}
+                    <div className="flex items-center gap-1.5 mb-3 opacity-60">
+                        <Target className="w-3 h-3 text-neutral-500" />
+                        <span className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                            <span className="truncate max-w-[100px] sm:max-w-xs">{annualObjective}</span> 
+                            <ChevronRight className="w-3 h-3 text-neutral-700" /> 
+                            <span>{monthName.substring(0, 3)}</span>
+                            <ChevronRight className="w-3 h-3 text-neutral-700" /> 
+                            <span className="text-white">Sprint {idx + 1}</span>
+                        </span>
+                    </div>
+
                     <div className="flex justify-between items-start gap-4">
                       <div className="space-y-2">
                         <div className="flex items-center gap-3">
