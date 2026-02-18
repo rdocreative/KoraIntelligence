@@ -129,13 +129,13 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
                {/* Right: Masterplan */}
                <div className="text-center md:text-left md:pl-12 space-y-4">
-                   {/* Internal Logo Replacement */}
-                   <div className="flex justify-center md:justify-start h-8 items-center">
+                   {/* Internal Logo Replacement - Increased by 80% */}
+                   <div className="flex justify-center md:justify-start h-12 items-center">
                        <img 
                           src="/MasterPlan.png" 
                           alt="MasterPlan" 
                           style={{ filter: 'drop-shadow(0 0 8px rgba(220, 38, 38, 0.5))' }}
-                          className="h-6 w-auto object-contain"
+                          className="h-11 w-auto object-contain"
                        />
                    </div>
                    <p className="text-[#EDEDED] text-xs font-semibold leading-relaxed uppercase tracking-widest">
