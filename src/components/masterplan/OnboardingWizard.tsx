@@ -92,20 +92,26 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     return (
       <div className="fixed inset-0 z-50 bg-[#050505] flex items-center justify-center p-6 overflow-hidden">
         
-        {/* Main Background Image - Clean and Visible */}
+        {/* Main Background Image */}
         <div 
-          className="absolute inset-0 bg-[url('/Background-MasterPlan.png')] bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-[url('/Background-MasterPlan.png')] bg-cover bg-center bg-no-repeat opacity-40 mix-blend-lighten"
           aria-hidden="true"
         />
 
-        {/* Overlay to ensure content readability */}
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" aria-hidden="true" />
+        {/* Subtle Background Elements Layered Over Image */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 right-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/10 blur-[120px] rounded-full opacity-50" />
+            
+            {/* Vignette for focus */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505] opacity-80" />
+        </div>
         
         <div className="w-full max-w-4xl space-y-12 relative z-10 flex flex-col items-center">
            
            {/* 1. Logo Section */}
            <div className="flex flex-col items-center animate-in fade-in zoom-in duration-700">
-               <span className="text-[12px] tracking-[0.4em] text-neutral-300 uppercase font-bold mb-[-2rem] relative z-0 opacity-80">
+               <span className="text-[12px] tracking-[0.4em] text-neutral-500 uppercase font-bold mb-[-2rem] relative z-0 opacity-80">
                   Bem-vindo ao
                </span>
                <img 
@@ -114,14 +120,17 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                   style={{ filter: 'drop-shadow(0 0 15px rgba(220, 38, 38, 0.8))' }}
                   className="h-32 md:h-40 w-auto object-contain relative z-10" 
                />
-               <span className="text-[10px] tracking-[0.6em] text-neutral-400 mt-6 uppercase font-medium">Sistema Ativo</span>
+               <span className="text-[10px] tracking-[0.6em] text-neutral-600 mt-6 uppercase font-medium">Sistema Ativo</span>
            </div>
 
            {/* 2. Modular Architecture - Side by Side Modules */}
            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200 fill-mode-backwards px-4 md:px-0 items-stretch">
                
                {/* Module Left: HABITS */}
-               <div className="bg-black/60 backdrop-blur-md border-r-2 border-neutral-700 p-6 md:pr-8 md:pl-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
+               <div className="bg-white/[0.02] backdrop-blur-sm border-r-2 border-neutral-700 p-6 md:pr-8 md:pl-6 flex flex-col gap-3 text-left hover:bg-white/[0.04] transition-colors relative overflow-hidden group">
+                   {/* Atmospheric Glow - Cold White from Right (Center) */}
+                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center_right,rgba(255,255,255,0.04)_0%,transparent_60%)] opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                   
                    <div className="relative z-10">
                        <span className="text-[10px] text-neutral-500 font-bold tracking-widest uppercase">Protocolo de Base</span>
                        <h2 className="text-2xl font-bold text-white uppercase tracking-tight">Hábitos</h2>
@@ -132,9 +141,13 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                </div>
 
                {/* Module Right: MASTERPLAN */}
-               <div className="bg-black/60 backdrop-blur-md border-l-2 border-red-600 p-6 md:pl-8 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
+               <div className="bg-white/[0.02] backdrop-blur-sm border-l-2 border-red-600 p-6 md:pl-8 flex flex-col gap-3 text-left hover:bg-white/[0.04] transition-colors relative overflow-hidden group">
+                   {/* Atmospheric Glow - Warm Red from Left (Center) */}
+                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center_left,rgba(220,20,60,0.04)_0%,transparent_60%)] opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+
                    <div className="relative z-10">
                        <span className="text-[10px] text-red-500 font-bold tracking-widest uppercase">Vetor de Expansão</span>
+                       {/* Logo Container - Aligned height with text */}
                        <div className="h-8 flex items-center justify-start">
                            <img 
                               src="/MasterPlan.png" 
@@ -152,7 +165,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
            {/* 3. Footer Command & Action */}
            <div className="w-full max-w-lg mx-auto flex flex-col gap-8 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-500 fill-mode-backwards mt-16">
-               <div className="border-y border-white/20 py-6 text-center bg-black/40 backdrop-blur-sm">
+               <div className="border-y border-white/30 py-6 text-center shadow-[0_0_15px_rgba(255,255,255,0.05)] bg-white/[0.01] backdrop-blur-[2px]">
                    <p className="text-white font-mono text-[10px] md:text-[11px] uppercase tracking-[0.15em] leading-relaxed">
                        O QUE VOCÊ VAI CONFIGURAR AGORA NÃO É UMA LISTINHA DE TAREFAS.<br className="hidden md:block" /> É O SEU PLANO DE ATAQUE.
                    </p>
