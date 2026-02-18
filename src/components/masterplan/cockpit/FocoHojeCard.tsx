@@ -5,6 +5,7 @@ import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { InfoTooltip } from "@/components/masterplan/InfoTooltip";
 
 interface DailyTask {
   id: string;
@@ -66,7 +67,14 @@ export const FocoHojeCard = ({ tasks, missions, monthName, onAddTask, onToggleTa
               <Zap className="w-5 h-5 text-emerald-500" />
             </div>
             <div>
-              <h2 className="text-xl font-black text-white uppercase tracking-tight">Foco de Hoje</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-black text-white uppercase tracking-tight">Foco de Hoje</h2>
+                <InfoTooltip 
+                  title="Foco de Hoje"
+                  purpose="É o seu campo de batalha tático. Aqui você traduz a estratégia em ações concretas que podem ser completadas em 24h."
+                  action="Liste 3-5 tarefas críticas para hoje. Vincule cada uma a uma Missão Semanal para garantir que seu esforço gera progresso real."
+                />
+              </div>
               <p className="text-xs text-neutral-500 capitalize mt-0.5">{today}</p>
             </div>
           </div>
