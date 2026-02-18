@@ -10,13 +10,14 @@ import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { 
   Target, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
-  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout, Layers, HelpCircle
+  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout, Layers, HelpCircle, Lock, Lightbulb
 } from "lucide-react";
 
 export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
   const { data, updateAnnual, addAreaItem, deleteAreaItem } = useMasterplan();
   const [step, setStep] = useState(0); 
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
+  const [activeTipPillar, setActiveTipPillar] = useState<string | null>(null);
   
   const [areaInputs, setAreaInputs] = useState({
     work: "",
@@ -39,6 +40,16 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
     addAreaItem(key as any, text.trim());
     setAreaInputs(prev => ({ ...prev, [key]: "" }));
+  };
+
+  const handleAddTip = (key: keyof typeof areaInputs, tip: string) => {
+    // @ts-ignore
+    if (data.areas[key].length >= 3) return;
+    
+    setAreaInputs(prev => ({ ...prev, [key]: tip }));
+    setActiveTipPillar(null); // Close tips after selection to let user edit or just see it in input
+    // Optionally auto-add? The requirement says "preenche automaticamente o campo de input". 
+    // Let's just fill the input so they can edit X or values if needed.
   };
 
   // Smart Validation Logic
@@ -74,11 +85,15 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     data.annual.objective.trim().length > 5 && 
     data.annual.successCriteria.trim().length > 5;
   
-  const hasAtLeastOneItem = 
-    data.areas.work.length > 0 || 
-    data.areas.studies.length > 0 || 
-    data.areas.health.length > 0 || 
-    data.areas.personal.length > 0;
+  // Progress Logic for Step 3
+  const filledPillarsCount = [
+    data.areas.work.length > 0,
+    data.areas.studies.length > 0,
+    data.areas.health.length > 0,
+    data.areas.personal.length > 0
+  ].filter(Boolean).length;
+
+  const allPillarsFilled = filledPillarsCount === 4;
 
   // Render Helpers
   const Feedback = ({ analysis }: { analysis: any }) => {
@@ -182,7 +197,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
   }
 
   const renderContent = () => {
-    // --- STEP 1: BRIEFING TÁTICO (REFINED) ---
+    // --- STEP 1: BRIEFING TÁTICO ---
     if (step === 1) {
       return (
         <div className="flex flex-col h-full animate-in fade-in zoom-in-95 duration-700 relative">
@@ -335,36 +350,60 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                 label: 'Trabalho', 
                 icon: Briefcase, 
                 colorClass: 'text-blue-500', 
-                borderColor: 'border-blue-500/40',
-                placeholder: "Ex: Conseguir uma promoção ou novo cliente",
-                items: data.areas.work 
+                borderColor: 'border-blue-500',
+                placeholder: "Escreva sua meta ou escolha uma dica...",
+                items: data.areas.work,
+                tips: [
+                    "Conseguir uma promoção ou aumento",
+                    "Fechar X novos clientes",
+                    "Lançar um produto ou serviço",
+                    "Aprender uma habilidade que aumenta minha renda"
+                ]
             },
             { 
                 id: 'studies', 
                 label: 'Estudos', 
                 icon: GraduationCap, 
                 colorClass: 'text-violet-500', 
-                borderColor: 'border-violet-500/40',
-                placeholder: "Ex: Terminar um curso ou aprender uma habilidade",
-                items: data.areas.studies 
+                borderColor: 'border-violet-500',
+                placeholder: "Escreva sua meta ou escolha uma dica...",
+                items: data.areas.studies,
+                tips: [
+                    "Terminar um curso ou certificação",
+                    "Ler X livros este ano",
+                    "Aprender um novo idioma",
+                    "Estudar X horas por semana de forma consistente"
+                ] 
             },
             { 
                 id: 'health', 
                 label: 'Saúde', 
                 icon: Heart, 
                 colorClass: 'text-emerald-500', 
-                borderColor: 'border-emerald-500/40',
-                placeholder: "Ex: Correr 5km ou perder 10kg",
-                items: data.areas.health 
+                borderColor: 'border-emerald-500',
+                placeholder: "Escreva sua meta ou escolha uma dica...",
+                items: data.areas.health,
+                tips: [
+                    "Correr X km ou completar uma corrida",
+                    "Perder X kg ou ganhar massa muscular",
+                    "Dormir 7-8h por noite de forma consistente",
+                    "Criar uma rotina de exercícios 4x por semana"
+                ]
             },
             { 
                 id: 'personal', 
                 label: 'Pessoal', 
                 icon: User, 
                 colorClass: 'text-amber-500', 
-                borderColor: 'border-amber-500/40',
-                placeholder: "Ex: Viajar, fortalecer relações, hobby",
-                items: data.areas.personal 
+                borderColor: 'border-amber-500',
+                placeholder: "Escreva sua meta ou escolha uma dica...",
+                items: data.areas.personal,
+                tips: [
+                    "Fazer uma viagem que sempre quis",
+                    "Fortalecer relações com família e amigos",
+                    "Desenvolver um hobby novo",
+                    "Dedicar tempo semanal para algo que me faz bem"
+                ]
             },
         ];
 
@@ -377,20 +416,66 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                             Seus 4 Pilares
                          </span>
                          <h2 className="text-xl font-medium text-neutral-400">
-                             Defina 1 meta principal para cada área da sua vida este ano.
+                             Defina pelo menos 1 meta para cada área. <br/>Você pode adicionar mais depois.
                          </h2>
                     </div>
 
                     <div className="space-y-4">
                         {areasConfig.map((area) => {
                           const isFull = area.items.length >= 3;
+                          const hasItems = area.items.length > 0;
+                          
+                          // Border logic: 
+                          // If locked and empty: Subtle pulse + red border? The prompt says pulse red.
+                          // But prompt also says border color is the pillar color.
+                          // "Pilares que ainda estão vazios devem ter uma borda pulsante sutil em vermelho (animation: pulse)"
+                          // Let's interpret: Border is Pillar Color. If empty, maybe shadow pulse? 
+                          // Or override border color to red if empty?
+                          // Let's use the pillar color for the border as requested in "Cores dos pilares" section,
+                          // but add a pulse animation if empty to draw attention.
+                          
+                          const borderStyle = hasItems 
+                            ? `${area.borderColor} border-opacity-100` 
+                            : `${area.borderColor} border-opacity-40 animate-pulse`;
+
                           return (
-                            <div key={area.id} className={`p-5 rounded-2xl bg-[#0A0A0A] border-l-[2px] border-y border-r border-y-white/5 border-r-white/5 ${area.borderColor}`}>
+                            <div key={area.id} className={`p-5 rounded-2xl bg-[#0A0A0A] border-l-[2px] border-y border-r border-y-white/5 border-r-white/5 ${borderStyle} transition-all duration-500`}>
                                 <div className="flex items-center justify-between mb-4">
-                                    <Label className={`flex items-center gap-2 text-xs uppercase font-black tracking-widest ${area.colorClass}`}>
-                                        <area.icon className="w-4 h-4" /> {area.label}
-                                    </Label>
-                                    {area.items.length > 0 && <CheckCircle2 className={`w-4 h-4 ${area.colorClass}`} />}
+                                    <div className="flex items-center gap-3">
+                                        <Label className={`flex items-center gap-2 text-xs uppercase font-black tracking-widest ${area.colorClass}`}>
+                                            <area.icon className="w-4 h-4" /> {area.label}
+                                        </Label>
+                                        
+                                        {/* Tips Button */}
+                                        <div className="relative">
+                                            <button 
+                                                onClick={() => setActiveTipPillar(activeTipPillar === area.id ? null : area.id)}
+                                                className="w-5 h-5 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors"
+                                            >
+                                                <Lightbulb className="w-3 h-3" />
+                                            </button>
+                                            
+                                            {/* Tips Dropdown */}
+                                            {activeTipPillar === area.id && (
+                                                <div className="absolute left-0 top-6 z-20 w-64 bg-[#1A1A1A] border border-white/10 rounded-lg shadow-2xl p-2 animate-in zoom-in-95 duration-200">
+                                                    <div className="text-[10px] uppercase font-bold text-neutral-500 px-2 py-1 mb-1">Sugestões</div>
+                                                    <div className="flex flex-col gap-1">
+                                                        {area.tips.map((tip, idx) => (
+                                                            <button 
+                                                                key={idx}
+                                                                onClick={() => handleAddTip(area.id as any, tip)}
+                                                                className="text-left text-xs text-neutral-300 hover:text-white hover:bg-[#2A2A2A] p-2 rounded-md transition-colors"
+                                                            >
+                                                                {tip}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {hasItems && <CheckCircle2 className={`w-4 h-4 ${area.colorClass}`} />}
                                 </div>
                                 
                                 <div className="flex gap-3 mb-3">
@@ -401,7 +486,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                                                 onChange={(e) => handleAreaInputChange(area.id as keyof typeof areaInputs, e.target.value)}
                                                 onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem(area.id as keyof typeof areaInputs)}
                                                 placeholder={area.placeholder}
-                                                className="bg-black/40 border-white/10 text-sm h-11 text-white placeholder:text-neutral-600" 
+                                                className="bg-black/40 border-white/10 text-sm h-11 text-white placeholder:text-neutral-600 focus:border-white/20" 
                                             />
                                             <Button size="icon" className="h-11 w-11 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0" onClick={() => handleAddAreaItem(area.id as keyof typeof areaInputs)}>
                                                 <Plus className="w-5 h-5"/>
@@ -409,7 +494,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                                         </>
                                     ) : (
                                         <div className="w-full h-11 flex items-center justify-center bg-white/5 rounded-md border border-white/5">
-                                            <span className="text-xs text-neutral-500 font-medium">Limite de 3 metas por pilar atingido.</span>
+                                            <span className="text-xs text-neutral-500 font-medium">Máximo de 3 metas por pilar.</span>
                                         </div>
                                     )}
                                 </div>
@@ -428,15 +513,52 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center pt-6 border-t border-white/5 flex-shrink-0 mt-auto pb-8">
-                    <Button variant="ghost" onClick={() => setStep(2)} className="text-neutral-500 hover:text-white font-medium text-xs">VOLTAR</Button>
-                    <Button 
-                        disabled={!hasAtLeastOneItem}
-                        onClick={() => setStep(4)}
-                        className={`font-bold px-8 rounded-[10px] h-12 transition-all duration-300 ${hasAtLeastOneItem ? 'bg-[#E8251A] hover:bg-[#c91e14] text-white shadow-[0_4px_20px_rgba(232,37,26,0.3)]' : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'}`}
-                    >
-                        ATIVAR SISTEMA →
-                    </Button>
+                {/* Footer Controls */}
+                <div className="flex flex-col gap-4 pt-4 border-t border-white/5 flex-shrink-0 mt-auto pb-6">
+                    
+                    {/* Progress Indicator */}
+                    <div className="w-full space-y-2">
+                        <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-widest">
+                            {allPillarsFilled ? (
+                                <span className="text-green-500 flex items-center gap-1.5"><Check className="w-3 h-3"/> Todos os pilares definidos. Pronto para começar.</span>
+                            ) : (
+                                <span className="text-neutral-500">{filledPillarsCount} de 4 pilares preenchidos</span>
+                            )}
+                            <span className="text-neutral-600">{(filledPillarsCount / 4) * 100}%</span>
+                        </div>
+                        <div className="h-1 w-full bg-neutral-800 rounded-full overflow-hidden">
+                            <div 
+                                className={`h-full transition-all duration-500 ${allPillarsFilled ? 'bg-green-500' : 'bg-[#E8251A]'}`} 
+                                style={{ width: `${(filledPillarsCount / 4) * 100}%` }} 
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                        <Button variant="ghost" onClick={() => setStep(2)} className="text-neutral-500 hover:text-white font-medium text-xs">VOLTAR</Button>
+                        
+                        <div className="relative overflow-hidden rounded-[10px]">
+                             <Button 
+                                disabled={!allPillarsFilled}
+                                onClick={() => setStep(4)}
+                                className={`font-bold px-8 h-12 transition-all duration-300 relative z-10 
+                                    ${allPillarsFilled 
+                                        ? 'bg-[#E8251A] hover:bg-[#c91e14] text-white shadow-[0_4px_20px_rgba(232,37,26,0.3)] group' 
+                                        : 'bg-[#2A2A2A] text-[#555] cursor-not-allowed border border-white/5'
+                                    }`}
+                            >
+                                {allPillarsFilled ? (
+                                    <>
+                                        ATIVAR SISTEMA →
+                                        {/* Shimmer Effect on Unlock */}
+                                        <div className="absolute inset-0 -translate-x-full animate-[shimmer_1s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-0 pointer-events-none" />
+                                    </>
+                                ) : (
+                                    <span className="flex items-center gap-2"><Lock className="w-3 h-3" /> ATIVAR SISTEMA</span>
+                                )}
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
