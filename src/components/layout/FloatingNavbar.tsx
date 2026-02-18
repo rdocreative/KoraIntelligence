@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, 
-  Crown, // Trocado CheckCircle2 por Crown para representar Masterplan
+  Crown, 
   ClipboardList,
   Target, 
   Swords,
@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'INÍCIO', path: '/' },
-  { icon: Crown, label: 'MASTERPLAN', path: '/masterplan' }, // Rota e ícone atualizados
+  { icon: Crown, label: 'MASTERPLAN', path: '/masterplan' },
   { icon: ClipboardList, label: 'TAREFAS', path: '/tarefas' },
   { icon: Target, label: 'METAS', path: '/metas' },
   { icon: Swords, label: 'MISSÕES', path: '/missoes' },
@@ -29,7 +29,7 @@ export const FloatingNavbar = () => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const startTimer = () => {
-    stopTimer(); // Limpa qualquer timer anterior
+    stopTimer();
     timeoutRef.current = setTimeout(() => {
       setIsMinimized(true);
     }, 5000);
@@ -42,7 +42,6 @@ export const FloatingNavbar = () => {
     }
   };
 
-  // Inicia o timer ao carregar o componente
   useEffect(() => {
     startTimer();
     return () => stopTimer();
@@ -54,8 +53,8 @@ export const FloatingNavbar = () => {
   };
 
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
-      {/* Container Principal com Detecção de Mouse */}
+    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center font-rajdhani">
+      {/* Container Principal */}
       <div 
         onMouseEnter={stopTimer}
         onMouseLeave={() => {
@@ -116,7 +115,7 @@ export const FloatingNavbar = () => {
         </nav>
       </div>
 
-      {/* Trigger Button (Seta para cima) */}
+      {/* Trigger Button */}
       <button
         onClick={handleExpand}
         className={cn(
