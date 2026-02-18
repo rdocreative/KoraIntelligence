@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -71,13 +73,12 @@
     @apply border-border;
   }
   body {
-    /* Força Rajdhani (via font-sans) em todo o app */
-    @apply bg-background text-foreground antialiased font-sans selection:bg-red-900/50 selection:text-white;
-    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+    @apply bg-background text-foreground antialiased selection:bg-red-900/50 selection:text-white;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 400;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    /* Como body já é Rajdhani, aqui reforçamos apenas o peso, se necessário */
     @apply font-semibold;
   }
   

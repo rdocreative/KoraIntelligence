@@ -19,9 +19,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        // Agora a fonte padrão 'sans' é Rajdhani
-        sans: ["Rajdhani", "sans-serif"],
-        // Mantemos 'rajdhani' caso alguma classe específica a chame, mas é redundante agora
+        // Agora a fonte padrão 'sans' é Exo 2
+        sans: ["'Exo 2'", "sans-serif"],
         rajdhani: ["Rajdhani", "sans-serif"],
       },
       colors: {
