@@ -86,15 +86,16 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     );
   };
 
-  // Background Component with high visibility
+  // Improved Background Component
   const AppBackground = () => (
     <div 
-      className="fixed inset-0 pointer-events-none z-[-1]"
+      className="absolute inset-0 pointer-events-none -z-10"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('/Background-MasterPlan.png')`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('/Background-MasterPlan.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed'
       }}
     />
   );
@@ -108,7 +109,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
         <div className="w-full max-w-4xl space-y-12 relative z-10 flex flex-col items-center">
            {/* Logo Section */}
            <div className="flex flex-col items-center animate-in fade-in zoom-in duration-700">
-               <span className="text-[12px] tracking-[0.4em] text-white/80 uppercase font-bold mb-[-2rem] relative z-0">
+               <span className="text-[12px] tracking-[0.4em] text-white/90 uppercase font-bold mb-[-2rem] relative z-0">
                   Bem-vindo ao
                </span>
                <img 
@@ -117,7 +118,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                   style={{ filter: 'drop-shadow(0 0 20px rgba(220, 38, 38, 0.9))' }}
                   className="h-32 md:h-40 w-auto object-contain relative z-10" 
                />
-               <span className="text-[10px] tracking-[0.6em] text-white/50 mt-6 uppercase font-medium">Sistema Ativo</span>
+               <span className="text-[10px] tracking-[0.6em] text-white/70 mt-6 uppercase font-medium">Sistema Ativo</span>
            </div>
 
            {/* Modular Architecture */}
