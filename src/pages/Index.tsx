@@ -1,113 +1,125 @@
-import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useMasterplan } from "@/hooks/useMasterplan";
-import { OverviewTab } from "@/components/masterplan/OverviewTab";
-import { WeeklyTab } from "@/components/masterplan/WeeklyTab";
-import { MonthlyTab } from "@/components/masterplan/MonthlyTab";
-import { AnnualTab } from "@/components/masterplan/AnnualTab";
-import { LoadingScreen } from "@/components/masterplan/LoadingScreen";
-import { OnboardingWizard } from "@/components/masterplan/OnboardingWizard";
+import React from "react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { useHabitTracker } from "@/hooks/useHabitTracker";
+import { useSettings } from "@/hooks/useSettings";
+import { DailyVerse } from "@/components/features/dashboard/DailyVerse";
+import { Gamification } from "@/components/features/habit-tracker/Gamification";
+import { HabitCard } from "@/components/features/habit-tracker/HabitCard";
+import { MonthlyProgress } from "@/components/features/dashboard/MonthlyProgress";
+import { MonthlyChart } from "@/components/features/dashboard/MonthlyChart";
+import { FAQSection } from "@/components/features/dashboard/FAQSection";
+import { HabitMonthView } from "@/components/features/habit-tracker/HabitMonthView";
+import { Flame, CalendarDays, LayoutDashboard } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Index = () => {
-  const { 
-    data, 
-    loading, 
-    updateAnnual, 
-    addAreaItem, 
-    toggleAreaItem, 
-    deleteAreaItem,
-    addWeek,
-    deleteWeek,
-    addWeekTask,
-    toggleWeekTask,
-    updateWeekReview,
-    addMonthGoal,
-    toggleMonthGoal,
-    updateMonth,
-    resetData,
-    analytics 
-  } = useMasterplan();
+  const { habits, completeHabit, totalPoints, streak, getCurrentBadge, getNextBadge, history } = useHabitTracker();
+  const { settings } = useSettings();
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("overview");
+  const today = new Date();
+  const currentBadge = getCurrentBadge();
+  const nextBadge = getNextBadge();
 
-  if (loading || isLoading) {
-    return <LoadingScreen onFinished={() => setIsLoading(false)} />;
-  }
-
-  if (!data.onboardingCompleted) {
-    return <OnboardingWizard onComplete={() => window.location.reload()} />;
-  }
+  // Filtra e ordena os hábitos: não completados primeiro
+  const sortedHabits = [...habits].sort((a, b) => {
+    if (a.completed === b.completed) return 0;
+    return a.completed ? 1 : -1;
+  });
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-red-500/30">
-      {/* Background Decor */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-red-900/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-900/5 blur-[120px] rounded-full" />
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {settings.showDailyVerse && <DailyVerse />}
+
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-3xl md:text-4xl font-black text-white glow-text uppercase italic tracking-tighter">
+            Olá, {settings.userName.split(" ")[0]}
+          </h1>
+          <p className="text-neutral-500 font-medium flex items-center gap-2 text-sm">
+            <CalendarDays className="w-4 h-4 text-red-500" />
+            {format(today, "EEEE, d 'de' MMMM", { locale: ptBR })}
+          </p>
+        </div>
+        
+        <div className="flex items-center gap-3 bg-[#121212] px-4 py-2 rounded-2xl border border-white/5 shadow-lg">
+          <div className="p-2 bg-red-500/10 rounded-full">
+            <Flame className={`w-5 h-5 ${streak > 0 ? 'text-red-500 fill-red-500 animate-pulse' : 'text-neutral-600'}`} />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xl font-black text-white leading-none">{streak}</span>
+            <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Dias Seguidos</span>
+          </div>
+        </div>
       </div>
 
-      <main className="relative z-10 container mx-auto px-4 md:px-8 py-8 md:py-12 max-w-7xl">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="flex justify-center mb-12">
-            <TabsList className="bg-neutral-900/50 border border-white/5 p-1 rounded-full backdrop-blur-md">
-              <TabsTrigger value="overview" className="rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-black transition-all">Visão</TabsTrigger>
-              <TabsTrigger value="weekly" className="rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-black transition-all">Foco</TabsTrigger>
-              <TabsTrigger value="monthly" className="rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-black transition-all">Mês</TabsTrigger>
-              <TabsTrigger value="annual" className="rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-black transition-all">Ano</TabsTrigger>
-            </TabsList>
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column: Habits (2/3) */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="space-y-4">
+             <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                   <LayoutDashboard className="w-5 h-5 text-red-500" />
+                   Hábitos de Hoje
+                </h2>
+                <span className="text-xs font-medium text-neutral-500 bg-[#121212] px-3 py-1 rounded-full border border-white/5">
+                   {habits.filter(h => h.completed).length} / {habits.length} Concluídos
+                </span>
+             </div>
+             
+             {habits.length === 0 ? (
+                <div className="text-center py-12 border border-dashed border-white/10 rounded-2xl bg-[#0a0a0a]/50">
+                   <p className="text-neutral-500 mb-4">Você ainda não tem hábitos configurados.</p>
+                   <Link to="/configuracoes">
+                      <Button variant="outline" className="border-red-500/50 text-red-500 hover:bg-red-500/10">
+                         Configurar Hábitos
+                      </Button>
+                   </Link>
+                </div>
+             ) : (
+                <div className="grid gap-3">
+                   {sortedHabits.map((habit, index) => (
+                      <HabitCard 
+                         key={habit.id} 
+                         habit={habit} 
+                         onComplete={completeHabit}
+                         index={index}
+                      />
+                   ))}
+                </div>
+             )}
           </div>
+          
+          <HabitMonthView />
+        </div>
 
-          <div className="bg-transparent border-none shadow-none p-0">
-            <TabsContent value="overview" className="mt-0 outline-none">
-              <OverviewTab 
-                activeWeeks={data.weeks} 
-                currentMonth={data.months[analytics.currentMonthIndex]} 
-                areas={data.areas}
-                onNavigateToWeekly={() => setActiveTab("weekly")}
-                annualData={{
-                  objective: data.annual.objective,
-                  successCriteria: data.annual.successCriteria,
-                  progress: data.annual.progress
-                }}
-                onResetTutorial={resetData}
+        {/* Right Column: Gamification & Stats (1/3) */}
+        <div className="space-y-6">
+           {/* Level Card */}
+           <div className="h-[300px]">
+              <Gamification 
+                 currentBadge={currentBadge} 
+                 nextBadge={nextBadge} 
+                 totalPoints={totalPoints}
+                 streak={streak}
               />
-            </TabsContent>
+           </div>
 
-            <TabsContent value="weekly" className="mt-0 outline-none">
-              <WeeklyTab 
-                weeks={data.weeks}
-                addWeek={addWeek}
-                deleteWeek={deleteWeek}
-                addWeekTask={addWeekTask}
-                toggleWeekTask={toggleWeekTask}
-                updateWeekReview={updateWeekReview}
-              />
-            </TabsContent>
+           {/* Monthly Progress */}
+           <MonthlyProgress 
+              totalPoints={totalPoints} 
+              habitsCount={history.reduce((acc, curr) => acc + curr.completedHabitIds.length, 0)} 
+           />
 
-            <TabsContent value="monthly" className="mt-0 outline-none">
-              <MonthlyTab 
-                months={data.months}
-                currentMonthIndex={analytics.currentMonthIndex}
-                addMonthGoal={addMonthGoal}
-                toggleMonthGoal={toggleMonthGoal}
-                updateMonth={updateMonth}
-              />
-            </TabsContent>
+           {/* XP Chart */}
+           <MonthlyChart history={history} />
+        </div>
+      </div>
 
-            <TabsContent value="annual" className="mt-0 outline-none">
-              <AnnualTab 
-                data={data}
-                analytics={analytics}
-                updateAnnual={updateAnnual}
-                addAreaItem={addAreaItem}
-                toggleAreaItem={toggleAreaItem}
-                deleteAreaItem={deleteAreaItem}
-              />
-            </TabsContent>
-          </div>
-        </Tabs>
-      </main>
+      <FAQSection />
     </div>
   );
 };
