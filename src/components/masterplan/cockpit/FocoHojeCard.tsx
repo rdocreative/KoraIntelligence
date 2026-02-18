@@ -1,4 +1,3 @@
-Semana) nas tarefas de hoje.">
 import React, { useState } from "react";
 import { Zap, Plus, Sparkles, Target, Link2, X, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
