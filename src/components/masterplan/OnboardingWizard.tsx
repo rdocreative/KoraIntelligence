@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { 
   Target, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
-  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout, ScanLine, BrainCircuit
+  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout, BrainCircuit
 } from "lucide-react";
 
 export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
@@ -42,7 +42,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     const length = text.length;
     
     if (length === 0) return null;
-    if (length < 8) return { status: 'weak', message: 'Muito curto. Seja mais específico.', color: 'text-red-500', icon: AlertCircle };
+    if (length < 8) return { status: 'weak', message: 'Muito curto. Seja mais específico.', color: 'text-[#E8251A]', icon: AlertCircle };
     
     const vagueWords = ['melhor', 'sucesso', 'feliz', 'rico', 'vida', 'coisas'];
     const hasVagueWords = vagueWords.some(w => text.toLowerCase().includes(w));
@@ -89,9 +89,9 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
   // Tactical Background Component
   const AppBackground = () => (
     <div 
-      className="fixed inset-0 pointer-events-none -z-10 bg-black"
+      className="fixed inset-0 pointer-events-none -z-10 bg-[#0A0A0A]"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.7)), url('/Background-MasterPlan.png')`,
+        backgroundImage: `linear-gradient(rgba(10, 10, 10, 0.75), rgba(10, 10, 10, 0.8)), url('/Background-MasterPlan.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -115,7 +115,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                <img 
                   src="/MasterPlan.png" 
                   alt="MasterPlan Logo" 
-                  style={{ filter: 'drop-shadow(0 0 20px rgba(220, 38, 38, 0.9))' }}
+                  style={{ filter: 'drop-shadow(0 0 20px rgba(232, 37, 26, 0.9))' }}
                   className="h-32 md:h-40 w-auto object-contain relative z-10" 
                />
                <span className="text-[10px] tracking-[0.6em] text-white/60 mt-6 uppercase font-medium">Sistema Ativo</span>
@@ -123,7 +123,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
            {/* Modular Architecture */}
            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200 fill-mode-backwards px-4 md:px-0 items-stretch">
-               <div className="bg-black/60 backdrop-blur-xl border-l-4 border-neutral-600 p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
+               <div className="bg-black/60 backdrop-blur-xl border-l-[4px] border-neutral-600 p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
                    <div className="relative z-10">
                        <span className="text-[10px] text-neutral-400 font-bold tracking-widest uppercase">Protocolo de Base</span>
                        <h2 className="text-2xl font-bold text-white uppercase tracking-tight">Hábitos</h2>
@@ -133,14 +133,14 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                    </div>
                </div>
 
-               <div className="bg-black/60 backdrop-blur-xl border-l-4 border-red-600 p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
+               <div className="bg-black/60 backdrop-blur-xl border-l-[4px] border-[#E8251A] p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
                    <div className="relative z-10">
-                       <span className="text-[10px] text-red-500 font-bold tracking-widest uppercase">Vetor de Expansão</span>
+                       <span className="text-[10px] text-[#E8251A] font-bold tracking-widest uppercase">Vetor de Expansão</span>
                        <div className="h-8 flex items-center justify-start">
                            <img 
                               src="/MasterPlan.png" 
                               alt="MasterPlan" 
-                              style={{ filter: 'drop-shadow(0 0 8px rgba(220, 38, 38, 0.5))' }}
+                              style={{ filter: 'drop-shadow(0 0 8px rgba(232, 37, 26, 0.5))' }}
                               className="h-10 w-auto object-contain object-left"
                            />
                        </div>
@@ -165,7 +165,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                          setHasShownWelcome(true);
                          setStep(1);
                      }}
-                     className="w-full h-12 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-widest rounded-md shadow-[0_0_25px_rgba(220,38,38,0.4)] transition-all duration-300 transform hover:-translate-y-1"
+                     className="w-full h-12 bg-[#E8251A] hover:bg-[#c91e14] text-white font-bold text-xs uppercase tracking-widest rounded-md shadow-[0_0_25px_rgba(232,37,26,0.4)] transition-all duration-300 transform hover:-translate-y-1"
                  >
                      ATIVAR PROTOCOLO
                  </Button>
@@ -177,12 +177,12 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
   }
 
   const renderContent = () => {
-    // --- STEP 1: BRIEFING TÁTICO ---
+    // --- STEP 1: BRIEFING TÁTICO (REDESIGNED) ---
     if (step === 1) {
       return (
         <div className="flex flex-col h-full animate-in fade-in zoom-in-95 duration-700 relative">
              {/* Scanning Effect */}
-             <div className="absolute inset-x-0 h-[2px] bg-red-500/80 shadow-[0_0_20px_rgba(220,38,38,1)] animate-scan pointer-events-none z-50 top-0" />
+             <div className="absolute inset-x-0 h-[2px] bg-[#E8251A]/80 shadow-[0_0_20px_rgba(232,37,26,1)] animate-scan pointer-events-none z-50 top-0" />
              <style jsx global>{`
                 @keyframes scan {
                     0% { top: 0%; opacity: 0; }
@@ -195,51 +195,50 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                 }
              `}</style>
 
-             <div className="flex-1 flex flex-col items-center justify-center space-y-10 px-2 py-4 text-center">
-                 <div className="space-y-4">
-                     <div className="w-16 h-16 bg-red-950/30 rounded-full border border-red-500/30 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(220,38,38,0.15)]">
-                        <BrainCircuit className="w-8 h-8 text-red-500" />
+             <div className="flex-1 flex flex-col px-[44px] py-[52px] text-left overflow-y-auto custom-scrollbar">
+                 
+                 {/* Header */}
+                 <div className="mb-10 text-center">
+                     <div className="w-16 h-16 bg-[#E8251A]/15 rounded-[14px] border border-[#E8251A]/30 flex items-center justify-center mx-auto mb-6">
+                        <BrainCircuit className="w-8 h-8 text-white" />
                      </div>
-                     <h2 className="text-2xl font-black text-white uppercase tracking-wider">A Ciência por trás da Forja</h2>
-                     <div className="w-24 h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent mx-auto rounded-full opacity-50" />
+                     <h2 className="text-3xl font-black text-white uppercase tracking-widest">A Ciência por trás da Forja</h2>
                  </div>
 
-                 <div className="space-y-8 max-w-md mx-auto">
-                     <div className="space-y-2">
-                         <h4 className="text-white text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2">
-                            <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" /> 
-                            A Otimização
-                         </h4>
-                         <p className="text-neutral-400 text-sm leading-relaxed font-medium">
-                            Adaptamos o milenar método japonês <span className="text-white italic">Nenkan Mokuhyo</span> para a realidade da alta performance digital. Eliminamos a burocracia e mantivemos o osso: a <span className="text-white">Cascata de Foco</span>.
+                 <div className="space-y-[28px]">
+                     {/* Section 1 */}
+                     <div className="space-y-3">
+                         <h4 className="text-[#E8251A] text-[10px] font-bold uppercase tracking-[2.5px]">A Otimização</h4>
+                         <p className="text-neutral-300 font-light text-sm leading-[1.7]">
+                            Adaptamos o <span className="text-white font-medium">Nenkan Mokuhyo</span> — um método japonês de planejamento milenar — para o ritmo da vida digital. Ficamos com o que importa: a <span className="text-white font-medium">Cascata de Foco</span>.
                          </p>
                      </div>
 
-                     <div className="space-y-2">
-                         <h4 className="text-white text-sm font-bold uppercase tracking-widest">A Diferença</h4>
-                         <p className="text-neutral-400 text-sm leading-relaxed font-medium">
-                            Enquanto outros apps tratam suas metas como listas de compras, nós tratamos sua vida como um <span className="text-red-500 font-bold">sistema de armas</span>. Separamos o que te mantém vivo (Hábitos) do que te faz vencer (Masterplan).
+                     {/* Section 2 */}
+                     <div className="space-y-3">
+                         <h4 className="text-[#E8251A] text-[10px] font-bold uppercase tracking-[2.5px]">A Diferença</h4>
+                         <p className="text-neutral-300 font-light text-sm leading-[1.7]">
+                            A maioria dos apps trata suas metas como itens de uma lista. Aqui é diferente: separamos o que te mantém no trilho (Hábitos) do que vai te levar longe (Masterplan).
                          </p>
                      </div>
 
-                     <div className="space-y-2 bg-white/5 p-4 rounded-lg border border-white/5">
-                         <h4 className="text-white text-xs font-bold uppercase tracking-widest mb-1">A Regra de Ouro</h4>
-                         <p className="text-neutral-300 text-xs leading-relaxed font-mono">
-                            O Ano dita o Mês.<br/>
-                            O Mês dita a Semana.<br/>
-                            A Semana dita o <span className="text-white font-bold bg-red-600/20 px-1 rounded">FOCO DE HOJE</span>.
-                         </p>
+                     {/* Gold Rule Block */}
+                     <div className="bg-[#0D0D0D] border-l-[3px] border-[#E8251A] rounded-[10px] p-[22px] space-y-1">
+                         <p className="text-neutral-300 text-sm font-light">O Ano dita o Mês.</p>
+                         <p className="text-neutral-300 text-sm font-light">O Mês dita a Semana.</p>
+                         <p className="text-[#E8251A] text-sm font-bold">A Semana dita o foco de hoje.</p>
                      </div>
                  </div>
-             </div>
 
-             <div className="pt-6 border-t border-white/5 mt-auto -mx-8 px-8 pb-8">
-                 <Button 
-                     onClick={() => setStep(2)}
-                     className="w-full h-14 bg-white hover:bg-neutral-200 text-black font-black text-sm uppercase tracking-widest rounded-md transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg"
-                 >
-                     ENTENDER O PROTOCOLO E AVANÇAR
-                 </Button>
+                 {/* CTA */}
+                 <div className="mt-10">
+                     <Button 
+                         onClick={() => setStep(2)}
+                         className="w-full h-auto py-4 bg-[#E8251A] hover:bg-[#c91e14] text-white font-semibold text-[13px] uppercase tracking-[1.8px] rounded-[10px] shadow-[0_4px_24px_rgba(232,37,26,0.25)] hover:shadow-[0_8px_32px_rgba(232,37,26,0.4)] transition-all transform hover:-translate-y-[1px]"
+                     >
+                         Começar agora →
+                     </Button>
+                 </div>
              </div>
         </div>
       );
@@ -248,20 +247,20 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     // --- STEP 2: ANNUAL (ANTIGO STEP 1) ---
     if (step === 2) {
         return (
-            <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500">
+            <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500 px-8 pt-6">
                 <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-6 custom-scrollbar pr-2">
                     <div className="space-y-4 text-center mb-6 pt-2">
-                         <div className="inline-flex items-center justify-center p-3 bg-red-500/10 rounded-full border border-red-500/20 mb-2 shadow-[0_0_15px_rgba(220,38,38,0.2)]">
-                            <Target className="w-6 h-6 text-red-500" />
+                         <div className="inline-flex items-center justify-center p-3 bg-[#E8251A]/10 rounded-full border border-[#E8251A]/20 mb-2 shadow-[0_0_15px_rgba(232,37,26,0.2)]">
+                            <Target className="w-6 h-6 text-[#E8251A]" />
                          </div>
                          <h2 className="text-2xl font-black text-white uppercase tracking-tight">O Alvo Único</h2>
                     </div>
 
                     <div className="bg-black/80 border border-white/10 rounded-xl p-5 mb-8 relative overflow-hidden group shadow-lg backdrop-blur-md">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-red-600" />
+                        <div className="absolute top-0 left-0 w-1 h-full bg-[#E8251A]" />
                         <div className="flex gap-4">
                             <div className="shrink-0 mt-0.5">
-                                <Info className="w-5 h-5 text-red-500" />
+                                <Info className="w-5 h-5 text-[#E8251A]" />
                             </div>
                             <div className="space-y-3">
                                 <h4 className="text-white font-bold text-sm uppercase tracking-wide">A Lei do Foco Extremo</h4>
@@ -280,7 +279,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                                 placeholder="Ex: Atingir liberdade financeira" 
                                 value={data.annual.objective}
                                 onChange={(e) => updateAnnual({ objective: e.target.value })}
-                                className="bg-black/60 backdrop-blur-md border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-red-500/50 text-white"
+                                className="bg-black/60 backdrop-blur-md border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-[#E8251A]/50 text-white"
                             />
                             <Feedback analysis={objectiveAnalysis} />
                         </div>
@@ -298,7 +297,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                     </div>
                 </div>
 
-                <div className="flex justify-end pt-6 border-t border-white/5 flex-shrink-0 mt-auto -mx-8 px-8 pb-8">
+                <div className="flex justify-end pt-6 border-t border-white/5 flex-shrink-0 mt-auto pb-8">
                     <Button 
                         disabled={!isAnnualValid}
                         onClick={() => setStep(3)}
@@ -314,7 +313,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     // --- STEP 3: AREAS (ANTIGO STEP 2) ---
     if (step === 3) {
         return (
-            <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500">
+            <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500 px-8 pt-6">
                 <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-6 custom-scrollbar pr-2">
                     <div className="space-y-4 text-center mb-6 pt-2">
                          <div className="inline-flex items-center justify-center p-3 bg-blue-500/10 rounded-full border border-blue-500/20 mb-2">
@@ -327,7 +326,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                         {[
                           { id: 'work', label: 'Trabalho', icon: Briefcase, color: 'text-blue-500', items: data.areas.work },
                           { id: 'studies', label: 'Estudos', icon: GraduationCap, color: 'text-purple-500', items: data.areas.studies },
-                          { id: 'health', label: 'Saúde', icon: Heart, color: 'text-red-500', items: data.areas.health },
+                          { id: 'health', label: 'Saúde', icon: Heart, color: 'text-[#E8251A]', items: data.areas.health },
                           { id: 'personal', label: 'Pessoal', icon: User, color: 'text-yellow-500', items: data.areas.personal },
                         ].map((area) => (
                           <div key={area.id} className="p-5 rounded-2xl border bg-black/60 backdrop-blur-md border-white/5">
@@ -354,7 +353,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                               {area.items.map((i: any) => (
                                   <div key={i.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 mt-2">
                                       <span className="text-sm font-medium text-neutral-200">{i.text}</span>
-                                      <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="text-neutral-600 hover:text-red-500">
+                                      <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="text-neutral-600 hover:text-[#E8251A]">
                                           <X className="w-4 h-4" />
                                       </button>
                                   </div>
@@ -364,7 +363,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center pt-6 border-t border-white/5 flex-shrink-0 mt-auto -mx-8 px-8 pb-8">
+                <div className="flex justify-between items-center pt-6 border-t border-white/5 flex-shrink-0 mt-auto pb-8">
                     <Button variant="ghost" onClick={() => setStep(2)} className="text-neutral-400 font-bold uppercase tracking-widest text-[10px] hover:text-white">Voltar</Button>
                     <Button 
                         disabled={!hasAtLeastOneItem}
@@ -381,12 +380,12 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     // --- STEP 4: SUCCESS (ANTIGO STEP 3) ---
     if (step === 4) {
         return (
-            <div className="flex flex-col items-center justify-center py-6 space-y-8 animate-in fade-in zoom-in duration-500 h-full overflow-y-auto custom-scrollbar">
+            <div className="flex flex-col items-center justify-center py-6 space-y-8 animate-in fade-in zoom-in duration-500 h-full overflow-y-auto custom-scrollbar px-8">
                 <div className="w-24 h-24 bg-gradient-to-br from-green-900/40 to-black border border-green-500/30 rounded-full flex items-center justify-center relative shadow-2xl">
                     <CheckCircle2 className="w-10 h-10 text-green-500 drop-shadow-[0_0_15px_rgba(34,197,94,0.6)]" />
                 </div>
                 <h3 className="text-2xl font-black text-white uppercase tracking-tight text-center">Tudo pronto.<br/>Sistema ativo.</h3>
-                <Button onClick={onComplete} className="w-full max-w-sm bg-red-600 hover:bg-red-500 text-white font-black uppercase tracking-widest h-14 rounded-full shadow-[0_0_30px_rgba(220,38,38,0.4)] transition-all">
+                <Button onClick={onComplete} className="w-full max-w-sm bg-[#E8251A] hover:bg-[#c91e14] text-white font-black uppercase tracking-widest h-14 rounded-full shadow-[0_0_30px_rgba(232,37,26,0.4)] transition-all">
                     ENTRAR NO CAMPO DE BATALHA
                 </Button>
             </div>
@@ -395,10 +394,10 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden bg-black">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden bg-[#0A0A0A]">
       <AppBackground />
 
-      <Card className={`w-full max-w-lg bg-black/70 backdrop-blur-2xl border-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col ring-1 ${step === 1 ? 'ring-red-500/30' : 'ring-white/10'}`}>
+      <Card className={`w-full max-w-lg bg-[#111111] border-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col ring-1 ${step === 1 ? 'ring-[#E8251A]/30' : 'ring-white/10'}`}>
         
         {/* Render Progress Bar ONLY if step > 1 (Actual Inputs) */}
         {step >= 2 && step <= 3 && (
@@ -407,17 +406,14 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">Passo {step - 1} de 2</span>
                     <div className="flex gap-1.5">
                         {[2, 3].map((i) => (
-                            <div key={i} className={`h-1 rounded-full transition-all duration-500 ${step >= i ? 'w-8 bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.5)]' : 'w-2 bg-neutral-800'}`} />
+                            <div key={i} className={`h-1 rounded-full transition-all duration-500 ${step >= i ? 'w-8 bg-[#E8251A] shadow-[0_0_10px_rgba(232,37,26,0.5)]' : 'w-2 bg-neutral-800'}`} />
                         ))}
                     </div>
                 </div>
             </div>
         )}
 
-        {/* If Step 1 (Briefing), add a subtle top spacer so content isn't glued to top edge */}
-        {step === 1 && <div className="h-4 shrink-0" />}
-
-        <CardContent className="flex-1 px-8 relative z-10 flex flex-col overflow-hidden">
+        <CardContent className="flex-1 p-0 relative z-10 flex flex-col overflow-hidden">
             {renderContent()}
         </CardContent>
       </Card>
