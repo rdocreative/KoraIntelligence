@@ -90,12 +90,17 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
   // --- WELCOME SCREEN (STEP 0) ---
   if (step === 0 && !hasShownWelcome) {
     return (
-      <div className="fixed inset-0 z-50 bg-[#050505] flex items-center justify-center p-6 overflow-hidden">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-6 overflow-hidden">
         
-        {/* Main Background Image */}
+        {/* Background Atmosphere Specific to Onboarding */}
         <div 
-          className="absolute inset-0 bg-[url('/Background-MasterPlan.png')] bg-cover bg-center bg-no-repeat opacity-40 mix-blend-lighten"
-          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `linear-gradient(rgba(5, 5, 5, 0.94), rgba(5, 5, 5, 0.98)), url('/Background-MasterPlan.png')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed'
+          }}
         />
 
         {/* Subtle Background Elements Layered Over Image */}
@@ -128,7 +133,6 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                
                {/* Module Left: HABITS */}
                <div className="bg-white/[0.02] backdrop-blur-sm border-r-2 border-neutral-700 p-6 md:pr-8 md:pl-6 flex flex-col gap-3 text-left hover:bg-white/[0.04] transition-colors relative overflow-hidden group">
-                   {/* Atmospheric Glow - Cold White from Right (Center) */}
                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center_right,rgba(255,255,255,0.04)_0%,transparent_60%)] opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
                    
                    <div className="relative z-10">
@@ -142,12 +146,10 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
                {/* Module Right: MASTERPLAN */}
                <div className="bg-white/[0.02] backdrop-blur-sm border-l-2 border-red-600 p-6 md:pl-8 flex flex-col gap-3 text-left hover:bg-white/[0.04] transition-colors relative overflow-hidden group">
-                   {/* Atmospheric Glow - Warm Red from Left (Center) */}
                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center_left,rgba(220,20,60,0.04)_0%,transparent_60%)] opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
 
                    <div className="relative z-10">
                        <span className="text-[10px] text-red-500 font-bold tracking-widest uppercase">Vetor de Expansão</span>
-                       {/* Logo Container - Aligned height with text */}
                        <div className="h-8 flex items-center justify-start">
                            <img 
                               src="/MasterPlan.png" 
@@ -337,6 +339,18 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
   return (
     <div className="fixed inset-0 z-50 bg-[#020202]/95 backdrop-blur-xl flex items-center justify-center p-4">
+      
+      {/* Background Atmosphere Persisting through all steps of Onboarding */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `linear-gradient(rgba(5, 5, 5, 0.94), rgba(5, 5, 5, 0.98)), url('/Background-MasterPlan.png')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      />
+
       <Card className="w-full max-w-lg bg-[#0A0A0A] border-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col ring-1 ring-white/5">
         <div className="px-8 pt-8 pb-6 flex justify-between items-end flex-shrink-0 bg-[#0A0A0A]">
             <div className="space-y-1">
