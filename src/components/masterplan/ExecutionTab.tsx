@@ -92,8 +92,6 @@ export const ExecutionTab = ({
         completed: false
       });
     } else {
-        // Caso edge: nenhuma missão existe. Poderíamos criar uma tarefa 'avulsa' ou alertar.
-        // Por enquanto, não faz nada se não houver missão (o botão de nova missão deve ser usado).
         console.warn("Nenhuma missão ativa para vincular a tarefa.");
     }
   };
@@ -133,6 +131,7 @@ export const ExecutionTab = ({
       <section>
         <MissoesSemanaisSection 
           missions={weeks}
+          monthlyGoals={currentMonth.goals}
           onAddMission={addWeek}
           onDeleteMission={deleteWeek}
           onSelectMission={handleSelectMission}

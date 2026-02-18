@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Flag, Plus, Zap, Briefcase, GraduationCap, Heart, User, Calendar as CalendarIcon, Trash2 } from "lucide-react";
+import { Flag, Plus, Zap, Briefcase, GraduationCap, Heart, User, Calendar as CalendarIcon, Trash2, Target, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,11 +16,19 @@ interface Mission {
   pillar?: string;
   startDate: string;
   endDate: string;
+  linkedMonthGoalId?: string; // Novo campo de vínculo
   tasks: { id: string; completed: boolean }[];
+}
+
+interface MonthlyGoal {
+  id: string;
+  text: string | { text: string; completed: boolean }; // Adaptando para estrutura flexível
+  completed: boolean;
 }
 
 interface MissoesSemanaisSectionProps {
   missions: Mission[];
+  monthlyGoals: MonthlyGoal[]; // Recebe as metas do mês
   onAddMission: (mission: any) => void;
   onDeleteMission: (id: string) => void;
   onSelectMission: (id: string) => void;
@@ -35,6 +43,7 @@ const pillars = [
 
 export const MissoesSemanaisSection = ({ 
   missions, 
+  monthlyGoals,
   onAddMission, 
   onDeleteMission,
   onSelectMission 
@@ -42,8 +51,13 @@ export const MissoesSemanaisSection = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newGoal, setNewGoal] = useState("");
   const [selectedPillar, setSelectedPillar] = useState<string | null>(null);
+  const [selectedMonthGoalId, setSelectedMonthGoalId] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
+  const [isGoalSelectorOpen, setIsGoalSelectorOpen] = useState(false);
+
+  // Filtra apenas metas não concluídas para vincular
+  const activeMonthlyGoals = monthlyGoals.filter(g => !g.completed);
 
   const getPillarStyles = (pillarId?: string) => {
     const pillar = pillars.find(p => p.id === pillarId);
@@ -51,13 +65,19 @@ export const MissoesSemanaisSection = ({
     return { ...pillar, icon: pillar.icon };
   };
 
+  const getGoalText = (goal: MonthlyGoal) => {
+      if (typeof goal.text === 'string') return goal.text;
+      return goal.text?.text || "Meta sem nome";
+  };
+
   const handleCreate = () => {
-    if (!newGoal || !startDate || !endDate) return;
+    if (!newGoal || !startDate || !endDate || !selectedMonthGoalId) return;
     
     onAddMission({
       id: Date.now().toString(),
       goal: newGoal,
       pillar: selectedPillar,
+      linkedMonthGoalId: selectedMonthGoalId, // Salvando o vínculo
       startDate: format(startDate, 'yyyy-MM-dd'),
       endDate: format(endDate, 'yyyy-MM-dd'),
       tasks: [],
@@ -66,10 +86,15 @@ export const MissoesSemanaisSection = ({
 
     setNewGoal("");
     setSelectedPillar(null);
+    setSelectedMonthGoalId(null);
     setStartDate(undefined);
     setEndDate(undefined);
     setIsDialogOpen(false);
   };
+
+  const selectedMonthGoalText = selectedMonthGoalId 
+    ? getGoalText(monthlyGoals.find(g => g.id === selectedMonthGoalId)!) 
+    : null;
 
   return (
     <div className="space-y-6">
@@ -102,8 +127,64 @@ export const MissoesSemanaisSection = ({
             </DialogHeader>
 
             <div className="space-y-5 py-4">
+              
+              {/* 1. SELETOR DE META MENSAL (VÍNCULO OBRIGATÓRIO) */}
               <div className="space-y-2">
-                <Label className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest">Objetivo</Label>
+                 <Label className="text-[10px] uppercase font-bold text-red-500 tracking-widest flex items-center gap-2">
+                    <Target className="w-3 h-3" /> Vínculo com o Norte (Obrigatório)
+                 </Label>
+                 <Popover open={isGoalSelectorOpen} onOpenChange={setIsGoalSelectorOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            className={cn(
+                                "w-full justify-between bg-white/5 border-white/10 hover:bg-white/10 h-11 rounded-lg text-left font-normal",
+                                !selectedMonthGoalId && "text-neutral-500"
+                            )}
+                        >
+                            <span className="truncate">
+                                {selectedMonthGoalText || "Selecione a Meta Mensal para vincular..."}
+                            </span>
+                            <Target className="ml-2 h-4 w-4 opacity-50 shrink-0" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[400px] p-2 bg-[#111] border-white/10" align="start">
+                        <div className="space-y-1">
+                            {activeMonthlyGoals.length === 0 ? (
+                                <div className="p-3 text-xs text-neutral-500 text-center">
+                                    Nenhuma meta mensal ativa encontrada. Defina suas metas do mês primeiro.
+                                </div>
+                            ) : (
+                                activeMonthlyGoals.map(goal => (
+                                    <button
+                                        key={goal.id}
+                                        onClick={() => {
+                                            setSelectedMonthGoalId(goal.id);
+                                            setIsGoalSelectorOpen(false);
+                                        }}
+                                        className={cn(
+                                            "w-full text-left px-3 py-2.5 rounded-md text-sm transition-colors flex items-center gap-3",
+                                            selectedMonthGoalId === goal.id 
+                                                ? "bg-red-500/20 text-red-400" 
+                                                : "text-neutral-300 hover:bg-white/5 hover:text-white"
+                                        )}
+                                    >
+                                        <div className={cn(
+                                            "w-2 h-2 rounded-full shrink-0",
+                                            selectedMonthGoalId === goal.id ? "bg-red-500" : "bg-neutral-700"
+                                        )} />
+                                        <span className="truncate flex-1">{getGoalText(goal)}</span>
+                                        {selectedMonthGoalId === goal.id && <Check className="w-3.5 h-3.5" />}
+                                    </button>
+                                ))
+                            )}
+                        </div>
+                    </PopoverContent>
+                 </Popover>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest">Objetivo Tático da Semana</Label>
                 <Input
                   value={newGoal}
                   onChange={(e) => setNewGoal(e.target.value)}
@@ -120,14 +201,14 @@ export const MissoesSemanaisSection = ({
                       key={p.id}
                       onClick={() => setSelectedPillar(p.id)}
                       className={cn(
-                        "h-10 rounded-lg border flex items-center justify-center gap-1.5 transition-all duration-300 px-2",
+                        "h-10 rounded-lg border flex items-center justify-center gap-1.5 transition-all duration-300 px-2 relative overflow-hidden",
                         selectedPillar === p.id 
                           ? `${p.bg} ${p.border} ring-1 ${p.border.replace('border', 'ring')}` 
                           : "bg-white/5 border-white/10 hover:border-white/20"
                       )}
                     >
-                      <p.icon className={cn("w-3.5 h-3.5", selectedPillar === p.id ? p.color : "text-neutral-500")} />
-                      <span className={cn("text-[9px] font-bold uppercase", selectedPillar === p.id ? "text-white" : "text-neutral-500")}>
+                      <p.icon className={cn("w-3.5 h-3.5 relative z-10", selectedPillar === p.id ? p.color : "text-neutral-500")} />
+                      <span className={cn("text-[9px] font-bold uppercase relative z-10", selectedPillar === p.id ? "text-white" : "text-neutral-500")}>
                         {p.label}
                       </span>
                     </button>
@@ -182,10 +263,10 @@ export const MissoesSemanaisSection = ({
             <DialogFooter>
               <Button 
                 onClick={handleCreate} 
-                disabled={!newGoal || !startDate || !endDate}
+                disabled={!newGoal || !startDate || !endDate || !selectedMonthGoalId}
                 className="w-full bg-red-600 hover:bg-red-500 text-white font-bold h-11 rounded-lg uppercase tracking-widest text-xs disabled:opacity-50"
               >
-                Iniciar Missão
+                {!selectedMonthGoalId ? "Vincule uma Meta Mensal" : "Iniciar Missão"}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -209,6 +290,10 @@ export const MissoesSemanaisSection = ({
             const completedTasks = mission.tasks?.filter(t => t.completed).length || 0;
             const totalTasks = mission.tasks?.length || 0;
             const progress = totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100;
+            
+            // Encontrar o nome da meta mensal vinculada (se existir)
+            const linkedGoal = monthlyGoals.find(g => g.id === mission.linkedMonthGoalId);
+            const linkedGoalName = linkedGoal ? getGoalText(linkedGoal) : null;
 
             return (
               <div
@@ -234,18 +319,31 @@ export const MissoesSemanaisSection = ({
 
                 {/* Content */}
                 <div className="space-y-3 pt-2">
-                  <div className="flex items-center gap-2">
-                    <div className={cn("p-1.5 rounded-md", pillarStyle.bg)}>
-                      <PillarIcon className={cn("w-3.5 h-3.5", pillarStyle.color)} />
-                    </div>
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">
-                      {format(new Date(mission.startDate), "dd MMM", { locale: ptBR })} - {format(new Date(mission.endDate), "dd MMM", { locale: ptBR })}
-                    </span>
+                  <div className="flex items-center gap-2 justify-between">
+                     <div className="flex items-center gap-2">
+                        <div className={cn("p-1.5 rounded-md", pillarStyle.bg)}>
+                          <PillarIcon className={cn("w-3.5 h-3.5", pillarStyle.color)} />
+                        </div>
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">
+                          {format(new Date(mission.startDate), "dd MMM", { locale: ptBR })}
+                        </span>
+                     </div>
                   </div>
-
+                  
+                  {/* Título da Missão */}
                   <h3 className="text-base font-bold text-white leading-tight line-clamp-2">
                     {mission.goal}
                   </h3>
+                  
+                  {/* Contexto da Meta Mensal */}
+                  {linkedGoalName && (
+                      <div className="flex items-center gap-1.5 pt-1 border-t border-white/5 mt-2">
+                          <Target className="w-3 h-3 text-neutral-600" />
+                          <p className="text-[10px] text-neutral-500 truncate font-medium uppercase tracking-wide max-w-full">
+                            {linkedGoalName}
+                          </p>
+                      </div>
+                  )}
 
                   <div className="flex items-center justify-between pt-2">
                     <span className="text-[10px] text-neutral-500 font-medium">
