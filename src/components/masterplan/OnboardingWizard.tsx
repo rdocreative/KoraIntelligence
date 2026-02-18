@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { 
   Target, ArrowRight, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
   Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Shield, Sword, Info, Layout,
-  ArrowDown, ArrowUp, Zap
+  ArrowDown, ArrowUp, Zap, Settings
 } from "lucide-react";
 
 export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
@@ -135,28 +135,28 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
               <div className="space-y-4 relative z-10">
                  <div className="flex gap-4 items-start">
                     <div className="p-2 bg-blue-500/10 rounded-lg shrink-0 mt-1">
-                       <Shield className="w-5 h-5 text-blue-400" />
+                       <Settings className="w-5 h-5 text-blue-400" />
                     </div>
                     <div>
-                       <h4 className="text-white font-bold text-sm uppercase tracking-wide">Seus Hábitos são sua Armadura</h4>
-                       <p className="text-neutral-400 text-sm mt-1">Ações diárias de manutenção (treino, água, leitura). Eles te mantêm vivo.</p>
+                       <h4 className="text-white font-bold text-sm uppercase tracking-wide">HÁBITOS SÃO O MÍNIMO ACEITÁVEL</h4>
+                       <p className="text-neutral-400 text-sm mt-1">A sua obrigação diária para manter a disciplina. Ações que você faz no automático, sem questionar.</p>
                     </div>
                  </div>
 
                  <div className="flex gap-4 items-start">
                     <div className="p-2 bg-red-500/10 rounded-lg shrink-0 mt-1">
-                       <Sword className="w-5 h-5 text-red-500" />
+                       <Zap className="w-5 h-5 text-red-500" />
                     </div>
                     <div>
-                       <h4 className="text-white font-bold text-sm uppercase tracking-wide">Seu Masterplan é sua Espada</h4>
-                       <p className="text-neutral-400 text-sm mt-1">Ações táticas, com começo, meio e fim. Elas servem para atacar o seu futuro e te subir de nível.</p>
+                       <h4 className="text-white font-bold text-sm uppercase tracking-wide">MASTERPLAN É ONDE O JOGO VIRA</h4>
+                       <p className="text-neutral-400 text-sm mt-1">Suas metas de guerra. Ações com data para acabar que vão, de fato, te tirar do lugar e subir o seu nível de vida.</p>
                     </div>
                  </div>
               </div>
 
               <div className="pt-4 border-t border-white/5 relative z-10">
                  <p className="text-neutral-300 font-medium italic text-center text-sm">
-                    "O que você vai configurar agora não é uma lista de tarefas. É o seu Sistema Operacional de Vida."
+                    "O que você vai configurar agora não é uma listinha de tarefas. É o seu plano de ataque."
                  </p>
               </div>
            </div>
