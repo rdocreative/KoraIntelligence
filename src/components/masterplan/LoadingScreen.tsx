@@ -29,7 +29,8 @@ export const LoadingScreen = ({ onFinished }: { onFinished: () => void }) => {
   }, [onFinished]);
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#050505] flex flex-col items-center justify-center p-8 animate-in fade-in duration-500">
+    // Removido 'animate-in fade-in duration-500' para evitar a "prévia" (fundo transparente inicial)
+    <div className="fixed inset-0 z-[100] bg-[#050505] flex flex-col items-center justify-center p-8">
        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/5 blur-[150px] rounded-full pointer-events-none animate-pulse duration-[3000ms]" />
        
        <div className="relative z-10 w-full max-w-sm flex flex-col items-center gap-12">
