@@ -22,7 +22,8 @@ interface ExecutionTabProps {
   deleteWeek: (weekId: string) => void;
   addWeekTask: (weekId: string, text: string) => void;
   toggleWeekTask: (weekId: string, taskId: string) => void;
-  updateWeekReview: (weekId: string, review: string) => void;
+  // Updated signature to match useMasterplan
+  updateWeekReview: (weekId: string, field: "worked" | "didntWork" | "improve", value: string) => void;
 }
 
 export const ExecutionTab = ({
@@ -232,7 +233,7 @@ export const ExecutionTab = ({
                             ))}
                         </div>
                     ) : (
-                        // NEW EMPTY STATE (Tactical & Directive)
+                        // EMPTY STATE
                         <div className="flex flex-col items-center justify-center py-16 px-4 border border-dashed border-neutral-800 rounded-xl bg-[#0A0A0A] relative overflow-hidden group">
                             <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(232,37,26,0.03)_50%,transparent_75%,transparent_100%)] bg-[length:20px_20px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
                             
