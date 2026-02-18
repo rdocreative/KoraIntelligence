@@ -98,10 +98,10 @@ const MasterplanPage = () => {
   const activeWeeks = data.weeks.filter(w => new Date(w.endDate) >= new Date());
 
   return (
-    <div className="min-h-screen bg-transparent text-white selection:bg-red-900/30 selection:text-white pb-32">
+    <div className="min-h-screen bg-[#020202] text-white selection:bg-red-900/30 selection:text-white pb-32">
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-neutral-900/10 to-transparent" />
+          <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-neutral-900/20 to-transparent" />
           <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-red-600/5 rounded-full blur-[150px]" />
       </div>
 
@@ -110,7 +110,7 @@ const MasterplanPage = () => {
         <Tabs defaultValue="overview" className="w-full space-y-8">
           {/* SELETOR DE ABAS NO TOPO ABSOLUTO DO CONTEÚDO */}
           <div className="sticky top-4 z-50 flex justify-center">
-            <TabsList className="grid grid-cols-4 bg-[#0A0A0A]/40 backdrop-blur-xl p-1.5 border border-white/10 rounded-2xl h-14 shadow-2xl w-full max-w-md ring-1 ring-white/5">
+            <TabsList className="grid grid-cols-4 bg-[#0A0A0A]/80 backdrop-blur-xl p-1.5 border border-white/10 rounded-2xl h-14 shadow-2xl w-full max-w-md ring-1 ring-white/5">
               <TabsTrigger value="overview" className="rounded-xl font-bold data-[state=active]:bg-white data-[state=active]:text-black text-[10px] uppercase tracking-wider transition-all duration-300">Visão</TabsTrigger>
               <TabsTrigger value="weekly" className="rounded-xl font-bold data-[state=active]:bg-red-600 data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Foco</TabsTrigger>
               <TabsTrigger value="monthly" className="rounded-xl font-bold data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Mês</TabsTrigger>
@@ -118,9 +118,9 @@ const MasterplanPage = () => {
             </TabsList>
           </div>
 
-          <div className="pt-4 bg-transparent shadow-none border-none">
+          <div className="pt-4">
             {/* --- 1. VISÃO GERAL (DASHBOARD) --- */}
-            <TabsContent value="overview" className="bg-transparent border-none shadow-none focus-visible:ring-0">
+            <TabsContent value="overview">
               <OverviewTab 
                   activeWeeks={activeWeeks}
                   currentMonth={currentMonth}
@@ -132,7 +132,7 @@ const MasterplanPage = () => {
             </TabsContent>
 
             {/* --- 2. WEEKLY (EXECUÇÃO) --- */}
-            <TabsContent value="weekly" className="bg-transparent border-none shadow-none focus-visible:ring-0">
+            <TabsContent value="weekly">
               <WeeklyTab 
                   weeks={data.weeks}
                   addWeek={addWeek}
@@ -144,7 +144,7 @@ const MasterplanPage = () => {
             </TabsContent>
 
             {/* --- 3. MONTHLY (PLANEJAMENTO) --- */}
-            <TabsContent value="monthly" className="bg-transparent border-none shadow-none focus-visible:ring-0">
+            <TabsContent value="monthly">
               <MonthlyTab 
                   months={data.months}
                   currentMonthIndex={currentMonthIndex}
@@ -155,7 +155,7 @@ const MasterplanPage = () => {
             </TabsContent>
 
             {/* --- 4. ANNUAL (DASHBOARD ANALÍTICO) --- */}
-            <TabsContent value="annual" className="bg-transparent border-none shadow-none focus-visible:ring-0">
+            <TabsContent value="annual">
                 <AnnualTab 
                   data={data}
                   analytics={analytics}

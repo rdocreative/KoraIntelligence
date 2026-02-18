@@ -31,7 +31,7 @@ export const MonthlyTab = ({ months, currentMonthIndex, addMonthGoal, toggleMont
                     {month.name}
                   </span>
                   {isCurrent && (
-                    <span className="bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(220,38,38,0.8)]">
+                    <span className="bg-red-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_10px_rgba(220,38,38,0.5)] animate-pulse">
                       Mês Atual
                     </span>
                   )}
