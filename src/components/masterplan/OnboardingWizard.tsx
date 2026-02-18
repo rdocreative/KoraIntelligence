@@ -131,7 +131,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                        <img 
                           src="/MasterPlan.png" 
                           alt="MasterPlan" 
-                          style={{ filter: 'drop-shadow(0 0 50px rgba(220, 38, 38, 0.5))' }}
+                          style={{ filter: 'drop-shadow(0 0 150px rgba(220, 38, 38, 0.5))' }}
                           className="h-6 w-auto object-contain"
                        />
                    </div>
