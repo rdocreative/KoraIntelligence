@@ -24,6 +24,15 @@ export const TaskList = ({
     }
   };
 
+  // Função auxiliar para extrair texto seguro mesmo de dados corrompidos
+  const getSafeText = (text: any) => {
+    if (typeof text === 'string') return text;
+    if (typeof text === 'object' && text !== null && 'text' in text) {
+        return text.text; // Recupera o texto de dentro do objeto aninhado
+    }
+    return String(text); // Fallback final
+  };
+
   return (
     <div className="space-y-5">
       
@@ -49,8 +58,7 @@ export const TaskList = ({
               "flex-1 text-sm transition-all duration-300 leading-relaxed",
               item.completed ? "text-neutral-600 line-through decoration-neutral-700" : "text-neutral-200"
             )}>
-              {/* Salvaguarda para evitar renderizar objetos se os dados estiverem corrompidos */}
-              {typeof item.text === 'string' ? item.text : String(item.text)}
+              {getSafeText(item.text)}
             </span>
 
             {onDelete && (

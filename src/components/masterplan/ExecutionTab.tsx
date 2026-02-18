@@ -45,6 +45,15 @@ export const ExecutionTab = ({
   // Encontrar a primeira meta não concluída para ser o destaque "Norte"
   const mainGoal = currentMonth.goals.find((g: any) => !g.completed) || currentMonth.goals[0];
 
+  // Helper para renderizar texto seguro
+  const getSafeText = (goal: any) => {
+      if (!goal) return "Nenhuma meta definida";
+      const text = goal.text;
+      if (typeof text === 'string') return text;
+      if (typeof text === 'object' && text?.text) return text.text;
+      return "Meta sem descrição";
+  };
+
   return (
     <div className="space-y-0 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
       
@@ -92,7 +101,7 @@ export const ExecutionTab = ({
                             <div className="flex-1 min-w-0 space-y-1">
                                 <span className="text-[10px] font-bold text-red-500/80 uppercase tracking-widest">Foco Principal</span>
                                 <p className="text-lg font-bold text-white leading-tight truncate">
-                                    {mainGoal ? mainGoal.text : "Nenhuma meta definida"}
+                                    {getSafeText(mainGoal)}
                                 </p>
                             </div>
                             <CollapsibleTrigger asChild>
