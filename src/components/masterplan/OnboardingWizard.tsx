@@ -98,15 +98,18 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
         
         <div className="w-full max-w-2xl space-y-16 relative z-10 flex flex-col items-center">
            
-           {/* 1. Logo Section - Scaled Up & Glowing - Immediate Entry */}
+           {/* 1. Logo Section - Scaled Up & Glowing with Overlap */}
            <div className="flex flex-col items-center animate-in fade-in zoom-in duration-700">
+               <span className="text-[12px] tracking-[0.4em] text-neutral-500 uppercase font-bold mb-[-2rem] relative z-0 opacity-80">
+                  Bem-vindo ao
+               </span>
                <img 
                   src="/MasterPlan.png" 
                   alt="MasterPlan Logo" 
                   style={{ filter: 'drop-shadow(0 0 15px rgba(220, 38, 38, 0.8))' }}
-                  className="h-32 md:h-40 w-auto object-contain" 
+                  className="h-32 md:h-40 w-auto object-contain relative z-10" 
                />
-               <span className="text-[10px] tracking-[0.6em] text-neutral-500 mt-6 uppercase font-medium">Sistema Ativo</span>
+               <span className="text-[10px] tracking-[0.6em] text-neutral-600 mt-6 uppercase font-medium">Sistema Ativo</span>
            </div>
 
            {/* 2. The Columns - Staggered Entry (200ms delay) */}
