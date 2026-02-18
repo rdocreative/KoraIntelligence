@@ -108,9 +108,10 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
            </div>
 
            {/* Typography - Emotional Impact */}
-           <div className="space-y-4">
-               <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-none animate-in slide-in-from-bottom-4 fade-in duration-1000">
-                 BEM-VINDO AO SEU <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400">MASTERPLAN.</span>
+           <div className="space-y-6">
+               <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-none animate-in slide-in-from-bottom-4 fade-in duration-1000 flex flex-col items-center gap-4">
+                 <span>BEM-VINDO AO SEU</span>
+                 <img src="/MasterPlan.png" alt="MasterPlan Logo" className="h-10 md:h-14 w-auto object-contain drop-shadow-[0_0_15px_rgba(220,38,38,0.3)]" />
                </h1>
                <p className="text-sm md:text-base text-neutral-400 font-bold uppercase tracking-widest max-w-lg mx-auto animate-in slide-in-from-bottom-5 fade-in duration-1000 delay-200">
                  O método japonês da clareza absoluta, adaptado para a execução implacável.
@@ -157,7 +158,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
            </div>
 
            {/* Call to Action - System Activation */}
-           <div className="w-full max-w-sm mx-auto animate-in slide-in-from-bottom-6 fade-in duration-1000 delay-500 pt-4">
+           <div className="w-full max-sm mx-auto animate-in slide-in-from-bottom-6 fade-in duration-1000 delay-500 pt-4">
              <Button 
                  onClick={() => {
                      setHasShownWelcome(true);
