@@ -128,7 +128,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                        <span className="text-[10px] text-neutral-400 font-bold tracking-widest uppercase">Protocolo de Base</span>
                        <h2 className="text-2xl font-bold text-white uppercase tracking-tight">Hábitos</h2>
                        <p className="text-neutral-300 text-xs font-medium leading-relaxed max-w-xs">
-                           Sua manutenção diária. Ações obrigatórias para manter a máquina operando em alta performance. Sem negociação.
+                           O que você faz todo dia para não perder o ritmo. Seus hábitos são a base — sem eles, nada mais funciona.
                        </p>
                    </div>
                </div>
@@ -145,7 +145,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                            />
                        </div>
                        <p className="text-neutral-300 text-xs font-medium leading-relaxed max-w-xs">
-                           Sua estratégia de ataque. Projetos táticos com início, meio e fim, desenhados para mover o ponteiro e mudar o seu nível de vida.
+                           Seus projetos e metas com início e fim. O que vai te levar para o próximo nível.
                        </p>
                    </div>
                </div>
@@ -154,8 +154,8 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
            {/* Footer Command */}
            <div className="w-full max-w-lg mx-auto flex flex-col gap-8 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-500 fill-mode-backwards mt-16">
                <div className="border-y border-white/20 py-6 text-center bg-black/50 backdrop-blur-md">
-                   <p className="text-white font-mono text-[10px] md:text-[11px] uppercase tracking-[0.15em] leading-relaxed">
-                       O QUE VOCÊ VAI CONFIGURAR AGORA NÃO É UMA LISTINHA DE TAREFAS.<br className="hidden md:block" /> É O SEU PLANO DE ATAQUE.
+                   <p className="text-white font-mono text-[10px] md:text-[11px] tracking-[0.15em] leading-relaxed">
+                       O que você vai montar agora não é uma lista de tarefas.<br className="hidden md:block" /> É o mapa para o seu próximo ano.
                    </p>
                </div>
 
@@ -165,7 +165,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                          setHasShownWelcome(true);
                          setStep(1);
                      }}
-                     className="w-full h-12 bg-[#E8251A] hover:bg-[#c91e14] text-white font-bold text-xs uppercase tracking-widest rounded-[8px] shadow-[0_0_25px_rgba(232,37,26,0.4)] transition-all duration-300 transform hover:-translate-y-1"
+                     className="w-full h-12 bg-[#E8251A] hover:bg-[#c91e14] text-white font-bold text-xs uppercase tracking-widest rounded-[10px] shadow-[0_0_25px_rgba(232,37,26,0.4)] transition-all duration-300 transform hover:-translate-y-1"
                  >
                      ATIVAR PROTOCOLO
                  </Button>
