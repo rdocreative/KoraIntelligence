@@ -90,107 +90,72 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     return (
       <div className="fixed inset-0 z-50 bg-[#050505] flex items-center justify-center p-6 animate-in fade-in duration-1000">
         
-        {/* Ambient Effects */}
+        {/* Subtle Background Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-0 right-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
-            {/* Scanner Line */}
-            <div className="absolute top-0 left-0 w-full h-[1px] bg-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.5)] animate-[scan_4s_linear_infinite]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/5 blur-[120px] rounded-full opacity-50" />
         </div>
         
-        <div className="w-full max-w-3xl space-y-12 relative z-10 flex flex-col items-center">
+        <div className="w-full max-w-2xl space-y-16 relative z-10 flex flex-col items-center">
            
-           {/* Logo Section */}
-           <div className="flex flex-col items-center space-y-4">
-               <div className="w-16 h-16 bg-white/[0.02] border border-white/10 rounded-xl flex items-center justify-center relative group">
-                   <Target className="w-8 h-8 text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]" />
-                   <div className="absolute -inset-1 border border-red-600/20 rounded-xl animate-pulse" />
+           {/* Logo Section - Reduced Size */}
+           <div className="flex flex-col items-center">
+               <img 
+                  src="/MasterPlan.png" 
+                  alt="MasterPlan Logo" 
+                  className="h-20 md:h-24 w-auto object-contain drop-shadow-2xl" 
+               />
+               <span className="text-[10px] tracking-[0.6em] text-neutral-600 mt-4 uppercase font-medium">Sistema Ativo</span>
+           </div>
+
+           {/* The Columns - Brutalist Split */}
+           <div className="w-full grid grid-cols-1 md:grid-cols-2 relative gap-12 md:gap-0">
+               {/* Vertical Line */}
+               <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-white opacity-10 -translate-x-1/2" />
+
+               {/* Left: Habits */}
+               <div className="text-center md:text-right md:pr-12 space-y-3">
+                   <h2 className="text-xl font-bold text-white uppercase tracking-tight">Hábitos</h2>
+                   <p className="text-neutral-500 text-[11px] font-medium leading-relaxed uppercase tracking-widest">
+                       A BASE OPERACIONAL. <br/>
+                       Sua obrigação diária para manter a disciplina. <br/>
+                       Sem questionamentos.
+                   </p>
                </div>
-               
-               <h1 className="text-2xl md:text-4xl font-black text-white tracking-tighter uppercase leading-none flex flex-col items-center">
-                 <span className="text-[10px] tracking-[0.4em] text-neutral-500 mb-2">SISTEMA ATIVO</span>
-                 <img 
-                    src="/MasterPlan.png" 
-                    alt="MasterPlan Logo" 
-                    className="h-28 md:h-36 w-auto object-contain" 
-                 />
-               </h1>
+
+               {/* Right: Masterplan */}
+               <div className="text-center md:text-left md:pl-12 space-y-3">
+                   <h2 className="text-xl font-bold text-red-600 uppercase tracking-tight">Masterplan</h2>
+                   <p className="text-neutral-500 text-[11px] font-medium leading-relaxed uppercase tracking-widest">
+                       O VETOR DE ATAQUE. <br/>
+                       Metas de guerra com data de conclusão. <br/>
+                       Onde você sobe seu nível de vida.
+                   </p>
+               </div>
            </div>
 
-           {/* HIGH-TECH DOSSIER CARD */}
-           <div className="w-full bg-[#0A0A0A] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative">
-              
-              {/* Header Info */}
-              <div className="border-b border-white/10 px-6 py-3 flex justify-between items-center bg-white/[0.02]">
-                  <div className="flex gap-4 items-center">
-                      <div className="w-2 h-2 rounded-full bg-red-600 animate-pulse" />
-                      <span className="text-[10px] font-bold text-neutral-400 tracking-[0.2em] uppercase">Status: Em Configuração</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-neutral-600">ID: MP-CORE-2024</span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 relative">
-                  {/* Vertical Divider */}
-                  <div className="hidden md:block absolute left-1/2 top-8 bottom-8 w-[1px] bg-neutral-800/50 -translate-x-1/2" />
-
-                  {/* Left Column: Hábitos */}
-                  <div className="p-8 md:p-10 space-y-4 text-center md:text-left">
-                      <h2 className="text-2xl font-black text-white uppercase tracking-tighter">
-                         HÁBITOS
-                      </h2>
-                      <div className="h-[2px] w-8 bg-white/20 mx-auto md:mx-0" />
-                      <p className="text-neutral-500 text-xs font-medium leading-relaxed uppercase tracking-wide">
-                         A base operacional. Sua obrigação diária para manter a disciplina. Ações que você executa no automático, sem questionamento.
-                      </p>
-                  </div>
-
-                  {/* Right Column: Masterplan */}
-                  <div className="p-8 md:p-10 space-y-4 text-center md:text-left bg-white/[0.01]">
-                      <h2 className="text-2xl font-black text-red-600 uppercase tracking-tighter">
-                         MASTERPLAN
-                      </h2>
-                      <div className="h-[2px] w-8 bg-red-600/50 mx-auto md:mx-0" />
-                      <p className="text-neutral-500 text-xs font-medium leading-relaxed uppercase tracking-wide">
-                         O vetor de ataque. Metas de guerra com data de conclusão. Onde você quebra o ciclo e sobe seu nível de vida.
-                      </p>
-                  </div>
-              </div>
-
-              {/* Mission Stamp Footer */}
-              <div className="p-8 flex justify-center border-t border-white/5 bg-black">
-                 <div className="border border-red-600/40 px-6 py-4 rounded-md bg-red-600/[0.02] relative group overflow-hidden">
-                    <div className="absolute top-0 left-0 w-2 h-full bg-red-600/20" />
-                    <p className="text-white font-black text-[10px] md:text-xs uppercase tracking-[0.2em] text-center leading-tight">
-                       O QUE VOCÊ VAI CONFIGURAR AGORA NÃO É UMA LISTINHA DE TAREFAS. <br className="hidden md:block" /> É O SEU PLANO DE ATAQUE.
-                    </p>
-                 </div>
-              </div>
+           {/* Footer Command - Terminal Style */}
+           <div className="w-full max-w-lg mx-auto">
+               <div className="border-y border-white/10 py-6 text-center">
+                   <p className="text-neutral-500 font-mono text-[10px] md:text-[11px] uppercase tracking-widest leading-relaxed">
+                       O QUE VOCÊ VAI CONFIGURAR AGORA NÃO É UMA LISTINHA DE TAREFAS.<br className="hidden md:block" /> É O SEU PLANO DE ATAQUE.
+                   </p>
+               </div>
            </div>
 
-           {/* Call to Action */}
-           <div className="w-full max-w-sm mx-auto">
+           {/* Action Button - Dashboard Style */}
+           <div className="w-full max-w-xs mx-auto pt-2">
              <Button 
                  onClick={() => {
                      setHasShownWelcome(true);
                      setStep(1);
                  }}
-                 className="w-full h-14 bg-white text-black hover:bg-neutral-200 font-black text-sm uppercase tracking-widest rounded-xl transition-all duration-300 transform hover:-translate-y-1 active:scale-95 group relative overflow-hidden"
+                 className="w-full h-12 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-widest rounded-md shadow-[0_0_20px_rgba(220,38,38,0.2)] hover:shadow-[0_0_30px_rgba(220,38,38,0.4)] transition-all duration-300"
              >
-                 <span className="relative z-10 flex items-center justify-center gap-3">
-                    ATIVAR PROTOCOLO
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                 </span>
+                 ATIVAR PROTOCOLO
              </Button>
            </div>
         </div>
-        
-        <style dangerouslySetInnerHTML={{ __html: `
-          @keyframes scan {
-            0% { top: 0; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-          }
-        `}} />
       </div>
     );
   }
