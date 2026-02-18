@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "@/components/ui/dialog";
-import { Zap, LayoutDashboard, Trash2, Calendar as CalendarIcon, Briefcase, GraduationCap, Heart, User, Sparkles, Brain, Target, ChevronRight, Flag, Plus } from "lucide-react";
+import { Zap, Trash2, Calendar as CalendarIcon, Briefcase, GraduationCap, Heart, User, Sparkles, Brain, Target, ChevronRight, Flag, Plus } from "lucide-react";
 import { TaskList } from "@/components/masterplan/TaskList";
 import { TaskItem } from "@/hooks/useMasterplan";
 import { cn } from "@/lib/utils";

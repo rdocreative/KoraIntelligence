@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useMasterplan } from "@/hooks/useMasterplan";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { 
   Target, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
-  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout, Layers, HelpCircle, Lock, Lightbulb
+  Plus, X, AlertCircle, Sparkles, Check, Info, Layers, HelpCircle, Lock, Lightbulb
 } from "lucide-react";
 
 export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {

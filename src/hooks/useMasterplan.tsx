@@ -107,8 +107,8 @@ export const MasterplanProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       try {
         const parsed = JSON.parse(saved);
         setData({ ...DEFAULT_DATA, ...parsed });
-      } catch (e) {
-        console.error("Failed to load masterplan", e);
+      } catch {
+        // Ignorar erro
       }
     }
     setLoaded(true);

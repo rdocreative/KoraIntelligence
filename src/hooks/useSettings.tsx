@@ -30,8 +30,8 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (saved) {
       try {
         setSettings(JSON.parse(saved));
-      } catch (e) {
-        console.error("Erro ao carregar configurações", e);
+      } catch {
+        // Ignorar erro silenciosamente
       }
     }
   }, []);

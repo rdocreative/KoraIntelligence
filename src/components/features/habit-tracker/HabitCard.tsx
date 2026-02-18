@@ -1,6 +1,6 @@
 import { Habit } from '@/hooks/useHabitTracker';
 import { Button } from '@/components/ui/button';
-import { Check, Trophy, Flame, Zap, Calendar } from 'lucide-react';
+import { Check, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface HabitCardProps {

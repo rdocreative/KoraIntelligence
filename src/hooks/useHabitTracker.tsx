@@ -88,7 +88,9 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (storedHistory) {
       try {
         parsedHistory = JSON.parse(storedHistory);
-      } catch (e) { console.error(e); }
+      } catch {
+        // Ignorar erro de parse
+      }
     }
     setHistory(parsedHistory);
 
@@ -96,7 +98,9 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (storedCustomHabits) {
         try {
             parsedCustomHabits = JSON.parse(storedCustomHabits);
-        } catch (e) { console.error(e); }
+        } catch {
+            // Ignorar erro de parse
+        }
     }
 
     setTotalPoints(parsedHistory.reduce((sum, day) => sum + day.points, 0));

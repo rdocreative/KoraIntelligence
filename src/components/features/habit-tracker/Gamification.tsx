@@ -1,6 +1,5 @@
-import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trophy, Zap, Crown } from 'lucide-react';
+import { Zap, Crown } from 'lucide-react';
 
 interface GamificationProps {
   currentBadge: { name: string; icon: string; color: string; threshold: number };

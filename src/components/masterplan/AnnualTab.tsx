@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { 
-  Target, BarChart3, TrendingUp, AlertTriangle, 
+  Target, BarChart3, TrendingUp, 
   Briefcase, GraduationCap, Heart, User, Plus, X, CheckCircle2, HelpCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
