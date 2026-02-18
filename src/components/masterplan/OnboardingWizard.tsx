@@ -177,42 +177,41 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
   }
 
   const renderContent = () => {
-    // --- STEP 1: BRIEFING TÁTICO (REDESIGNED - IMAGE MATCH) ---
+    // --- STEP 1: BRIEFING TÁTICO (REFINED) ---
     if (step === 1) {
       return (
         <div className="flex flex-col h-full animate-in fade-in zoom-in-95 duration-700 relative">
-             <div className="flex-1 flex flex-col px-[40px] py-[48px] text-left overflow-y-auto custom-scrollbar">
+             <div className="flex-1 flex flex-col px-10 py-12 text-left overflow-y-auto custom-scrollbar">
                  
                  {/* Header Centered */}
-                 <div className="mb-10 text-center flex flex-col items-center">
-                     <div className="w-14 h-14 bg-[#E8251A]/10 rounded-2xl border border-[#E8251A]/20 flex items-center justify-center mb-6">
-                        <Layers className="w-7 h-7 text-[#E8251A]" />
+                 <div className="mb-12 text-center flex flex-col items-center">
+                     <div className="w-12 h-12 bg-[#E8251A]/10 rounded-xl border border-[#E8251A]/20 flex items-center justify-center mb-6">
+                        <Layers className="w-6 h-6 text-[#E8251A]" />
                      </div>
-                     <h2 className="text-4xl md:text-[2.75rem] leading-[0.95] font-black text-white uppercase tracking-tighter mb-4">
-                         A CIÊNCIA<br/>POR TRÁS DA FORJA
+                     <h2 className="text-[32px] font-extrabold text-white uppercase tracking-tight whitespace-nowrap">
+                         A CIÊNCIA POR TRÁS DA FORJA
                      </h2>
-                     <div className="w-12 h-[3px] bg-[#E8251A] rounded-full" />
                  </div>
 
-                 <div className="space-y-[32px]">
+                 <div className="space-y-10">
                      {/* Section 1 */}
-                     <div className="space-y-3">
-                         <h4 className="text-[#E8251A] text-[10px] font-bold uppercase tracking-[0.25em]">O Método</h4>
-                         <p className="text-neutral-400 font-light text-[13px] leading-[1.8]">
-                            Adaptamos o <span className="text-white font-bold">Nenkan Mokuhyo</span> — um método japonês de planejamento milenar — para o ritmo da vida digital. Ficamos com o que importa: a <span className="text-[#E8251A] font-bold">Cascata de Foco</span>.
+                     <div className="border-l-[3px] border-[#E8251A] pl-5 space-y-2">
+                         <h4 className="text-white text-[10px] font-bold uppercase tracking-[0.25em]">O Método</h4>
+                         <p className="text-[#AAAAAA] font-light text-[13px] leading-[1.7]">
+                            Adaptamos o <span className="text-white font-medium">Nenkan Mokuhyo</span> — um método japonês de planejamento milenar — para o ritmo da vida digital. Ficamos com o que importa: a <span className="text-[#E8251A] font-medium">Cascata de Foco</span>.
                          </p>
                      </div>
 
                      {/* Section 2 */}
-                     <div className="space-y-3">
-                         <h4 className="text-[#E8251A] text-[10px] font-bold uppercase tracking-[0.25em]">O Que Nos Diferencia</h4>
-                         <p className="text-neutral-400 font-light text-[13px] leading-[1.8]">
-                            A maioria dos apps trata suas metas como itens de uma lista. Aqui é diferente: separamos o que te mantém no trilho (<span className="text-white font-bold">Hábitos</span>) do que vai te levar longe (<span className="text-white font-bold">Masterplan</span>).
+                     <div className="border-l-[3px] border-[#E8251A] pl-5 space-y-2">
+                         <h4 className="text-white text-[10px] font-bold uppercase tracking-[0.25em]">O Que Nos Diferencia</h4>
+                         <p className="text-[#AAAAAA] font-light text-[13px] leading-[1.7]">
+                            A maioria dos apps trata suas metas como itens de uma lista. Aqui é diferente: separamos o que te mantém no trilho (<span className="text-white font-medium">Hábitos</span>) do que vai te levar longe (<span className="text-white font-medium">Masterplan</span>).
                          </p>
                      </div>
 
-                     {/* Gold Rule Card - Matching Image Style */}
-                     <div className="bg-[#161616] rounded-xl border border-white/5 relative overflow-hidden p-6 pl-7">
+                     {/* Gold Rule Card */}
+                     <div className="bg-[#0A0A0A] rounded-xl relative overflow-hidden p-6 pl-7 mt-4">
                          <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-[#E8251A]" />
                          
                          <h4 className="text-[#E8251A] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">A Regra de Ouro</h4>
@@ -226,10 +225,10 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                  </div>
 
                  {/* CTA */}
-                 <div className="mt-10 pb-4">
+                 <div className="mt-12 flex justify-center pb-2">
                      <Button 
                          onClick={() => setStep(2)}
-                         className="w-full h-14 bg-[#E8251A] hover:bg-[#c91e14] text-white font-bold text-[13px] uppercase tracking-[0.15em] rounded-[8px] shadow-[0_4px_24px_rgba(232,37,26,0.25)] hover:shadow-[0_8px_32px_rgba(232,37,26,0.4)] transition-all transform hover:-translate-y-[1px]"
+                         className="w-[320px] h-14 bg-[#E8251A] hover:bg-[#c91e14] text-white font-bold text-[13px] uppercase tracking-[0.15em] rounded-[10px] shadow-[0_4px_24px_rgba(232,37,26,0.25)] hover:shadow-[0_8px_32px_rgba(232,37,26,0.4)] transition-all transform hover:-translate-y-[1px]"
                      >
                          Começar Agora →
                      </Button>
@@ -239,7 +238,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
       );
     }
 
-    // --- STEP 2: ANNUAL (ANTIGO STEP 1) ---
+    // --- STEP 2: ANNUAL ---
     if (step === 2) {
         return (
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500 px-8 pt-6">
@@ -305,7 +304,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
         );
     }
 
-    // --- STEP 3: AREAS (ANTIGO STEP 2) ---
+    // --- STEP 3: AREAS ---
     if (step === 3) {
         return (
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500 px-8 pt-6">
@@ -372,7 +371,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
         );
     }
 
-    // --- STEP 4: SUCCESS (ANTIGO STEP 3) ---
+    // --- STEP 4: SUCCESS ---
     if (step === 4) {
         return (
             <div className="flex flex-col items-center justify-center py-6 space-y-8 animate-in fade-in zoom-in duration-500 h-full overflow-y-auto custom-scrollbar px-8">
@@ -388,11 +387,16 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     }
   };
 
+  // Determine card style based on step
+  const cardStyles = step === 1 
+    ? "w-full max-w-lg bg-[#0E0E0E] shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col" 
+    : "w-full max-w-lg bg-[#111111] border-white/10 ring-1 ring-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col";
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden bg-[#0A0A0A]">
       <AppBackground />
 
-      <Card className={`w-full max-w-lg bg-[#111111] border-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col ring-1 ${step === 1 ? 'ring-[#E8251A]/30' : 'ring-white/10'}`}>
+      <Card className={cardStyles}>
         
         {/* Render Progress Bar ONLY if step > 1 (Actual Inputs) */}
         {step >= 2 && step <= 3 && (
