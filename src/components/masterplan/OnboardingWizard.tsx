@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useMasterplan } from "@/hooks/useMasterplan";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -445,14 +445,77 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     // --- STEP 4: SUCCESS ---
     if (step === 4) {
         return (
-            <div className="flex flex-col items-center justify-center py-6 space-y-8 animate-in fade-in zoom-in duration-500 h-full overflow-y-auto custom-scrollbar px-8">
-                <div className="w-24 h-24 bg-gradient-to-br from-green-900/40 to-black border border-green-500/30 rounded-full flex items-center justify-center relative shadow-2xl">
-                    <CheckCircle2 className="w-10 h-10 text-green-500 drop-shadow-[0_0_15px_rgba(34,197,94,0.6)]" />
+            <div className="flex flex-col items-center justify-center py-6 h-full overflow-hidden px-8 relative">
+                
+                {/* Check Animation SVG */}
+                <div className="relative mb-8 flex items-center justify-center">
+                    {/* Radial Glow */}
+                    <div 
+                        className="absolute inset-0 rounded-full animate-in fade-in duration-1000"
+                        style={{ background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%)', transform: 'scale(2.5)' }} 
+                    />
+                    
+                    <svg width="100" height="100" viewBox="0 0 100 100" className="relative z-10">
+                        <circle 
+                            cx="50" cy="50" r="45" 
+                            fill="none" 
+                            stroke="#10B981" 
+                            strokeWidth="4"
+                            strokeDasharray="283"
+                            strokeDashoffset="283"
+                            className="animate-[circle-draw_0.8s_ease-out_forwards]"
+                        />
+                        <path 
+                            d="M30 52 L45 67 L70 35" 
+                            fill="none" 
+                            stroke="#10B981" 
+                            strokeWidth="5"
+                            strokeLinecap="round" 
+                            strokeLinejoin="round"
+                            strokeDasharray="100"
+                            strokeDashoffset="100"
+                            className="animate-[check-draw_0.5s_ease-out_0.6s_forwards]"
+                        />
+                    </svg>
                 </div>
-                <h3 className="text-2xl font-black text-white uppercase tracking-tight text-center">Tudo pronto.<br/>Sistema ativo.</h3>
-                <Button onClick={onComplete} className="w-full max-w-sm bg-[#E8251A] hover:bg-[#c91e14] text-white font-black uppercase tracking-widest h-14 rounded-full shadow-[0_0_30px_rgba(232,37,26,0.4)] transition-all">
-                    ENTRAR NO CAMPO DE BATALHA
-                </Button>
+
+                {/* Text Content with Staggered Delay */}
+                <div className="text-center space-y-4 animate-in slide-in-from-bottom-4 fade-in duration-700 delay-700 fill-mode-backwards">
+                    <h3 className="text-3xl font-black text-white uppercase tracking-tight leading-tight">
+                        Tudo pronto.<br/>
+                        <span className="text-[#10B981]">Seu Masterplan está ativo.</span>
+                    </h3>
+                    
+                    <p className="text-neutral-400 font-light text-sm tracking-wide">
+                        A partir de agora, cada ação conta.
+                    </p>
+                </div>
+
+                {/* Button with Shimmer */}
+                <div className="mt-12 w-full max-w-sm animate-in slide-in-from-bottom-8 fade-in duration-700 delay-1000 fill-mode-backwards relative overflow-hidden rounded-[10px]">
+                    <Button 
+                        onClick={onComplete} 
+                        className="w-full bg-[#E8251A] hover:bg-[#c91e14] text-white font-black uppercase tracking-widest h-14 rounded-[10px] shadow-[0_0_30px_rgba(232,37,26,0.3)] transition-all relative overflow-hidden group"
+                    >
+                        <span className="relative z-10">ENTRAR NO CAMPO DE BATALHA</span>
+                        
+                        {/* Shimmer Effect */}
+                        <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-0" />
+                    </Button>
+                </div>
+
+                {/* Keyframes (Injected via style tag for simplicity in this component scope) */}
+                <style dangerouslySetInnerHTML={{__html: `
+                    @keyframes circle-draw {
+                        to { stroke-dashoffset: 0; }
+                    }
+                    @keyframes check-draw {
+                        to { stroke-dashoffset: 0; }
+                    }
+                    @keyframes shimmer {
+                        100% { transform: translateX(100%); }
+                    }
+                `}} />
             </div>
         );
     }
