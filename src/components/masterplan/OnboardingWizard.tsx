@@ -119,7 +119,8 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
                {/* Left: Habits */}
                <div className="text-center md:text-right md:pr-12 space-y-4">
-                   <h2 className="text-2xl md:text-3xl font-bold text-white uppercase tracking-tight h-14 flex items-center justify-center md:justify-end">Hábitos</h2>
+                   {/* Reduced size by ~20% (from 2xl/3xl to lg/2xl) */}
+                   <h2 className="text-lg md:text-2xl font-bold text-white uppercase tracking-tight h-14 flex items-center justify-center md:justify-end">Hábitos</h2>
                    <p className="text-[#EDEDED] text-[13px] font-semibold leading-relaxed uppercase tracking-widest">
                        A BASE OPERACIONAL. <br/>
                        Sua obrigação diária para manter a disciplina. <br/>
@@ -129,7 +130,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
                {/* Right: Masterplan */}
                <div className="text-center md:text-left md:pl-12 space-y-4">
-                   {/* Internal Logo Replacement - Increased by another 30% and Aligned */}
+                   {/* Internal Logo Replacement - Kept at the requested size */}
                    <div className="flex justify-center md:justify-start h-14 items-center">
                        <img 
                           src="/MasterPlan.png" 
