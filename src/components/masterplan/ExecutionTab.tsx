@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { 
   Plus, Calendar, ChevronRight, CheckCircle2, AlertCircle, 
-  Target, Zap, ArrowDown, Terminal, HelpCircle
+  Target, Zap, ArrowDown, Terminal, HelpCircle, Trash2, X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -16,6 +16,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ExecutionTabProps {
   currentMonth: any;
@@ -64,6 +74,7 @@ export const ExecutionTab = ({
   const [newMonthGoal, setNewMonthGoal] = useState("");
   const [newWeekTask, setNewWeekTask] = useState("");
   const [activeWeekId, setActiveWeekId] = useState<string | null>(null);
+  const [weekToDelete, setWeekToDelete] = useState<string | null>(null);
 
   // Helper to find current active week
   React.useEffect(() => {
@@ -71,10 +82,17 @@ export const ExecutionTab = ({
       const now = new Date();
       const current = weeks.find(w => new Date(w.endDate) >= now);
       if (current) setActiveWeekId(current.id);
+      else setActiveWeekId(weeks[0].id); // Fallback to first week if none is active
     }
   }, [weeks, activeWeekId]);
 
   const activeWeek = weeks.find(w => w.id === activeWeekId);
+
+  // LIMITS
+  const MAX_WEEKS = 4;
+  const MAX_TASKS = 7;
+  const canCreateWeek = weeks.length < MAX_WEEKS;
+  const canAddTask = activeWeek ? activeWeek.tasks.length < MAX_TASKS : false;
 
   const handleAddMonthGoal = () => {
     if (!newMonthGoal.trim()) return;
@@ -83,12 +101,14 @@ export const ExecutionTab = ({
   };
 
   const handleAddWeekTask = () => {
-    if (!newWeekTask.trim() || !activeWeekId) return;
+    if (!newWeekTask.trim() || !activeWeekId || !canAddTask) return;
     addWeekTask(activeWeekId, newWeekTask);
     setNewWeekTask("");
   };
 
   const handleCreateWeek = () => {
+    if (!canCreateWeek) return;
+
     const now = new Date();
     const end = new Date();
     end.setDate(now.getDate() + 7);
@@ -100,6 +120,16 @@ export const ExecutionTab = ({
         tasks: [],
         review: ""
     });
+  };
+
+  const confirmDeleteWeek = () => {
+    if (weekToDelete) {
+      deleteWeek(weekToDelete);
+      if (activeWeekId === weekToDelete) {
+        setActiveWeekId(null);
+      }
+      setWeekToDelete(null);
+    }
   };
 
   return (
@@ -176,25 +206,59 @@ export const ExecutionTab = ({
         {/* Week Selector */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar">
             {weeks.map((week) => (
-                <button
-                    key={week.id}
-                    onClick={() => setActiveWeekId(week.id)}
-                    className={cn(
-                        "flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-bold uppercase tracking-wide transition-all whitespace-nowrap",
-                        activeWeekId === week.id 
-                            ? "bg-[#E8251A] text-white border-[#E8251A] shadow-[0_4px_20px_rgba(232,37,26,0.3)]" 
-                            : "bg-[#111111] text-neutral-500 border-white/5 hover:border-white/20 hover:text-neutral-300"
-                    )}
-                >
-                    {week.title}
-                </button>
+                <div key={week.id} className="relative group/week">
+                    <button
+                        onClick={() => setActiveWeekId(week.id)}
+                        className={cn(
+                            "flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-bold uppercase tracking-wide transition-all whitespace-nowrap pr-8",
+                            activeWeekId === week.id 
+                                ? "bg-[#E8251A] text-white border-[#E8251A] shadow-[0_4px_20px_rgba(232,37,26,0.3)]" 
+                                : "bg-[#111111] text-neutral-500 border-white/5 hover:border-white/20 hover:text-neutral-300"
+                        )}
+                    >
+                        {week.title}
+                    </button>
+                    {/* Delete Week Button */}
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setWeekToDelete(week.id);
+                        }}
+                        className={cn(
+                            "absolute right-1 top-1 bottom-1 w-6 flex items-center justify-center rounded hover:bg-black/20 transition-all opacity-0 group-hover/week:opacity-100",
+                            activeWeekId === week.id ? "text-white/80 hover:text-white" : "text-neutral-500 hover:text-[#E8251A]"
+                        )}
+                    >
+                        <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                </div>
             ))}
-            <button 
-                onClick={handleCreateWeek}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-dashed border-neutral-700 text-neutral-500 hover:text-white hover:border-white/30 text-xs font-bold uppercase tracking-wide transition-all whitespace-nowrap ml-2"
-            >
-                <Plus className="w-3 h-3" /> Nova Semana
-            </button>
+            
+            <TooltipProvider>
+                <Tooltip delayDuration={0}>
+                    <TooltipTrigger asChild>
+                        <div>
+                            <button 
+                                onClick={handleCreateWeek}
+                                disabled={!canCreateWeek}
+                                className={cn(
+                                    "flex items-center gap-1.5 px-4 py-2.5 rounded-lg border border-dashed border-neutral-700 text-xs font-bold uppercase tracking-wide transition-all whitespace-nowrap ml-2",
+                                    canCreateWeek 
+                                        ? "text-neutral-500 hover:text-white hover:border-white/30 cursor-pointer" 
+                                        : "opacity-40 cursor-not-allowed text-neutral-600"
+                                )}
+                            >
+                                <Plus className="w-3 h-3" /> Nova Semana
+                            </button>
+                        </div>
+                    </TooltipTrigger>
+                    {!canCreateWeek && (
+                        <TooltipContent className="bg-[#1A1A1A] border-[#333] text-white text-xs">
+                            Um mês tem no máximo 4 semanas. Gerencie as existentes antes de criar uma nova.
+                        </TooltipContent>
+                    )}
+                </Tooltip>
+            </TooltipProvider>
         </div>
 
         {activeWeek ? (
@@ -288,20 +352,33 @@ export const ExecutionTab = ({
                 {/* Input Area */}
                 <div className="relative pt-2">
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent -z-10" />
-                    <div className="flex gap-0 group focus-within:ring-2 focus-within:ring-[#E8251A]/30 rounded-xl transition-all shadow-2xl">
+                    <div className={cn(
+                        "flex gap-0 group rounded-xl transition-all shadow-2xl",
+                        canAddTask ? "focus-within:ring-2 focus-within:ring-[#E8251A]/30" : "opacity-70 cursor-not-allowed"
+                    )}>
                         <div className="bg-[#1A1A1A] flex items-center justify-center pl-4 rounded-l-xl border-y border-l border-white/10 group-focus-within:border-[#E8251A]/50 transition-colors">
                             <Terminal className="w-5 h-5 text-neutral-500 group-focus-within:text-[#E8251A] transition-colors" />
                         </div>
                         <Input 
                             value={newWeekTask}
+                            disabled={!canAddTask}
                             onChange={(e) => setNewWeekTask(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleAddWeekTask()}
-                            placeholder="Comando: Adicionar tarefa tática..." 
-                            className="h-14 bg-[#1A1A1A] border-y border-r border-l-0 border-white/10 rounded-l-none rounded-r-xl focus-visible:ring-0 focus-visible:border-[#E8251A]/50 text-base font-medium placeholder:text-neutral-600 text-white shadow-none transition-all"
+                            placeholder={canAddTask ? "Comando: Adicionar tarefa tática..." : "7 batalhas por dia é o limite. Foco é sobre escolher, não acumular."}
+                            className={cn(
+                                "h-14 bg-[#1A1A1A] border-y border-r border-l-0 border-white/10 rounded-l-none rounded-r-xl focus-visible:ring-0 focus-visible:border-[#E8251A]/50 text-base font-medium shadow-none transition-all",
+                                canAddTask ? "text-white placeholder:text-neutral-600" : "text-red-500 placeholder:text-red-500/60 cursor-not-allowed"
+                            )}
                         />
                         <Button 
                             onClick={handleAddWeekTask}
-                            className="absolute right-2 top-2 bottom-2 bg-[#E8251A] hover:bg-[#c91e14] text-white px-6 font-bold text-xs uppercase tracking-widest rounded-lg shadow-[0_0_15px_rgba(232,37,26,0.3)] transition-all transform active:scale-95"
+                            disabled={!canAddTask}
+                            className={cn(
+                                "absolute right-2 top-2 bottom-2 px-6 font-bold text-xs uppercase tracking-widest rounded-lg shadow-[0_0_15px_rgba(232,37,26,0.3)] transition-all",
+                                canAddTask 
+                                    ? "bg-[#E8251A] hover:bg-[#c91e14] text-white transform active:scale-95" 
+                                    : "bg-neutral-800 text-neutral-500 cursor-not-allowed shadow-none"
+                            )}
                         >
                             Executar
                         </Button>
@@ -321,6 +398,23 @@ export const ExecutionTab = ({
         )}
 
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <AlertDialog open={!!weekToDelete} onOpenChange={(open) => !open && setWeekToDelete(null)}>
+        <AlertDialogContent className="bg-[#111111] border border-white/10 text-white">
+            <AlertDialogHeader>
+                <AlertDialogTitle className="text-white font-bold">Tem certeza?</AlertDialogTitle>
+                <AlertDialogDescription className="text-neutral-400">
+                    Excluir a semana selecionada vai apagar todas as tarefas vinculadas a ela. Essa ação não pode ser desfeita.
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogCancel className="bg-transparent border-white/10 text-white hover:bg-white/5 hover:text-white">Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={confirmDeleteWeek} className="bg-[#E8251A] hover:bg-[#c91e14] text-white border-0">Confirmar Exclusão</AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
     </div>
   );
 };
