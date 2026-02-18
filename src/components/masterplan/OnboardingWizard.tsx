@@ -114,7 +114,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                  <img 
                     src="/MasterPlan.png" 
                     alt="MasterPlan Logo" 
-                    className="h-16 md:h-24 w-auto object-contain drop-shadow-[0_0_20px_rgba(220,38,38,0.4)] -mt-4 md:-mt-6 relative z-20 transition-transform hover:scale-105 duration-500" 
+                    className="h-24 md:h-36 w-auto object-contain drop-shadow-[0_0_25px_rgba(220,38,38,0.5)] -mt-6 md:-mt-10 relative z-20 transition-transform hover:scale-105 duration-500" 
                  />
                </h1>
                <p className="text-sm md:text-base text-neutral-400 font-bold uppercase tracking-widest max-w-lg mx-auto animate-in slide-in-from-bottom-5 fade-in duration-1000 delay-200">
