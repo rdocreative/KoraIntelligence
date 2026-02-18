@@ -1,24 +1,26 @@
+"use client";
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Target, ArrowRight, Trophy, Briefcase, GraduationCap, Heart, User } from "lucide-react";
-import { TaskItem } from "@/hooks/useMasterplan";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Briefcase, GraduationCap, Heart, User, 
+  ArrowRight, Target, CalendarDays, CheckCircle2, RefreshCw
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface OverviewTabProps {
   activeWeeks: any[];
   currentMonth: any;
   areas: {
-    work: TaskItem[];
-    studies: TaskItem[];
-    health: TaskItem[];
-    personal: TaskItem[];
+    work: any[];
+    studies: any[];
+    health: any[];
+    personal: any[];
   };
   onNavigateToWeekly: () => void;
-  annualData: {
-    objective: string;
-    successCriteria: string;
-    progress: number;
-  };
+  annualData: any;
   onResetTutorial: () => void;
 }
 
@@ -26,158 +28,216 @@ export const OverviewTab = ({
   activeWeeks, 
   currentMonth, 
   areas, 
-  onNavigateToWeekly,
+  onNavigateToWeekly, 
   annualData,
   onResetTutorial
 }: OverviewTabProps) => {
 
-  // Helper para obter texto seguro
-  const getSafeText = (item: any) => {
-    if (!item) return "";
-    if (typeof item === 'string') return item;
-    return item.text || "";
+  const pillars = [
+    { id: 'work', label: 'Trabalho', icon: Briefcase, items: areas.work },
+    { id: 'studies', label: 'Estudos', icon: GraduationCap, items: areas.studies },
+    { id: 'health', label: 'Saúde', icon: Heart, items: areas.health },
+    { id: 'personal', label: 'Pessoal', icon: User, items: areas.personal },
+  ];
+
+  const calculateProgress = (items: any[]) => {
+    if (!items?.length) return 0;
+    return Math.round((items.filter(i => i.completed).length / items.length) * 100);
   };
 
   return (
-    <div className="space-y-12 outline-none animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       
-      {/* HEADER */}
-      <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 pt-4">
-           <div className="space-y-2 max-w-3xl">
-              <div className="flex items-center gap-4 mb-2">
-                <span className="text-[11px] font-bold text-neutral-400 uppercase tracking-[0.2em]">
-                  OBJETIVO NORTEADOR DO ANO
-                </span>
-                <Button variant="ghost" size="sm" onClick={onResetTutorial} className="h-5 px-2 text-[9px] text-neutral-600 hover:text-white uppercase tracking-widest hover:bg-white/5 rounded-full">
-                    Setup
-                </Button>
-              </div>
+      {/* Annual Hero Section */}
+      <div className="relative overflow-hidden rounded-2xl bg-[#111111] border border-white/5 p-8 shadow-2xl group">
+        <div className="absolute top-0 right-0 p-4 opacity-50 group-hover:opacity-100 transition-opacity">
+           <Button variant="ghost" size="sm" onClick={onResetTutorial} className="text-[10px] uppercase tracking-widest text-neutral-600 hover:text-white">
+              <RefreshCw className="w-3 h-3 mr-2" /> Reset
+           </Button>
+        </div>
+        <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#E8251A]" />
+        
+        <div className="flex flex-col md:flex-row gap-8 items-start md:items-center justify-between relative z-10">
+          <div className="space-y-4 max-w-2xl">
+            <div className="flex items-center gap-2 text-[#E8251A]">
+              <Target className="w-5 h-5" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em]">Objetivo Anual</span>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight leading-none">
+              {annualData.objective || "Defina seu objetivo"}
+            </h1>
+            <p className="text-neutral-400 font-mono text-xs leading-relaxed max-w-lg">
+              {annualData.successCriteria || "Critérios não definidos"}
+            </p>
+          </div>
 
-              <div>
-                <h1 className="text-3xl md:text-[2.5rem] font-bold text-white tracking-tight leading-tight">
-                  {annualData.objective || "Objetivo Não Definido"}
-                </h1>
-                <p className="mt-4 text-base md:text-lg text-neutral-400/90 font-medium max-w-xl leading-relaxed">
-                    {annualData.successCriteria || "Defina seu critério de sucesso na aba Anual."}
-                </p>
-              </div>
-           </div>
-           
-           <div className="flex flex-col items-end gap-3 w-full lg:w-auto">
-              <div className="flex justify-between w-full lg:w-72 text-xs font-bold uppercase tracking-[0.15em] text-neutral-500">
-                  <span>Conclusão Anual</span>
-                  <span className="text-white text-shadow-sm">{annualData.progress}%</span>
-              </div>
-              <div className="w-full lg:w-72 h-2 bg-neutral-900 rounded-full border border-white/5 relative overflow-hidden shadow-inner">
-                 <div 
-                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-red-800 via-red-600 to-red-500 rounded-full shadow-[0_0_20px_rgba(220,38,38,0.4)] transition-all duration-1000 ease-out"
-                    style={{ width: `${annualData.progress}%` }}
-                 />
-              </div>
-           </div>
-      </header>
-
-      {/* OS 4 PILARES DA EVOLUÇÃO (NOVA SEÇÃO) */}
-      <div className="space-y-4">
-        <h3 className="text-xs font-black uppercase text-neutral-500 tracking-[0.2em] pl-1">Os 4 Pilares da Evolução</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-           {[
-             { label: 'Trabalho', items: areas.work, icon: Briefcase, color: 'text-blue-500', bg: 'bg-blue-500/5', border: 'border-blue-500/10' },
-             { label: 'Estudos', items: areas.studies, icon: GraduationCap, color: 'text-purple-500', bg: 'bg-purple-500/5', border: 'border-purple-500/10' },
-             { label: 'Saúde', items: areas.health, icon: Heart, color: 'text-red-500', bg: 'bg-red-500/5', border: 'border-red-500/10' },
-             { label: 'Pessoal', items: areas.personal, icon: User, color: 'text-yellow-500', bg: 'bg-yellow-500/5', border: 'border-yellow-500/10' },
-           ].map((area) => (
-             <div key={area.label} className={`relative flex items-center gap-4 p-5 rounded-2xl border ${area.border} ${area.bg} transition-all duration-300 hover:bg-white/5 hover:border-white/10 group overflow-hidden`}>
-                <div className={`absolute right-0 top-0 p-4 opacity-0 group-hover:opacity-10 transition-opacity transform translate-x-2 -translate-y-2`}>
-                   <area.icon className={`w-16 h-16 ${area.color}`} />
-                </div>
-                
-                <div className={`w-10 h-10 rounded-xl bg-[#0A0A0A] border border-white/5 flex items-center justify-center shrink-0 shadow-lg`}>
-                   <area.icon className={`w-5 h-5 ${area.color}`} />
-                </div>
-                
-                <div className="flex-1 min-w-0 relative z-10">
-                   <div className={`text-[10px] font-black uppercase tracking-wider mb-1 ${area.color}`}>{area.label}</div>
-                   <div className="text-sm font-bold text-white truncate leading-tight">
-                      {area.items.length > 0 ? getSafeText(area.items[0]) : <span className="text-neutral-600 font-normal italic">Sem metas definidas</span>}
-                   </div>
+          <div className="w-full md:w-auto flex flex-col items-end gap-2">
+             <div className="text-right">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">Progresso Anual</span>
+                <div className="text-5xl font-black text-white tracking-tighter">
+                  {annualData.progress}%
                 </div>
              </div>
-           ))}
+             {/* Custom Progress Bar */}
+             <div className="w-full md:w-48 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-[#E8251A] transition-all duration-1000" 
+                  style={{ width: `${annualData.progress}%` }} 
+                />
+             </div>
+          </div>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* HERO CARD - WEEKLY FOCUS */}
-        <Card className="lg:col-span-2 bg-gradient-to-br from-[#121212] to-black border-white/10 shadow-2xl relative overflow-hidden group hover:border-red-500/30 transition-all duration-500">
-          <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-500 scale-150">
-            <Target className="w-64 h-64" />
-          </div>
-          <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-red-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* OS 4 PILARES DA EVOLUÇÃO (MONOCHROME RED) */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between px-1">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
+            Os 4 Pilares da Evolução
+          </h3>
+        </div>
 
-          <CardHeader className="relative z-10 pb-2">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_red]" />
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-red-500">Foco da Semana</span>
-            </div>
-          </CardHeader>
-          <CardContent className="relative z-10 space-y-6">
-            {activeWeeks.length > 0 ? (
-              <div className="space-y-6">
-                <h3 className="text-3xl md:text-4xl font-black text-white leading-tight tracking-tight">
-                  "{activeWeeks[0].goal}"
-                </h3>
-                <div className="flex items-center gap-6">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest">Progresso</span>
-                    <span className="text-2xl font-bold text-white">{Math.round((activeWeeks[0].tasks.filter((t: any) => t.completed).length / (activeWeeks[0].tasks.length || 1)) * 100)}%</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {pillars.map((pillar) => {
+            const progress = calculateProgress(pillar.items);
+            const isActive = pillar.items.length > 0;
+            
+            return (
+              <div 
+                key={pillar.id}
+                className={cn(
+                  "relative p-5 rounded-xl border transition-all duration-300 group hover:-translate-y-1",
+                  isActive 
+                    ? "bg-[#111111] border-white/5 hover:border-[#E8251A]/30 hover:shadow-[0_4px_20px_rgba(232,37,26,0.1)]" 
+                    : "bg-[#0A0A0A] border-white/5 opacity-60 hover:opacity-100"
+                )}
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div className={cn(
+                    "p-2.5 rounded-lg border transition-colors",
+                    isActive 
+                      ? "bg-[#E8251A]/10 border-[#E8251A]/20 text-[#E8251A]" 
+                      : "bg-neutral-900 border-white/5 text-neutral-600 group-hover:text-neutral-500"
+                  )}>
+                    <pillar.icon className="w-5 h-5" />
                   </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest">Tarefas</span>
-                    <span className="text-2xl font-bold text-white">{activeWeeks[0].tasks.filter((t: any) => t.completed).length} <span className="text-base text-neutral-600 font-medium">/ {activeWeeks[0].tasks.length}</span></span>
-                  </div>
+                  {isActive && (
+                    <span className="text-[10px] font-bold text-neutral-500 tabular-nums">
+                      {progress}%
+                    </span>
+                  )}
                 </div>
-                <Button onClick={onNavigateToWeekly} className="bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-lg">
-                  Ver Detalhes <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </div>
-            ) : (
-              <div className="py-8 flex flex-col items-start gap-4">
-                <p className="text-neutral-500 text-lg">Você ainda não definiu o foco desta semana.</p>
-                <Button className="bg-red-600 hover:bg-red-500 text-white font-bold px-6 shadow-lg shadow-red-900/20">
-                  Definir Agora
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
 
-        {/* MONTH CARD */}
-        <Card className="bg-[#0A0A0A] border-white/10 hover:border-white/20 transition-all duration-300 flex flex-col justify-between">
-          <CardHeader>
-            <CardTitle className="text-xs font-bold text-neutral-500 uppercase tracking-[0.2em]">Mês Atual</CardTitle>
-            <div className="text-3xl font-black text-white uppercase">{currentMonth.name}</div>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-end justify-between">
-              <div className="text-5xl font-black text-white tracking-tighter">
-                {currentMonth.goals.filter((g: any) => g.completed).length}
-                <span className="text-lg text-neutral-600 font-medium ml-1">/ {currentMonth.goals.length}</span>
+                <div className="space-y-1">
+                   <h4 className={cn(
+                     "text-sm font-bold uppercase tracking-wide transition-colors",
+                     isActive ? "text-white" : "text-neutral-500"
+                   )}>
+                     {pillar.label}
+                   </h4>
+                   <p className="text-[10px] text-neutral-500 font-medium">
+                     {pillar.items.length} {pillar.items.length === 1 ? 'meta' : 'metas'} ativas
+                   </p>
+                </div>
+
+                {/* Progress Bar only if active */}
+                {isActive ? (
+                  <div className="mt-4 h-1 w-full bg-neutral-800 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-[#E8251A] transition-all duration-1000"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                ) : (
+                  <div className="mt-4 h-1 w-full bg-neutral-900 rounded-full overflow-hidden" />
+                )}
               </div>
-              <Trophy className="w-12 h-12 text-neutral-800" />
-            </div>
-            <div className="h-1.5 w-full bg-neutral-900 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-white rounded-full transition-all duration-1000"
-                style={{ width: `${(currentMonth.goals.filter((g: any) => g.completed).length / (currentMonth.goals.length || 1)) * 100}%` }}
-              />
-            </div>
-            <p className="text-xs text-neutral-500 font-medium">
-              Cada pequena vitória conta. Continue avançando.
-            </p>
-          </CardContent>
-        </Card>
+            );
+          })}
+        </div>
       </div>
+
+      {/* Monthly / Weekly Summary Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+         {/* Monthly Focus */}
+         <Card className="bg-[#111111] border-white/5 hover:border-white/10 transition-colors">
+            <CardHeader className="pb-2">
+               <CardTitle className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 flex items-center gap-2">
+                  <CalendarDays className="w-4 h-4" /> Mês Atual
+               </CardTitle>
+            </CardHeader>
+            <CardContent>
+               <div className="space-y-4">
+                  <div className="flex items-baseline justify-between">
+                     <h3 className="text-xl font-bold text-white">{currentMonth?.name || "Mês Atual"}</h3>
+                     <span className="text-xs text-neutral-500 font-mono">
+                        {currentMonth?.goals?.filter((g: any) => g.completed).length}/{currentMonth?.goals?.length}
+                     </span>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    {currentMonth?.goals?.slice(0, 3).map((goal: any, i: number) => (
+                      <div key={i} className="flex items-center gap-3 text-sm text-neutral-300">
+                        <div className={cn("w-1.5 h-1.5 rounded-full", goal.completed ? "bg-[#E8251A]" : "bg-neutral-700")} />
+                        <span className={cn("truncate", goal.completed && "line-through text-neutral-600")}>
+                           {goal.text}
+                        </span>
+                      </div>
+                    ))}
+                    {(!currentMonth?.goals || currentMonth.goals.length === 0) && (
+                       <p className="text-sm text-neutral-600 italic">Nenhum foco definido para este mês.</p>
+                    )}
+                  </div>
+
+                  <Button onClick={onNavigateToWeekly} className="w-full bg-white/5 hover:bg-white/10 text-white border border-white/5 text-xs font-bold uppercase tracking-widest mt-2">
+                     Gerenciar Mês
+                  </Button>
+               </div>
+            </CardContent>
+         </Card>
+
+         {/* Weekly Focus */}
+         <Card className="bg-[#111111] border-white/5 hover:border-white/10 transition-colors">
+            <CardHeader className="pb-2">
+               <CardTitle className="text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4" /> Semanas Ativas
+               </CardTitle>
+            </CardHeader>
+            <CardContent>
+               <div className="space-y-4">
+                  {activeWeeks && activeWeeks.length > 0 ? (
+                    activeWeeks.slice(0, 2).map((week, idx) => (
+                      <div key={idx} className="bg-[#0A0A0A] p-3 rounded-lg border border-white/5">
+                         <div className="flex justify-between items-center mb-2">
+                            <span className="text-xs font-bold text-white uppercase tracking-wider">{week.title}</span>
+                            <Badge variant="outline" className="border-[#E8251A]/30 text-[#E8251A] text-[9px] uppercase px-1.5 h-5">
+                               Ativa
+                            </Badge>
+                         </div>
+                         <div className="space-y-1">
+                            {week.tasks?.slice(0, 2).map((t: any, ti: number) => (
+                               <div key={ti} className="text-xs text-neutral-400 truncate flex items-center gap-2">
+                                  <div className={cn("w-1 h-1 rounded-full", t.completed ? "bg-[#E8251A]" : "bg-neutral-700")} />
+                                  {t.text}
+                               </div>
+                            ))}
+                         </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="py-6 text-center">
+                       <p className="text-sm text-neutral-600 mb-4">Nenhuma semana ativa no momento.</p>
+                    </div>
+                  )}
+                  
+                  <Button onClick={onNavigateToWeekly} className="w-full bg-[#E8251A] hover:bg-[#c91e14] text-white text-xs font-bold uppercase tracking-widest">
+                     Abrir Painel Tático <ArrowRight className="w-3 h-3 ml-2" />
+                  </Button>
+               </div>
+            </CardContent>
+         </Card>
+      </div>
+
     </div>
   );
 };
