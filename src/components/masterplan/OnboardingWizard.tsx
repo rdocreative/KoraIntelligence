@@ -7,7 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { 
   Target, ArrowRight, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
-  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Shield, Sword, Info, Layout
+  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Shield, Sword, Info, Layout,
+  ArrowDown, ArrowUp, Zap
 } from "lucide-react";
 
 export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
@@ -211,8 +212,8 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                     <div className="space-y-8">
                         <div className="space-y-3 group relative">
                             <div className="flex justify-between items-baseline">
-                                <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Objetivo Anual</Label>
-                                {objectiveAnalysis?.status === 'strong' && <span className="text-[10px] text-green-500 font-bold uppercase tracking-wider animate-in fade-in">Validado</span>}
+                               <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Objetivo Anual</Label>
+                               {objectiveAnalysis?.status === 'strong' && <span className="text-[10px] text-green-500 font-bold uppercase tracking-wider animate-in fade-in">Validado</span>}
                             </div>
                             <Input 
                                 autoFocus
@@ -388,26 +389,61 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
     if (step === 3) {
         return (
-            <div className="flex flex-col items-center justify-center py-8 space-y-10 animate-in fade-in zoom-in duration-500 h-full">
-                <div className="relative">
+            <div className="flex flex-col items-center justify-center py-6 space-y-8 animate-in fade-in zoom-in duration-500 h-full overflow-y-auto custom-scrollbar">
+                <div className="relative shrink-0">
                   <div className="absolute inset-0 bg-green-500/20 blur-3xl rounded-full animate-pulse" />
-                  <div className="w-32 h-32 bg-gradient-to-br from-green-900/40 to-black border border-green-500/30 rounded-full flex items-center justify-center relative z-10 shadow-2xl hover:scale-105 transition-transform duration-500">
-                      <CheckCircle2 className="w-12 h-12 text-green-500 drop-shadow-[0_0_15px_rgba(34,197,94,0.6)]" />
+                  <div className="w-24 h-24 bg-gradient-to-br from-green-900/40 to-black border border-green-500/30 rounded-full flex items-center justify-center relative z-10 shadow-2xl hover:scale-105 transition-transform duration-500">
+                      <CheckCircle2 className="w-10 h-10 text-green-500 drop-shadow-[0_0_15px_rgba(34,197,94,0.6)]" />
                   </div>
                 </div>
                 
-                <div className="text-center space-y-4">
-                   <h3 className="text-3xl font-black text-white uppercase tracking-tight">Tudo pronto.<br/>Sistema ativo.</h3>
-                   <p className="text-neutral-400 font-medium text-base max-w-xs mx-auto">
-                      Vamos começar a execução?
-                   </p>
+                <div className="text-center space-y-2 shrink-0">
+                   <h3 className="text-2xl font-black text-white uppercase tracking-tight">Tudo pronto.<br/>Sistema ativo.</h3>
+                </div>
+
+                {/* GAME RULES CARD */}
+                <div className="w-full bg-[#0E0E0E] border border-white/10 rounded-xl p-6 relative overflow-hidden group shadow-lg text-left max-w-sm mx-auto">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl -z-10" />
+                    <div className="space-y-5">
+                        <div className="flex items-center gap-3 border-b border-white/5 pb-3">
+                            <Zap className="w-4 h-4 text-yellow-500" />
+                            <h4 className="text-white font-bold text-sm uppercase tracking-wide">A Regra do Jogo</h4>
+                        </div>
+                        
+                        <p className="text-neutral-300 text-sm font-medium leading-relaxed">
+                            Seu Masterplan está forjado. A partir de agora, a regra é simples:
+                        </p>
+
+                        <div className="space-y-3">
+                            <div className="flex gap-3">
+                                <ArrowDown className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+                                <div className="text-sm">
+                                    <span className="text-white font-bold">O Planejamento desce:</span> 
+                                    <span className="text-neutral-400 block mt-0.5 text-xs leading-relaxed">O Ano define o Mês. O Mês define a Missão da Semana.</span>
+                                </div>
+                            </div>
+                            <div className="flex gap-3">
+                                <ArrowUp className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                                <div className="text-sm">
+                                    <span className="text-white font-bold">A Execução sobe:</span> 
+                                    <span className="text-neutral-400 block mt-0.5 text-xs leading-relaxed">Você não foca no Ano. Você acorda e executa o Foco de Hoje. Ao vencer o Dia, você avança a Semana. Ao vencer a Semana, o Mês é conquistado.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="pt-3 border-t border-white/5 text-center">
+                            <p className="text-white font-black uppercase text-xs tracking-widest">
+                                O mapa está traçado. O resto é disciplina.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 <Button 
                     onClick={onComplete} 
-                    className="w-full max-w-xs bg-red-600 hover:bg-red-500 text-white font-bold h-14 rounded-full shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_50px_rgba(220,38,38,0.6)] transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95"
+                    className="w-full max-w-sm bg-red-600 hover:bg-red-500 text-white font-black uppercase tracking-widest h-14 rounded-full shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_50px_rgba(220,38,38,0.6)] transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95 shrink-0"
                 >
-                    ACESSAR DASHBOARD
+                    ENTRAR NO CAMPO DE BATALHA
                 </Button>
             </div>
         );
