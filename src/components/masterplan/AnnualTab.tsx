@@ -7,19 +7,40 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { 
   Target, BarChart3, TrendingUp, AlertTriangle, 
-  Briefcase, GraduationCap, Heart, User, Plus, X, CheckCircle2
+  Briefcase, GraduationCap, Heart, User, Plus, X, CheckCircle2, HelpCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface AnnualTabProps {
   data: any;
   analytics: any;
   updateAnnual: (data: any) => void;
-  // Fixed type definition
   addAreaItem: (area: "work" | "studies" | "health" | "personal", text: string) => void;
   toggleAreaItem: (area: "work" | "studies" | "health" | "personal", id: string) => void;
   deleteAreaItem: (area: "work" | "studies" | "health" | "personal", id: string) => void;
 }
+
+// Reusable Helper Component for the Tooltip
+const InfoTooltip = ({ text }: { text: string }) => (
+  <TooltipProvider>
+    <Tooltip delayDuration={300}>
+      <TooltipTrigger asChild>
+        <button className="outline-none ml-2">
+            <HelpCircle className="w-[14px] h-[14px] text-[#555] hover:text-[#E8251A] transition-colors" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="bg-[#1A1A1A] border-[#333] text-[#AAAAAA] max-w-[220px] rounded-lg p-3 text-xs leading-relaxed">
+        <p>{text}</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+);
 
 export const AnnualTab = ({ 
   data, 
@@ -55,8 +76,9 @@ export const AnnualTab = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="bg-[#111111] border-white/5 md:col-span-2">
               <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
-                      <BarChart3 className="w-4 h-4" /> Status Geral do Ano
+                  <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
+                      <BarChart3 className="w-4 h-4 mr-2" /> Status Geral do Ano
+                      <InfoTooltip text="Porcentagem das suas metas anuais concluídas até agora." />
                   </CardTitle>
               </CardHeader>
               <CardContent>
@@ -115,8 +137,9 @@ export const AnnualTab = ({
       {/* Main Annual Goal Editor */}
       <Card className="bg-[#111111] border-white/5">
           <CardHeader>
-               <CardTitle className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-[#E8251A]">
-                   <Target className="w-4 h-4" /> Objetivo Principal
+               <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-[#E8251A]">
+                   <Target className="w-4 h-4 mr-2" /> Objetivo Principal
+                   <InfoTooltip text="É a sua grande meta do ano. Tudo que você faz aqui deve servir a esse objetivo." />
                </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -169,6 +192,7 @@ export const AnnualTab = ({
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
                       <CardTitle className="text-lg font-bold text-white uppercase tracking-tight flex items-center gap-2">
                            {currentArea?.label}
+                           <InfoTooltip text="São as 4 áreas da sua vida. Cada pilar tem metas próprias que contribuem pro seu objetivo anual." />
                       </CardTitle>
                       <div className="text-xs text-neutral-500 font-mono">
                           {currentArea?.items.filter((i:any) => i.completed).length}/{currentArea?.items.length} Concluídas

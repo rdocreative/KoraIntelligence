@@ -7,9 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { 
   Plus, Calendar, ChevronRight, CheckCircle2, AlertCircle, 
-  Target, Zap, ArrowDown, Terminal
+  Target, Zap, ArrowDown, Terminal, HelpCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ExecutionTabProps {
   currentMonth: any;
@@ -22,9 +28,24 @@ interface ExecutionTabProps {
   deleteWeek: (weekId: string) => void;
   addWeekTask: (weekId: string, text: string) => void;
   toggleWeekTask: (weekId: string, taskId: string) => void;
-  // Updated signature to match useMasterplan
   updateWeekReview: (weekId: string, field: "worked" | "didntWork" | "improve", value: string) => void;
 }
+
+// Reusable Helper Component for the Tooltip
+const InfoTooltip = ({ text }: { text: string }) => (
+  <TooltipProvider>
+    <Tooltip delayDuration={300}>
+      <TooltipTrigger asChild>
+        <button className="outline-none ml-2">
+            <HelpCircle className="w-[14px] h-[14px] text-[#555] hover:text-[#E8251A] transition-colors" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="bg-[#1A1A1A] border-[#333] text-[#AAAAAA] max-w-[220px] rounded-lg p-3 text-xs leading-relaxed">
+        <p>{text}</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+);
 
 export const ExecutionTab = ({
   currentMonth,
@@ -93,7 +114,10 @@ export const ExecutionTab = ({
                         <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#E8251A] flex items-center gap-2">
                            <Target className="w-4 h-4" /> Estratégia Mensal
                         </span>
-                        <span className="text-xs font-mono text-neutral-500">{currentMonth?.name}</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-mono text-neutral-500">{currentMonth?.name}</span>
+                            <InfoTooltip text="As metas que você quer conquistar neste mês. Elas devem alimentar os seus pilares." />
+                        </div>
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-6 space-y-6">
@@ -179,10 +203,13 @@ export const ExecutionTab = ({
                 {/* Tactical Header */}
                 <div className="flex items-center justify-between bg-[#111111] p-4 rounded-xl border border-white/5">
                     <div>
-                        <h2 className="text-xl font-black text-white uppercase tracking-tight flex items-center gap-3">
-                            <Zap className="w-5 h-5 text-[#E8251A] fill-current" />
-                            Foco de Hoje
-                        </h2>
+                        <div className="flex items-center gap-2">
+                            <h2 className="text-xl font-black text-white uppercase tracking-tight flex items-center gap-3">
+                                <Zap className="w-5 h-5 text-[#E8251A] fill-current" />
+                                Foco de Hoje
+                            </h2>
+                            <InfoTooltip text="Suas tarefas de hoje. Devem estar conectadas ao foco da semana." />
+                        </div>
                         <p className="text-[10px] text-neutral-500 font-mono mt-1 uppercase tracking-widest pl-8">
                             {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
                         </p>
