@@ -1,106 +1,113 @@
-import React from "react";
+import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMasterplan } from "@/hooks/useMasterplan";
-import { ExecutionTab } from "@/components/masterplan/ExecutionTab";
-import { YearlyTab } from "@/components/masterplan/YearlyTab";
-import { LifeVisionTab } from "@/components/masterplan/LifeVisionTab";
-import { Sword, Mountain, Crown } from "lucide-react";
+import { OverviewTab } from "@/components/masterplan/OverviewTab";
+import { WeeklyTab } from "@/components/masterplan/WeeklyTab";
+import { MonthlyTab } from "@/components/masterplan/MonthlyTab";
+import { AnnualTab } from "@/components/masterplan/AnnualTab";
+import { LoadingScreen } from "@/components/masterplan/LoadingScreen";
+import { OnboardingWizard } from "@/components/masterplan/OnboardingWizard";
 
 const Index = () => {
   const { 
-    months, 
-    currentMonthIndex, 
-    weeks, 
-    addMonthGoal, 
-    toggleMonthGoal, 
-    updateMonth,
+    data, 
+    loading, 
+    updateAnnual, 
+    addAreaItem, 
+    toggleAreaItem, 
+    deleteAreaItem,
     addWeek,
     deleteWeek,
     addWeekTask,
     toggleWeekTask,
     updateWeekReview,
-    // Assumindo que existam handlers para o ano e vida, baseados no padrão
-    lifeVision,
-    updateLifeVision,
-    years,
-    updateYear
+    addMonthGoal,
+    toggleMonthGoal,
+    updateMonth,
+    resetData,
+    analytics 
   } = useMasterplan();
 
-  return (
-    <div className="min-h-screen bg-[#050505] text-neutral-200 font-sans selection:bg-red-500/30">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        
-        <header className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase mb-2">
-              Master<span className="text-red-600">Plan</span>
-            </h1>
-            <p className="text-neutral-500 font-medium">Design your life. Execute daily.</p>
-          </div>
-        </header>
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("overview");
 
-        <Tabs defaultValue="execution" className="space-y-10">
-          <div className="sticky top-4 z-50 backdrop-blur-xl bg-[#050505]/80 p-2 rounded-2xl border border-white/5 shadow-2xl ring-1 ring-black/50 inline-flex">
-            <TabsList className="bg-transparent border-0 p-0 h-auto gap-1">
-              <TabsTrigger 
-                value="execution" 
-                className="data-[state=active]:bg-white data-[state=active]:text-black text-neutral-500 hover:text-white px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center gap-2"
-              >
-                <Sword className="w-4 h-4" />
-                Execução
-              </TabsTrigger>
-              <TabsTrigger 
-                value="yearly" 
-                className="data-[state=active]:bg-white data-[state=active]:text-black text-neutral-500 hover:text-white px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center gap-2"
-              >
-                <Mountain className="w-4 h-4" />
-                Visão Anual
-              </TabsTrigger>
-              <TabsTrigger 
-                value="life" 
-                className="data-[state=active]:bg-white data-[state=active]:text-black text-neutral-500 hover:text-white px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-xs transition-all flex items-center gap-2"
-              >
-                <Crown className="w-4 h-4" />
-                Life Vision
-              </TabsTrigger>
+  if (loading || isLoading) {
+    return <LoadingScreen onFinished={() => setIsLoading(false)} />;
+  }
+
+  if (!data.onboardingCompleted) {
+    return <OnboardingWizard onComplete={() => window.location.reload()} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-red-500/30">
+      {/* Background Decor */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-red-900/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-900/5 blur-[120px] rounded-full" />
+      </div>
+
+      <main className="relative z-10 container mx-auto px-4 md:px-8 py-8 md:py-12 max-w-7xl">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="flex justify-center mb-12">
+            <TabsList className="bg-neutral-900/50 border border-white/5 p-1 rounded-full backdrop-blur-md">
+              <TabsTrigger value="overview" className="rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-black transition-all">Visão</TabsTrigger>
+              <TabsTrigger value="weekly" className="rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-black transition-all">Foco</TabsTrigger>
+              <TabsTrigger value="monthly" className="rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-black transition-all">Mês</TabsTrigger>
+              <TabsTrigger value="annual" className="rounded-full px-6 py-2 text-xs font-bold uppercase tracking-widest data-[state=active]:bg-white data-[state=active]:text-black transition-all">Ano</TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="execution" className="outline-none min-h-[500px]">
-            <ExecutionTab
-              months={months}
-              currentMonthIndex={currentMonthIndex}
-              addMonthGoal={addMonthGoal}
-              toggleMonthGoal={toggleMonthGoal}
-              updateMonth={updateMonth}
-              weeks={weeks}
-              addWeek={addWeek}
-              deleteWeek={deleteWeek}
-              addWeekTask={addWeekTask}
-              toggleWeekTask={toggleWeekTask}
-              updateWeekReview={updateWeekReview}
-            />
-          </TabsContent>
+          <div className="bg-transparent border-none shadow-none p-0">
+            <TabsContent value="overview" className="mt-0 outline-none">
+              <OverviewTab 
+                activeWeeks={data.weeks} 
+                currentMonth={data.months[analytics.currentMonthIndex]} 
+                areas={data.areas}
+                onNavigateToWeekly={() => setActiveTab("weekly")}
+                annualData={{
+                  objective: data.annual.objective,
+                  successCriteria: data.annual.successCriteria,
+                  progress: data.annual.progress
+                }}
+                onResetTutorial={resetData}
+              />
+            </TabsContent>
 
-          <TabsContent value="yearly" className="outline-none">
-             {/* Fallback caso YearlyTab não exista ou precise ser recriada, mas assumindo import */}
-             {/* Se não existir, o compilador avisará e corrigiremos. */}
-             <div className="p-10 text-center border border-dashed border-white/10 rounded-3xl">
-                <Mountain className="w-10 h-10 text-neutral-600 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-white">Visão Anual</h3>
-                <p className="text-neutral-500">Módulo de planejamento anual (Placeholder)</p>
-             </div>
-          </TabsContent>
+            <TabsContent value="weekly" className="mt-0 outline-none">
+              <WeeklyTab 
+                weeks={data.weeks}
+                addWeek={addWeek}
+                deleteWeek={deleteWeek}
+                addWeekTask={addWeekTask}
+                toggleWeekTask={toggleWeekTask}
+                updateWeekReview={updateWeekReview}
+              />
+            </TabsContent>
 
-          <TabsContent value="life" className="outline-none">
-             <div className="p-10 text-center border border-dashed border-white/10 rounded-3xl">
-                <Crown className="w-10 h-10 text-neutral-600 mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-white">Life Vision</h3>
-                <p className="text-neutral-500">Módulo de visão de vida (Placeholder)</p>
-             </div>
-          </TabsContent>
+            <TabsContent value="monthly" className="mt-0 outline-none">
+              <MonthlyTab 
+                months={data.months}
+                currentMonthIndex={analytics.currentMonthIndex}
+                addMonthGoal={addMonthGoal}
+                toggleMonthGoal={toggleMonthGoal}
+                updateMonth={updateMonth}
+              />
+            </TabsContent>
+
+            <TabsContent value="annual" className="mt-0 outline-none">
+              <AnnualTab 
+                data={data}
+                analytics={analytics}
+                updateAnnual={updateAnnual}
+                addAreaItem={addAreaItem}
+                toggleAreaItem={toggleAreaItem}
+                deleteAreaItem={deleteAreaItem}
+              />
+            </TabsContent>
+          </div>
         </Tabs>
-      </div>
+      </main>
     </div>
   );
 };

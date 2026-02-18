@@ -30,9 +30,9 @@ function Calendar({
         nav_button_previous: "relative",
         nav_button_next: "relative",
         table: "w-full border-collapse space-y-1 block",
-        head: "hidden", // Oculta o container thead
-        head_row: "hidden", // Oculta a linha tr do cabeçalho
-        head_cell: "hidden", // Oculta as células th
+        head_row: "hidden", // Ocultando a linha dos dias da semana (Mo, Tu, We...)
+        head_cell:
+          "text-neutral-500 font-bold text-[0.7rem] uppercase tracking-wider text-center w-full",
         row: "grid grid-cols-7 w-full mt-1",
         cell: "h-9 w-full text-center text-sm p-0 relative flex items-center justify-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
         day: cn(
