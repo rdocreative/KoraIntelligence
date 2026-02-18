@@ -86,15 +86,15 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     );
   };
 
-  // Background Component to avoid repetition
+  // Background Component with high visibility
   const AppBackground = () => (
     <div 
-      className="absolute inset-0 pointer-events-none z-0"
+      className="fixed inset-0 pointer-events-none z-[-1]"
       style={{
-        backgroundImage: `linear-gradient(rgba(5, 5, 5, 0.4), rgba(5, 5, 5, 0.7)), url('/Background-MasterPlan.png')`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('/Background-MasterPlan.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundAttachment: 'fixed'
+        backgroundRepeat: 'no-repeat'
       }}
     />
   );
@@ -102,13 +102,13 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
   // --- WELCOME SCREEN (STEP 0) ---
   if (step === 0 && !hasShownWelcome) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-6 overflow-hidden bg-black">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-6 overflow-hidden">
         <AppBackground />
         
         <div className="w-full max-w-4xl space-y-12 relative z-10 flex flex-col items-center">
            {/* Logo Section */}
            <div className="flex flex-col items-center animate-in fade-in zoom-in duration-700">
-               <span className="text-[12px] tracking-[0.4em] text-white/60 uppercase font-bold mb-[-2rem] relative z-0">
+               <span className="text-[12px] tracking-[0.4em] text-white/80 uppercase font-bold mb-[-2rem] relative z-0">
                   Bem-vindo ao
                </span>
                <img 
@@ -122,7 +122,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
            {/* Modular Architecture */}
            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200 fill-mode-backwards px-4 md:px-0 items-stretch">
-               <div className="bg-black/40 backdrop-blur-md border-r-2 border-neutral-700 p-6 flex flex-col gap-3 text-left hover:bg-black/60 transition-colors relative overflow-hidden group">
+               <div className="bg-black/60 backdrop-blur-xl border-r-2 border-neutral-700 p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
                    <div className="relative z-10">
                        <span className="text-[10px] text-neutral-400 font-bold tracking-widest uppercase">Protocolo de Base</span>
                        <h2 className="text-2xl font-bold text-white uppercase tracking-tight">Hábitos</h2>
@@ -132,7 +132,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                    </div>
                </div>
 
-               <div className="bg-black/40 backdrop-blur-md border-l-2 border-red-600 p-6 flex flex-col gap-3 text-left hover:bg-black/60 transition-colors relative overflow-hidden group">
+               <div className="bg-black/60 backdrop-blur-xl border-l-2 border-red-600 p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
                    <div className="relative z-10">
                        <span className="text-[10px] text-red-500 font-bold tracking-widest uppercase">Vetor de Expansão</span>
                        <div className="h-8 flex items-center justify-start">
@@ -152,7 +152,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
            {/* Footer Command */}
            <div className="w-full max-w-lg mx-auto flex flex-col gap-8 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-500 fill-mode-backwards mt-16">
-               <div className="border-y border-white/20 py-6 text-center bg-black/30 backdrop-blur-sm">
+               <div className="border-y border-white/20 py-6 text-center bg-black/40 backdrop-blur-md">
                    <p className="text-white font-mono text-[10px] md:text-[11px] uppercase tracking-[0.15em] leading-relaxed">
                        O QUE VOCÊ VAI CONFIGURAR AGORA NÃO É UMA LISTINHA DE TAREFAS.<br className="hidden md:block" /> É O SEU PLANO DE ATAQUE.
                    </p>
@@ -187,7 +187,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                          <h2 className="text-2xl font-black text-white uppercase tracking-tight">O Alvo Único</h2>
                     </div>
 
-                    <div className="bg-black/80 border border-white/10 rounded-xl p-5 mb-8 relative overflow-hidden group shadow-lg backdrop-blur-md">
+                    <div className="bg-black/90 border border-white/10 rounded-xl p-5 mb-8 relative overflow-hidden group shadow-lg backdrop-blur-md">
                         <div className="absolute top-0 left-0 w-1 h-full bg-red-600" />
                         <div className="flex gap-4">
                             <div className="shrink-0 mt-0.5">
@@ -323,10 +323,10 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden">
       <AppBackground />
 
-      <Card className="w-full max-w-lg bg-black/60 backdrop-blur-xl border-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col ring-1 ring-white/10">
+      <Card className="w-full max-w-lg bg-black/70 backdrop-blur-xl border-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col ring-1 ring-white/10">
         <div className="px-8 pt-8 pb-6 flex justify-between items-end flex-shrink-0">
             <div className="space-y-1">
                 <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">Passo {step} de 3</span>
