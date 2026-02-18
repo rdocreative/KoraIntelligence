@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { 
   Target, ArrowRight, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
-  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Shield, Sword, Info
+  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Shield, Sword, Info, Layout
 } from "lucide-react";
 
 export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
@@ -211,8 +211,8 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                     <div className="space-y-8">
                         <div className="space-y-3 group relative">
                             <div className="flex justify-between items-baseline">
-                               <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Objetivo Anual</Label>
-                               {objectiveAnalysis?.status === 'strong' && <span className="text-[10px] text-green-500 font-bold uppercase tracking-wider animate-in fade-in">Validado</span>}
+                                <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Objetivo Anual</Label>
+                                {objectiveAnalysis?.status === 'strong' && <span className="text-[10px] text-green-500 font-bold uppercase tracking-wider animate-in fade-in">Validado</span>}
                             </div>
                             <Input 
                                 autoFocus
@@ -254,11 +254,30 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
         return (
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500">
                 <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-6 custom-scrollbar pr-2">
-                    <div className="text-center space-y-2 mb-8 pt-2">
+                    <div className="space-y-4 text-center mb-6 pt-2">
+                         <div className="inline-flex items-center justify-center p-3 bg-blue-500/10 rounded-full border border-blue-500/20 mb-2 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                            <Layout className="w-6 h-6 text-blue-500" />
+                         </div>
                          <h2 className="text-2xl font-black text-white uppercase tracking-tight">Os 4 Pilares</h2>
-                         <p className="text-neutral-400 text-sm">
-                            Para o sistema funcionar, adicione ao menos <span className="text-white font-bold">1 meta</span>.
-                         </p>
+                    </div>
+
+                    {/* NEW INSTRUCTION CARD STEP 2 */}
+                    <div className="bg-[#0E0E0E] border border-white/10 rounded-xl p-5 mb-8 relative overflow-hidden group shadow-lg">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-blue-500" />
+                        <div className="flex gap-4">
+                            <div className="shrink-0 mt-0.5">
+                                <Info className="w-5 h-5 text-blue-500" />
+                            </div>
+                            <div className="space-y-3">
+                                <h4 className="text-white font-bold text-sm uppercase tracking-wide">O Ecossistema da Vida</h4>
+                                <p className="text-neutral-400 text-sm leading-relaxed">
+                                    O seu Alvo Único não sobrevive em um corpo doente ou com uma mente estagnada. Os 4 Pilares são o ecossistema da sua vida.
+                                </p>
+                                <div className="text-neutral-400 text-sm leading-relaxed border-t border-white/5 pt-3">
+                                    Para chegar ao seu Norte, você precisará evoluir nestas 4 áreas. <span className="text-white font-bold">Defina pelo menos UMA meta estratégica para cada pilar.</span> Essas metas serão o combustível das suas Missões Semanais.
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="space-y-4">
