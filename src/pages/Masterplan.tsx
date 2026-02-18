@@ -98,7 +98,7 @@ const MasterplanPage = () => {
   const activeWeeks = data.weeks.filter(w => new Date(w.endDate) >= new Date());
 
   return (
-    <div className="min-h-screen bg-[#020202] text-white selection:bg-red-900/30 selection:text-white pb-32">
+    <div className="min-h-screen text-white selection:bg-red-900/30 selection:text-white pb-32">
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none">
           <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-neutral-900/20 to-transparent" />
