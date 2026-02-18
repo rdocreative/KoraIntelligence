@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { 
   Target, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
-  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout
+  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout, ScanLine, BrainCircuit
 } from "lucide-react";
 
 export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
@@ -177,7 +177,76 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
   }
 
   const renderContent = () => {
+    // --- STEP 1: BRIEFING TÁTICO ---
     if (step === 1) {
+      return (
+        <div className="flex flex-col h-full animate-in fade-in zoom-in-95 duration-700 relative">
+             {/* Scanning Effect */}
+             <div className="absolute inset-x-0 h-[2px] bg-red-500/80 shadow-[0_0_20px_rgba(220,38,38,1)] animate-scan pointer-events-none z-50 top-0" />
+             <style jsx global>{`
+                @keyframes scan {
+                    0% { top: 0%; opacity: 0; }
+                    10% { opacity: 1; }
+                    90% { opacity: 1; }
+                    100% { top: 100%; opacity: 0; }
+                }
+                .animate-scan {
+                    animation: scan 4s ease-in-out infinite;
+                }
+             `}</style>
+
+             <div className="flex-1 flex flex-col items-center justify-center space-y-10 px-2 py-4 text-center">
+                 <div className="space-y-4">
+                     <div className="w-16 h-16 bg-red-950/30 rounded-full border border-red-500/30 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(220,38,38,0.15)]">
+                        <BrainCircuit className="w-8 h-8 text-red-500" />
+                     </div>
+                     <h2 className="text-2xl font-black text-white uppercase tracking-wider">A Ciência por trás da Forja</h2>
+                     <div className="w-24 h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent mx-auto rounded-full opacity-50" />
+                 </div>
+
+                 <div className="space-y-8 max-w-md mx-auto">
+                     <div className="space-y-2">
+                         <h4 className="text-white text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+                            <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" /> 
+                            A Otimização
+                         </h4>
+                         <p className="text-neutral-400 text-sm leading-relaxed font-medium">
+                            Adaptamos o milenar método japonês <span className="text-white italic">Nenkan Mokuhyo</span> para a realidade da alta performance digital. Eliminamos a burocracia e mantivemos o osso: a <span className="text-white">Cascata de Foco</span>.
+                         </p>
+                     </div>
+
+                     <div className="space-y-2">
+                         <h4 className="text-white text-sm font-bold uppercase tracking-widest">A Diferença</h4>
+                         <p className="text-neutral-400 text-sm leading-relaxed font-medium">
+                            Enquanto outros apps tratam suas metas como listas de compras, nós tratamos sua vida como um <span className="text-red-500 font-bold">sistema de armas</span>. Separamos o que te mantém vivo (Hábitos) do que te faz vencer (Masterplan).
+                         </p>
+                     </div>
+
+                     <div className="space-y-2 bg-white/5 p-4 rounded-lg border border-white/5">
+                         <h4 className="text-white text-xs font-bold uppercase tracking-widest mb-1">A Regra de Ouro</h4>
+                         <p className="text-neutral-300 text-xs leading-relaxed font-mono">
+                            O Ano dita o Mês.<br/>
+                            O Mês dita a Semana.<br/>
+                            A Semana dita o <span className="text-white font-bold bg-red-600/20 px-1 rounded">FOCO DE HOJE</span>.
+                         </p>
+                     </div>
+                 </div>
+             </div>
+
+             <div className="pt-6 border-t border-white/5 mt-auto -mx-8 px-8 pb-8">
+                 <Button 
+                     onClick={() => setStep(2)}
+                     className="w-full h-14 bg-white hover:bg-neutral-200 text-black font-black text-sm uppercase tracking-widest rounded-md transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg"
+                 >
+                     ENTENDER O PROTOCOLO E AVANÇAR
+                 </Button>
+             </div>
+        </div>
+      );
+    }
+
+    // --- STEP 2: ANNUAL (ANTIGO STEP 1) ---
+    if (step === 2) {
         return (
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500">
                 <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-6 custom-scrollbar pr-2">
@@ -232,7 +301,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                 <div className="flex justify-end pt-6 border-t border-white/5 flex-shrink-0 mt-auto -mx-8 px-8 pb-8">
                     <Button 
                         disabled={!isAnnualValid}
-                        onClick={() => setStep(2)}
+                        onClick={() => setStep(3)}
                         className={`font-bold px-10 rounded-full h-12 transition-all duration-500 ${isAnnualValid ? 'bg-white text-black hover:bg-neutral-200' : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'}`}
                     >
                         Próximo <ChevronRight className="w-4 h-4 ml-1" />
@@ -242,7 +311,8 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
         );
     }
 
-    if (step === 2) {
+    // --- STEP 3: AREAS (ANTIGO STEP 2) ---
+    if (step === 3) {
         return (
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500">
                 <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-6 custom-scrollbar pr-2">
@@ -295,10 +365,10 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                 </div>
 
                 <div className="flex justify-between items-center pt-6 border-t border-white/5 flex-shrink-0 mt-auto -mx-8 px-8 pb-8">
-                    <Button variant="ghost" onClick={() => setStep(1)} className="text-neutral-400 font-bold uppercase tracking-widest text-[10px] hover:text-white">Voltar</Button>
+                    <Button variant="ghost" onClick={() => setStep(2)} className="text-neutral-400 font-bold uppercase tracking-widest text-[10px] hover:text-white">Voltar</Button>
                     <Button 
                         disabled={!hasAtLeastOneItem}
-                        onClick={() => setStep(3)}
+                        onClick={() => setStep(4)}
                         className={`font-bold px-10 rounded-full h-12 transition-all duration-500 ${hasAtLeastOneItem ? 'bg-white text-black hover:bg-neutral-200' : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'}`}
                     >
                         Próximo <ChevronRight className="w-4 h-4 ml-1" />
@@ -308,7 +378,8 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
         );
     }
 
-    if (step === 3) {
+    // --- STEP 4: SUCCESS (ANTIGO STEP 3) ---
+    if (step === 4) {
         return (
             <div className="flex flex-col items-center justify-center py-6 space-y-8 animate-in fade-in zoom-in duration-500 h-full overflow-y-auto custom-scrollbar">
                 <div className="w-24 h-24 bg-gradient-to-br from-green-900/40 to-black border border-green-500/30 rounded-full flex items-center justify-center relative shadow-2xl">
@@ -327,17 +398,25 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden bg-black">
       <AppBackground />
 
-      <Card className="w-full max-w-lg bg-black/70 backdrop-blur-2xl border-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col ring-1 ring-white/10">
-        <div className="px-8 pt-8 pb-6 flex justify-between items-end flex-shrink-0">
-            <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">Passo {step} de 3</span>
-                <div className="flex gap-1.5">
-                    {[1, 2, 3].map((i) => (
-                        <div key={i} className={`h-1 rounded-full transition-all duration-500 ${step >= i ? 'w-8 bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.5)]' : 'w-2 bg-neutral-800'}`} />
-                    ))}
+      <Card className={`w-full max-w-lg bg-black/70 backdrop-blur-2xl border-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col ring-1 ${step === 1 ? 'ring-red-500/30' : 'ring-white/10'}`}>
+        
+        {/* Render Progress Bar ONLY if step > 1 (Actual Inputs) */}
+        {step >= 2 && step <= 3 && (
+            <div className="px-8 pt-8 pb-6 flex justify-between items-end flex-shrink-0 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div className="space-y-1">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">Passo {step - 1} de 2</span>
+                    <div className="flex gap-1.5">
+                        {[2, 3].map((i) => (
+                            <div key={i} className={`h-1 rounded-full transition-all duration-500 ${step >= i ? 'w-8 bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.5)]' : 'w-2 bg-neutral-800'}`} />
+                        ))}
+                    </div>
                 </div>
             </div>
-        </div>
+        )}
+
+        {/* If Step 1 (Briefing), add a subtle top spacer so content isn't glued to top edge */}
+        {step === 1 && <div className="h-4 shrink-0" />}
+
         <CardContent className="flex-1 px-8 relative z-10 flex flex-col overflow-hidden">
             {renderContent()}
         </CardContent>
