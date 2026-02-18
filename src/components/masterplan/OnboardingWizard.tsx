@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { 
   Target, ArrowRight, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
-  Plus, X, ChevronRight, AlertCircle, Sparkles, Check
+  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Shield, Sword
 } from "lucide-react";
 
 export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
@@ -95,40 +95,78 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
             <div className="absolute top-0 right-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.04] mix-blend-overlay" />
         </div>
         
-        <div className="w-full max-w-xl text-center space-y-12 relative z-10 flex flex-col items-center">
+        <div className="w-full max-w-2xl text-center space-y-10 relative z-10 flex flex-col items-center">
            
            {/* Icon with Breathing Animation */}
            <div className="relative group">
              <div className="absolute inset-0 bg-red-500/20 blur-[60px] rounded-full animate-pulse" />
-             <div className="w-28 h-28 bg-gradient-to-br from-[#1E1E1E] to-black border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl relative z-10 animate-[bounce_3s_infinite]">
+             <div className="w-24 h-24 bg-gradient-to-br from-[#1E1E1E] to-black border border-white/10 rounded-3xl flex items-center justify-center shadow-2xl relative z-10 animate-[bounce_3s_infinite]">
                  <div className="absolute inset-0 rounded-3xl border border-white/5 mask-image-gradient" />
-                 <Target className="w-12 h-12 text-red-500 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]" />
+                 <Target className="w-10 h-10 text-red-500 drop-shadow-[0_0_15px_rgba(220,38,38,0.8)]" />
              </div>
            </div>
 
            {/* Typography - Emotional Impact */}
-           <div className="space-y-6">
-               <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-[1.1] animate-in slide-in-from-bottom-4 fade-in duration-1000">
-                 Parabéns. Sua nova<br/>
-                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-300">fase começa agora.</span>
+           <div className="space-y-4">
+               <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-none animate-in slide-in-from-bottom-4 fade-in duration-1000">
+                 BEM-VINDO AO SEU <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400">MASTERPLAN.</span>
                </h1>
-               <p className="text-lg md:text-xl text-neutral-400 font-medium max-w-md mx-auto leading-relaxed animate-in slide-in-from-bottom-5 fade-in duration-1000 delay-200">
-                 Em poucos minutos, você terá o plano mais claro e poderoso da sua vida.
+               <p className="text-sm md:text-base text-neutral-400 font-bold uppercase tracking-widest max-w-lg mx-auto animate-in slide-in-from-bottom-5 fade-in duration-1000 delay-200">
+                 O método japonês da clareza absoluta, adaptado para a execução implacável.
                </p>
            </div>
 
+           {/* Manifesto Card */}
+           <div className="w-full bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 text-left space-y-6 animate-in slide-in-from-bottom-6 fade-in duration-1000 delay-300 shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-4 opacity-10">
+                 <Target className="w-32 h-32 text-white transform rotate-12 translate-x-10 -translate-y-10" />
+              </div>
+
+              <p className="text-neutral-300 font-medium leading-relaxed relative z-10">
+                 A maioria das pessoas falha porque mistura rotina com evolução. Aqui, nós separamos os dois:
+              </p>
+              
+              <div className="space-y-4 relative z-10">
+                 <div className="flex gap-4 items-start">
+                    <div className="p-2 bg-blue-500/10 rounded-lg shrink-0 mt-1">
+                       <Shield className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <div>
+                       <h4 className="text-white font-bold text-sm uppercase tracking-wide">Seus Hábitos são sua Armadura</h4>
+                       <p className="text-neutral-400 text-sm mt-1">Ações diárias de manutenção (treino, água, leitura). Eles te mantêm vivo.</p>
+                    </div>
+                 </div>
+
+                 <div className="flex gap-4 items-start">
+                    <div className="p-2 bg-red-500/10 rounded-lg shrink-0 mt-1">
+                       <Sword className="w-5 h-5 text-red-500" />
+                    </div>
+                    <div>
+                       <h4 className="text-white font-bold text-sm uppercase tracking-wide">Seu Masterplan é sua Espada</h4>
+                       <p className="text-neutral-400 text-sm mt-1">Ações táticas, com começo, meio e fim. Elas servem para atacar o seu futuro e te subir de nível.</p>
+                    </div>
+                 </div>
+              </div>
+
+              <div className="pt-4 border-t border-white/5 relative z-10">
+                 <p className="text-neutral-300 font-medium italic text-center text-sm">
+                    "O que você vai configurar agora não é uma lista de tarefas. É o seu Sistema Operacional de Vida."
+                 </p>
+              </div>
+           </div>
+
            {/* Call to Action - System Activation */}
-           <div className="w-full max-w-sm mx-auto animate-in slide-in-from-bottom-6 fade-in duration-1000 delay-500 pt-8">
+           <div className="w-full max-w-sm mx-auto animate-in slide-in-from-bottom-6 fade-in duration-1000 delay-500 pt-4">
              <Button 
                  onClick={() => {
                      setHasShownWelcome(true);
                      setStep(1);
                  }}
-                 className="w-full h-16 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-black text-lg tracking-wide rounded-full shadow-[0_0_40px_rgba(220,38,38,0.3)] hover:shadow-[0_0_60px_rgba(220,38,38,0.5)] transition-all duration-300 transform hover:-translate-y-1 active:scale-95 border border-white/10 group relative overflow-hidden"
+                 className="w-full h-14 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-black text-sm uppercase tracking-widest rounded-full shadow-[0_0_40px_rgba(220,38,38,0.3)] hover:shadow-[0_0_60px_rgba(220,38,38,0.5)] transition-all duration-300 transform hover:-translate-y-1 active:scale-95 border border-white/10 group relative overflow-hidden"
              >
                  <span className="relative z-10 flex items-center justify-center gap-3">
-                    ATIVAR MEU SISTEMA
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    INICIAR CONFIGURAÇÃO DO SISTEMA
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                  </span>
                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
              </Button>
