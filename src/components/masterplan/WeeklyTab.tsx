@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Zap, LayoutDashboard, Trash2, Calendar as CalendarIcon, Briefcase, GraduationCap, Heart, User, Sparkles, Brain, Target, ChevronRight } from "lucide-react";
+import { Zap, LayoutDashboard, Trash2, Calendar as CalendarIcon, Briefcase, GraduationCap, Heart, User, Sparkles, Brain, Target, ChevronRight, Flag } from "lucide-react";
 import { TaskList } from "@/components/masterplan/TaskList";
 import { TaskItem } from "@/hooks/useMasterplan";
 import { cn } from "@/lib/utils";
@@ -82,23 +82,23 @@ export const WeeklyTab = ({
       <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
              <div className="p-2 rounded-lg bg-white/5 border border-white/5">
-                <LayoutDashboard className="w-5 h-5 text-neutral-400" />
+                <Flag className="w-5 h-5 text-neutral-400" />
              </div>
              <div>
-                <h2 className="text-xl font-bold text-white tracking-tight">PROGRESSO SEMANAL</h2>
-                <p className="text-xs text-neutral-500 font-medium mt-1">Gerencie suas sprints e mantenha o ritmo.</p>
+                <h2 className="text-xl font-bold text-white tracking-tight">MISSÕES SEMANAIS</h2>
+                <p className="text-xs text-neutral-500 font-medium mt-1">Gerencie suas missões e mantenha o ritmo.</p>
              </div>
           </div>
       </div>
 
-      {/* NEW SPRINT CREATOR */}
+      {/* NEW MISSION CREATOR */}
       <Card className="bg-[#0A0A0A] border-white/10 shadow-lg mb-12">
         <CardHeader className="border-b border-white/5 pb-4 pt-5 px-6">
           <div className="flex items-center gap-3">
             <div className="p-1.5 bg-red-500/10 rounded-md"><Zap className="w-4 h-4 text-red-500" /></div>
             <div>
-               <CardTitle className="text-sm font-bold uppercase text-white tracking-wider">Nova Sprint</CardTitle>
-               <CardDescription className="text-xs text-neutral-500 mt-0.5">Defina o foco, o pilar e o período.</CardDescription>
+               <CardTitle className="text-sm font-bold uppercase text-white tracking-wider">Nova Missão Semanal</CardTitle>
+               <CardDescription className="text-xs text-neutral-500 mt-0.5">Defina o foco, o pilar e o período da missão.</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -110,7 +110,7 @@ export const WeeklyTab = ({
                     <Input
                         value={newWeekGoal}
                         onChange={(e) => setNewWeekGoal(e.target.value)}
-                        placeholder="Meta principal da semana..."
+                        placeholder="Meta principal da missão..."
                         className="bg-[#0E0E0E] border-white/10 h-11 text-sm focus:border-red-500/50 transition-all focus:ring-1 focus:ring-red-500/20 rounded-lg placeholder:text-neutral-600"
                     />
                 </div>
@@ -206,20 +206,20 @@ export const WeeklyTab = ({
                     onClick={handleCreateWeek} 
                     className="w-full lg:w-auto h-10 bg-red-600 hover:bg-red-500 text-white font-bold px-12 rounded-md transition-all duration-300 transform active:scale-95 text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] border border-transparent"
                 >
-                  INICIAR SPRINT
+                  INICIAR MISSÃO
                 </Button>
             </div>
         </CardContent>
       </Card>
 
-      {/* ACTIVE SPRINTS LIST */}
+      {/* ACTIVE MISSIONS LIST */}
       <div className="space-y-8">
         {weeks.length === 0 && (
           <div className="text-center py-24 border border-dashed border-white/5 rounded-2xl animate-in fade-in duration-700 bg-white/[0.01]">
             <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Sparkles className="w-6 h-6 text-neutral-600" />
             </div>
-            <p className="text-sm font-medium text-neutral-500 uppercase tracking-[0.2em]">Nenhuma sprint ativa</p>
+            <p className="text-sm font-medium text-neutral-500 uppercase tracking-[0.2em]">Nenhuma Missão Semanal ativa</p>
             <p className="text-xs text-neutral-700 mt-2">Defina seu foco acima para começar a batalha.</p>
           </div>
         )}
@@ -251,7 +251,7 @@ export const WeeklyTab = ({
                             <ChevronRight className="w-3 h-3 text-neutral-700" /> 
                             <span>{monthName.substring(0, 3)}</span>
                             <ChevronRight className="w-3 h-3 text-neutral-700" /> 
-                            <span className="text-white">Sprint {idx + 1}</span>
+                            <span className="text-white">Missão {idx + 1}</span>
                         </span>
                     </div>
 
