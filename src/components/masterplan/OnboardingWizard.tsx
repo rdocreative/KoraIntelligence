@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { 
   Target, ArrowRight, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
-  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Shield, Sword
+  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Shield, Sword, Info
 } from "lucide-react";
 
 export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
@@ -181,14 +181,31 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
         return (
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500">
                 <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-6 custom-scrollbar pr-2">
-                    <div className="space-y-4 text-center mb-8 pt-2">
+                    <div className="space-y-4 text-center mb-6 pt-2">
                          <div className="inline-flex items-center justify-center p-3 bg-red-500/10 rounded-full border border-red-500/20 mb-2 shadow-[0_0_15px_rgba(220,38,38,0.2)]">
                             <Target className="w-6 h-6 text-red-500" />
                          </div>
                          <h2 className="text-2xl font-black text-white uppercase tracking-tight">O Alvo Único</h2>
-                         <p className="text-neutral-400 text-sm max-w-xs mx-auto">
-                            O sucesso vem da clareza. Escolha um único objetivo central para o seu ano.
-                         </p>
+                    </div>
+
+                    {/* NEW INSTRUCTION CARD */}
+                    <div className="bg-[#0E0E0E] border border-white/10 rounded-xl p-5 mb-8 relative overflow-hidden group shadow-lg">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-red-600" />
+                        <div className="flex gap-4">
+                            <div className="shrink-0 mt-0.5">
+                                <Info className="w-5 h-5 text-red-500" />
+                            </div>
+                            <div className="space-y-3">
+                                <h4 className="text-white font-bold text-sm uppercase tracking-wide">A Lei do Foco Extremo <span className="text-neutral-500 font-medium normal-case tracking-normal ml-1">(Nenkan Mokuhyo)</span></h4>
+                                <p className="text-neutral-400 text-sm leading-relaxed">
+                                    Se você tem 10 prioridades, você não tem nenhuma. Qual é a <span className="text-white font-bold">ÚNICA</span> coisa que, se você conquistar este ano, fará todas as outras parecerem fáceis ou irrelevantes?
+                                </p>
+                                <div className="text-neutral-400 text-sm leading-relaxed border-t border-white/5 pt-3">
+                                    Este será o seu Norte. Todas as suas missões semanais e diárias serão julgadas por uma pergunta: <br/>
+                                    <span className="italic text-neutral-300 block mt-1">"Isso me aproxima do meu Alvo Único?"</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="space-y-8">
