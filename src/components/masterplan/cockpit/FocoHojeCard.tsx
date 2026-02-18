@@ -40,40 +40,39 @@ export const FocoHojeCard = ({ tasks, onAddTask, onToggleTask }: FocoHojeCardPro
   };
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-[#0A0A0A] border border-white/10 shadow-2xl">
-      {/* Efeitos de fundo */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -mt-20 w-96 h-40 bg-red-500/5 blur-[100px] rounded-full pointer-events-none" />
+    <div className="relative overflow-hidden rounded-2xl bg-[#141414] border border-neutral-700/60 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.8)] ring-1 ring-white/5">
+      {/* Efeitos de fundo sutis para dar profundidade sem tirar o foco */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-500/[0.03] blur-[120px] rounded-full pointer-events-none" />
       
       {/* Header */}
-      <div className="relative z-10 p-6 pb-4 border-b border-white/5">
+      <div className="relative z-10 p-7 pb-5 border-b border-white/5">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-red-500/10 border border-red-500/10">
-              <Zap className="w-5 h-5 text-red-500" />
+          <div className="flex items-center gap-4">
+            <div className="p-2.5 rounded-xl bg-red-600 text-white shadow-lg shadow-red-900/20">
+              <Zap className="w-5 h-5 fill-current" />
             </div>
             <div>
-              <h2 className="text-xl font-black text-white uppercase tracking-tight">Foco de Hoje</h2>
-              <p className="text-xs text-neutral-500 capitalize mt-0.5">{today}</p>
+              <h2 className="text-2xl font-black text-white uppercase tracking-tight leading-none">Foco de Hoje</h2>
+              <p className="text-xs text-neutral-400 font-medium capitalize mt-1 tracking-wide">{today}</p>
             </div>
           </div>
           
           <div className="text-right">
-            <span className="text-3xl font-black text-white">{completedCount}</span>
-            <span className="text-lg text-neutral-600 font-bold">/{totalCount}</span>
-            <p className="text-[10px] text-neutral-500 uppercase tracking-wider">Concluídas</p>
+            <span className="text-4xl font-black text-white tracking-tighter">{completedCount}</span>
+            <span className="text-xl text-neutral-600 font-bold tracking-tighter">/{totalCount}</span>
           </div>
         </div>
       </div>
 
       {/* Task List */}
-      <div className="relative z-10 p-6 space-y-3 min-h-[200px]">
+      <div className="relative z-10 p-7 space-y-3 min-h-[220px]">
         {tasks.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="w-14 h-14 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-6 h-6 text-neutral-600" />
+          <div className="text-center py-16 flex flex-col items-center justify-center h-full">
+            <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mb-5 border border-white/5">
+              <Sparkles className="w-7 h-7 text-neutral-500" />
             </div>
-            <p className="text-sm text-neutral-500 font-medium">Nenhuma tarefa para hoje</p>
-            <p className="text-xs text-neutral-700 mt-1">Adicione suas batalhas abaixo</p>
+            <p className="text-base text-neutral-300 font-semibold">Tudo limpo por aqui</p>
+            <p className="text-xs text-neutral-500 mt-1 max-w-[200px] mx-auto">Adicione suas missões críticas para dominar o dia.</p>
           </div>
         ) : (
           tasks.map((task) => (
@@ -83,38 +82,38 @@ export const FocoHojeCard = ({ tasks, onAddTask, onToggleTask }: FocoHojeCardPro
               className={cn(
                 "group relative p-4 rounded-xl border cursor-pointer transition-all duration-300",
                 task.completed 
-                  ? "bg-white/[0.02] border-white/5 opacity-50" 
-                  : "bg-white/[0.03] border-white/10 hover:border-white/20 hover:bg-white/[0.05]",
+                  ? "bg-black/20 border-transparent opacity-40" 
+                  : "bg-[#1A1A1A] border-white/5 hover:border-red-500/30 hover:bg-[#1F1F1F] shadow-sm",
                 animatingId === task.id && !task.completed && "animate-pulse"
               )}
             >
               {/* XP Animation */}
               {animatingId === task.id && !task.completed && (
-                <div className="absolute -top-2 right-4 text-xs font-black text-green-500 animate-bounce">
+                <div className="absolute -top-2 right-4 text-xs font-black text-green-500 animate-bounce bg-[#141414] px-2 py-0.5 rounded-full border border-green-900/30 z-20">
                   +10 XP ✨
                 </div>
               )}
 
               {/* Breadcrumb */}
               {task.missionName && (
-                <div className="flex items-center gap-1 mb-2 opacity-60">
-                  <Target className="w-2.5 h-2.5 text-neutral-500" />
-                  <span className="text-[9px] text-neutral-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                    Missão <ChevronRight className="w-2.5 h-2.5" /> {task.missionName}
+                <div className="flex items-center gap-1.5 mb-2.5 opacity-60">
+                  <Target className="w-3 h-3 text-red-500/70" />
+                  <span className="text-[10px] text-neutral-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                    {task.missionName}
                   </span>
                 </div>
               )}
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-start gap-4">
                 {/* Custom Checkbox */}
                 <div className={cn(
-                  "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-300 shrink-0",
+                  "mt-0.5 w-5 h-5 rounded-[6px] border-2 flex items-center justify-center transition-all duration-300 shrink-0",
                   task.completed 
-                    ? "bg-red-500 border-red-500" 
-                    : "border-neutral-700 group-hover:border-red-500/50"
+                    ? "bg-red-600 border-red-600" 
+                    : "border-neutral-600 bg-neutral-800/50 group-hover:border-red-500 group-hover:bg-red-500/10"
                 )}>
                   {task.completed && (
-                    <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   )}
@@ -122,8 +121,8 @@ export const FocoHojeCard = ({ tasks, onAddTask, onToggleTask }: FocoHojeCardPro
 
                 {/* Task Text */}
                 <span className={cn(
-                  "text-sm font-medium transition-all duration-300",
-                  task.completed ? "text-neutral-600 line-through" : "text-white"
+                  "text-sm font-medium transition-all duration-300 leading-tight",
+                  task.completed ? "text-neutral-500 line-through decoration-neutral-700" : "text-neutral-100"
                 )}>
                   {task.text}
                 </span>
@@ -134,19 +133,19 @@ export const FocoHojeCard = ({ tasks, onAddTask, onToggleTask }: FocoHojeCardPro
       </div>
 
       {/* Add Task Input */}
-      <div className="relative z-10 p-6 pt-0">
+      <div className="relative z-10 p-7 pt-2 pb-8">
         <div className="flex gap-3">
           <Input
             value={newTask}
             onChange={(e) => setNewTask(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleAddTask()}
-            placeholder="Adicionar tarefa de hoje..."
-            className="flex-1 bg-white/5 border-white/10 h-12 text-sm focus:border-red-500/50 focus:ring-red-500/20 rounded-xl placeholder:text-neutral-600"
+            placeholder="O que precisa ser feito hoje?"
+            className="flex-1 bg-[#0A0A0A] border-white/10 h-12 text-sm focus:border-red-500/50 focus:ring-red-500/10 rounded-xl placeholder:text-neutral-600 text-white shadow-inner"
           />
           <button
             onClick={handleAddTask}
             disabled={!newTask.trim()}
-            className="h-12 w-12 rounded-xl bg-red-600 hover:bg-red-500 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-300 shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_30px_rgba(220,38,38,0.5)]"
+            className="h-12 w-12 rounded-xl bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-neutral-800 flex items-center justify-center transition-all duration-300 shadow-lg shadow-red-900/20 hover:shadow-red-900/40"
           >
             <Plus className="w-5 h-5 text-white" />
           </button>

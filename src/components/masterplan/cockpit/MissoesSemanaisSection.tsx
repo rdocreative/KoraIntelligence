@@ -75,20 +75,19 @@ export const MissoesSemanaisSection = ({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-white/5 border border-white/5">
-            <Flag className="w-5 h-5 text-neutral-400" />
+        <div className="flex items-center gap-3 opacity-60">
+          <div className="p-2 rounded-lg bg-transparent border border-white/10">
+            <Flag className="w-4 h-4 text-neutral-500" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-white uppercase tracking-tight">Missões Semanais</h2>
-            <p className="text-xs text-neutral-500 font-medium">Suas batalhas estratégicas</p>
+            <h2 className="text-sm font-bold text-neutral-300 uppercase tracking-widest">Missões Semanais</h2>
           </div>
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider px-5 h-9 rounded-lg shadow-[0_0_15px_rgba(220,38,38,0.2)] hover:shadow-[0_0_25px_rgba(220,38,38,0.4)] transition-all">
-              <Plus className="w-4 h-4 mr-1.5" /> Nova Missão
+            <Button className="bg-red-600/90 hover:bg-red-500 text-white font-bold text-[10px] uppercase tracking-wider px-4 h-8 rounded-lg shadow-none hover:shadow-lg transition-all">
+              <Plus className="w-3 h-3 mr-1.5" /> Nova Missão
             </Button>
           </DialogTrigger>
           <DialogContent className="bg-[#0A0A0A]/95 backdrop-blur-xl border-white/10 sm:max-w-[480px]">
@@ -194,12 +193,11 @@ export const MissoesSemanaisSection = ({
 
       {/* Mission Cards Grid */}
       {missions.length === 0 ? (
-        <div className="text-center py-16 border border-dashed border-white/5 rounded-2xl bg-white/[0.01]">
-          <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Flag className="w-5 h-5 text-neutral-600" />
+        <div className="text-center py-12 border border-dashed border-white/5 rounded-2xl bg-transparent opacity-50">
+          <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-3">
+            <Flag className="w-4 h-4 text-neutral-600" />
           </div>
-          <p className="text-sm text-neutral-500 font-medium">Nenhuma missão ativa</p>
-          <p className="text-xs text-neutral-700 mt-1">Clique em "+ Nova Missão" para começar</p>
+          <p className="text-xs text-neutral-500 font-medium uppercase tracking-widest">Sem missões ativas</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -215,13 +213,13 @@ export const MissoesSemanaisSection = ({
                 key={mission.id}
                 onClick={() => onSelectMission(mission.id)}
                 className={cn(
-                  "group relative p-5 rounded-xl border cursor-pointer transition-all duration-300 hover:scale-[1.02] bg-[#0E0E0E]",
-                  mission.pillar ? `${pillarStyle.border} border-opacity-30` : "border-white/10 hover:border-white/20"
+                  "group relative p-5 rounded-xl border cursor-pointer transition-all duration-300 bg-transparent hover:bg-white/[0.02]",
+                  mission.pillar ? `border-white/5 hover:border-white/10` : "border-white/5"
                 )}
               >
-                {/* Progress bar top */}
-                <div className="absolute top-0 left-0 w-full h-1 bg-white/5 rounded-t-xl overflow-hidden">
-                  <div className={cn("h-full transition-all duration-700", pillarStyle.bar)} style={{ width: `${progress}%` }} />
+                {/* Progress bar top (subtle) */}
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-white/5 rounded-t-xl overflow-hidden">
+                  <div className={cn("h-full transition-all duration-700 opacity-70", pillarStyle.bar)} style={{ width: `${progress}%` }} />
                 </div>
 
                 {/* Delete button */}
@@ -233,25 +231,25 @@ export const MissoesSemanaisSection = ({
                 </button>
 
                 {/* Content */}
-                <div className="space-y-3 pt-2">
+                <div className="space-y-2 pt-1 opacity-80 group-hover:opacity-100 transition-opacity">
                   <div className="flex items-center gap-2">
-                    <div className={cn("p-1.5 rounded-md", pillarStyle.bg)}>
-                      <PillarIcon className={cn("w-3.5 h-3.5", pillarStyle.color)} />
+                    <div className={cn("p-1 rounded-md bg-white/5")}>
+                      <PillarIcon className={cn("w-3 h-3 text-neutral-400")} />
                     </div>
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-neutral-600">
                       {format(new Date(mission.startDate), "dd MMM", { locale: ptBR })} - {format(new Date(mission.endDate), "dd MMM", { locale: ptBR })}
                     </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-white leading-tight line-clamp-2">
+                  <h3 className="text-sm font-bold text-neutral-300 leading-tight line-clamp-1">
                     {mission.goal}
                   </h3>
 
-                  <div className="flex items-center justify-between pt-2">
-                    <span className="text-[10px] text-neutral-500 font-medium">
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-[10px] text-neutral-600 font-medium">
                       {completedTasks}/{totalTasks} tarefas
                     </span>
-                    <span className="text-sm font-black text-white">{Math.round(progress)}%</span>
+                    <span className="text-xs font-bold text-neutral-500">{Math.round(progress)}%</span>
                   </div>
                 </div>
               </div>
