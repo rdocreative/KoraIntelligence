@@ -74,10 +74,15 @@ export const ExecutionTab = ({
     return allTasks;
   }, [weeks]);
 
-  const handleAddDailyTask = (text: string) => {
-    // Se há uma missão selecionada, adiciona nela. Senão, adiciona na primeira missão ou cria uma tarefa avulsa
-    const targetWeek = selectedMissionId 
-      ? weeks.find(w => w.id === selectedMissionId) 
+  const handleAddDailyTask = (text: string, specificMissionId?: string) => {
+    // 1. Tenta usar o ID passado pelo seletor do input
+    // 2. Se não, tenta usar a missão selecionada no grid (A Estratégia)
+    // 3. Se não, fallback para a primeira missão disponível
+    
+    const targetId = specificMissionId || selectedMissionId;
+    
+    const targetWeek = targetId
+      ? weeks.find(w => w.id === targetId) 
       : weeks[0];
     
     if (targetWeek) {
@@ -86,6 +91,10 @@ export const ExecutionTab = ({
         text,
         completed: false
       });
+    } else {
+        // Caso edge: nenhuma missão existe. Poderíamos criar uma tarefa 'avulsa' ou alertar.
+        // Por enquanto, não faz nada se não houver missão (o botão de nova missão deve ser usado).
+        console.warn("Nenhuma missão ativa para vincular a tarefa.");
     }
   };
 
@@ -114,6 +123,7 @@ export const ExecutionTab = ({
       <section>
         <FocoHojeCard 
           tasks={dailyTasks}
+          missions={weeks}
           onAddTask={handleAddDailyTask}
           onToggleTask={handleToggleDailyTask}
         />
