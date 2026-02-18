@@ -47,8 +47,8 @@ export const MissoesSemanaisSection = ({
 
   const getPillarStyles = (pillarId?: string) => {
     const pillar = pillars.find(p => p.id === pillarId);
-    if (!pillar) return { color: 'text-neutral-500', border: 'border-white/10', bg: 'bg-white/5', bar: 'bg-[var(--color-week)]', icon: Flag };
-    return { ...pillar, icon: pillar.icon, bar: `bg-[var(--color-week)]` };
+    if (!pillar) return { color: 'text-neutral-500', border: 'border-white/10', bg: 'bg-white/5', bar: 'bg-neutral-500', icon: Flag };
+    return { ...pillar, icon: pillar.icon };
   };
 
   const handleCreate = () => {
@@ -73,28 +73,28 @@ export const MissoesSemanaisSection = ({
 
   return (
     <div className="space-y-6">
-      {/* Header com cor da semana */}
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-[var(--color-week)]/10 border border-[var(--color-week)]/20">
-            <Flag className="w-5 h-5 text-[var(--color-week)]" />
+          <div className="p-2 rounded-lg bg-white/5 border border-white/5">
+            <Flag className="w-5 h-5 text-neutral-400" />
           </div>
           <div>
             <h2 className="text-lg font-bold text-white uppercase tracking-tight">Missões Semanais</h2>
-            <p className="text-xs text-neutral-500 font-medium">Sua estratégia tática</p>
+            <p className="text-xs text-neutral-500 font-medium">Suas batalhas estratégicas</p>
           </div>
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-[var(--color-week)] hover:brightness-110 text-white font-bold text-xs uppercase tracking-wider px-5 h-9 rounded-lg shadow-[0_0_15px_rgba(255,51,102,0.2)] transition-all">
+            <Button className="bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider px-5 h-9 rounded-lg shadow-[0_0_15px_rgba(220,38,38,0.2)] hover:shadow-[0_0_25px_rgba(220,38,38,0.4)] transition-all">
               <Plus className="w-4 h-4 mr-1.5" /> Nova Missão
             </Button>
           </DialogTrigger>
           <DialogContent className="bg-[#0A0A0A]/95 backdrop-blur-xl border-white/10 sm:max-w-[480px]">
             <DialogHeader>
               <DialogTitle className="text-white uppercase tracking-wider flex items-center gap-2 text-lg">
-                <Zap className="w-5 h-5 text-[var(--color-week)]" /> Nova Missão Semanal
+                <Zap className="w-5 h-5 text-red-500" /> Nova Missão Semanal
               </DialogTitle>
               <DialogDescription className="text-neutral-500">
                 Defina o foco tático para a próxima semana.
@@ -108,7 +108,7 @@ export const MissoesSemanaisSection = ({
                   value={newGoal}
                   onChange={(e) => setNewGoal(e.target.value)}
                   placeholder="Ex: Finalizar o Módulo 3..."
-                  className="bg-white/5 border-white/10 h-11 text-sm focus:border-[var(--color-week)]/50 focus:ring-[var(--color-week)]/10 rounded-lg placeholder:text-neutral-600 text-white"
+                  className="bg-white/5 border-white/10 h-11 text-sm focus:border-red-500/50 focus:ring-red-500/20 rounded-lg placeholder:text-neutral-600 text-white"
                 />
               </div>
               
@@ -122,11 +122,11 @@ export const MissoesSemanaisSection = ({
                       className={cn(
                         "h-10 rounded-lg border flex items-center justify-center gap-1.5 transition-all duration-300 px-2",
                         selectedPillar === p.id 
-                          ? `bg-[var(--color-week)]/20 border-[var(--color-week)]/50 ring-1 ring-[var(--color-week)]/30` 
+                          ? `${p.bg} ${p.border} ring-1 ${p.border.replace('border', 'ring')}` 
                           : "bg-white/5 border-white/10 hover:border-white/20"
                       )}
                     >
-                      <p.icon className={cn("w-3.5 h-3.5", selectedPillar === p.id ? "text-[var(--color-week)]" : "text-neutral-500")} />
+                      <p.icon className={cn("w-3.5 h-3.5", selectedPillar === p.id ? p.color : "text-neutral-500")} />
                       <span className={cn("text-[9px] font-bold uppercase", selectedPillar === p.id ? "text-white" : "text-neutral-500")}>
                         {p.label}
                       </span>
@@ -183,7 +183,7 @@ export const MissoesSemanaisSection = ({
               <Button 
                 onClick={handleCreate} 
                 disabled={!newGoal || !startDate || !endDate}
-                className="w-full bg-[var(--color-week)] hover:brightness-110 text-white font-bold h-11 rounded-lg uppercase tracking-widest text-xs disabled:opacity-50"
+                className="w-full bg-red-600 hover:bg-red-500 text-white font-bold h-11 rounded-lg uppercase tracking-widest text-xs disabled:opacity-50"
               >
                 Iniciar Missão
               </Button>
@@ -216,10 +216,10 @@ export const MissoesSemanaisSection = ({
                 onClick={() => onSelectMission(mission.id)}
                 className={cn(
                   "group relative p-5 rounded-xl border cursor-pointer transition-all duration-300 hover:scale-[1.02] bg-[#0E0E0E]",
-                  "border-white/10 hover:border-[var(--color-week)]/30"
+                  mission.pillar ? `${pillarStyle.border} border-opacity-30` : "border-white/10 hover:border-white/20"
                 )}
               >
-                {/* Progress bar top com cor da semana */}
+                {/* Progress bar top */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-white/5 rounded-t-xl overflow-hidden">
                   <div className={cn("h-full transition-all duration-700", pillarStyle.bar)} style={{ width: `${progress}%` }} />
                 </div>
@@ -235,15 +235,15 @@ export const MissoesSemanaisSection = ({
                 {/* Content */}
                 <div className="space-y-3 pt-2">
                   <div className="flex items-center gap-2">
-                    <div className={cn("p-1.5 rounded-md bg-[var(--color-week)]/10")}>
-                      <PillarIcon className={cn("w-3.5 h-3.5 text-[var(--color-week)]")} />
+                    <div className={cn("p-1.5 rounded-md", pillarStyle.bg)}>
+                      <PillarIcon className={cn("w-3.5 h-3.5", pillarStyle.color)} />
                     </div>
                     <span className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">
                       {format(new Date(mission.startDate), "dd MMM", { locale: ptBR })} - {format(new Date(mission.endDate), "dd MMM", { locale: ptBR })}
                     </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-white leading-tight line-clamp-2 group-hover:text-[var(--color-week)] transition-colors">
+                  <h3 className="text-base font-bold text-white leading-tight line-clamp-2">
                     {mission.goal}
                   </h3>
 
