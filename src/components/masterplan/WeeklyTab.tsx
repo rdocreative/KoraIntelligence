@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Zap, LayoutDashboard, Trash2, CheckSquare, Save, Calendar as CalendarIcon, ArrowRight } from "lucide-react";
+import { Zap, LayoutDashboard, Trash2, CheckSquare, Save, Calendar as CalendarIcon } from "lucide-react";
 import { TaskList } from "@/components/masterplan/TaskList";
 import { TaskItem } from "@/hooks/useMasterplan";
 import { cn } from "@/lib/utils";
@@ -30,7 +30,6 @@ export const WeeklyTab = ({ weeks, addWeek, deleteWeek, addWeekTask, toggleWeekT
   const handleCreateWeek = () => {
     if (!newWeekStart || !newWeekEnd) return;
     
-    // Format dates as YYYY-MM-DD for consistency with existing data structure logic
     const startDateStr = format(newWeekStart, 'yyyy-MM-dd');
     const endDateStr = format(newWeekEnd, 'yyyy-MM-dd');
 
@@ -46,7 +45,7 @@ export const WeeklyTab = ({ weeks, addWeek, deleteWeek, addWeekTask, toggleWeekT
   };
 
   return (
-    <div className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out pb-10">
+    <div className="space-y-10 outline-none animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out pb-10">
       
       {/* NEW SPRINT CREATOR */}
       <Card className="bg-[#0A0A0A] border-white/10 shadow-lg">
@@ -133,8 +132,11 @@ export const WeeklyTab = ({ weeks, addWeek, deleteWeek, addWeekTask, toggleWeekT
               </div>
             </div>
 
-            <Button onClick={handleCreateWeek} className="w-full lg:w-auto h-10 bg-white text-black hover:bg-neutral-200 font-bold px-6 rounded-md transition-all active:scale-95 text-xs uppercase tracking-wider">
-              Criar <ArrowRight className="w-3.5 h-3.5 ml-2" />
+            <Button 
+                onClick={handleCreateWeek} 
+                className="w-full lg:w-auto h-10 bg-red-600 hover:bg-red-500 text-white font-bold px-8 rounded-md transition-all duration-300 transform active:scale-95 text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] border border-transparent"
+            >
+              CRIAR
             </Button>
           </div>
         </CardContent>
@@ -142,9 +144,12 @@ export const WeeklyTab = ({ weeks, addWeek, deleteWeek, addWeekTask, toggleWeekT
 
       <div className="space-y-6">
         {weeks.length === 0 && (
-          <div className="text-center py-20 opacity-30 border border-dashed border-white/10 rounded-2xl animate-in fade-in duration-500 bg-[#0A0A0A]/50">
-            <LayoutDashboard className="w-16 h-16 mx-auto mb-4 text-neutral-500" />
-            <p className="text-base font-medium text-neutral-400">Nenhuma sprint ativa.</p>
+          <div className="text-center py-24 border border-dashed border-white/5 rounded-2xl animate-in fade-in duration-700 bg-white/[0.01]">
+            <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+                <LayoutDashboard className="w-6 h-6 text-neutral-600" />
+            </div>
+            <p className="text-sm font-medium text-neutral-500 uppercase tracking-[0.2em]">Nenhuma sprint ativa</p>
+            <p className="text-xs text-neutral-700 mt-2">Defina seu foco acima para começar a batalha.</p>
           </div>
         )}
 
