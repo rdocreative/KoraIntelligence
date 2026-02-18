@@ -9,11 +9,9 @@ import {
   User, 
   Trash2, 
   ShieldAlert,
-  Save,
-  Settings as SettingsIcon
+  Save
 } from "lucide-react";
 import { toast } from "sonner";
-import { PageHeader } from "@/components/layout/PageHeader";
 
 const Settings = () => {
   const { settings, updateSettings } = useSettings();
@@ -44,17 +42,18 @@ const Settings = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <PageHeader
-        title="Configurações"
-        subtitle="Personalize sua experiência"
-        icon={SettingsIcon}
-        hexColor="#6b6b7a"
-        rightAction={
-          <Button onClick={handleSave} disabled={!hasChanges} size="sm" className={`font-rajdhani font-bold px-4 shadow-lg transition-all ${hasChanges ? "bg-red-600 hover:bg-red-500 text-white" : "bg-neutral-800 text-neutral-500 opacity-50"}`}>
-            <Save className="w-3.5 h-3.5 mr-2" /> Salvar
-          </Button>
-        }
-      />
+      
+      {/* Botão de Salvar (Movido do Header) */}
+      <div className="flex justify-end">
+         <Button 
+            onClick={handleSave} 
+            disabled={!hasChanges} 
+            size="sm" 
+            className={`font-rajdhani font-bold px-6 shadow-lg transition-all ${hasChanges ? "bg-red-600 hover:bg-red-500 text-white" : "bg-neutral-800 text-neutral-500 opacity-50"}`}
+         >
+            <Save className="w-3.5 h-3.5 mr-2" /> Salvar Alterações
+         </Button>
+      </div>
 
       <div className="grid gap-6">
         <Card className="glass-card border-none bg-[#121212]">

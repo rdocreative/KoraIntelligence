@@ -1,8 +1,6 @@
 import { useState, useMemo } from "react";
 import { useMasterplan, TaskItem } from "@/hooks/useMasterplan";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PageHeader } from "@/components/layout/PageHeader";
-import { Eye, Play, Calendar } from "lucide-react";
 
 // Importando componentes modularizados
 import { LoadingScreen } from "@/components/masterplan/LoadingScreen";
@@ -104,46 +102,6 @@ const MasterplanPage = () => {
   const currentMonth = data.months[currentMonthIndex];
   const activeWeeks = data.weeks.filter(w => new Date(w.endDate) >= new Date());
 
-  // Header Config based on Tab
-  const getHeaderConfig = () => {
-    switch (activeTab) {
-        case "overview":
-            return {
-                title: "Visão",
-                subtitle: "Para onde você está indo",
-                icon: Eye,
-                hexColor: "#f0b429",
-                badge: "Master Plan"
-            };
-        case "execution":
-            return {
-                title: "Execução",
-                subtitle: "O que está sendo feito agora",
-                icon: Play,
-                hexColor: "#e8283a",
-                badge: "Em curso",
-                stats: true
-            };
-        case "annual":
-            return {
-                title: "Ano",
-                subtitle: "Sua jornada em 2025",
-                icon: Calendar,
-                hexColor: "#a78bfa",
-                badge: "2025"
-            };
-        default:
-            return {
-                title: "Master Plan",
-                subtitle: "Sistema Tático",
-                icon: Eye,
-                hexColor: "#ffffff"
-            };
-    }
-  };
-
-  const headerConfig = getHeaderConfig();
-
   return (
     <div className="min-h-screen text-white pb-32">
       {/* Background Ambience */}
@@ -156,46 +114,28 @@ const MasterplanPage = () => {
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
           
-          {/* Dynamic Header */}
-          <PageHeader
-             title={headerConfig.title}
-             subtitle={headerConfig.subtitle}
-             icon={headerConfig.icon}
-             hexColor={headerConfig.hexColor}
-             badge={headerConfig.badge}
-          >
-             {/* Execução Stats Bar */}
-             {headerConfig.stats && (
-                 <div className="flex gap-8">
-                    <div className="space-y-1">
-                        <span className="text-[10px] uppercase text-[#6b6b7a] font-bold tracking-wider">Ativos</span>
-                        <div className="text-lg font-rajdhani font-bold text-white">{activeWeeks.length}</div>
-                    </div>
-                    <div className="space-y-1">
-                        <span className="text-[10px] uppercase text-[#6b6b7a] font-bold tracking-wider">Feitos</span>
-                        <div className="text-lg font-rajdhani font-bold text-white">{analytics.completedTasks}</div>
-                    </div>
-                    <div className="space-y-1">
-                        <span className="text-[10px] uppercase text-[#6b6b7a] font-bold tracking-wider">Taxa</span>
-                        <div className="text-lg font-rajdhani font-bold text-[#e8283a]">{analytics.executionRate}%</div>
-                    </div>
+          {/* Stats Bar Contextual (Substituindo o que estava no header) */}
+          {activeTab === 'execution' && (
+              <div className="flex gap-4 md:gap-8 justify-center md:justify-start bg-[#141418]/50 p-4 rounded-xl border border-[#2a2a35] backdrop-blur-sm">
+                 <div className="space-y-1 text-center md:text-left">
+                     <span className="text-[10px] uppercase text-[#6b6b7a] font-bold tracking-wider block">Ativos</span>
+                     <div className="text-xl font-rajdhani font-bold text-white">{activeWeeks.length}</div>
                  </div>
-             )}
-             
-             {/* Year Tabs */}
-             {activeTab === 'annual' && (
-                 <div className="flex gap-6">
-                    {['Trimestre', 'Mês', 'Semana'].map((t, i) => (
-                         <span key={t} className={`text-xs font-rajdhani font-bold uppercase tracking-wider pb-1 ${i===1 ? 'text-white border-b-2 border-[#a78bfa]' : 'text-[#6b6b7a]'}`}>
-                             {t}
-                         </span>
-                    ))}
+                 <div className="w-[1px] h-auto bg-[#2a2a35]" />
+                 <div className="space-y-1 text-center md:text-left">
+                     <span className="text-[10px] uppercase text-[#6b6b7a] font-bold tracking-wider block">Feitos</span>
+                     <div className="text-xl font-rajdhani font-bold text-white">{analytics.completedTasks}</div>
                  </div>
-             )}
-          </PageHeader>
+                 <div className="w-[1px] h-auto bg-[#2a2a35]" />
+                 <div className="space-y-1 text-center md:text-left">
+                     <span className="text-[10px] uppercase text-[#6b6b7a] font-bold tracking-wider block">Taxa</span>
+                     <div className="text-xl font-rajdhani font-bold text-[#e8283a]">{analytics.executionRate}%</div>
+                 </div>
+              </div>
+          )}
 
           {/* Navigation Tabs */}
-          <div className="sticky top-4 z-50 flex justify-center mb-8">
+          <div className="sticky top-4 z-30 flex justify-center mb-4">
             <TabsList className="grid grid-cols-3 bg-[#0A0A0A]/80 backdrop-blur-xl p-1.5 border border-white/10 rounded-2xl h-14 shadow-2xl w-full max-w-sm ring-1 ring-white/5">
               <TabsTrigger value="overview" className="rounded-xl font-bold data-[state=active]:bg-white data-[state=active]:text-black text-[10px] uppercase tracking-wider transition-all duration-300">Visão</TabsTrigger>
               <TabsTrigger value="execution" className="rounded-xl font-bold data-[state=active]:bg-[#E8251A] data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Execução</TabsTrigger>
