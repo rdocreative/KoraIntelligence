@@ -1,10 +1,6 @@
-"use client";
-
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { useMasterplan, TaskItem } from "@/hooks/useMasterplan";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ToastProgress } from "@/components/ui/toast-progress";
-import { useProgressToast } from "@/hooks/useProgressToast";
 
 // Importando componentes modularizados
 import { LoadingScreen } from "@/components/masterplan/LoadingScreen";
@@ -21,33 +17,6 @@ const MasterplanPage = () => {
   } = useMasterplan();
 
   const [isLoading, setIsLoading] = useState(true);
-  const { isVisible, message, showProgressToast, hideProgressToast } = useProgressToast();
-
-  // Wrapper functions to show toast on task completion
-  const handleToggleMonthGoal = useCallback((monthIndex: number, goalId: string) => {
-    const goal = data.months[monthIndex]?.goals.find(g => g.id === goalId);
-    if (goal && !goal.completed) {
-      showProgressToast();
-    }
-    toggleMonthGoal(monthIndex, goalId);
-  }, [data.months, toggleMonthGoal, showProgressToast]);
-
-  const handleToggleWeekTask = useCallback((weekId: string, taskId: string) => {
-    const week = data.weeks.find(w => w.id === weekId);
-    const task = week?.tasks.find(t => t.id === taskId);
-    if (task && !task.completed) {
-      showProgressToast();
-    }
-    toggleWeekTask(weekId, taskId);
-  }, [data.weeks, toggleWeekTask, showProgressToast]);
-
-  const handleToggleAreaItem = useCallback((area: 'work' | 'studies' | 'health' | 'personal', itemId: string) => {
-    const item = data.areas[area].find(i => i.id === itemId);
-    if (item && !item.completed) {
-      showProgressToast();
-    }
-    toggleAreaItem(area, itemId);
-  }, [data.areas, toggleAreaItem, showProgressToast]);
 
   // ==========================================
   // CÁLCULOS ANALÍTICOS (DASHBOARD)
@@ -176,14 +145,14 @@ const MasterplanPage = () => {
                   currentMonth={currentMonth}
                   currentMonthIndex={currentMonthIndex}
                   addMonthGoal={addMonthGoal}
-                  toggleMonthGoal={handleToggleMonthGoal}
+                  toggleMonthGoal={toggleMonthGoal}
                   updateMonth={updateMonth}
                   // Weekly Props
                   weeks={data.weeks}
                   addWeek={addWeek}
                   deleteWeek={deleteWeek}
                   addWeekTask={addWeekTask}
-                  toggleWeekTask={handleToggleWeekTask}
+                  toggleWeekTask={toggleWeekTask}
                   updateWeekReview={updateWeekReview}
               />
             </TabsContent>
@@ -195,20 +164,13 @@ const MasterplanPage = () => {
                   analytics={analytics}
                   updateAnnual={updateAnnual}
                   addAreaItem={addAreaItem}
-                  toggleAreaItem={handleToggleAreaItem}
+                  toggleAreaItem={toggleAreaItem}
                   deleteAreaItem={deleteAreaItem}
                 />
             </TabsContent>
           </div>
         </Tabs>
       </div>
-
-      {/* Progress Toast */}
-      <ToastProgress 
-        message={message}
-        isVisible={isVisible}
-        onClose={hideProgressToast}
-      />
     </div>
   );
 };
