@@ -29,20 +29,7 @@ const MasterplanPage = () => {
     const dayOfYear = Math.floor(diff / oneDay);
     const yearProgress = (dayOfYear / 365) * 100;
 
-    let yearStatus = "No Ritmo";
-    let statusColor = "text-yellow-500";
-    let statusMessage = "Continue consistente.";
-    
-    if (data.annual.progress < yearProgress - 10) {
-        yearStatus = "Atenção Necessária";
-        statusColor = "text-red-500";
-        statusMessage = "Acelere o ritmo para alcançar a meta.";
-    } else if (data.annual.progress > yearProgress + 5) {
-        yearStatus = "Excelente";
-        statusColor = "text-green-500";
-        statusMessage = "Você está superando as expectativas.";
-    }
-
+    // Helper para estatísticas das áreas
     const calculateAreaStats = (items: TaskItem[]) => {
         const total = items.length;
         const completed = items.filter(i => i.completed).length;
@@ -51,10 +38,10 @@ const MasterplanPage = () => {
     };
 
     const areaStats = [
-        { id: 'work', label: 'Trabalho', ...calculateAreaStats(data.areas.work), color: 'text-blue-500', barColor: 'bg-blue-500' },
-        { id: 'studies', label: 'Estudos', ...calculateAreaStats(data.areas.studies), color: 'text-purple-500', barColor: 'bg-purple-500' },
-        { id: 'health', label: 'Saúde', ...calculateAreaStats(data.areas.health), color: 'text-red-500', barColor: 'bg-red-500' },
-        { id: 'personal', label: 'Pessoal', ...calculateAreaStats(data.areas.personal), color: 'text-yellow-500', barColor: 'bg-yellow-500' },
+        { id: 'work', label: 'Trabalho', ...calculateAreaStats(data.areas.work) },
+        { id: 'studies', label: 'Estudos', ...calculateAreaStats(data.areas.studies) },
+        { id: 'health', label: 'Saúde', ...calculateAreaStats(data.areas.health) },
+        { id: 'personal', label: 'Pessoal', ...calculateAreaStats(data.areas.personal) },
     ];
 
     const strongestArea = [...areaStats].sort((a, b) => b.percentage - a.percentage)[0];
@@ -69,6 +56,28 @@ const MasterplanPage = () => {
                            data.months.reduce((acc, m) => acc + m.goals.filter(g => g.completed).length, 0);
 
     const executionRate = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+
+    // LÓGICA DE STATUS CONDICIONAL
+    let yearStatus = "Em Execução";
+    let statusColor = "text-white";
+    let statusMessage = "Mantenha o foco.";
+
+    if (data.annual.progress === 0) {
+        // Cenário 1: Usuário novo ou no ponto de partida
+        yearStatus = "Ponto de Partida";
+        statusColor = "text-neutral-400"; // Neutro
+        statusMessage = "Sua jornada começa agora. Defina o ritmo.";
+    } else if (data.annual.progress < yearProgress - 10) {
+        // Cenário 2: Atrasado
+        yearStatus = "Atenção Necessária";
+        statusColor = "text-[#E8251A]"; // Vermelho
+        statusMessage = "Acelere o ritmo para alcançar a meta.";
+    } else if (data.annual.progress > yearProgress + 5) {
+        // Cenário 3: Adiantado
+        yearStatus = "Excelente";
+        statusColor = "text-emerald-500"; // Verde
+        statusMessage = "Você está superando as expectativas.";
+    }
 
     return {
         yearProgress,
@@ -111,7 +120,7 @@ const MasterplanPage = () => {
           <div className="sticky top-4 z-50 flex justify-center">
             <TabsList className="grid grid-cols-3 bg-[#0A0A0A]/80 backdrop-blur-xl p-1.5 border border-white/10 rounded-2xl h-14 shadow-2xl w-full max-w-sm ring-1 ring-white/5">
               <TabsTrigger value="overview" className="rounded-xl font-bold data-[state=active]:bg-white data-[state=active]:text-black text-[10px] uppercase tracking-wider transition-all duration-300">Visão</TabsTrigger>
-              <TabsTrigger value="execution" className="rounded-xl font-bold data-[state=active]:bg-red-600 data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Execução</TabsTrigger>
+              <TabsTrigger value="execution" className="rounded-xl font-bold data-[state=active]:bg-[#E8251A] data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Execução</TabsTrigger>
               <TabsTrigger value="annual" className="rounded-xl font-bold data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Ano</TabsTrigger>
             </TabsList>
           </div>
