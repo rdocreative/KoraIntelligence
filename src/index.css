@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --radius: 0.75rem;
+
+    /* Sistema de Cores Cognitivo */
+    --color-day: #00FFA3;
+    --color-week: #FF3366;
+    --color-month: #B026FF;
+    --color-year: #FFD700;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom Utilities para as cores cognitivas */
+.text-day { color: var(--color-day); }
+.bg-day { background-color: var(--color-day); }
+.border-day { border-color: var(--color-day); }
+.shadow-day { shadow: 0 0 15px var(--color-day); }
+
+.text-week { color: var(--color-week); }
+.bg-week { background-color: var(--color-week); }
+.border-week { border-color: var(--color-week); }
+
+.text-month { color: var(--color-month); }
+.bg-month { background-color: var(--color-month); }
+.border-month { border-color: var(--color-month); }
+
+.text-year { color: var(--color-year); }
+.bg-year { background-color: var(--color-year); }
+.border-year { border-color: var(--color-year); }

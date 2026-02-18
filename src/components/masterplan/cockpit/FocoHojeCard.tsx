@@ -41,15 +41,15 @@ export const FocoHojeCard = ({ tasks, onAddTask, onToggleTask }: FocoHojeCardPro
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-[#0A0A0A] border border-white/10 shadow-2xl">
-      {/* Efeitos de fundo */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 -mt-20 w-96 h-40 bg-red-500/5 blur-[100px] rounded-full pointer-events-none" />
+      {/* Efeito de brilho com a cor do dia */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 -mt-20 w-96 h-40 bg-[var(--color-day)] opacity-5 blur-[100px] rounded-full pointer-events-none" />
       
       {/* Header */}
       <div className="relative z-10 p-6 pb-4 border-b border-white/5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-red-500/10 border border-red-500/10">
-              <Zap className="w-5 h-5 text-red-500" />
+            <div className="p-2 rounded-xl bg-[var(--color-day)]/10 border border-[var(--color-day)]/20">
+              <Zap className="w-5 h-5 text-[var(--color-day)]" />
             </div>
             <div>
               <h2 className="text-xl font-black text-white uppercase tracking-tight">Foco de Hoje</h2>
@@ -83,14 +83,14 @@ export const FocoHojeCard = ({ tasks, onAddTask, onToggleTask }: FocoHojeCardPro
               className={cn(
                 "group relative p-4 rounded-xl border cursor-pointer transition-all duration-300",
                 task.completed 
-                  ? "bg-white/[0.02] border-white/5 opacity-50" 
-                  : "bg-white/[0.03] border-white/10 hover:border-white/20 hover:bg-white/[0.05]",
+                  ? "bg-white/[0.01] border-white/5 opacity-40" 
+                  : "bg-white/[0.03] border-white/10 hover:border-[var(--color-day)]/30 hover:bg-white/[0.05]",
                 animatingId === task.id && !task.completed && "animate-pulse"
               )}
             >
-              {/* XP Animation */}
+              {/* XP Animation com cor do dia */}
               {animatingId === task.id && !task.completed && (
-                <div className="absolute -top-2 right-4 text-xs font-black text-green-500 animate-bounce">
+                <div className="absolute -top-2 right-4 text-xs font-black text-[var(--color-day)] animate-bounce">
                   +10 XP ✨
                 </div>
               )}
@@ -106,15 +106,15 @@ export const FocoHojeCard = ({ tasks, onAddTask, onToggleTask }: FocoHojeCardPro
               )}
 
               <div className="flex items-center gap-4">
-                {/* Custom Checkbox */}
+                {/* Custom Checkbox com cor do dia */}
                 <div className={cn(
                   "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-300 shrink-0",
                   task.completed 
-                    ? "bg-red-500 border-red-500" 
-                    : "border-neutral-700 group-hover:border-red-500/50"
+                    ? "bg-[var(--color-day)] border-[var(--color-day)]" 
+                    : "border-neutral-700 group-hover:border-[var(--color-day)]/50"
                 )}>
                   {task.completed && (
-                    <svg className="w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <svg className="w-3.5 h-3.5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   )}
@@ -123,7 +123,7 @@ export const FocoHojeCard = ({ tasks, onAddTask, onToggleTask }: FocoHojeCardPro
                 {/* Task Text */}
                 <span className={cn(
                   "text-sm font-medium transition-all duration-300",
-                  task.completed ? "text-neutral-600 line-through" : "text-white"
+                  task.completed ? "text-neutral-600 line-through" : "text-white group-hover:text-[var(--color-day)]"
                 )}>
                   {task.text}
                 </span>
@@ -133,7 +133,7 @@ export const FocoHojeCard = ({ tasks, onAddTask, onToggleTask }: FocoHojeCardPro
         )}
       </div>
 
-      {/* Add Task Input */}
+      {/* Add Task Input com foco na cor do dia */}
       <div className="relative z-10 p-6 pt-0">
         <div className="flex gap-3">
           <Input
@@ -141,14 +141,14 @@ export const FocoHojeCard = ({ tasks, onAddTask, onToggleTask }: FocoHojeCardPro
             onChange={(e) => setNewTask(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleAddTask()}
             placeholder="Adicionar tarefa de hoje..."
-            className="flex-1 bg-white/5 border-white/10 h-12 text-sm focus:border-red-500/50 focus:ring-red-500/20 rounded-xl placeholder:text-neutral-600"
+            className="flex-1 bg-white/5 border-white/10 h-12 text-sm focus:border-[var(--color-day)]/50 focus:ring-[var(--color-day)]/10 rounded-xl placeholder:text-neutral-600"
           />
           <button
             onClick={handleAddTask}
             disabled={!newTask.trim()}
-            className="h-12 w-12 rounded-xl bg-red-600 hover:bg-red-500 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-300 shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_30px_rgba(220,38,38,0.5)]"
+            className="h-12 w-12 rounded-xl bg-[var(--color-day)] hover:brightness-110 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all duration-300 shadow-[0_0_20px_rgba(0,255,163,0.2)]"
           >
-            <Plus className="w-5 h-5 text-white" />
+            <Plus className="w-5 h-5 text-black" />
           </button>
         </div>
       </div>
