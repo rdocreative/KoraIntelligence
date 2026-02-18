@@ -33,6 +33,10 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     const text = areaInputs[key];
     if (!text || !text.trim()) return;
     
+    // Check limit before adding (although UI should hide input)
+    // @ts-ignore
+    if (data.areas[key].length >= 3) return;
+
     addAreaItem(key as any, text.trim());
     setAreaInputs(prev => ({ ...prev, [key]: "" }));
   };
@@ -325,65 +329,113 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
     // --- STEP 3: AREAS ---
     if (step === 3) {
+        const areasConfig = [
+            { 
+                id: 'work', 
+                label: 'Trabalho', 
+                icon: Briefcase, 
+                colorClass: 'text-blue-500', 
+                borderColor: 'border-blue-500/40',
+                placeholder: "Ex: Conseguir uma promoção ou novo cliente",
+                items: data.areas.work 
+            },
+            { 
+                id: 'studies', 
+                label: 'Estudos', 
+                icon: GraduationCap, 
+                colorClass: 'text-violet-500', 
+                borderColor: 'border-violet-500/40',
+                placeholder: "Ex: Terminar um curso ou aprender uma habilidade",
+                items: data.areas.studies 
+            },
+            { 
+                id: 'health', 
+                label: 'Saúde', 
+                icon: Heart, 
+                colorClass: 'text-emerald-500', 
+                borderColor: 'border-emerald-500/40',
+                placeholder: "Ex: Correr 5km ou perder 10kg",
+                items: data.areas.health 
+            },
+            { 
+                id: 'personal', 
+                label: 'Pessoal', 
+                icon: User, 
+                colorClass: 'text-amber-500', 
+                borderColor: 'border-amber-500/40',
+                placeholder: "Ex: Viajar, fortalecer relações, hobby",
+                items: data.areas.personal 
+            },
+        ];
+
         return (
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500 px-8 pt-6">
                 <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-6 custom-scrollbar pr-2">
-                    <div className="space-y-4 text-center mb-6 pt-2">
-                         <div className="inline-flex items-center justify-center p-3 bg-blue-500/10 rounded-full border border-blue-500/20 mb-2">
-                            <Layout className="w-6 h-6 text-blue-500" />
-                         </div>
-                         <h2 className="text-2xl font-black text-white uppercase tracking-tight">Os 4 Pilares</h2>
+                    {/* Header */}
+                    <div className="space-y-2 text-center mb-8 pt-2">
+                         <span className="text-[10px] font-bold text-[#E8251A] uppercase tracking-[0.2em]">
+                            Seus 4 Pilares
+                         </span>
+                         <h2 className="text-xl font-medium text-neutral-400">
+                             Defina 1 meta principal para cada área da sua vida este ano.
+                         </h2>
                     </div>
 
                     <div className="space-y-4">
-                        {[
-                          { id: 'work', label: 'Trabalho', icon: Briefcase, color: 'text-blue-500', items: data.areas.work },
-                          { id: 'studies', label: 'Estudos', icon: GraduationCap, color: 'text-purple-500', items: data.areas.studies },
-                          { id: 'health', label: 'Saúde', icon: Heart, color: 'text-[#E8251A]', items: data.areas.health },
-                          { id: 'personal', label: 'Pessoal', icon: User, color: 'text-yellow-500', items: data.areas.personal },
-                        ].map((area) => (
-                          <div key={area.id} className="p-5 rounded-2xl border bg-black/60 backdrop-blur-md border-white/5">
-                              <div className="flex items-center justify-between mb-4">
-                                  <Label className={`flex items-center gap-2 text-xs uppercase font-black tracking-widest ${area.color}`}>
-                                      <area.icon className="w-4 h-4" /> {area.label}
-                                  </Label>
-                                  {area.items.length > 0 && <CheckCircle2 className="w-4 h-4 text-green-500" />}
-                              </div>
-                              
-                              <div className="flex gap-3 mb-3">
-                                  <Input 
-                                      value={areaInputs[area.id as keyof typeof areaInputs]}
-                                      onChange={(e) => handleAreaInputChange(area.id as keyof typeof areaInputs, e.target.value)}
-                                      onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem(area.id as keyof typeof areaInputs)}
-                                      placeholder="Defina uma meta..." 
-                                      className="bg-black/40 border-white/10 text-sm h-11 text-white" 
-                                  />
-                                  <Button size="icon" className="h-11 w-11 bg-white/5 hover:bg-white/10 border border-white/5" onClick={() => handleAddAreaItem(area.id as keyof typeof areaInputs)}>
-                                      <Plus className="w-5 h-5"/>
-                                  </Button>
-                              </div>
+                        {areasConfig.map((area) => {
+                          const isFull = area.items.length >= 3;
+                          return (
+                            <div key={area.id} className={`p-5 rounded-2xl bg-[#0A0A0A] border-l-[2px] border-y border-r border-y-white/5 border-r-white/5 ${area.borderColor}`}>
+                                <div className="flex items-center justify-between mb-4">
+                                    <Label className={`flex items-center gap-2 text-xs uppercase font-black tracking-widest ${area.colorClass}`}>
+                                        <area.icon className="w-4 h-4" /> {area.label}
+                                    </Label>
+                                    {area.items.length > 0 && <CheckCircle2 className={`w-4 h-4 ${area.colorClass}`} />}
+                                </div>
+                                
+                                <div className="flex gap-3 mb-3">
+                                    {!isFull ? (
+                                        <>
+                                            <Input 
+                                                value={areaInputs[area.id as keyof typeof areaInputs]}
+                                                onChange={(e) => handleAreaInputChange(area.id as keyof typeof areaInputs, e.target.value)}
+                                                onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem(area.id as keyof typeof areaInputs)}
+                                                placeholder={area.placeholder}
+                                                className="bg-black/40 border-white/10 text-sm h-11 text-white placeholder:text-neutral-600" 
+                                            />
+                                            <Button size="icon" className="h-11 w-11 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0" onClick={() => handleAddAreaItem(area.id as keyof typeof areaInputs)}>
+                                                <Plus className="w-5 h-5"/>
+                                            </Button>
+                                        </>
+                                    ) : (
+                                        <div className="w-full h-11 flex items-center justify-center bg-white/5 rounded-md border border-white/5">
+                                            <span className="text-xs text-neutral-500 font-medium">Limite de 3 metas por pilar atingido.</span>
+                                        </div>
+                                    )}
+                                </div>
 
-                              {area.items.map((i: any) => (
-                                  <div key={i.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 mt-2">
-                                      <span className="text-sm font-medium text-neutral-200">{i.text}</span>
-                                      <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="text-neutral-600 hover:text-[#E8251A]">
-                                          <X className="w-4 h-4" />
-                                      </button>
-                                  </div>
-                              ))}
-                          </div>
-                        ))}
+                                {area.items.map((i: any) => (
+                                    <div key={i.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 mt-2 animate-in slide-in-from-top-2">
+                                        <span className="text-sm font-medium text-neutral-200">{i.text}</span>
+                                        <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="text-neutral-600 hover:text-[#E8251A] transition-colors">
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                          );
+                        })}
                     </div>
                 </div>
 
                 <div className="flex justify-between items-center pt-6 border-t border-white/5 flex-shrink-0 mt-auto pb-8">
-                    <Button variant="ghost" onClick={() => setStep(2)} className="text-neutral-400 font-bold uppercase tracking-widest text-[10px] hover:text-white">Voltar</Button>
+                    <Button variant="ghost" onClick={() => setStep(2)} className="text-neutral-500 hover:text-white font-medium text-xs">VOLTAR</Button>
                     <Button 
                         disabled={!hasAtLeastOneItem}
                         onClick={() => setStep(4)}
-                        className={`font-bold px-10 rounded-full h-12 transition-all duration-500 ${hasAtLeastOneItem ? 'bg-white text-black hover:bg-neutral-200' : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'}`}
+                        className={`font-bold px-8 rounded-[10px] h-12 transition-all duration-300 ${hasAtLeastOneItem ? 'bg-[#E8251A] hover:bg-[#c91e14] text-white shadow-[0_4px_20px_rgba(232,37,26,0.3)]' : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'}`}
                     >
-                        Próximo <ChevronRight className="w-4 h-4 ml-1" />
+                        ATIVAR SISTEMA →
                     </Button>
                 </div>
             </div>
