@@ -1,169 +1,68 @@
-import { useState, useMemo } from "react";
-import { useMasterplan, TaskItem } from "@/hooks/useMasterplan";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-// Importando componentes modularizados
-import { LoadingScreen } from "@/components/masterplan/LoadingScreen";
 import { OnboardingWizard } from "@/components/masterplan/OnboardingWizard";
-import { OverviewTab } from "@/components/masterplan/OverviewTab";
-import { AnnualTab } from "@/components/masterplan/AnnualTab";
-import { ExecutionTab } from "@/components/masterplan/ExecutionTab";
+import { useState, useEffect } from "react";
+import { useMasterplan } from "@/hooks/useMasterplan";
 
-const MasterplanPage = () => {
-  const { 
-    data, completeTutorial, resetTutorial, updateAnnual, addAreaItem, toggleAreaItem, deleteAreaItem,
-    addMonthGoal, toggleMonthGoal, updateMonth,
-    addWeek, deleteWeek, addWeekTask, toggleWeekTask, updateWeekReview 
-  } = useMasterplan();
+const MasterPlan = () => {
+  const { data } = useMasterplan();
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(true);
-
-  // ==========================================
-  // CÁLCULOS ANALÍTICOS (DASHBOARD)
-  // ==========================================
-  const analytics = useMemo(() => {
-    const now = new Date();
-    const startOfYear = new Date(now.getFullYear(), 0, 0);
-    const diff = now.getTime() - startOfYear.getTime();
-    const oneDay = 1000 * 60 * 60 * 24;
-    const dayOfYear = Math.floor(diff / oneDay);
-    const yearProgress = (dayOfYear / 365) * 100;
-
-    let yearStatus = "No Ritmo";
-    let statusColor = "text-yellow-500";
-    let statusMessage = "Continue consistente.";
-    
-    if (data.annual.progress < yearProgress - 10) {
-        yearStatus = "Atenção Necessária";
-        statusColor = "text-red-500";
-        statusMessage = "Acelere o ritmo para alcançar a meta.";
-    } else if (data.annual.progress > yearProgress + 5) {
-        yearStatus = "Excelente";
-        statusColor = "text-green-500";
-        statusMessage = "Você está superando as expectativas.";
+  useEffect(() => {
+    // Se o objetivo anual estiver vazio, assume-se que o onboarding ainda não foi feito
+    if (!data.annual.objective) {
+      setShowOnboarding(true);
     }
-
-    const calculateAreaStats = (items: TaskItem[]) => {
-        const total = items.length;
-        const completed = items.filter(i => i.completed).length;
-        const percentage = total === 0 ? 0 : (completed / total) * 100;
-        return { total, completed, percentage };
-    };
-
-    const areaStats = [
-        { id: 'work', label: 'Trabalho', ...calculateAreaStats(data.areas.work), color: 'text-blue-500', barColor: 'bg-blue-500' },
-        { id: 'studies', label: 'Estudos', ...calculateAreaStats(data.areas.studies), color: 'text-purple-500', barColor: 'bg-purple-500' },
-        { id: 'health', label: 'Saúde', ...calculateAreaStats(data.areas.health), color: 'text-red-500', barColor: 'bg-red-500' },
-        { id: 'personal', label: 'Pessoal', ...calculateAreaStats(data.areas.personal), color: 'text-yellow-500', barColor: 'bg-yellow-500' },
-    ];
-
-    const strongestArea = [...areaStats].sort((a, b) => b.percentage - a.percentage)[0];
-    const weakestArea = [...areaStats].sort((a, b) => a.percentage - b.percentage)[0];
-
-    const totalTasks = areaStats.reduce((acc, curr) => acc + curr.total, 0) + 
-                       data.weeks.reduce((acc, w) => acc + w.tasks.length, 0) +
-                       data.months.reduce((acc, m) => acc + m.goals.length, 0);
-                       
-    const completedTasks = areaStats.reduce((acc, curr) => acc + curr.completed, 0) + 
-                           data.weeks.reduce((acc, w) => acc + w.tasks.filter(t => t.completed).length, 0) +
-                           data.months.reduce((acc, m) => acc + m.goals.filter(g => g.completed).length, 0);
-
-    const executionRate = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
-
-    return {
-        yearProgress,
-        yearStatus,
-        statusColor,
-        statusMessage,
-        areaStats,
-        strongestArea,
-        weakestArea,
-        totalTasks,
-        completedTasks,
-        executionRate
-    };
-  }, [data]);
-
-  if (isLoading) {
-    return <LoadingScreen onFinished={() => setIsLoading(false)} />;
-  }
-
-  if (!data.isTutorialCompleted) {
-    return <OnboardingWizard onComplete={completeTutorial} />;
-  }
-
-  const currentMonthIndex = new Date().getMonth();
-  const currentMonth = data.months[currentMonthIndex];
-  const activeWeeks = data.weeks.filter(w => new Date(w.endDate) >= new Date());
+  }, [data.annual.objective]);
 
   return (
-    <div className="min-h-screen text-white selection:bg-red-900/30 selection:text-white pb-32">
-      {/* Background Ambience */}
-      <div className="fixed inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-neutral-900/20 to-transparent" />
-          <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-red-600/5 rounded-full blur-[150px]" />
-      </div>
+    <div 
+      className="min-h-screen w-full relative overflow-x-hidden bg-[#050505]"
+      style={{ 
+        backgroundImage: "url('/Background-MasterPlan.png')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      {/* Overlay para garantir legibilidade dos componentes */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+      {/* Conteúdo Principal */}
+      <div className="relative z-10 container mx-auto p-6 md:p-10">
+        {showOnboarding && (
+          <OnboardingWizard onComplete={() => setShowOnboarding(false)} />
+        )}
         
-        <Tabs defaultValue="overview" className="w-full space-y-8">
-          {/* SELETOR DE ABAS NO TOPO ABSOLUTO DO CONTEÚDO */}
-          <div className="sticky top-4 z-50 flex justify-center">
-            <TabsList className="grid grid-cols-3 bg-[#0A0A0A]/80 backdrop-blur-xl p-1.5 border border-white/10 rounded-2xl h-14 shadow-2xl w-full max-w-sm ring-1 ring-white/5">
-              <TabsTrigger value="overview" className="rounded-xl font-bold data-[state=active]:bg-white data-[state=active]:text-black text-[10px] uppercase tracking-wider transition-all duration-300">Visão</TabsTrigger>
-              <TabsTrigger value="execution" className="rounded-xl font-bold data-[state=active]:bg-red-600 data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Execução</TabsTrigger>
-              <TabsTrigger value="annual" className="rounded-xl font-bold data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Ano</TabsTrigger>
-            </TabsList>
+        {!showOnboarding && (
+          <div className="space-y-8 animate-in fade-in duration-700">
+             <header className="flex flex-col gap-2">
+                <span className="text-red-500 font-bold tracking-[0.3em] uppercase text-xs">Vetor de Expansão</span>
+                <h1 className="text-4xl font-black text-white uppercase tracking-tighter italic flex items-center gap-4">
+                  Master<span className="text-red-600">Plan</span>
+                  <div className="h-1 flex-1 bg-gradient-to-r from-red-600/50 to-transparent" />
+                </h1>
+             </header>
+
+             {/* Aqui entrarão os componentes de visualização do MasterPlan (Timeline, Pilares, etc) */}
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-[#0A0A0A]/80 border border-white/10 p-8 rounded-3xl backdrop-blur-xl">
+                   <h3 className="text-neutral-500 font-bold uppercase tracking-widest text-[10px] mb-4">Alvo Anual</h3>
+                   <p className="text-2xl font-bold text-white uppercase tracking-tight leading-tight">
+                     {data.annual.objective || "Aguardando definição estratégica..."}
+                   </p>
+                </div>
+                
+                <div className="bg-[#0A0A0A]/80 border border-white/10 p-8 rounded-3xl backdrop-blur-xl">
+                   <h3 className="text-neutral-500 font-bold uppercase tracking-widest text-[10px] mb-4">Critério de Sucesso</h3>
+                   <p className="text-lg font-medium text-neutral-300">
+                     {data.annual.successCriteria || "Defina os números do seu alvo."}
+                   </p>
+                </div>
+             </div>
           </div>
-
-          <div className="pt-4">
-            {/* --- 1. VISÃO GERAL (DASHBOARD) --- */}
-            <TabsContent value="overview">
-              <OverviewTab 
-                  activeWeeks={activeWeeks}
-                  currentMonth={currentMonth}
-                  areas={data.areas}
-                  onNavigateToWeekly={() => document.querySelector('[data-value="execution"]')?.dispatchEvent(new MouseEvent('click', {bubbles: true}))}
-                  annualData={data.annual}
-                  onResetTutorial={resetTutorial}
-              />
-            </TabsContent>
-
-            {/* --- 2. EXECUÇÃO (MÊS + SEMANA) --- */}
-            <TabsContent value="execution">
-              <ExecutionTab 
-                  // Monthly Props
-                  currentMonth={currentMonth}
-                  currentMonthIndex={currentMonthIndex}
-                  addMonthGoal={addMonthGoal}
-                  toggleMonthGoal={toggleMonthGoal}
-                  updateMonth={updateMonth}
-                  // Weekly Props
-                  weeks={data.weeks}
-                  addWeek={addWeek}
-                  deleteWeek={deleteWeek}
-                  addWeekTask={addWeekTask}
-                  toggleWeekTask={toggleWeekTask}
-                  updateWeekReview={updateWeekReview}
-              />
-            </TabsContent>
-
-            {/* --- 3. ANNUAL (DASHBOARD ANALÍTICO) --- */}
-            <TabsContent value="annual">
-                <AnnualTab 
-                  data={data}
-                  analytics={analytics}
-                  updateAnnual={updateAnnual}
-                  addAreaItem={addAreaItem}
-                  toggleAreaItem={toggleAreaItem}
-                  deleteAreaItem={deleteAreaItem}
-                />
-            </TabsContent>
-          </div>
-        </Tabs>
+        )}
       </div>
     </div>
   );
 };
 
-export default MasterplanPage;
+export default MasterPlan;
