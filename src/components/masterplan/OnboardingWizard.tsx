@@ -108,10 +108,14 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
            </div>
 
            {/* Typography - Emotional Impact */}
-           <div className="space-y-6">
-               <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-none animate-in slide-in-from-bottom-4 fade-in duration-1000 flex flex-col items-center gap-4">
-                 <span>BEM-VINDO AO SEU</span>
-                 <img src="/MasterPlan.png" alt="MasterPlan Logo" className="h-10 md:h-14 w-auto object-contain drop-shadow-[0_0_15px_rgba(220,38,38,0.3)]" />
+           <div className="space-y-6 flex flex-col items-center">
+               <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter uppercase leading-none animate-in slide-in-from-bottom-4 fade-in duration-1000 flex flex-col items-center">
+                 <span className="relative z-10">BEM-VINDO AO SEU</span>
+                 <img 
+                    src="/MasterPlan.png" 
+                    alt="MasterPlan Logo" 
+                    className="h-16 md:h-24 w-auto object-contain drop-shadow-[0_0_20px_rgba(220,38,38,0.4)] -mt-4 md:-mt-6 relative z-20 transition-transform hover:scale-105 duration-500" 
+                 />
                </h1>
                <p className="text-sm md:text-base text-neutral-400 font-bold uppercase tracking-widest max-w-lg mx-auto animate-in slide-in-from-bottom-5 fade-in duration-1000 delay-200">
                  O método japonês da clareza absoluta, adaptado para a execução implacável.
