@@ -56,6 +56,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   const monthTotal = currentMonth?.goals.length || 0;
   const monthCompleted = currentMonth?.goals.filter((g: any) => g.completed).length || 0;
   const monthProgress = monthTotal === 0 ? 0 : (monthCompleted / monthTotal) * 100;
+  const hasMonthGoals = monthTotal > 0;
 
   // Cálculo de progresso da semana
   const weekTotal = currentWeek?.tasks.length || 0;
@@ -125,6 +126,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           const Icon = config.icon;
           const areaItems = areas[area.id] || [];
           const firstItem = areaItems.find((i: any) => !i.completed) || areaItems[0];
+          const hasItem = !!firstItem;
 
           return (
             <Card key={area.id} className="bg-[#0A0A0A] border-white/10 hover:border-white/20 transition-all duration-300 group">
@@ -143,15 +145,15 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                   <Progress value={area.percentage} className="h-1.5 bg-neutral-800 mb-4" indicatorClassName={config.bg} />
                   
                   <div className="min-h-[3rem]">
-                    {firstItem ? (
+                    {hasItem ? (
                       <p className="text-sm text-neutral-300 line-clamp-2 leading-relaxed">
                         <span className="text-neutral-500 mr-1">Próximo:</span> 
                         {firstItem.title}
                       </p>
                     ) : (
-                      <div className="flex items-center gap-2 text-neutral-500 text-sm italic">
-                        <Plus size={14} /> Adicionar meta
-                      </div>
+                       <p className="text-sm text-neutral-600 italic mt-1">
+                        Sem meta definida
+                      </p>
                     )}
                   </div>
                 </div>
@@ -188,17 +190,27 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                   </span>
                 </div>
               ))}
-              {(!currentMonth?.goals || currentMonth.goals.length === 0) && (
+              {(!hasMonthGoals) && (
                  <p className="text-sm text-neutral-600 italic">Sem metas definidas para este mês.</p>
               )}
             </div>
-            <Button 
-              variant="outline" 
-              className="w-full mt-4 border-white/10 hover:bg-white/5 text-neutral-400 hover:text-white"
-              onClick={onNavigateToWeekly}
-            >
-              Gerenciar Mês
-            </Button>
+            
+            {hasMonthGoals ? (
+              <Button 
+                variant="outline" 
+                className="w-full mt-4 border-white/10 hover:bg-white/5 text-neutral-400 hover:text-white"
+                onClick={onNavigateToWeekly}
+              >
+                Gerenciar Mês
+              </Button>
+            ) : (
+              <Button 
+                className="w-full mt-4 bg-[#E8251A] hover:bg-[#c91e14] text-white border-0"
+                onClick={onNavigateToWeekly}
+              >
+                + Definir metas do mês
+              </Button>
+            )}
           </CardContent>
         </Card>
 
@@ -222,18 +234,29 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                 </div>
               </div>
             ) : (
-               <span className="text-sm text-neutral-500 mt-2">Nenhuma semana ativa</span>
+               <span className="text-sm text-neutral-500 mt-2 block">Nenhuma semana definida ainda.</span>
             )}
           </CardHeader>
           <CardContent className="flex-1 flex flex-col justify-end">
-            <Progress value={weekProgress} className="h-2 bg-neutral-800 mb-4" />
-            <Button 
-              variant="outline" 
-              className="w-full border-white/10 hover:bg-white/5 text-neutral-400 hover:text-white"
-              onClick={onNavigateToWeekly}
-            >
-              Ver Tarefas
-            </Button>
+            {currentWeek ? (
+              <>
+                <Progress value={weekProgress} className="h-2 bg-neutral-800 mb-4" />
+                <Button 
+                  variant="outline" 
+                  className="w-full border-white/10 hover:bg-white/5 text-neutral-400 hover:text-white"
+                  onClick={onNavigateToWeekly}
+                >
+                  Ver Tarefas
+                </Button>
+              </>
+            ) : (
+              <Button 
+                className="w-full bg-[#E8251A] hover:bg-[#c91e14] text-white border-0 mt-4"
+                onClick={onNavigateToWeekly}
+              >
+                + Criar Semana
+              </Button>
+            )}
           </CardContent>
         </Card>
 
