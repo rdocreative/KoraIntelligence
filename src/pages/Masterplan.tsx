@@ -114,26 +114,6 @@ const MasterplanPage = () => {
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
           
-          {/* Stats Bar Contextual (Substituindo o que estava no header) */}
-          {activeTab === 'execution' && (
-              <div className="flex gap-4 md:gap-8 justify-center md:justify-start bg-[#141418]/50 p-4 rounded-xl border border-[#2a2a35] backdrop-blur-sm">
-                 <div className="space-y-1 text-center md:text-left">
-                     <span className="text-[10px] uppercase text-[#6b6b7a] font-bold tracking-wider block">Ativos</span>
-                     <div className="text-xl font-rajdhani font-bold text-white">{activeWeeks.length}</div>
-                 </div>
-                 <div className="w-[1px] h-auto bg-[#2a2a35]" />
-                 <div className="space-y-1 text-center md:text-left">
-                     <span className="text-[10px] uppercase text-[#6b6b7a] font-bold tracking-wider block">Feitos</span>
-                     <div className="text-xl font-rajdhani font-bold text-white">{analytics.completedTasks}</div>
-                 </div>
-                 <div className="w-[1px] h-auto bg-[#2a2a35]" />
-                 <div className="space-y-1 text-center md:text-left">
-                     <span className="text-[10px] uppercase text-[#6b6b7a] font-bold tracking-wider block">Taxa</span>
-                     <div className="text-xl font-rajdhani font-bold text-[#e8283a]">{analytics.executionRate}%</div>
-                 </div>
-              </div>
-          )}
-
           {/* Navigation Tabs */}
           <div className="sticky top-4 z-30 flex justify-center mb-4">
             <TabsList className="grid grid-cols-3 bg-[#0A0A0A]/80 backdrop-blur-xl p-1.5 border border-white/10 rounded-2xl h-14 shadow-2xl w-full max-w-sm ring-1 ring-white/5">
