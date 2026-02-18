@@ -185,7 +185,11 @@ export const WeeklyTab = ({ weeks, addWeek, deleteWeek, addWeekTask, toggleWeekT
                     <div className="min-h-[120px]">
                       <TaskList
                         items={week.tasks}
-                        onAdd={(t) => addWeekTask(week.id, t)}
+                        onAdd={(text) => addWeekTask(week.id, {
+                           id: Date.now().toString(),
+                           text: text,
+                           completed: false
+                        })}
                         onToggle={(taskId) => toggleWeekTask(week.id, taskId)}
                         placeholder="Adicionar tarefa..."
                       />

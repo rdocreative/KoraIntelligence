@@ -49,7 +49,8 @@ export const TaskList = ({
               "flex-1 text-sm transition-all duration-300 leading-relaxed",
               item.completed ? "text-neutral-600 line-through decoration-neutral-700" : "text-neutral-200"
             )}>
-              {item.text}
+              {/* Salvaguarda para evitar renderizar objetos se os dados estiverem corrompidos */}
+              {typeof item.text === 'string' ? item.text : String(item.text)}
             </span>
 
             {onDelete && (
