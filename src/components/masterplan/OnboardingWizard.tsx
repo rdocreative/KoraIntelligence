@@ -165,7 +165,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                          setHasShownWelcome(true);
                          setStep(1);
                      }}
-                     className="w-full h-12 bg-[#E8251A] hover:bg-[#c91e14] text-white font-bold text-xs uppercase tracking-widest rounded-md shadow-[0_0_25px_rgba(232,37,26,0.4)] transition-all duration-300 transform hover:-translate-y-1"
+                     className="w-full h-12 bg-[#E8251A] hover:bg-[#c91e14] text-white font-bold text-xs uppercase tracking-widest rounded-[8px] shadow-[0_0_25px_rgba(232,37,26,0.4)] transition-all duration-300 transform hover:-translate-y-1"
                  >
                      ATIVAR PROTOCOLO
                  </Button>
