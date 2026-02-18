@@ -113,7 +113,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
            </div>
 
            {/* 2. Modular Architecture - Side by Side Modules */}
-           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200 fill-mode-backwards px-4 md:px-0">
+           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200 fill-mode-backwards px-4 md:px-0 items-stretch">
                
                {/* Module Left: HABITS */}
                <div className="bg-white/[0.02] border-r-2 border-neutral-700 p-6 md:pr-8 md:pl-6 flex flex-col gap-3 text-left hover:bg-white/[0.04] transition-colors relative overflow-hidden group">
@@ -155,7 +155,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
            {/* 3. Footer Command & Action */}
            <div className="w-full max-w-lg mx-auto flex flex-col gap-8 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-500 fill-mode-backwards mt-16">
                <div className="border-y border-white/30 py-6 text-center shadow-[0_0_15px_rgba(255,255,255,0.05)] bg-white/[0.01]">
-                   <p className="text-white font-mono text-[10px] md:text-[11px] uppercase tracking-[0.15em] leading-relaxed drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
+                   <p className="text-white font-mono text-[10px] md:text-[11px] uppercase tracking-[0.15em] leading-relaxed">
                        O QUE VOCÊ VAI CONFIGURAR AGORA NÃO É UMA LISTINHA DE TAREFAS.<br className="hidden md:block" /> É O SEU PLANO DE ATAQUE.
                    </p>
                </div>
