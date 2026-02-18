@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { 
   Target, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
-  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout, Layers
+  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout, Layers, HelpCircle
 } from "lucide-react";
 
 export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
@@ -49,7 +50,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     
     if (hasVagueWords && length < 20) return { status: 'medium', message: 'Tente definir o que isso significa na prática.', color: 'text-yellow-500', icon: AlertCircle };
     
-    return { status: 'strong', message: 'Excelente objetivo.', color: 'text-green-500', icon: Check };
+    return { status: 'strong', message: '✓ EXCELENTE OBJETIVO.', color: 'text-green-500', icon: Check };
   }, [data.annual.objective]);
 
   const criteriaAnalysis = useMemo(() => {
@@ -244,14 +245,15 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500 px-8 pt-6">
                 <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-6 custom-scrollbar pr-2">
                     <div className="space-y-4 text-center mb-6 pt-2">
-                         <div className="inline-flex items-center justify-center p-3 bg-[#E8251A]/10 rounded-full border border-[#E8251A]/20 mb-2 shadow-[0_0_15px_rgba(232,37,26,0.2)]">
-                            <Target className="w-6 h-6 text-[#E8251A]" />
+                         <div className="inline-flex items-center justify-center p-3 bg-[#E8251A]/10 rounded-full border border-[#E8251A]/20 mb-2 relative">
+                            {/* Pulsing glow background */}
+                            <div className="absolute inset-0 bg-[#E8251A]/30 rounded-full animate-ping opacity-20" />
+                            <Target className="w-6 h-6 text-[#E8251A] relative z-10" />
                          </div>
                          <h2 className="text-2xl font-black text-white uppercase tracking-tight">O Alvo Único</h2>
                     </div>
 
-                    <div className="bg-black/80 border border-white/10 rounded-xl p-5 mb-8 relative overflow-hidden group shadow-lg backdrop-blur-md">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-[#E8251A]" />
+                    <div className="bg-[#0D0D0D] border-l-[3px] border-l-[#E8251A] rounded-r-xl p-5 mb-8 relative overflow-hidden group shadow-lg">
                         <div className="flex gap-4">
                             <div className="shrink-0 mt-0.5">
                                 <Info className="w-5 h-5 text-[#E8251A]" />
@@ -270,21 +272,34 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                             <Label className="text-xs font-bold uppercase tracking-widest text-neutral-400 group-focus-within:text-white transition-colors pl-1">Objetivo Anual</Label>
                             <Input 
                                 autoFocus
-                                placeholder="Ex: Atingir liberdade financeira" 
+                                placeholder="Ex: Faturar R$10k/mês com meu negócio digital" 
                                 value={data.annual.objective}
                                 onChange={(e) => updateAnnual({ objective: e.target.value })}
-                                className="bg-black/60 backdrop-blur-md border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-[#E8251A]/50 text-white"
+                                className="bg-black/60 backdrop-blur-md border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-[#E8251A] text-white"
                             />
                             <Feedback analysis={objectiveAnalysis} />
                         </div>
                         
                         <div className="space-y-3 group">
-                            <Label className="text-xs font-bold uppercase tracking-widest text-neutral-400 group-focus-within:text-white transition-colors pl-1">Critério de Sucesso</Label>
+                            <div className="flex items-center gap-2">
+                                <Label className="text-xs font-bold uppercase tracking-widest text-neutral-400 group-focus-within:text-white transition-colors pl-1">COMO VOCÊ VAI SABER QUE CHEGOU LÁ?</Label>
+                                <TooltipProvider>
+                                    <Tooltip delayDuration={300}>
+                                        <TooltipTrigger asChild>
+                                            <HelpCircle className="w-3.5 h-3.5 text-neutral-500 hover:text-white cursor-help transition-colors" />
+                                        </TooltipTrigger>
+                                        <TooltipContent className="bg-black border border-white/10 text-xs text-neutral-300 max-w-[200px] p-3">
+                                            <p>Defina um número ou resultado concreto. Objetivos vagos não se concretizam.</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </div>
+                            
                             <Textarea 
-                                placeholder="Ex: Ter R$ 100k investidos." 
+                                placeholder="Ex: Receita recorrente de R$10k por 3 meses seguidos" 
                                 value={data.annual.successCriteria}
                                 onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                                className="bg-black/60 backdrop-blur-md border-white/10 min-h-[120px] text-base px-4 py-4 resize-none text-white"
+                                className="bg-black/60 backdrop-blur-md border-white/10 min-h-[120px] text-base px-4 py-4 resize-none text-white focus-visible:ring-2 focus-visible:ring-[#E8251A]"
                             />
                             <Feedback analysis={criteriaAnalysis} />
                         </div>
@@ -295,9 +310,13 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                     <Button 
                         disabled={!isAnnualValid}
                         onClick={() => setStep(3)}
-                        className={`font-bold px-10 rounded-full h-12 transition-all duration-500 ${isAnnualValid ? 'bg-white text-black hover:bg-neutral-200' : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'}`}
+                        className={`font-bold px-10 rounded-[10px] h-12 transition-all duration-300 
+                            ${isAnnualValid 
+                                ? 'bg-[#E8251A] hover:bg-[#c91e14] text-white shadow-[0_4px_20px_rgba(232,37,26,0.3)] hover:shadow-[0_4px_25px_rgba(232,37,26,0.5)] transform hover:-translate-y-0.5' 
+                                : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'
+                            }`}
                     >
-                        Próximo <ChevronRight className="w-4 h-4 ml-1" />
+                        PRÓXIMO PASSO →
                     </Button>
                 </div>
             </div>
