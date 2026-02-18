@@ -86,7 +86,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     );
   };
 
-  // Tactical Background Component (Opacity reduced by 15% from previous 0.8/0.85)
+  // Tactical Background Component
   const AppBackground = () => (
     <div 
       className="fixed inset-0 pointer-events-none -z-10 bg-black"
@@ -123,7 +123,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
            {/* Modular Architecture */}
            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200 fill-mode-backwards px-4 md:px-0 items-stretch">
-               <div className="bg-black/60 backdrop-blur-xl border-r-2 border-neutral-700 p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
+               <div className="bg-black/60 backdrop-blur-xl border-l-4 border-neutral-600 p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
                    <div className="relative z-10">
                        <span className="text-[10px] text-neutral-400 font-bold tracking-widest uppercase">Protocolo de Base</span>
                        <h2 className="text-2xl font-bold text-white uppercase tracking-tight">Hábitos</h2>
@@ -133,7 +133,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                    </div>
                </div>
 
-               <div className="bg-black/60 backdrop-blur-xl border-l-2 border-red-600 p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
+               <div className="bg-black/60 backdrop-blur-xl border-l-4 border-red-600 p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
                    <div className="relative z-10">
                        <span className="text-[10px] text-red-500 font-bold tracking-widest uppercase">Vetor de Expansão</span>
                        <div className="h-8 flex items-center justify-start">
