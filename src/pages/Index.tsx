@@ -3,7 +3,6 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
 import { useHabitTracker } from '@/hooks/useHabitTracker';
 import { HabitCard } from '@/components/features/habit-tracker/HabitCard';
-import { DailyVerse } from '@/components/features/dashboard/DailyVerse';
 import { MonthlyProgress } from '@/components/features/dashboard/MonthlyProgress';
 import { MonthlyChart } from '@/components/features/dashboard/MonthlyChart';
 import { Gamification } from '@/components/features/habit-tracker/Gamification';
@@ -37,9 +36,6 @@ const Index = () => {
             </Button>
         }
       />
-
-      {/* Componente flutuante de frase do dia */}
-      <DailyVerse />
       
       {/* Status Mensal no Topo (Full Width) */}
       <MonthlyProgress totalPoints={totalPoints} habitsCount={habits.length} />
