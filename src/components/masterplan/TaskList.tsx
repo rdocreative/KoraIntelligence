@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CheckSquare, Trash2, Plus, CornerDownLeft } from "lucide-react";
+import { Check, Trash2, Plus, CornerDownLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { TaskItem } from "@/hooks/useMasterplan";
@@ -24,49 +24,67 @@ export const TaskList = ({
     }
   };
 
-  // Função auxiliar para extrair texto seguro mesmo de dados corrompidos
+  // Função auxiliar para extrair texto seguro
   const getSafeText = (text: any) => {
     if (typeof text === 'string') return text;
     if (typeof text === 'object' && text !== null && 'text' in text) {
-        return text.text; // Recupera o texto de dentro do objeto aninhado
+        return text.text;
     }
-    return String(text); // Fallback final
+    return String(text);
   };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       
-      {/* Lista de Itens Existentes */}
-      <div className="space-y-1">
+      {/* Lista de Itens (Cards) */}
+      <div className="space-y-2">
         {items.map(item => (
-          <div key={item.id} className="group flex items-start gap-3 p-3 rounded-xl hover:bg-white/[0.03] transition-all border border-transparent hover:border-white/5">
-            <div className="pt-0.5">
-               <button 
+          <div 
+            key={item.id} 
+            className={cn(
+                "group flex items-center gap-4 p-4 rounded-xl border transition-all duration-500 ease-out animate-in fade-in slide-in-from-bottom-2",
+                item.completed 
+                    ? "bg-black/20 border-white/5 opacity-60" // Estilo 'Missão Cumprida'
+                    : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20 shadow-sm backdrop-blur-sm" // Estilo Ativo
+            )}
+          >
+            {/* Checkbox Customizado */}
+            <button 
                 onClick={() => onToggle(item.id)}
                 className={cn(
-                  "w-5 h-5 rounded border flex items-center justify-center transition-all duration-300",
-                  item.completed 
-                    ? "bg-red-600 border-red-600 text-white shadow-[0_0_10px_rgba(220,38,38,0.4)]" 
-                    : "border-white/20 text-transparent hover:border-red-500/50"
+                    "relative w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-300 shrink-0 overflow-hidden",
+                    item.completed 
+                        ? "bg-red-600 border-red-600 shadow-[0_0_15px_rgba(220,38,38,0.5)]" 
+                        : "border-neutral-600 hover:border-red-500 bg-transparent"
                 )}
-               >
-                 <CheckSquare className="w-3.5 h-3.5" strokeWidth={3} />
-               </button>
-            </div>
+            >
+                <Check 
+                    className={cn(
+                        "w-3.5 h-3.5 text-white transition-all duration-300", 
+                        item.completed ? "scale-100 opacity-100" : "scale-50 opacity-0"
+                    )} 
+                    strokeWidth={4} 
+                />
+            </button>
             
+            {/* Texto da Tarefa */}
             <span className={cn(
-              "flex-1 text-sm transition-all duration-300 leading-relaxed",
-              item.completed ? "text-neutral-600 line-through decoration-neutral-700" : "text-neutral-200"
+              "flex-1 text-sm font-medium transition-all duration-300 leading-relaxed",
+              item.completed 
+                ? "text-neutral-500 line-through decoration-neutral-600 decoration-2" 
+                : "text-neutral-200"
             )}>
               {getSafeText(item.text)}
             </span>
 
+            {/* Botão Excluir (Hover Only) */}
             {onDelete && (
                 <button 
                     onClick={() => onDelete(item.id)}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-neutral-600 hover:text-red-500 hover:bg-red-500/10 rounded"
+                    className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all duration-300 p-2 text-neutral-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transform hover:scale-105"
+                    aria-label="Excluir tarefa"
                 >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-4 h-4" />
                 </button>
             )}
           </div>
@@ -76,7 +94,7 @@ export const TaskList = ({
       {/* Input de Novo Item - Visual Premium */}
       <div 
         className={cn(
-            "relative flex items-center gap-3 p-1 pl-4 pr-1 rounded-xl border transition-all duration-500 ease-out group/input",
+            "relative flex items-center gap-3 p-1 pl-4 pr-1 rounded-xl border transition-all duration-500 ease-out group/input mt-4",
             isFocused 
                 ? "bg-[#0E0E0E] border-red-500/40 shadow-[0_0_20px_rgba(220,38,38,0.1)]" 
                 : "bg-white/[0.03] border-white/5 hover:bg-white/[0.05] hover:border-white/10"
