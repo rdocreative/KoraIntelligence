@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { 
   Target, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
-  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout, BrainCircuit
+  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout, Layers
 } from "lucide-react";
 
 export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
@@ -91,7 +91,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     <div 
       className="fixed inset-0 pointer-events-none -z-10 bg-[#0A0A0A]"
       style={{
-        backgroundImage: `linear-gradient(rgba(10, 10, 10, 0.75), rgba(10, 10, 10, 0.8)), url('/Background-MasterPlan.png')`,
+        backgroundImage: `linear-gradient(rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.9)), url('/Background-MasterPlan.png')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -177,66 +177,61 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
   }
 
   const renderContent = () => {
-    // --- STEP 1: BRIEFING TÁTICO (REDESIGNED) ---
+    // --- STEP 1: BRIEFING TÁTICO (REDESIGNED - IMAGE MATCH) ---
     if (step === 1) {
       return (
         <div className="flex flex-col h-full animate-in fade-in zoom-in-95 duration-700 relative">
-             {/* Scanning Effect */}
-             <div className="absolute inset-x-0 h-[2px] bg-[#E8251A]/80 shadow-[0_0_20px_rgba(232,37,26,1)] animate-scan pointer-events-none z-50 top-0" />
-             <style jsx global>{`
-                @keyframes scan {
-                    0% { top: 0%; opacity: 0; }
-                    10% { opacity: 1; }
-                    90% { opacity: 1; }
-                    100% { top: 100%; opacity: 0; }
-                }
-                .animate-scan {
-                    animation: scan 4s ease-in-out infinite;
-                }
-             `}</style>
-
-             <div className="flex-1 flex flex-col px-[44px] py-[52px] text-left overflow-y-auto custom-scrollbar">
+             <div className="flex-1 flex flex-col px-[40px] py-[48px] text-left overflow-y-auto custom-scrollbar">
                  
-                 {/* Header */}
-                 <div className="mb-10 text-center">
-                     <div className="w-16 h-16 bg-[#E8251A]/15 rounded-[14px] border border-[#E8251A]/30 flex items-center justify-center mx-auto mb-6">
-                        <BrainCircuit className="w-8 h-8 text-white" />
+                 {/* Header Centered */}
+                 <div className="mb-10 text-center flex flex-col items-center">
+                     <div className="w-14 h-14 bg-[#E8251A]/10 rounded-2xl border border-[#E8251A]/20 flex items-center justify-center mb-6">
+                        <Layers className="w-7 h-7 text-[#E8251A]" />
                      </div>
-                     <h2 className="text-3xl font-black text-white uppercase tracking-widest">A Ciência por trás da Forja</h2>
+                     <h2 className="text-4xl md:text-[2.75rem] leading-[0.95] font-black text-white uppercase tracking-tighter mb-4">
+                         A CIÊNCIA<br/>POR TRÁS DA FORJA
+                     </h2>
+                     <div className="w-12 h-[3px] bg-[#E8251A] rounded-full" />
                  </div>
 
-                 <div className="space-y-[28px]">
+                 <div className="space-y-[32px]">
                      {/* Section 1 */}
                      <div className="space-y-3">
-                         <h4 className="text-[#E8251A] text-[10px] font-bold uppercase tracking-[2.5px]">A Otimização</h4>
-                         <p className="text-neutral-300 font-light text-sm leading-[1.7]">
-                            Adaptamos o <span className="text-white font-medium">Nenkan Mokuhyo</span> — um método japonês de planejamento milenar — para o ritmo da vida digital. Ficamos com o que importa: a <span className="text-white font-medium">Cascata de Foco</span>.
+                         <h4 className="text-[#E8251A] text-[10px] font-bold uppercase tracking-[0.25em]">O Método</h4>
+                         <p className="text-neutral-400 font-light text-[13px] leading-[1.8]">
+                            Adaptamos o <span className="text-white font-bold">Nenkan Mokuhyo</span> — um método japonês de planejamento milenar — para o ritmo da vida digital. Ficamos com o que importa: a <span className="text-[#E8251A] font-bold">Cascata de Foco</span>.
                          </p>
                      </div>
 
                      {/* Section 2 */}
                      <div className="space-y-3">
-                         <h4 className="text-[#E8251A] text-[10px] font-bold uppercase tracking-[2.5px]">A Diferença</h4>
-                         <p className="text-neutral-300 font-light text-sm leading-[1.7]">
-                            A maioria dos apps trata suas metas como itens de uma lista. Aqui é diferente: separamos o que te mantém no trilho (Hábitos) do que vai te levar longe (Masterplan).
+                         <h4 className="text-[#E8251A] text-[10px] font-bold uppercase tracking-[0.25em]">O Que Nos Diferencia</h4>
+                         <p className="text-neutral-400 font-light text-[13px] leading-[1.8]">
+                            A maioria dos apps trata suas metas como itens de uma lista. Aqui é diferente: separamos o que te mantém no trilho (<span className="text-white font-bold">Hábitos</span>) do que vai te levar longe (<span className="text-white font-bold">Masterplan</span>).
                          </p>
                      </div>
 
-                     {/* Gold Rule Block */}
-                     <div className="bg-[#0D0D0D] border-l-[3px] border-[#E8251A] rounded-[10px] p-[22px] space-y-1">
-                         <p className="text-neutral-300 text-sm font-light">O Ano dita o Mês.</p>
-                         <p className="text-neutral-300 text-sm font-light">O Mês dita a Semana.</p>
-                         <p className="text-[#E8251A] text-sm font-bold">A Semana dita o foco de hoje.</p>
+                     {/* Gold Rule Card - Matching Image Style */}
+                     <div className="bg-[#161616] rounded-xl border border-white/5 relative overflow-hidden p-6 pl-7">
+                         <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-[#E8251A]" />
+                         
+                         <h4 className="text-[#E8251A] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">A Regra de Ouro</h4>
+                         
+                         <div className="space-y-1.5 text-[13px] text-neutral-400 font-light">
+                             <p><span className="text-white font-bold">O Ano</span> dita o Mês.</p>
+                             <p><span className="text-white font-bold">O Mês</span> dita a Semana.</p>
+                             <p>A Semana dita o <span className="text-[#E8251A] font-bold">foco de hoje.</span></p>
+                         </div>
                      </div>
                  </div>
 
                  {/* CTA */}
-                 <div className="mt-10">
+                 <div className="mt-10 pb-4">
                      <Button 
                          onClick={() => setStep(2)}
-                         className="w-full h-auto py-4 bg-[#E8251A] hover:bg-[#c91e14] text-white font-semibold text-[13px] uppercase tracking-[1.8px] rounded-[10px] shadow-[0_4px_24px_rgba(232,37,26,0.25)] hover:shadow-[0_8px_32px_rgba(232,37,26,0.4)] transition-all transform hover:-translate-y-[1px]"
+                         className="w-full h-14 bg-[#E8251A] hover:bg-[#c91e14] text-white font-bold text-[13px] uppercase tracking-[0.15em] rounded-[8px] shadow-[0_4px_24px_rgba(232,37,26,0.25)] hover:shadow-[0_8px_32px_rgba(232,37,26,0.4)] transition-all transform hover:-translate-y-[1px]"
                      >
-                         Começar agora →
+                         Começar Agora →
                      </Button>
                  </div>
              </div>
