@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { 
   Target, ArrowRight, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
-  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Shield, Sword, Info, Layout,
+  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout,
   ArrowDown, ArrowUp, Zap, Settings
 } from "lucide-react";
 
@@ -96,7 +96,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
             <div className="absolute top-0 right-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.04] mix-blend-overlay" />
         </div>
         
-        <div className="w-full max-w-2xl text-center space-y-10 relative z-10 flex flex-col items-center">
+        <div className="w-full max-w-2xl text-center space-y-12 relative z-10 flex flex-col items-center">
            
            {/* Icon with Breathing Animation */}
            <div className="relative group">
@@ -122,41 +122,42 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                </p>
            </div>
 
-           {/* Manifesto Card */}
-           <div className="w-full bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 text-left space-y-6 animate-in slide-in-from-bottom-6 fade-in duration-1000 delay-300 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 opacity-10">
-                 <Target className="w-32 h-32 text-white transform rotate-12 translate-x-10 -translate-y-10" />
-              </div>
-
-              <p className="text-neutral-300 font-medium leading-relaxed relative z-10">
-                 A maioria das pessoas falha porque mistura rotina com evolução. Aqui, nós separamos os dois:
-              </p>
+           {/* NEW AGGRESSIVE MANIFESTO CARD */}
+           <div className="w-full bg-[#080808] border border-white/10 rounded-3xl overflow-hidden animate-in slide-in-from-bottom-6 fade-in duration-1000 delay-300 shadow-[0_0_50px_rgba(0,0,0,0.5)] relative">
               
-              <div className="space-y-4 relative z-10">
-                 <div className="flex gap-4 items-start">
-                    <div className="p-2 bg-blue-500/10 rounded-lg shrink-0 mt-1">
-                       <Settings className="w-5 h-5 text-blue-400" />
-                    </div>
-                    <div>
-                       <h4 className="text-white font-bold text-sm uppercase tracking-wide">HÁBITOS SÃO O MÍNIMO ACEITÁVEL</h4>
-                       <p className="text-neutral-400 text-sm mt-1">A sua obrigação diária para manter a disciplina. Ações que você faz no automático, sem questionar.</p>
-                    </div>
-                 </div>
-
-                 <div className="flex gap-4 items-start">
-                    <div className="p-2 bg-red-500/10 rounded-lg shrink-0 mt-1">
-                       <Zap className="w-5 h-5 text-red-500" />
-                    </div>
-                    <div>
-                       <h4 className="text-white font-bold text-sm uppercase tracking-wide">MASTERPLAN É ONDE O JOGO VIRA</h4>
-                       <p className="text-neutral-400 text-sm mt-1">Suas metas de guerra. Ações com data para acabar que vão, de fato, te tirar do lugar e subir o seu nível de vida.</p>
-                    </div>
-                 </div>
+              {/* Target Watermark */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
+                 <Target className="w-[400px] h-[400px] text-white" />
               </div>
 
-              <div className="pt-4 border-t border-white/5 relative z-10">
-                 <p className="text-neutral-300 font-medium italic text-center text-sm">
-                    "O que você vai configurar agora não é uma listinha de tarefas. É o seu plano de ataque."
+              <div className="p-8 md:p-12 space-y-12 relative z-10">
+                 
+                 {/* Block 1: Habits */}
+                 <div className="space-y-3 text-left">
+                    <h2 className="text-2xl md:text-4xl font-black text-neutral-700 uppercase tracking-tighter leading-none">
+                       HÁBITOS SÃO O <br/>MÍNIMO ACEITÁVEL
+                    </h2>
+                    <p className="text-neutral-400 text-sm md:text-base font-medium max-w-md leading-relaxed">
+                       A sua obrigação diária para manter a disciplina. Ações que você faz no automático, sem questionar.
+                    </p>
+                 </div>
+
+                 {/* Block 2: Masterplan */}
+                 <div className="space-y-3 text-left">
+                    <h2 className="text-2xl md:text-4xl font-black text-red-600 uppercase tracking-tighter leading-none drop-shadow-[0_0_15px_rgba(220,38,38,0.4)]">
+                       MASTERPLAN É <br/>ONDE O JOGO VIRA
+                    </h2>
+                    <p className="text-neutral-400 text-sm md:text-base font-medium max-w-md leading-relaxed">
+                       Suas metas de guerra. Ações com data para acabar que vão, de fato, te tirar do lugar e subir o seu nível de vida.
+                    </p>
+                 </div>
+
+              </div>
+
+              {/* System Alert Footer */}
+              <div className="bg-red-600 p-6 flex items-center justify-center relative z-20">
+                 <p className="text-white font-black text-[10px] md:text-xs uppercase tracking-[0.2em] text-center leading-tight">
+                    O QUE VOCÊ VAI CONFIGURAR AGORA NÃO É UMA LISTINHA DE TAREFAS. <br className="hidden md:block" /> É O SEU PLANO DE ATAQUE.
                  </p>
               </div>
            </div>
@@ -194,7 +195,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                          <h2 className="text-2xl font-black text-white uppercase tracking-tight">O Alvo Único</h2>
                     </div>
 
-                    {/* NEW INSTRUCTION CARD */}
+                    {/* INSTRUCTION CARD */}
                     <div className="bg-[#0E0E0E] border border-white/10 rounded-xl p-5 mb-8 relative overflow-hidden group shadow-lg">
                         <div className="absolute top-0 left-0 w-1 h-full bg-red-600" />
                         <div className="flex gap-4">
@@ -267,7 +268,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                          <h2 className="text-2xl font-black text-white uppercase tracking-tight">Os 4 Pilares</h2>
                     </div>
 
-                    {/* NEW INSTRUCTION CARD STEP 2 */}
+                    {/* INSTRUCTION CARD STEP 2 */}
                     <div className="bg-[#0E0E0E] border border-white/10 rounded-xl p-5 mb-8 relative overflow-hidden group shadow-lg">
                         <div className="absolute top-0 left-0 w-1 h-full bg-blue-500" />
                         <div className="flex gap-4">
