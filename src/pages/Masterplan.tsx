@@ -135,6 +135,7 @@ const MasterplanPage = () => {
                   onNavigateToWeekly={() => document.querySelector('[data-value="execution"]')?.dispatchEvent(new MouseEvent('click', {bubbles: true}))}
                   annualData={data.annual}
                   onResetTutorial={resetTutorial}
+                  analytics={analytics}
               />
             </TabsContent>
 

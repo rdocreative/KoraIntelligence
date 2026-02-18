@@ -1,178 +1,293 @@
-"use client";
-
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
-  Target, Calendar, CheckCircle2, ChevronRight, HelpCircle, ArrowRight
+  Target, 
+  Calendar, 
+  CheckCircle2, 
+  ArrowRight, 
+  TrendingUp, 
+  Briefcase, 
+  GraduationCap, 
+  Heart, 
+  User,
+  Plus,
+  RefreshCw
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 
 interface OverviewTabProps {
   activeWeeks: any[];
   currentMonth: any;
   areas: any;
-  annualData: any;
   onNavigateToWeekly: () => void;
+  annualData: any;
   onResetTutorial: () => void;
+  analytics: any;
 }
 
-// Reusable Helper Component for the Tooltip
-const InfoTooltip = ({ text }: { text: string }) => (
-  <TooltipProvider>
-    <Tooltip delayDuration={300}>
-      <TooltipTrigger asChild>
-        <button className="outline-none">
-            <HelpCircle className="w-[14px] h-[14px] text-[#555] hover:text-[#E8251A] transition-colors" />
-        </button>
-      </TooltipTrigger>
-      <TooltipContent side="top" className="bg-[#1A1A1A] border-[#333] text-[#AAAAAA] max-w-[220px] rounded-lg p-3 text-xs leading-relaxed">
-        <p>{text}</p>
-      </TooltipContent>
-    </Tooltip>
-  </TooltipProvider>
-);
-
-export const OverviewTab = ({ 
-  activeWeeks, 
-  currentMonth, 
-  areas, 
+export const OverviewTab: React.FC<OverviewTabProps> = ({
+  activeWeeks,
+  currentMonth,
+  areas,
   onNavigateToWeekly,
   annualData,
-  onResetTutorial
-}: OverviewTabProps) => {
+  onResetTutorial,
+  analytics
+}) => {
+  const currentWeek = activeWeeks[0];
+  const today = new Date();
+  const dateOptions: Intl.DateTimeFormatOptions = { weekday: 'long', day: 'numeric', month: 'long' };
+  const formattedDate = today.toLocaleDateString('pt-BR', dateOptions);
 
-  const navigateToTab = (value: string) => {
-    document.querySelector(`[data-value="${value}"]`)?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  // Helper para cores das áreas
+  const getAreaConfig = (id: string) => {
+    switch(id) {
+      case 'work': return { color: 'text-blue-500', bg: 'bg-blue-500', icon: Briefcase, label: 'Trabalho' };
+      case 'studies': return { color: 'text-violet-500', bg: 'bg-violet-500', icon: GraduationCap, label: 'Estudos' };
+      case 'health': return { color: 'text-emerald-500', bg: 'bg-emerald-500', icon: Heart, label: 'Saúde' };
+      case 'personal': return { color: 'text-amber-500', bg: 'bg-amber-500', icon: User, label: 'Pessoal' };
+      default: return { color: 'text-white', bg: 'bg-white', icon: Target, label: 'Geral' };
+    }
   };
 
+  // Cálculo de progresso do mês
+  const monthTotal = currentMonth?.goals.length || 0;
+  const monthCompleted = currentMonth?.goals.filter((g: any) => g.completed).length || 0;
+  const monthProgress = monthTotal === 0 ? 0 : (monthCompleted / monthTotal) * 100;
+
+  // Cálculo de progresso da semana
+  const weekTotal = currentWeek?.tasks.length || 0;
+  const weekCompleted = currentWeek?.tasks.filter((t: any) => t.completed).length || 0;
+  const weekProgress = weekTotal === 0 ? 0 : (weekCompleted / weekTotal) * 100;
+
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       
-      {/* 1A - HIERARCHICAL CONNECTION STRIP */}
-      <div className="w-full bg-[#111111] border-y border-white/5 py-4 overflow-x-auto">
-        <div className="flex items-start justify-between min-w-[600px] px-4 md:px-8 gap-4">
-            
-            {/* ANO */}
-            <button onClick={() => navigateToTab('annual')} className="group flex flex-col items-center gap-1 flex-1 text-center hover:bg-white/5 p-2 rounded-lg transition-colors">
-                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest group-hover:text-white transition-colors">ANO</span>
-                <span className="text-[10px] text-neutral-600 group-hover:text-neutral-400">Seu grande objetivo</span>
-            </button>
-
-            <ArrowRight className="w-4 h-4 text-neutral-800 mt-3 shrink-0" />
-
-            {/* MÊS */}
-            <button onClick={() => navigateToTab('execution')} className="group flex flex-col items-center gap-1 flex-1 text-center hover:bg-white/5 p-2 rounded-lg transition-colors">
-                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest group-hover:text-white transition-colors">MÊS</span>
-                <span className="text-[10px] text-neutral-600 group-hover:text-neutral-400">As batalhas do mês</span>
-            </button>
-
-            <ArrowRight className="w-4 h-4 text-neutral-800 mt-3 shrink-0" />
-
-            {/* SEMANA */}
-            <button onClick={() => navigateToTab('execution')} className="group flex flex-col items-center gap-1 flex-1 text-center hover:bg-white/5 p-2 rounded-lg transition-colors">
-                <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest group-hover:text-white transition-colors">SEMANA</span>
-                <span className="text-[10px] text-neutral-600 group-hover:text-neutral-400">Seu foco desta semana</span>
-            </button>
-
-            <ArrowRight className="w-4 h-4 text-neutral-800 mt-3 shrink-0" />
-
-            {/* DIA */}
-            <button onClick={() => navigateToTab('execution')} className="group flex flex-col items-center gap-1 flex-1 text-center hover:bg-white/5 p-2 rounded-lg transition-colors">
-                <span className="text-[10px] font-bold text-[#E8251A] uppercase tracking-widest">DIA</span>
-                <span className="text-[10px] text-neutral-400">O que você vai fazer hoje</span>
-            </button>
-
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* 1. CARD OBJETIVO ANUAL */}
+      <Card className="bg-[#0A0A0A] border-white/10 shadow-2xl relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-32 bg-red-600/5 rounded-full blur-3xl group-hover:bg-red-600/10 transition-colors duration-500" />
         
-        {/* Annual Summary Card */}
-        <Card className="bg-[#111111] border-white/5 lg:col-span-2">
-            <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-[#E8251A]">
-                    <span className="flex items-center gap-2"><Target className="w-4 h-4" /> Objetivo Anual</span>
-                    <InfoTooltip text="É a sua grande meta do ano. Tudo que você faz aqui deve servir a esse objetivo." />
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="text-xl font-bold text-white mb-2 line-clamp-2">
-                    {annualData.objective || "Nenhum objetivo definido."}
+        <CardContent className="p-8 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-red-500 mb-1">
+                <Target size={16} />
+                <span className="text-xs font-bold tracking-widest uppercase">Objetivo Anual</span>
+              </div>
+              <h2 className="text-3xl font-bold text-white tracking-tight">{annualData.mainGoal || "Defina seu objetivo principal"}</h2>
+            </div>
+            <div className="text-right">
+              <div className="text-4xl font-black text-white">{Math.round(annualData.progress)}%</div>
+              <span className="text-neutral-500 text-sm font-medium">Concluído</span>
+            </div>
+          </div>
+
+          {/* Barra de Progresso Principal */}
+          <div className="h-4 bg-neutral-800 rounded-full overflow-hidden mb-6 border border-white/5">
+            <div 
+              className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-1000 ease-out relative"
+              style={{ width: `${annualData.progress}%` }}
+            >
+              <div className="absolute inset-0 bg-white/20 animate-[shimmer_2s_infinite]" style={{ backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)', transform: 'skewX(-20deg)' }}></div>
+            </div>
+          </div>
+
+          {/* Breakdown dos 4 Pilares */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-white/5">
+            {analytics.areaStats.map((area: any) => {
+              const config = getAreaConfig(area.id);
+              const Icon = config.icon;
+              return (
+                <div key={area.id} className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg bg-neutral-900 border border-white/5 ${config.color}`}>
+                    <Icon size={16} />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex justify-between text-xs mb-1.5">
+                      <span className="text-neutral-300 font-medium">{config.label}</span>
+                      <span className={`${config.color} font-bold`}>{Math.round(area.percentage)}%</span>
+                    </div>
+                    <Progress value={area.percentage} className="h-1.5 bg-neutral-800" indicatorClassName={config.bg} />
+                  </div>
                 </div>
-                <div className="w-full bg-neutral-900 h-1.5 rounded-full overflow-hidden mt-4">
-                    <div className="bg-[#E8251A] h-full transition-all duration-500" style={{ width: `${annualData.progress}%` }} />
+              )
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* 2. GRID DE PILARES (4 CARDS) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {analytics.areaStats.map((area: any) => {
+          const config = getAreaConfig(area.id);
+          const Icon = config.icon;
+          const areaItems = areas[area.id] || [];
+          const firstItem = areaItems.find((i: any) => !i.completed) || areaItems[0];
+
+          return (
+            <Card key={area.id} className="bg-[#0A0A0A] border-white/10 hover:border-white/20 transition-all duration-300 group">
+              <CardContent className="p-5 flex flex-col h-full justify-between gap-4">
+                <div>
+                  <div className="flex justify-between items-start mb-4">
+                    <div className={`p-2.5 rounded-xl bg-neutral-900 border border-white/5 ${config.color} group-hover:scale-110 transition-transform`}>
+                      <Icon size={20} />
+                    </div>
+                    <Badge variant="outline" className="border-white/5 bg-neutral-900 text-neutral-400">
+                      {area.completed}/{area.total}
+                    </Badge>
+                  </div>
+                  
+                  <h3 className={`font-bold text-lg mb-1 ${config.color}`}>{config.label}</h3>
+                  <Progress value={area.percentage} className="h-1.5 bg-neutral-800 mb-4" indicatorClassName={config.bg} />
+                  
+                  <div className="min-h-[3rem]">
+                    {firstItem ? (
+                      <p className="text-sm text-neutral-300 line-clamp-2 leading-relaxed">
+                        <span className="text-neutral-500 mr-1">Próximo:</span> 
+                        {firstItem.title}
+                      </p>
+                    ) : (
+                      <div className="flex items-center gap-2 text-neutral-500 text-sm italic">
+                        <Plus size={14} /> Adicionar meta
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="text-[10px] text-neutral-500 font-mono mt-2 text-right">
-                    {annualData.progress}% Concluído
+              </CardContent>
+            </Card>
+          )
+        })}
+      </div>
+
+      {/* 3. GRID DE TEMPO (MÊS, SEMANA, HOJE) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        
+        {/* Card Mês */}
+        <Card className="bg-[#0A0A0A] border-white/10 flex flex-col">
+          <CardHeader className="pb-2">
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-base font-bold text-neutral-200 uppercase tracking-wider">
+                {currentMonth?.name || "Mês Atual"}
+              </CardTitle>
+              <Calendar size={16} className="text-neutral-500" />
+            </div>
+            <div className="flex items-end gap-2 mt-1">
+              <span className="text-2xl font-bold text-white">{monthCompleted}</span>
+              <span className="text-sm text-neutral-500 mb-1">de {monthTotal} metas</span>
+            </div>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col">
+            <div className="space-y-3 mt-2 flex-1">
+              {currentMonth?.goals.slice(0, 3).map((goal: any, idx: number) => (
+                <div key={idx} className="flex items-center gap-3 text-sm">
+                  <div className={`w-2 h-2 rounded-full ${goal.completed ? 'bg-emerald-500' : 'bg-neutral-700'}`} />
+                  <span className={`line-clamp-1 ${goal.completed ? 'text-neutral-500 line-through' : 'text-neutral-300'}`}>
+                    {goal.title}
+                  </span>
                 </div>
-            </CardContent>
+              ))}
+              {(!currentMonth?.goals || currentMonth.goals.length === 0) && (
+                 <p className="text-sm text-neutral-600 italic">Sem metas definidas para este mês.</p>
+              )}
+            </div>
+            <Button 
+              variant="outline" 
+              className="w-full mt-4 border-white/10 hover:bg-white/5 text-neutral-400 hover:text-white"
+              onClick={onNavigateToWeekly}
+            >
+              Gerenciar Mês
+            </Button>
+          </CardContent>
         </Card>
 
-        {/* Monthly Summary Card */}
-        <Card className="bg-[#111111] border-white/5 cursor-pointer hover:border-white/10 transition-colors" onClick={() => navigateToTab('execution')}>
-            <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
-                    <span className="flex items-center gap-2"><Calendar className="w-4 h-4" /> Mês Atual</span>
-                    <InfoTooltip text="As metas que você quer conquistar neste mês. Elas devem alimentar os seus pilares." />
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                 <div className="text-2xl font-bold text-white mb-1">{currentMonth?.name}</div>
-                 <div className="text-xs text-neutral-500 mb-4">
-                    {currentMonth?.goals.filter((g:any) => g.completed).length} de {currentMonth?.goals.length} metas
-                 </div>
-                 <div className="space-y-2">
-                    {currentMonth?.goals.slice(0, 2).map((goal: any) => (
-                        <div key={goal.id} className="flex items-center gap-2 text-xs text-neutral-300">
-                            <div className={`w-1.5 h-1.5 rounded-full ${goal.completed ? 'bg-[#E8251A]' : 'bg-neutral-700'}`} />
-                            <span className={goal.completed ? 'line-through opacity-50' : ''}>{goal.text}</span>
-                        </div>
-                    ))}
-                    {currentMonth?.goals.length === 0 && <span className="text-xs text-neutral-600 italic">Nenhuma meta definida.</span>}
-                 </div>
-            </CardContent>
+        {/* Card Semana */}
+        <Card className="bg-[#0A0A0A] border-white/10 flex flex-col">
+          <CardHeader className="pb-2">
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-base font-bold text-neutral-200 uppercase tracking-wider">
+                Semana Ativa
+              </CardTitle>
+              <TrendingUp size={16} className="text-neutral-500" />
+            </div>
+            {currentWeek ? (
+              <div className="flex flex-col mt-1">
+                <span className="text-xs text-neutral-500">
+                  {new Date(currentWeek.startDate).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit'})} - {new Date(currentWeek.endDate).toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit'})}
+                </span>
+                <div className="flex items-end gap-2 mt-1">
+                  <span className="text-2xl font-bold text-white">{weekCompleted}</span>
+                  <span className="text-sm text-neutral-500 mb-1">tarefas concluídas</span>
+                </div>
+              </div>
+            ) : (
+               <span className="text-sm text-neutral-500 mt-2">Nenhuma semana ativa</span>
+            )}
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col justify-end">
+            <Progress value={weekProgress} className="h-2 bg-neutral-800 mb-4" />
+            <Button 
+              variant="outline" 
+              className="w-full border-white/10 hover:bg-white/5 text-neutral-400 hover:text-white"
+              onClick={onNavigateToWeekly}
+            >
+              Ver Tarefas
+            </Button>
+          </CardContent>
         </Card>
 
-        {/* Weekly Summary Card */}
-        <Card className="bg-[#111111] border-white/5 cursor-pointer hover:border-white/10 transition-colors" onClick={onNavigateToWeekly}>
-            <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
-                     <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Semana Ativa</span>
-                     <InfoTooltip text="Cada semana tem um foco específico. Defina no máximo 3 prioridades por semana." />
+        {/* Card Hoje (Foco) */}
+        <Card className="bg-gradient-to-br from-[#0A0A0A] to-neutral-900 border-white/10 ring-1 ring-red-500/20 flex flex-col">
+          <CardHeader className="pb-2">
+            <div className="flex justify-between items-start">
+              <div>
+                <CardTitle className="text-base font-bold text-red-500 uppercase tracking-wider flex items-center gap-2">
+                   <Target size={16} /> Foco de Hoje
                 </CardTitle>
-            </CardHeader>
-            <CardContent>
-                 {activeWeeks.length > 0 ? (
-                     <>
-                        <div className="text-lg font-bold text-white mb-1">{activeWeeks[0].title}</div>
-                        <div className="text-xs text-neutral-500 mb-4">
-                            {new Date(activeWeeks[0].endDate).toLocaleDateString()}
-                        </div>
-                        <div className="text-xs font-bold text-[#E8251A] uppercase tracking-wide flex items-center gap-1">
-                            Ver Tarefas <ChevronRight className="w-3 h-3" />
-                        </div>
-                     </>
-                 ) : (
-                     <div className="h-full flex flex-col justify-center items-center text-center">
-                         <span className="text-xs text-neutral-500 mb-2">Nenhuma semana ativa</span>
-                         <span className="text-[10px] font-bold text-[#E8251A] uppercase tracking-widest">Iniciar Agora</span>
-                     </div>
-                 )}
-            </CardContent>
+                <p className="text-xs text-neutral-400 capitalize mt-1">{formattedDate}</p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col">
+            <div className="space-y-3 mt-2 flex-1">
+              {currentWeek?.tasks.filter((t:any) => !t.completed).slice(0, 2).map((task: any, idx: number) => (
+                <div key={idx} className="flex gap-3 items-start group">
+                  <div className="mt-1 w-4 h-4 rounded border border-neutral-600 group-hover:border-red-500 transition-colors flex items-center justify-center">
+                    <div className="w-2 h-2 rounded-[1px] bg-transparent group-hover:bg-red-500/50 transition-colors" />
+                  </div>
+                  <span className="text-sm text-white font-medium line-clamp-2 leading-relaxed">
+                    {task.title}
+                  </span>
+                </div>
+              ))}
+              
+              {(!currentWeek || currentWeek.tasks.filter((t:any) => !t.completed).length === 0) && (
+                <div className="flex flex-col items-center justify-center h-full text-center py-2">
+                  <CheckCircle2 size={24} className="text-emerald-500 mb-2 opacity-50" />
+                  <p className="text-xs text-neutral-500">Tudo feito por hoje!</p>
+                </div>
+              )}
+            </div>
+
+            <Button 
+              className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white border-0 shadow-lg shadow-red-900/20 group"
+              onClick={onNavigateToWeekly}
+            >
+              Ir para Execução <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </CardContent>
         </Card>
 
       </div>
-      
-      {/* Tutorial Reset (Hidden helper) */}
-      <div className="flex justify-center pt-8 opacity-20 hover:opacity-100 transition-opacity">
-        <button onClick={onResetTutorial} className="text-[10px] uppercase tracking-widest text-neutral-500 hover:text-white">
-            Reiniciar Tutorial
+
+      {/* Footer Discreto com Reset */}
+      <div className="flex justify-center pt-8 pb-4 opacity-0 hover:opacity-100 transition-opacity duration-500">
+        <button 
+          onClick={onResetTutorial}
+          className="flex items-center gap-2 text-xs text-neutral-700 hover:text-red-500 transition-colors"
+        >
+          <RefreshCw size={10} /> Reiniciar Tutorial
         </button>
       </div>
 
