@@ -1,5 +1,6 @@
+Semana) nas tarefas de hoje.">
 import React, { useState } from "react";
-import { Zap, Plus, Sparkles, Target, ChevronRight, Link2, X, Calendar } from "lucide-react";
+import { Zap, Plus, Sparkles, Target, Link2, X, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
@@ -22,7 +23,7 @@ interface Mission {
 interface FocoHojeCardProps {
   tasks: DailyTask[];
   missions: Mission[]; 
-  monthName: string; // Novo prop para o contexto do grupo
+  monthName: string; 
   onAddTask: (text: string, missionId?: string) => void;
   onToggleTask: (id: string) => void;
 }
@@ -109,13 +110,26 @@ export const FocoHojeCard = ({ tasks, missions, monthName, onAddTask, onToggleTa
                 </div>
               )}
 
-              {/* Breadcrumb */}
+              {/* BREADCRUMBS MINIMALISTA: MÊS > SEMANA */}
               {task.missionName && (
-                <div className="flex items-center gap-1 mb-2 opacity-60">
-                  <Target className="w-2.5 h-2.5 text-neutral-500" />
-                  <span className="text-[9px] text-neutral-500 font-bold uppercase tracking-wider flex items-center gap-1">
-                    Missão <ChevronRight className="w-2.5 h-2.5" /> {task.missionName}
-                  </span>
+                <div className="flex items-center gap-1.5 mb-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                   {/* Nível 1: Mês (Roxo) */}
+                   <div className="flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-[0_0_6px_rgba(168,85,247,0.6)]" />
+                      <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest leading-none">
+                        {monthName.substring(0, 3)}
+                      </span>
+                   </div>
+
+                   <ChevronRight className="w-3 h-3 text-neutral-700" />
+
+                   {/* Nível 2: Missão (Vermelho) */}
+                   <div className="flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.6)]" />
+                      <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest leading-none truncate max-w-[180px]">
+                        {task.missionName}
+                      </span>
+                   </div>
                 </div>
               )}
 
