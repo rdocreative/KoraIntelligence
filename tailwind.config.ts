@@ -19,7 +19,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Exo 2", "sans-serif"],
+        sans: ["ui-sans-serif", "system-ui", "sans-serif"], // Voltando ao padrão do sistema para legibilidade
         rajdhani: ["Rajdhani", "sans-serif"],
       },
       colors: {
