@@ -8,7 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Zap, LayoutDashboard, Trash2, Calendar as CalendarIcon, Briefcase, GraduationCap, Heart, User, Sparkles, Brain, Target, ChevronRight, Flag } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { Zap, LayoutDashboard, Trash2, Calendar as CalendarIcon, Briefcase, GraduationCap, Heart, User, Sparkles, Brain, Target, ChevronRight, Flag, Plus } from "lucide-react";
 import { TaskList } from "@/components/masterplan/TaskList";
 import { TaskItem } from "@/hooks/useMasterplan";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,7 @@ export const WeeklyTab = ({
   annualObjective = "Objetivo Anual",
   monthName = "Mês Atual"
 }: WeeklyTabProps) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newWeekStart, setNewWeekStart] = useState<Date>();
   const [newWeekEnd, setNewWeekEnd] = useState<Date>();
   const [newWeekGoal, setNewWeekGoal] = useState("");
@@ -48,7 +50,7 @@ export const WeeklyTab = ({
   ];
 
   const handleCreateWeek = () => {
-    if (!newWeekStart || !newWeekEnd) return;
+    if (!newWeekStart || !newWeekEnd || !newWeekGoal) return;
     
     const startDateStr = format(newWeekStart, 'yyyy-MM-dd');
     const endDateStr = format(newWeekEnd, 'yyyy-MM-dd');
@@ -63,10 +65,13 @@ export const WeeklyTab = ({
       tasks: [],
       review: { worked: "", didntWork: "", improve: "" }
     });
+    
+    // Reset form and close dialog
     setNewWeekStart(undefined);
     setNewWeekEnd(undefined);
     setNewWeekGoal("");
     setSelectedPillar(null);
+    setIsDialogOpen(false);
   };
 
   const getPillarStyles = (pillarId: string) => {
@@ -78,8 +83,8 @@ export const WeeklyTab = ({
   return (
     <div className="space-y-10 outline-none animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out pb-20">
       
-      {/* HEADER SECTION */}
-      <div className="flex items-center justify-between mb-8">
+      {/* HEADER SECTION WITH ACTION BUTTON */}
+      <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-6">
           <div className="flex items-center gap-3">
              <div className="p-2 rounded-lg bg-white/5 border border-white/5">
                 <Flag className="w-5 h-5 text-neutral-400" />
@@ -89,128 +94,126 @@ export const WeeklyTab = ({
                 <p className="text-xs text-neutral-500 font-medium mt-1">Gerencie suas missões e mantenha o ritmo.</p>
              </div>
           </div>
-      </div>
 
-      {/* NEW MISSION CREATOR */}
-      <Card className="bg-[#0A0A0A] border-white/10 shadow-lg mb-12">
-        <CardHeader className="border-b border-white/5 pb-4 pt-5 px-6">
-          <div className="flex items-center gap-3">
-            <div className="p-1.5 bg-red-500/10 rounded-md"><Zap className="w-4 h-4 text-red-500" /></div>
-            <div>
-               <CardTitle className="text-sm font-bold uppercase text-white tracking-wider">Nova Missão Semanal</CardTitle>
-               <CardDescription className="text-xs text-neutral-500 mt-0.5">Defina o foco, o pilar e o período da missão.</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-5 px-6 pb-6 space-y-6">
-            
-            <div className="grid lg:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                    <Label className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest pl-1">Objetivo Único</Label>
-                    <Input
-                        value={newWeekGoal}
-                        onChange={(e) => setNewWeekGoal(e.target.value)}
-                        placeholder="Meta principal da missão..."
-                        className="bg-[#0E0E0E] border-white/10 h-11 text-sm focus:border-red-500/50 transition-all focus:ring-1 focus:ring-red-500/20 rounded-lg placeholder:text-neutral-600"
-                    />
-                </div>
-                
-                <div className="space-y-2">
-                     <Label className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest pl-1">Pilar Relacionado</Label>
-                     <div className="flex gap-2">
-                        {pillars.map((p) => (
-                            <button
-                                key={p.id}
-                                onClick={() => setSelectedPillar(p.id)}
-                                className={cn(
-                                    "flex-1 h-11 rounded-lg border flex items-center justify-center transition-all duration-300 relative overflow-hidden group",
-                                    selectedPillar === p.id 
-                                        ? `${p.bg} ${p.border} ring-1 ring-offset-0 ${p.border.replace('border', 'ring')}` 
-                                        : "bg-[#0E0E0E] border-white/10 hover:border-white/20 text-neutral-500"
-                                )}
-                            >
-                                <p.icon className={cn("w-4 h-4 transition-colors", selectedPillar === p.id ? p.color : "text-neutral-500 group-hover:text-white")} />
-                                {selectedPillar === p.id && (
-                                    <div className="absolute inset-0 bg-white/5 animate-pulse" />
-                                )}
-                            </button>
-                        ))}
-                     </div>
-                </div>
-            </div>
-
-            <div className="flex flex-col lg:flex-row gap-5 items-end pt-2 border-t border-white/5">
-                <div className="grid grid-cols-2 gap-3 w-full lg:w-auto flex-1">
-                  <div className="space-y-1.5 flex flex-col">
-                    <Label className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest pl-1">Início</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal bg-[#0E0E0E] border-white/10 hover:bg-white/5 hover:text-white h-10 rounded-md",
-                            !newWeekStart && "text-neutral-500"
-                          )}
-                        >
-                          {newWeekStart ? (
-                            format(newWeekStart, "dd/MM/yyyy")
-                          ) : (
-                            <span className="text-xs text-neutral-600">DD/MM/AAAA</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-3.5 w-3.5 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={newWeekStart}
-                          onSelect={setNewWeekStart}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-
-                  <div className="space-y-1.5 flex flex-col">
-                    <Label className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest pl-1">Fim</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full pl-3 text-left font-normal bg-[#0E0E0E] border-white/10 hover:bg-white/5 hover:text-white h-10 rounded-md",
-                            !newWeekEnd && "text-neutral-500"
-                          )}
-                        >
-                          {newWeekEnd ? (
-                            format(newWeekEnd, "dd/MM/yyyy")
-                          ) : (
-                            <span className="text-xs text-neutral-600">DD/MM/AAAA</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-3.5 w-3.5 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={newWeekEnd}
-                          onSelect={setNewWeekEnd}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                </div>
-
-                <Button 
-                    onClick={handleCreateWeek} 
-                    className="w-full lg:w-auto h-10 bg-red-600 hover:bg-red-500 text-white font-bold px-12 rounded-md transition-all duration-300 transform active:scale-95 text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] border border-transparent"
-                >
-                  INICIAR MISSÃO
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+                <Button className="bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider px-6 h-10 rounded-lg shadow-[0_0_20px_rgba(220,38,38,0.2)] hover:shadow-[0_0_30px_rgba(220,38,38,0.4)] transition-all">
+                    <Plus className="w-4 h-4 mr-2" /> Nova Missão
                 </Button>
-            </div>
-        </CardContent>
-      </Card>
+            </DialogTrigger>
+            <DialogContent className="bg-[#0A0A0A]/95 backdrop-blur-xl border-white/10 sm:max-w-[500px]">
+                <DialogHeader>
+                    <DialogTitle className="text-white uppercase tracking-wider flex items-center gap-2 text-lg">
+                        <Zap className="w-5 h-5 text-red-500" /> Nova Missão Semanal
+                    </DialogTitle>
+                    <DialogDescription className="text-neutral-500">
+                        Defina o foco tático para a próxima semana.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-6 py-4">
+                    <div className="space-y-2">
+                        <Label className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest pl-1">Objetivo Único</Label>
+                        <Input
+                            value={newWeekGoal}
+                            onChange={(e) => setNewWeekGoal(e.target.value)}
+                            placeholder="Ex: Finalizar o Módulo 3..."
+                            className="bg-white/5 border-white/10 h-11 text-sm focus:border-red-500/50 focus:ring-red-500/20 rounded-lg placeholder:text-neutral-600 text-white"
+                        />
+                    </div>
+                    
+                    <div className="space-y-2">
+                        <Label className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest pl-1">Pilar Relacionado</Label>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            {pillars.map((p) => (
+                                <button
+                                    key={p.id}
+                                    onClick={() => setSelectedPillar(p.id)}
+                                    className={cn(
+                                        "h-10 rounded-lg border flex items-center justify-center gap-2 transition-all duration-300 relative overflow-hidden group px-2",
+                                        selectedPillar === p.id 
+                                            ? `${p.bg} ${p.border} ring-1 ring-offset-0 ${p.border.replace('border', 'ring')}` 
+                                            : "bg-white/5 border-white/10 hover:border-white/20 text-neutral-500"
+                                    )}
+                                >
+                                    <p.icon className={cn("w-3.5 h-3.5 transition-colors", selectedPillar === p.id ? p.color : "text-neutral-500 group-hover:text-white")} />
+                                    <span className={cn("text-[10px] font-bold uppercase truncate", selectedPillar === p.id ? "text-white" : "text-neutral-500")}>
+                                        {p.label}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                            <Label className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest pl-1">Início</Label>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                            "w-full pl-3 text-left font-normal bg-white/5 border-white/10 hover:bg-white/10 hover:text-white h-10 rounded-lg",
+                                            !newWeekStart && "text-neutral-500"
+                                        )}
+                                    >
+                                        {newWeekStart ? format(newWeekStart, "dd/MM/yyyy") : <span className="text-xs">DD/MM/AAAA</span>}
+                                        <CalendarIcon className="ml-auto h-3.5 w-3.5 opacity-50" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0 bg-[#111] border-white/10" align="start">
+                                    <Calendar
+                                        mode="single"
+                                        selected={newWeekStart}
+                                        onSelect={setNewWeekStart}
+                                        initialFocus
+                                        className="p-3 pointer-events-auto"
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+
+                        <div className="space-y-1.5">
+                            <Label className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest pl-1">Fim</Label>
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                            "w-full pl-3 text-left font-normal bg-white/5 border-white/10 hover:bg-white/10 hover:text-white h-10 rounded-lg",
+                                            !newWeekEnd && "text-neutral-500"
+                                        )}
+                                    >
+                                        {newWeekEnd ? format(newWeekEnd, "dd/MM/yyyy") : <span className="text-xs">DD/MM/AAAA</span>}
+                                        <CalendarIcon className="ml-auto h-3.5 w-3.5 opacity-50" />
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-auto p-0 bg-[#111] border-white/10" align="start">
+                                    <Calendar
+                                        mode="single"
+                                        selected={newWeekEnd}
+                                        onSelect={setNewWeekEnd}
+                                        initialFocus
+                                        className="p-3 pointer-events-auto"
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+                    </div>
+                </div>
+
+                <DialogFooter className="sm:justify-end">
+                    <Button 
+                        onClick={handleCreateWeek} 
+                        disabled={!newWeekGoal || !newWeekStart || !newWeekEnd}
+                        className="w-full bg-red-600 hover:bg-red-500 text-white font-bold h-11 rounded-lg transition-all duration-300 uppercase tracking-widest text-xs shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Iniciar Missão
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+          </Dialog>
+      </div>
 
       {/* ACTIVE MISSIONS LIST */}
       <div className="space-y-8">
@@ -220,7 +223,7 @@ export const WeeklyTab = ({
                 <Sparkles className="w-6 h-6 text-neutral-600" />
             </div>
             <p className="text-sm font-medium text-neutral-500 uppercase tracking-[0.2em]">Nenhuma Missão Semanal ativa</p>
-            <p className="text-xs text-neutral-700 mt-2">Defina seu foco acima para começar a batalha.</p>
+            <p className="text-xs text-neutral-700 mt-2">Clique em "+ Nova Missão" para começar a batalha.</p>
           </div>
         )}
 
