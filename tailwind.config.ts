@@ -19,7 +19,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["ui-sans-serif", "system-ui", "sans-serif"], // Voltando ao padrão do sistema para legibilidade
+        // Agora a fonte padrão 'sans' é Rajdhani
+        sans: ["Rajdhani", "sans-serif"],
+        // Mantemos 'rajdhani' caso alguma classe específica a chame, mas é redundante agora
         rajdhani: ["Rajdhani", "sans-serif"],
       },
       colors: {
