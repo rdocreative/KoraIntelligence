@@ -8,9 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { 
-  Target, ArrowRight, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
-  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout,
-  ArrowDown, ArrowUp, Zap, Settings
+  Target, CheckCircle2, Briefcase, GraduationCap, Heart, User, 
+  Plus, X, ChevronRight, AlertCircle, Sparkles, Check, Info, Layout
 } from "lucide-react";
 
 export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => {
@@ -87,67 +86,53 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     );
   };
 
+  // Background Component to avoid repetition
+  const AppBackground = () => (
+    <div 
+      className="absolute inset-0 pointer-events-none z-0"
+      style={{
+        backgroundImage: `linear-gradient(rgba(5, 5, 5, 0.4), rgba(5, 5, 5, 0.7)), url('/Background-MasterPlan.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    />
+  );
+
   // --- WELCOME SCREEN (STEP 0) ---
   if (step === 0 && !hasShownWelcome) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-6 overflow-hidden">
-        
-        {/* Background Atmosphere Specific to Onboarding */}
-        <div 
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: `linear-gradient(rgba(5, 5, 5, 0.94), rgba(5, 5, 5, 0.98)), url('/Background-MasterPlan.png')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed'
-          }}
-        />
-
-        {/* Subtle Background Elements Layered Over Image */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 right-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/10 blur-[120px] rounded-full opacity-50" />
-            
-            {/* Vignette for focus */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505] opacity-80" />
-        </div>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-6 overflow-hidden bg-black">
+        <AppBackground />
         
         <div className="w-full max-w-4xl space-y-12 relative z-10 flex flex-col items-center">
-           
-           {/* 1. Logo Section */}
+           {/* Logo Section */}
            <div className="flex flex-col items-center animate-in fade-in zoom-in duration-700">
-               <span className="text-[12px] tracking-[0.4em] text-neutral-500 uppercase font-bold mb-[-2rem] relative z-0 opacity-80">
+               <span className="text-[12px] tracking-[0.4em] text-white/60 uppercase font-bold mb-[-2rem] relative z-0">
                   Bem-vindo ao
                </span>
                <img 
                   src="/MasterPlan.png" 
                   alt="MasterPlan Logo" 
-                  style={{ filter: 'drop-shadow(0 0 15px rgba(220, 38, 38, 0.8))' }}
+                  style={{ filter: 'drop-shadow(0 0 20px rgba(220, 38, 38, 0.9))' }}
                   className="h-32 md:h-40 w-auto object-contain relative z-10" 
                />
-               <span className="text-[10px] tracking-[0.6em] text-neutral-600 mt-6 uppercase font-medium">Sistema Ativo</span>
+               <span className="text-[10px] tracking-[0.6em] text-white/50 mt-6 uppercase font-medium">Sistema Ativo</span>
            </div>
 
-           {/* 2. Modular Architecture - Side by Side Modules */}
+           {/* Modular Architecture */}
            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200 fill-mode-backwards px-4 md:px-0 items-stretch">
-               
-               {/* Module Left: HABITS */}
-               <div className="bg-white/[0.02] backdrop-blur-sm border-r-2 border-neutral-700 p-6 md:pr-8 md:pl-6 flex flex-col gap-3 text-left hover:bg-white/[0.04] transition-colors relative overflow-hidden group">
-                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center_right,rgba(255,255,255,0.04)_0%,transparent_60%)] opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
-                   
+               <div className="bg-black/40 backdrop-blur-md border-r-2 border-neutral-700 p-6 flex flex-col gap-3 text-left hover:bg-black/60 transition-colors relative overflow-hidden group">
                    <div className="relative z-10">
-                       <span className="text-[10px] text-neutral-500 font-bold tracking-widest uppercase">Protocolo de Base</span>
+                       <span className="text-[10px] text-neutral-400 font-bold tracking-widest uppercase">Protocolo de Base</span>
                        <h2 className="text-2xl font-bold text-white uppercase tracking-tight">Hábitos</h2>
-                       <p className="text-neutral-400 text-xs font-medium leading-relaxed max-w-xs">
+                       <p className="text-neutral-300 text-xs font-medium leading-relaxed max-w-xs">
                            Sua manutenção diária. Ações obrigatórias para manter a máquina operando em alta performance. Sem negociação.
                        </p>
                    </div>
                </div>
 
-               {/* Module Right: MASTERPLAN */}
-               <div className="bg-white/[0.02] backdrop-blur-sm border-l-2 border-red-600 p-6 md:pl-8 flex flex-col gap-3 text-left hover:bg-white/[0.04] transition-colors relative overflow-hidden group">
-                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center_left,rgba(220,20,60,0.04)_0%,transparent_60%)] opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
-
+               <div className="bg-black/40 backdrop-blur-md border-l-2 border-red-600 p-6 flex flex-col gap-3 text-left hover:bg-black/60 transition-colors relative overflow-hidden group">
                    <div className="relative z-10">
                        <span className="text-[10px] text-red-500 font-bold tracking-widest uppercase">Vetor de Expansão</span>
                        <div className="h-8 flex items-center justify-start">
@@ -158,16 +143,16 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                               className="h-10 w-auto object-contain object-left"
                            />
                        </div>
-                       <p className="text-neutral-400 text-xs font-medium leading-relaxed max-w-xs">
+                       <p className="text-neutral-300 text-xs font-medium leading-relaxed max-w-xs">
                            Sua estratégia de ataque. Projetos táticos com início, meio e fim, desenhados para mover o ponteiro e mudar o seu nível de vida.
                        </p>
                    </div>
                </div>
            </div>
 
-           {/* 3. Footer Command & Action */}
+           {/* Footer Command */}
            <div className="w-full max-w-lg mx-auto flex flex-col gap-8 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-500 fill-mode-backwards mt-16">
-               <div className="border-y border-white/30 py-6 text-center shadow-[0_0_15px_rgba(255,255,255,0.05)] bg-white/[0.01] backdrop-blur-[2px]">
+               <div className="border-y border-white/20 py-6 text-center bg-black/30 backdrop-blur-sm">
                    <p className="text-white font-mono text-[10px] md:text-[11px] uppercase tracking-[0.15em] leading-relaxed">
                        O QUE VOCÊ VAI CONFIGURAR AGORA NÃO É UMA LISTINHA DE TAREFAS.<br className="hidden md:block" /> É O SEU PLANO DE ATAQUE.
                    </p>
@@ -179,7 +164,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                          setHasShownWelcome(true);
                          setStep(1);
                      }}
-                     className="w-full h-12 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-widest rounded-md shadow-[0_0_25px_rgba(220,38,38,0.4)] hover:shadow-[0_0_40px_rgba(220,38,38,0.6)] transition-all duration-300 transform hover:-translate-y-1"
+                     className="w-full h-12 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-widest rounded-md shadow-[0_0_25px_rgba(220,38,38,0.4)] transition-all duration-300 transform hover:-translate-y-1"
                  >
                      ATIVAR PROTOCOLO
                  </Button>
@@ -202,7 +187,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                          <h2 className="text-2xl font-black text-white uppercase tracking-tight">O Alvo Único</h2>
                     </div>
 
-                    <div className="bg-[#0E0E0E] border border-white/10 rounded-xl p-5 mb-8 relative overflow-hidden group shadow-lg">
+                    <div className="bg-black/80 border border-white/10 rounded-xl p-5 mb-8 relative overflow-hidden group shadow-lg backdrop-blur-md">
                         <div className="absolute top-0 left-0 w-1 h-full bg-red-600" />
                         <div className="flex gap-4">
                             <div className="shrink-0 mt-0.5">
@@ -210,7 +195,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                             </div>
                             <div className="space-y-3">
                                 <h4 className="text-white font-bold text-sm uppercase tracking-wide">A Lei do Foco Extremo</h4>
-                                <p className="text-neutral-400 text-sm leading-relaxed">
+                                <p className="text-neutral-300 text-sm leading-relaxed">
                                     Qual é a <span className="text-white font-bold">ÚNICA</span> coisa que, se você conquistar este ano, fará todas as outras parecerem fáceis ou irrelevantes?
                                 </p>
                             </div>
@@ -219,31 +204,31 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
                     <div className="space-y-8">
                         <div className="space-y-3 group relative">
-                            <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Objetivo Anual</Label>
+                            <Label className="text-xs font-bold uppercase tracking-widest text-neutral-400 group-focus-within:text-white transition-colors pl-1">Objetivo Anual</Label>
                             <Input 
                                 autoFocus
                                 placeholder="Ex: Atingir liberdade financeira" 
                                 value={data.annual.objective}
                                 onChange={(e) => updateAnnual({ objective: e.target.value })}
-                                className="bg-[#0E0E0E] border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-red-500/50 transition-all duration-300"
+                                className="bg-black/60 backdrop-blur-md border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-red-500/50"
                             />
                             <Feedback analysis={objectiveAnalysis} />
                         </div>
                         
                         <div className="space-y-3 group">
-                            <Label className="text-xs font-bold uppercase tracking-widest text-neutral-500 group-focus-within:text-white transition-colors pl-1">Critério de Sucesso</Label>
+                            <Label className="text-xs font-bold uppercase tracking-widest text-neutral-400 group-focus-within:text-white transition-colors pl-1">Critério de Sucesso</Label>
                             <Textarea 
                                 placeholder="Ex: Ter R$ 100k investidos." 
                                 value={data.annual.successCriteria}
                                 onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                                className="bg-[#0E0E0E] border-white/10 min-h-[120px] text-base px-4 py-4 resize-none shadow-inner"
+                                className="bg-black/60 backdrop-blur-md border-white/10 min-h-[120px] text-base px-4 py-4 resize-none"
                             />
                             <Feedback analysis={criteriaAnalysis} />
                         </div>
                     </div>
                 </div>
 
-                <div className="flex justify-end pt-6 border-t border-white/5 flex-shrink-0 mt-auto bg-[#0A0A0A]/90 backdrop-blur-sm -mx-8 px-8 pb-8">
+                <div className="flex justify-end pt-6 border-t border-white/5 flex-shrink-0 mt-auto -mx-8 px-8 pb-8">
                     <Button 
                         disabled={!isAnnualValid}
                         onClick={() => setStep(2)}
@@ -274,7 +259,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                           { id: 'health', label: 'Saúde', icon: Heart, color: 'text-red-500', items: data.areas.health },
                           { id: 'personal', label: 'Pessoal', icon: User, color: 'text-yellow-500', items: data.areas.personal },
                         ].map((area) => (
-                          <div key={area.id} className="p-5 rounded-2xl border bg-[#0E0E0E] border-white/5">
+                          <div key={area.id} className="p-5 rounded-2xl border bg-black/60 backdrop-blur-md border-white/5">
                               <div className="flex items-center justify-between mb-4">
                                   <Label className={`flex items-center gap-2 text-xs uppercase font-black tracking-widest ${area.color}`}>
                                       <area.icon className="w-4 h-4" /> {area.label}
@@ -308,8 +293,8 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center pt-6 border-t border-white/5 flex-shrink-0 mt-auto bg-[#0A0A0A]/90 backdrop-blur-sm -mx-8 px-8 pb-8">
-                    <Button variant="ghost" onClick={() => setStep(1)} className="text-neutral-500 font-bold uppercase tracking-widest text-[10px]">Voltar</Button>
+                <div className="flex justify-between items-center pt-6 border-t border-white/5 flex-shrink-0 mt-auto -mx-8 px-8 pb-8">
+                    <Button variant="ghost" onClick={() => setStep(1)} className="text-neutral-400 font-bold uppercase tracking-widest text-[10px] hover:text-white">Voltar</Button>
                     <Button 
                         disabled={!hasAtLeastOneItem}
                         onClick={() => setStep(3)}
@@ -338,23 +323,13 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#020202]/95 backdrop-blur-xl flex items-center justify-center p-4">
-      
-      {/* Background Atmosphere Persisting through all steps of Onboarding */}
-      <div 
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: `linear-gradient(rgba(5, 5, 5, 0.94), rgba(5, 5, 5, 0.98)), url('/Background-MasterPlan.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed'
-        }}
-      />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black overflow-hidden">
+      <AppBackground />
 
-      <Card className="w-full max-w-lg bg-[#0A0A0A] border-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col ring-1 ring-white/5">
-        <div className="px-8 pt-8 pb-6 flex justify-between items-end flex-shrink-0 bg-[#0A0A0A]">
+      <Card className="w-full max-w-lg bg-black/60 backdrop-blur-xl border-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col ring-1 ring-white/10">
+        <div className="px-8 pt-8 pb-6 flex justify-between items-end flex-shrink-0">
             <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">Passo {step} de 3</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">Passo {step} de 3</span>
                 <div className="flex gap-1.5">
                     {[1, 2, 3].map((i) => (
                         <div key={i} className={`h-1 rounded-full transition-all duration-500 ${step >= i ? 'w-8 bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.5)]' : 'w-2 bg-neutral-800'}`} />
