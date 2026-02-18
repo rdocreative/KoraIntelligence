@@ -63,11 +63,14 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   const weekCompleted = currentWeek?.tasks.filter((t: any) => t.completed).length || 0;
   const weekProgress = weekTotal === 0 ? 0 : (weekCompleted / weekTotal) * 100;
 
+  // Common card styles
+  const cardBaseStyle = "bg-[#161616] border-white/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.4)]";
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       
       {/* 1. CARD OBJETIVO ANUAL */}
-      <Card className="bg-[#0A0A0A] border-white/10 shadow-2xl relative overflow-hidden group">
+      <Card className={`${cardBaseStyle} relative overflow-hidden group`}>
         <div className="absolute top-0 right-0 p-32 bg-red-600/5 rounded-full blur-3xl group-hover:bg-red-600/10 transition-colors duration-500" />
         
         <CardContent className="p-8 relative z-10">
@@ -102,7 +105,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               const Icon = config.icon;
               return (
                 <div key={area.id} className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg bg-neutral-900 border border-white/5 ${config.color}`}>
+                  <div className={`p-2 rounded-lg bg-[#0A0A0A] border border-white/5 ${config.color}`}>
                     <Icon size={16} />
                   </div>
                   <div className="flex-1">
@@ -129,14 +132,14 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           const hasItem = !!firstItem;
 
           return (
-            <Card key={area.id} className="bg-[#0A0A0A] border-white/10 hover:border-white/20 transition-all duration-300 group">
+            <Card key={area.id} className={`${cardBaseStyle} hover:border-white/20 transition-all duration-300 group`}>
               <CardContent className="p-5 flex flex-col h-full justify-between gap-4">
                 <div>
                   <div className="flex justify-between items-start mb-4">
-                    <div className={`p-2.5 rounded-xl bg-neutral-900 border border-white/5 ${config.color} group-hover:scale-110 transition-transform`}>
+                    <div className={`p-2.5 rounded-xl bg-[#0A0A0A] border border-white/5 ${config.color} group-hover:scale-110 transition-transform`}>
                       <Icon size={20} />
                     </div>
-                    <Badge variant="outline" className="border-white/5 bg-neutral-900 text-neutral-400">
+                    <Badge variant="outline" className="border-white/5 bg-[#0A0A0A] text-neutral-400">
                       {area.completed}/{area.total}
                     </Badge>
                   </div>
@@ -151,7 +154,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
                         {firstItem.title}
                       </p>
                     ) : (
-                       <p className="text-sm text-neutral-600 italic mt-1">
+                       <p className="text-sm text-[#444] italic mt-1 font-light">
                         Sem meta definida
                       </p>
                     )}
@@ -167,7 +170,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         
         {/* Card Mês */}
-        <Card className="bg-[#0A0A0A] border-white/10 flex flex-col">
+        <Card className={`${cardBaseStyle} flex flex-col`}>
           <CardHeader className="pb-2">
             <div className="flex justify-between items-center">
               <CardTitle className="text-base font-bold text-neutral-200 uppercase tracking-wider">
@@ -215,7 +218,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </Card>
 
         {/* Card Semana */}
-        <Card className="bg-[#0A0A0A] border-white/10 flex flex-col">
+        <Card className={`${cardBaseStyle} flex flex-col`}>
           <CardHeader className="pb-2">
             <div className="flex justify-between items-center">
               <CardTitle className="text-base font-bold text-neutral-200 uppercase tracking-wider">
@@ -261,7 +264,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </Card>
 
         {/* Card Hoje (Foco) */}
-        <Card className="bg-gradient-to-br from-[#0A0A0A] to-neutral-900 border-white/10 ring-1 ring-red-500/20 flex flex-col">
+        <Card className={`${cardBaseStyle} ring-1 ring-red-500/20 flex flex-col`}>
           <CardHeader className="pb-2">
             <div className="flex justify-between items-start">
               <div>
