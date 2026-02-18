@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Zap, Plus, Sparkles, Target, ChevronRight, Link2, X } from "lucide-react";
+import { Zap, Plus, Sparkles, Target, ChevronRight, Link2, X, Calendar } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
@@ -21,12 +21,13 @@ interface Mission {
 
 interface FocoHojeCardProps {
   tasks: DailyTask[];
-  missions: Mission[]; // Nova prop para o seletor
+  missions: Mission[]; 
+  monthName: string; // Novo prop para o contexto do grupo
   onAddTask: (text: string, missionId?: string) => void;
   onToggleTask: (id: string) => void;
 }
 
-export const FocoHojeCard = ({ tasks, missions, onAddTask, onToggleTask }: FocoHojeCardProps) => {
+export const FocoHojeCard = ({ tasks, missions, monthName, onAddTask, onToggleTask }: FocoHojeCardProps) => {
   const [newTask, setNewTask] = useState("");
   const [selectedMissionId, setSelectedMissionId] = useState<string | null>(null);
   const [animatingId, setAnimatingId] = useState<string | null>(null);
@@ -43,8 +44,6 @@ export const FocoHojeCard = ({ tasks, missions, onAddTask, onToggleTask }: FocoH
     if (newTask.trim()) {
       onAddTask(newTask.trim(), selectedMissionId || undefined);
       setNewTask("");
-      // Opcional: manter a missão selecionada para adições em lote ou limpar
-      // setSelectedMissionId(null); 
     }
   };
 
@@ -190,27 +189,41 @@ export const FocoHojeCard = ({ tasks, missions, onAddTask, onToggleTask }: FocoH
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-64 p-2 bg-[#161616] border-white/10 backdrop-blur-xl" align="start" sideOffset={8}>
-                <div className="mb-2 px-2 py-1 text-[10px] uppercase font-bold text-neutral-500 tracking-widest">
-                  Selecionar Missão Ativa
-                </div>
+            <PopoverContent className="w-[320px] p-0 bg-[#161616] border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden" align="start" sideOffset={8}>
                 {missions.length === 0 ? (
-                  <div className="text-xs text-neutral-500 px-2 py-2">Nenhuma missão ativa.</div>
+                  <div className="text-xs text-neutral-500 px-4 py-4 text-center">Nenhuma missão ativa neste mês.</div>
                 ) : (
-                  <div className="space-y-1">
-                    {missions.map(m => (
-                      <button
-                        key={m.id}
-                        onClick={() => {
-                          setSelectedMissionId(m.id);
-                          setIsPopoverOpen(false);
-                        }}
-                        className="w-full text-left px-3 py-2 rounded-md hover:bg-white/5 text-xs text-neutral-300 hover:text-white transition-colors flex items-center gap-2 group"
-                      >
-                         <Target className="w-3 h-3 text-neutral-600 group-hover:text-emerald-500 transition-colors" />
-                         <span className="truncate">{m.goal}</span>
-                      </button>
-                    ))}
+                  <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
+                    
+                    {/* OPTGROUP HEADER: MONTH */}
+                    <div className="sticky top-0 z-10 bg-[#161616]/95 backdrop-blur-sm px-3 py-2 border-b border-white/5 flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)]"></div>
+                        <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">{monthName}</span>
+                    </div>
+
+                    {/* OPTIONS: MISSIONS */}
+                    <div className="p-1 space-y-0.5">
+                      {missions.map(m => (
+                        <button
+                          key={m.id}
+                          onClick={() => {
+                            setSelectedMissionId(m.id);
+                            setIsPopoverOpen(false);
+                          }}
+                          className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-white/5 text-xs text-neutral-300 hover:text-white transition-all flex items-center gap-3 group relative overflow-hidden"
+                        >
+                           {/* Hover indicator */}
+                           <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                           
+                           <Target className="w-3.5 h-3.5 text-neutral-600 group-hover:text-emerald-500 transition-colors shrink-0" />
+                           <span className="truncate font-medium">{m.goal}</span>
+                           
+                           <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                             <span className="text-[9px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded uppercase tracking-wider">Selecionar</span>
+                           </div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
             </PopoverContent>

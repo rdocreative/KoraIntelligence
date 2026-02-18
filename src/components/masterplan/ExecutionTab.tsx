@@ -122,6 +122,7 @@ export const ExecutionTab = ({
         <FocoHojeCard 
           tasks={dailyTasks}
           missions={weeks}
+          monthName={currentMonth.name}
           onAddTask={handleAddDailyTask}
           onToggleTask={handleToggleDailyTask}
         />
