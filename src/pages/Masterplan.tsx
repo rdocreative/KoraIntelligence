@@ -6,9 +6,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LoadingScreen } from "@/components/masterplan/LoadingScreen";
 import { OnboardingWizard } from "@/components/masterplan/OnboardingWizard";
 import { OverviewTab } from "@/components/masterplan/OverviewTab";
-import { WeeklyTab } from "@/components/masterplan/WeeklyTab";
-import { MonthlyTab } from "@/components/masterplan/MonthlyTab";
 import { AnnualTab } from "@/components/masterplan/AnnualTab";
+import { ExecutionTab } from "@/components/masterplan/ExecutionTab";
 
 const MasterplanPage = () => {
   const { 
@@ -110,10 +109,9 @@ const MasterplanPage = () => {
         <Tabs defaultValue="overview" className="w-full space-y-8">
           {/* SELETOR DE ABAS NO TOPO ABSOLUTO DO CONTEÚDO */}
           <div className="sticky top-4 z-50 flex justify-center">
-            <TabsList className="grid grid-cols-4 bg-[#0A0A0A]/80 backdrop-blur-xl p-1.5 border border-white/10 rounded-2xl h-14 shadow-2xl w-full max-w-md ring-1 ring-white/5">
+            <TabsList className="grid grid-cols-3 bg-[#0A0A0A]/80 backdrop-blur-xl p-1.5 border border-white/10 rounded-2xl h-14 shadow-2xl w-full max-w-sm ring-1 ring-white/5">
               <TabsTrigger value="overview" className="rounded-xl font-bold data-[state=active]:bg-white data-[state=active]:text-black text-[10px] uppercase tracking-wider transition-all duration-300">Visão</TabsTrigger>
-              <TabsTrigger value="weekly" className="rounded-xl font-bold data-[state=active]:bg-red-600 data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Foco</TabsTrigger>
-              <TabsTrigger value="monthly" className="rounded-xl font-bold data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Mês</TabsTrigger>
+              <TabsTrigger value="execution" className="rounded-xl font-bold data-[state=active]:bg-red-600 data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Execução</TabsTrigger>
               <TabsTrigger value="annual" className="rounded-xl font-bold data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Ano</TabsTrigger>
             </TabsList>
           </div>
@@ -125,15 +123,22 @@ const MasterplanPage = () => {
                   activeWeeks={activeWeeks}
                   currentMonth={currentMonth}
                   areas={data.areas}
-                  onNavigateToWeekly={() => document.querySelector('[data-value="weekly"]')?.dispatchEvent(new MouseEvent('click', {bubbles: true}))}
+                  onNavigateToWeekly={() => document.querySelector('[data-value="execution"]')?.dispatchEvent(new MouseEvent('click', {bubbles: true}))}
                   annualData={data.annual}
                   onResetTutorial={resetTutorial}
               />
             </TabsContent>
 
-            {/* --- 2. WEEKLY (EXECUÇÃO) --- */}
-            <TabsContent value="weekly">
-              <WeeklyTab 
+            {/* --- 2. EXECUÇÃO (MÊS + SEMANA) --- */}
+            <TabsContent value="execution">
+              <ExecutionTab 
+                  // Monthly Props
+                  currentMonth={currentMonth}
+                  currentMonthIndex={currentMonthIndex}
+                  addMonthGoal={addMonthGoal}
+                  toggleMonthGoal={toggleMonthGoal}
+                  updateMonth={updateMonth}
+                  // Weekly Props
                   weeks={data.weeks}
                   addWeek={addWeek}
                   deleteWeek={deleteWeek}
@@ -143,18 +148,7 @@ const MasterplanPage = () => {
               />
             </TabsContent>
 
-            {/* --- 3. MONTHLY (PLANEJAMENTO) --- */}
-            <TabsContent value="monthly">
-              <MonthlyTab 
-                  months={data.months}
-                  currentMonthIndex={currentMonthIndex}
-                  addMonthGoal={addMonthGoal}
-                  toggleMonthGoal={toggleMonthGoal}
-                  updateMonth={updateMonth}
-              />
-            </TabsContent>
-
-            {/* --- 4. ANNUAL (DASHBOARD ANALÍTICO) --- */}
+            {/* --- 3. ANNUAL (DASHBOARD ANALÍTICO) --- */}
             <TabsContent value="annual">
                 <AnnualTab 
                   data={data}
