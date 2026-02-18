@@ -96,9 +96,9 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/5 blur-[120px] rounded-full opacity-50" />
         </div>
         
-        <div className="w-full max-w-2xl space-y-16 relative z-10 flex flex-col items-center">
+        <div className="w-full max-w-4xl space-y-12 relative z-10 flex flex-col items-center">
            
-           {/* 1. Logo Section - Scaled Up & Glowing with Overlap */}
+           {/* 1. Logo Section */}
            <div className="flex flex-col items-center animate-in fade-in zoom-in duration-700">
                <span className="text-[12px] tracking-[0.4em] text-neutral-500 uppercase font-bold mb-[-2rem] relative z-0 opacity-80">
                   Bem-vindo ao
@@ -112,50 +112,44 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                <span className="text-[10px] tracking-[0.6em] text-neutral-600 mt-6 uppercase font-medium">Sistema Ativo</span>
            </div>
 
-           {/* 2. The Columns - Staggered Entry (200ms delay) */}
-           <div className="w-full grid grid-cols-1 md:grid-cols-2 relative gap-12 md:gap-0 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200 fill-mode-backwards">
-               {/* Vertical Line */}
-               <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-white opacity-10 -translate-x-1/2" />
-
-               {/* Left: Habits */}
-               <div className="text-center md:text-right md:pr-12 space-y-4">
-                   {/* Reduced size by ~20% (from 2xl/3xl to lg/2xl) */}
-                   <h2 className="text-lg md:text-2xl font-bold text-white uppercase tracking-tight h-14 flex items-center justify-center md:justify-end">Hábitos</h2>
-                   <p className="text-[#EDEDED] text-[13px] font-semibold leading-relaxed uppercase tracking-widest">
-                       A BASE OPERACIONAL. <br/>
-                       Sua obrigação diária para manter a disciplina. <br/>
-                       Sem questionamentos.
+           {/* 2. Modular Architecture - Side by Side Modules */}
+           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200 fill-mode-backwards px-4 md:px-0">
+               
+               {/* Module Left: HABITS */}
+               <div className="bg-white/[0.02] border-l-2 border-neutral-700 p-6 md:pl-8 flex flex-col gap-3 text-left hover:bg-white/[0.04] transition-colors">
+                   <span className="text-[10px] text-neutral-500 font-bold tracking-widest uppercase">Protocolo de Base</span>
+                   <h2 className="text-2xl font-bold text-white uppercase tracking-tight">Hábitos</h2>
+                   <p className="text-neutral-400 text-xs font-medium leading-relaxed max-w-xs">
+                       Sua manutenção diária. Ações obrigatórias para manter a máquina operando em alta performance. Sem negociação.
                    </p>
                </div>
 
-               {/* Right: Masterplan */}
-               <div className="text-center md:text-left md:pl-12 space-y-4">
-                   {/* Internal Logo Replacement - Kept at the requested size */}
-                   <div className="flex justify-center md:justify-start h-14 items-center">
+               {/* Module Right: MASTERPLAN */}
+               <div className="bg-white/[0.02] border-l-2 border-red-600 p-6 md:pl-8 flex flex-col gap-3 text-left hover:bg-white/[0.04] transition-colors">
+                   <span className="text-[10px] text-red-500 font-bold tracking-widest uppercase">Vetor de Expansão</span>
+                   {/* Logo Container - Aligned height with text */}
+                   <div className="h-8 flex items-center justify-start">
                        <img 
                           src="/MasterPlan.png" 
                           alt="MasterPlan" 
-                          style={{ filter: 'drop-shadow(0 0 10px rgba(220, 38, 38, 0.6))' }}
-                          className="h-14 w-auto object-contain"
+                          style={{ filter: 'drop-shadow(0 0 8px rgba(220, 38, 38, 0.5))' }}
+                          className="h-10 w-auto object-contain object-left"
                        />
                    </div>
-                   <p className="text-[#EDEDED] text-[13px] font-semibold leading-relaxed uppercase tracking-widest">
-                       O VETOR DE ATAQUE. <br/>
-                       Metas de guerra com data de conclusão. <br/>
-                       Onde você sobe seu nível de vida.
+                   <p className="text-neutral-400 text-xs font-medium leading-relaxed max-w-xs">
+                       Sua estratégia de ataque. Projetos táticos com início, meio e fim, desenhados para mover o ponteiro e mudar o seu nível de vida.
                    </p>
                </div>
            </div>
 
-           {/* 3. Footer Command & Action - Staggered Entry (400ms delay) */}
-           <div className="w-full max-w-lg mx-auto flex flex-col gap-8 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-500 fill-mode-backwards">
+           {/* 3. Footer Command & Action */}
+           <div className="w-full max-w-lg mx-auto flex flex-col gap-8 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-500 fill-mode-backwards mt-16">
                <div className="border-y border-white/10 py-6 text-center">
                    <p className="text-neutral-500 font-mono text-[10px] md:text-[11px] uppercase tracking-widest leading-relaxed">
                        O QUE VOCÊ VAI CONFIGURAR AGORA NÃO É UMA LISTINHA DE TAREFAS.<br className="hidden md:block" /> É O SEU PLANO DE ATAQUE.
                    </p>
                </div>
 
-               {/* Action Button - Dashboard Style with Glow */}
                <div className="w-full max-w-xs mx-auto">
                  <Button 
                      onClick={() => {
