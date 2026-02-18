@@ -311,7 +311,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       <div className="flex justify-center pt-8 pb-4 opacity-0 hover:opacity-100 transition-opacity duration-500">
         <button 
           onClick={onResetTutorial}
-          className="flex items-center gap-2 text-xs text-neutral-700 hover:text-red-500 transition-colors"
+          className="flex items-center gap-2 text-xs text-neutral-400 hover:text-white transition-colors"
         >
           <RefreshCw size={10} /> Reiniciar Tutorial
         </button>
