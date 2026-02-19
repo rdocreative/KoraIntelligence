@@ -21,9 +21,9 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
     <div 
       className={cn(
         "group relative flex flex-col gap-3 p-5 rounded-[2rem] border transition-all duration-500 backdrop-blur-[50px]",
-        "bg-black/80 hover:bg-black/95",
+        "bg-[#0d0d0f] hover:bg-black",
         "border-white/5 hover:border-red-600/50",
-        "shadow-[0_30px_60px_-12px_rgba(0,0,0,1),0_10px_20px_rgba(0,0,0,0.5)] hover:shadow-[0_40px_80px_-12px_rgba(220,38,38,0.2)]",
+        "shadow-[0_40px_80px_-15px_rgba(0,0,0,1),0_0_20px_rgba(0,0,0,0.8)] hover:shadow-[0_50px_100px_-15px_rgba(220,38,38,0.2),0_0_30px_rgba(0,0,0,1)]",
         habit.completed && "opacity-60"
       )}
     >
@@ -93,7 +93,7 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
               habit.completed 
                 ? "bg-green-600/10 text-green-500 border border-green-500/20" 
                 : isForToday 
-                  ? "bg-red-700 hover:bg-red-600 text-white shadow-[0_15px_30px_-5px_rgba(220,38,38,0.6)] border border-red-500/50" 
+                  ? "bg-red-700 hover:bg-red-600 text-white shadow-[0_20px_40px_-5px_rgba(220,38,38,0.7)] border border-red-500/50" 
                   : "bg-white/5 text-white/10 border border-white/5 cursor-not-allowed"
             )}
           >
