@@ -44,11 +44,11 @@ const App = () => (
                   {/* Background Layers */}
                   <ParticleBackground />
                   
-                  {/* Main App Background Gradient - Red from bottom using requested colors */}
-                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(232,40,58,0.08)_0%,rgba(28,28,29,1)_50%,rgba(20,20,21,1)_100%)]" />
+                  {/* Main App Background - Clean dark style using requested colors */}
+                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgb(20,20,21)_0%,rgb(28,28,29)_100%)] opacity-50" />
                   
-                  {/* Depth overlay */}
-                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_center_bottom,rgba(232,40,58,0.05),transparent_70%)]" />
+                  {/* Solid base to ensure no transparent gaps */}
+                  <div className="fixed inset-0 pointer-events-none bg-[#141415] -z-10" />
 
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
