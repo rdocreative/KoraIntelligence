@@ -39,14 +39,10 @@ const App = () => (
               <Toaster />
               <Sonner theme="dark" />
               <BrowserRouter>
-                {/* Container principal com a nova cor de fundo e overflow controlado */}
-                <div className="min-h-screen bg-[#0a0a0c] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
+                {/* Reverted background to simple dark #060606 */}
+                <div className="min-h-screen bg-[#060606] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                   
-                  {/* Camadas de fundo fixas */}
-                  <div className="bg-circuit-pattern" />
-                  <div className="bg-cyber-glow" />
-
-                  {/* Conteúdo principal com z-index elevado para ficar acima do fundo */}
+                  {/* Conteúdo principal */}
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
                     <main className="flex-1 p-6 pb-32 max-w-5xl mx-auto w-full">
