@@ -8,7 +8,7 @@
   :root {
     --background: 0 0% 2%; /* #060606 */
     --foreground: 240 6% 95%;
-    --card: 0 0% 100% / 0.03; 
+    --card: 0 0% 100% / 0.02; 
     --border: 240 10% 20%; 
     --radius: 1rem;
   }
@@ -25,14 +25,14 @@
 }
 
 @layer components {
-  /* Ghost Card: 3% opacity, max blur, visible border */
+  /* Ghost Card: 2% opacity, max blur, visible border */
   .card-ghost {
-    @apply bg-white/[0.03] border border-white/20 rounded-2xl backdrop-blur-3xl shadow-2xl shadow-black/80;
+    @apply bg-white/[0.02] border border-white/20 rounded-2xl backdrop-blur-3xl shadow-2xl shadow-black/80;
   }
 
-  /* Internal items: barely visible (1.5% opacity) */
+  /* Internal items: barely visible (1% opacity) */
   .item-ghost {
-    @apply bg-white/[0.015] border border-white/10 rounded-xl hover:bg-white/[0.04] transition-all;
+    @apply bg-white/[0.01] border border-white/10 rounded-xl hover:bg-white/[0.03] transition-all;
   }
 
   /* Red Glows for Screen Corners */
