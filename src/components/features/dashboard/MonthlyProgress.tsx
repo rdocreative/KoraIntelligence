@@ -1,4 +1,3 @@
-import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Target, CheckCircle2, ListTodo, Zap, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,42 +12,14 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
   const progressPercentage = Math.min(100, (totalPoints / MONTHLY_XP_TARGET) * 100);
   
   const stats = [
-    { 
-      label: "Hábitos", 
-      value: habitsCount, 
-      icon: CheckCircle2, 
-      color: "text-red-500",
-      borderColor: "border-red-500/20",
-      bgGradient: "from-red-600/10 via-red-600/0 to-transparent"
-    },
-    { 
-      label: "Tarefas", 
-      value: "0", 
-      icon: ListTodo, 
-      color: "text-blue-500",
-      borderColor: "border-blue-500/20",
-      bgGradient: "from-blue-600/10 via-blue-600/0 to-transparent"
-    },
-    { 
-      label: "Metas", 
-      value: "0", 
-      icon: Target, 
-      color: "text-emerald-500",
-      borderColor: "border-emerald-500/20",
-      bgGradient: "from-emerald-600/10 via-emerald-600/0 to-transparent"
-    },
-    { 
-      label: "XP Total", 
-      value: totalPoints, 
-      icon: Zap, 
-      color: "text-amber-500",
-      borderColor: "border-amber-500/20",
-      bgGradient: "from-amber-600/10 via-amber-600/0 to-transparent"
-    },
+    { label: "Hábitos", value: habitsCount, icon: CheckCircle2, color: "text-red-500", borderColor: "rgba(220,38,38,0.2)" },
+    { label: "Tarefas", value: "0", icon: ListTodo, color: "text-blue-500", borderColor: "rgba(59,130,246,0.2)" },
+    { label: "Metas", value: "0", icon: Target, color: "text-emerald-500", borderColor: "rgba(16,185,129,0.2)" },
+    { label: "XP Total", value: totalPoints, icon: Zap, color: "text-amber-500", borderColor: "rgba(245,158,11,0.2)" },
   ];
 
   return (
-    <Card className="card-glass overflow-hidden">
+    <Card className="card-glass overflow-hidden border-none">
       <CardHeader className="pb-4 border-b border-white/5 bg-white/[0.01]">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
@@ -79,13 +50,10 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
             <div 
               key={i} 
               className={cn(
-                "group flex flex-col justify-between p-4 rounded-2xl border transition-all duration-300 relative overflow-hidden shadow-2xl shadow-black/80",
-                "bg-[#121215] hover:bg-[#18181b]",
-                stat.borderColor
+                "group flex flex-col justify-between p-4 rounded-2xl transition-all duration-300 relative shadow-2xl shadow-black/80",
+                "item-glass hover:scale-[1.02]"
               )}
             >
-              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-100", stat.bgGradient)} />
-              
               <div className="relative z-10 flex justify-between items-start mb-3">
                  <div className="p-1.5 rounded-lg bg-black/40 border border-white/5">
                     <stat.icon className={cn("h-4 w-4", stat.color)} />
