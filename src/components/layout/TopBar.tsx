@@ -65,7 +65,7 @@ export const TopBar = () => {
         
         {/* Main Page Capsule */}
         <div 
-          className="flex items-center gap-[14px] px-6 py-3 rounded-full bg-gradient-to-r from-[#141415] to-[#1b1b1c] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300"
+          className="flex items-center gap-[14px] px-6 py-3 rounded-full bg-[#141415] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300"
         >
           <div className="flex items-center gap-3">
             <Icon 
@@ -84,42 +84,59 @@ export const TopBar = () => {
           </span>
         </div>
 
-        {/* Action Buttons Group */}
+        {/* Stats and Action Group */}
         <div className="flex items-center gap-2">
-          {/* Coins Button */}
+          
+          {/* XP Pill */}
           <button 
-            onClick={() => setActiveModal('coins')}
-            className="w-11 h-11 flex items-center justify-center rounded-[18px] bg-gradient-to-r from-[#141415] to-[#1b1b1c] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none"
+            onClick={() => setActiveModal('profile')}
+            className="h-11 px-4 flex items-center gap-3 rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#e8283a44] active:scale-95 outline-none"
           >
-            <div className="relative flex flex-col items-center">
-              <Coins 
-                size={18} 
-                className="text-[#fb923c] transition-transform duration-300 group-hover:scale-110" 
-                style={{ filter: 'drop-shadow(0 0 4px #fb923c66)' }}
-              />
-            </div>
+            <Zap 
+              size={16} 
+              className="text-[#e8283a] fill-[#e8283a22]" 
+              style={{ filter: 'drop-shadow(0 0 4px #e8283a66)' }}
+            />
+            <span className="text-[0.85rem] font-bold text-[#e8283a] tracking-tight">
+              {userStats.xp}
+            </span>
           </button>
 
-          {/* Achievements Button */}
+          {/* Coins Pill */}
+          <button 
+            onClick={() => setActiveModal('coins')}
+            className="h-11 px-4 flex items-center gap-3 rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none"
+          >
+            <Coins 
+              size={16} 
+              className="text-[#fb923c]" 
+              style={{ filter: 'drop-shadow(0 0 4px #fb923c66)' }}
+            />
+            <span className="text-[0.85rem] font-bold text-[#fb923c] tracking-tight">
+              {userStats.coins}
+            </span>
+          </button>
+
+          {/* Achievement Square */}
           <button 
             onClick={() => setActiveModal('achievements')}
-            className="w-11 h-11 flex items-center justify-center rounded-[18px] bg-gradient-to-r from-[#141415] to-[#1b1b1c] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none"
+            className="w-11 h-11 flex items-center justify-center rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none"
           >
             <Trophy 
               size={18} 
-              className="text-[#a855f7] transition-transform duration-300 group-hover:scale-110"
+              className="text-[#a855f7]"
               style={{ filter: 'drop-shadow(0 0 4px #a855f766)' }}
             />
           </button>
 
-          {/* Profile Button */}
+          {/* Profile Square */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className="w-11 h-11 flex items-center justify-center rounded-[18px] bg-gradient-to-r from-[#141415] to-[#1b1b1c] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none"
+            className="w-11 h-11 flex items-center justify-center rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none"
           >
             <UserCircle 
               size={22} 
-              className="text-[#38bdf8] transition-transform duration-300 group-hover:scale-110"
+              className="text-[#38bdf8]"
               style={{ filter: 'drop-shadow(0 0 4px #38bdf866)' }}
             />
           </button>
