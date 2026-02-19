@@ -43,6 +43,9 @@ const App = () => (
                   
                   {/* Background Layers */}
                   <ParticleBackground />
+                  
+                  {/* Subtle red gradient from bottom */}
+                  <div className="fixed inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-red-900/15 via-transparent to-transparent pointer-events-none z-0" />
 
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
