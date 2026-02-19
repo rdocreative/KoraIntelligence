@@ -88,7 +88,7 @@ export const TopBar = () => {
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-10 pb-5 pointer-events-none">
       <div 
-        className="flex items-center gap-[14px] px-6 py-3 rounded-full bg-gradient-to-r from-[#121212] to-[#2a2a2a] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300 pointer-events-auto"
+        className="flex items-center gap-[14px] px-6 py-3 rounded-full bg-gradient-to-r from-[#141415] to-[#1b1b1c] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300 pointer-events-auto"
       >
         {/* 1. Glowing Icon */}
         <div className="flex items-center justify-center">
