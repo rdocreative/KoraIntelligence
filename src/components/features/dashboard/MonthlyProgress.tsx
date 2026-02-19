@@ -19,7 +19,6 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       icon: CheckCircle2, 
       color: "text-red-500",
       bgGradient: "from-red-500/10 to-transparent",
-      borderColor: "group-hover:border-red-500/30"
     },
     { 
       label: "Tarefas", 
@@ -27,7 +26,6 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       icon: ListTodo, 
       color: "text-blue-500",
       bgGradient: "from-blue-500/10 to-transparent",
-      borderColor: "group-hover:border-blue-500/30"
     },
     { 
       label: "Metas", 
@@ -35,7 +33,6 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       icon: Target, 
       color: "text-emerald-500",
       bgGradient: "from-emerald-500/10 to-transparent",
-      borderColor: "group-hover:border-emerald-500/30"
     },
     { 
       label: "XP Total", 
@@ -43,12 +40,11 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       icon: Zap, 
       color: "text-amber-500",
       bgGradient: "from-amber-500/10 to-transparent",
-      borderColor: "group-hover:border-amber-500/30"
     },
   ];
 
   return (
-    <Card className="bg-[#121212] border border-white/10 rounded-2xl shadow-2xl shadow-black/80 overflow-hidden">
+    <Card className="card-glass overflow-hidden border-white/10">
       <CardHeader className="pb-4 border-b border-white/5">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
@@ -79,16 +75,14 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
             <div 
               key={i} 
               className={cn(
-                "group flex flex-col justify-between p-4 rounded-xl border transition-all cursor-default shadow-lg shadow-black/40 relative overflow-hidden",
-                "bg-[#1a1a1a] border-white/5",
-                stat.borderColor
+                "group relative flex flex-col justify-between p-4 rounded-xl border transition-all cursor-default overflow-hidden",
+                "bg-white/[0.02] border-white/5 hover:border-white/20",
               )}
             >
-              {/* Background Gradient */}
-              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-50", stat.bgGradient)} />
+              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-20", stat.bgGradient)} />
               
               <div className="relative z-10 flex justify-between items-start mb-2">
-                 <stat.icon className={cn("h-4 w-4", stat.color)} />
+                 <stat.icon className={cn("h-4 w-4", stat.color)} strokeWidth={2.5} />
                  <ChevronRight className="h-3 w-3 text-white/30 group-hover:text-white transition-colors" />
               </div>
               <div className="relative z-10">

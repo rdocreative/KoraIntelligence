@@ -14,14 +14,14 @@ export const Gamification = ({ currentBadge, nextBadge, totalPoints, streak }: G
     : 100;
 
   return (
-    <Card className="bg-[#121212] border border-white/10 rounded-2xl h-full shadow-2xl shadow-black/80">
+    <Card className="card-glass h-full border-white/10">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 border-b border-white/5">
         <CardTitle className="text-[10px] font-bold text-white/50 uppercase tracking-widest">SEU NÍVEL</CardTitle>
         <Crown className="h-5 w-5 text-yellow-500" />
       </CardHeader>
       <CardContent className="pt-6 space-y-6">
         <div className="flex items-center gap-4">
-            <div className="h-16 w-16 rounded-2xl bg-white/5 flex items-center justify-center text-3xl border border-white/10 shadow-inner">
+            <div className="h-16 w-16 rounded-2xl bg-white/5 flex items-center justify-center text-3xl border border-white/10">
                 {currentBadge.icon}
             </div>
             <div>
@@ -38,7 +38,7 @@ export const Gamification = ({ currentBadge, nextBadge, totalPoints, streak }: G
                 <span className="font-rajdhani text-sm text-white">XP: {totalPoints}</span>
                 <span className="font-rajdhani text-sm">PRÓXIMO: {nextBadge.threshold}</span>
              </div>
-             <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden shadow-inner">
+             <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                 <div 
                     className="h-full bg-red-600 shadow-[0_0_15px_rgba(239,68,68,0.6)]" 
                     style={{ width: `${progress}%` }} 

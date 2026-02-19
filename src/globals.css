@@ -6,10 +6,10 @@
 
 @layer base {
   :root {
-    --background: 0 90% 4%; /* #0d0101 */
+    --background: 0 90% 4%; 
     --foreground: 240 6% 95%;
-    --card: 240 4% 10%; /* Cinza escuro neutro */
-    --border: 240 5% 20%; 
+    --card: 0 0% 100% / 0.02; 
+    --border: 0 0% 100% / 0.1; 
     --radius: 1rem;
   }
 
@@ -18,24 +18,19 @@
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-bold text-white;
-  }
 }
 
 @layer components {
-  /* Ghost Card: Neutral gray to prevent red tinting */
-  .card-ghost {
-    @apply bg-[#121212]/90 border border-white/10 rounded-2xl backdrop-blur-md shadow-2xl shadow-black/80;
+  /* Estilo Glass Universal: 2% opacidade, borda sutil e blur máximo */
+  .card-glass {
+    @apply bg-white/[0.02] border border-white/10 rounded-2xl backdrop-blur-2xl shadow-2xl shadow-black/40;
   }
 
-  /* Internal items */
-  .item-ghost {
-    @apply bg-white/[0.03] border border-white/5 rounded-xl hover:bg-white/[0.05] transition-all;
+  /* Itens internos ainda mais sutis */
+  .item-glass {
+    @apply bg-white/[0.01] border border-white/5 rounded-xl hover:bg-white/[0.03] transition-all;
   }
 
-  /* Particle Animation */
   @keyframes particle-fade {
     0%, 100% { opacity: 0; transform: scale(0.5); }
     50% { opacity: 1; transform: scale(1.2); }
@@ -43,6 +38,5 @@
 
   .animate-particle {
     animation: particle-fade infinite ease-in-out;
-    will-change: opacity, transform;
   }
 }

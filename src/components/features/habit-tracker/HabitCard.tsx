@@ -18,10 +18,8 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
   return (
     <div 
       className={cn(
-        "group relative flex flex-col gap-3 p-4 rounded-2xl border transition-all duration-300",
-        "bg-[#161616] hover:bg-[#1a1a1a]",
-        "border-white/10 hover:border-red-500/40",
-        "shadow-2xl shadow-black/80",
+        "group relative flex flex-col gap-3 p-4 border transition-all duration-300 card-glass",
+        "hover:border-red-500/40",
         habit.completed && "opacity-60"
       )}
     >
