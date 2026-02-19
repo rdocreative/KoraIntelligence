@@ -22,7 +22,7 @@ export const HabitMonthView = () => {
   });
 
   return (
-    <div className="card-glass p-4 overflow-hidden">
+    <div className="card-glass p-4 overflow-hidden shadow-2xl shadow-black/60 border-white/5">
       <div className="flex items-center justify-between mb-6">
          <h3 className="font-bold text-white flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-red-500"></span>

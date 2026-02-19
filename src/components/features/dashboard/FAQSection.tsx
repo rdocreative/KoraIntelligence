@@ -9,7 +9,7 @@ import { HelpCircle } from "lucide-react";
 
 export const FAQSection = () => {
   return (
-    <Card className="card-glass overflow-hidden">
+    <Card className="card-glass overflow-hidden shadow-2xl shadow-black/60 border-white/10">
       <CardHeader className="pb-2 border-b border-white/5 bg-gradient-to-r from-white/[0.03] to-transparent">
         <CardTitle className="text-lg font-bold flex items-center gap-2 text-white">
           <HelpCircle className="h-5 w-5 text-red-500" />

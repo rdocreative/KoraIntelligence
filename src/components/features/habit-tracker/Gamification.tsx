@@ -14,7 +14,7 @@ export const Gamification = ({ currentBadge, nextBadge, totalPoints, streak }: G
     : 100;
 
   return (
-    <Card className="card-glass border-white/10 h-full overflow-hidden">
+    <Card className="card-glass border-white/10 h-full overflow-hidden shadow-2xl shadow-black/60">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 border-b border-white/5 bg-gradient-to-r from-white/[0.03] to-transparent">
         <CardTitle className="text-[11px] font-black text-white/40 uppercase tracking-[0.2em]">SEU NÍVEL</CardTitle>
         <Crown className="h-5 w-5 text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]" />

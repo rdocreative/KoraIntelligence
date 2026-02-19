@@ -56,7 +56,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
   ];
 
   return (
-    <Card className="card-glass overflow-hidden">
+    <Card className="card-glass overflow-hidden shadow-2xl shadow-black/60 border-white/10">
       <CardHeader className="pb-4 border-b border-white/5 bg-gradient-to-r from-white/[0.03] to-transparent">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-white flex items-center gap-2">

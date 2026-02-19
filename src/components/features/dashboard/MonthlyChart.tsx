@@ -24,7 +24,7 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
   }
 
   return (
-    <Card className="card-glass border-white/10 overflow-hidden">
+    <Card className="card-glass border-white/10 overflow-hidden shadow-2xl shadow-black/60">
       <CardHeader className="border-b border-white/5 pb-4 bg-gradient-to-r from-white/[0.03] to-transparent">
         <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
             <Activity className="w-5 h-5 text-red-500" />
