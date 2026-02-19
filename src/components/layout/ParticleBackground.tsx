@@ -3,13 +3,13 @@ import React, { useMemo } from 'react';
 const ParticleBackground = () => {
   // Geramos as posições apenas uma vez para evitar re-calculos
   const particles = useMemo(() => {
-    return Array.from({ length: 40 }).map((_, i) => ({
+    return Array.from({ length: 45 }).map((_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
       top: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 8}s`,
-      duration: `${4 + Math.random() * 6}s`,
-      size: Math.random() > 0.5 ? '1px' : '2px',
+      delay: `${Math.random() * 10}s`,
+      duration: `${3 + Math.random() * 5}s`,
+      size: Math.random() > 0.5 ? '2px' : '3px',
     }));
   }, []);
 
@@ -18,7 +18,7 @@ const ParticleBackground = () => {
       {particles.map((p) => (
         <div
           key={p.id}
-          className="absolute rounded-full bg-white animate-particle"
+          className="absolute rounded-full bg-red-500/60 animate-particle"
           style={{
             left: p.left,
             top: p.top,

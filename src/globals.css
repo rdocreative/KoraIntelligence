@@ -35,23 +35,23 @@
     @apply bg-white/[0.01] border border-white/10 rounded-xl hover:bg-white/[0.03] transition-all;
   }
 
-  /* Red Glows for Screen Corners - Enhanced Intensity and Size */
+  /* Red Glows - Intensificados e ampliados para evitar cortes */
   .corner-glow-tl {
-    @apply fixed top-[-25%] left-[-25%] w-[85vw] h-[85vh] pointer-events-none z-0 opacity-60;
-    background: radial-gradient(circle at 25% 25%, rgba(220, 38, 38, 0.45) 0%, transparent 70%);
-    filter: blur(80px);
+    @apply fixed top-[-30%] left-[-30%] w-[95vw] h-[95vh] pointer-events-none z-0 opacity-75;
+    background: radial-gradient(circle at 30% 30%, rgba(220, 38, 38, 0.5) 0%, transparent 70%);
+    filter: blur(100px);
   }
 
   .corner-glow-br {
-    @apply fixed bottom-[-25%] right-[-25%] w-[85vw] h-[85vh] pointer-events-none z-0 opacity-50;
-    background: radial-gradient(circle at 75% 75%, rgba(220, 38, 38, 0.35) 0%, transparent 70%);
-    filter: blur(80px);
+    @apply fixed bottom-[-30%] right-[-30%] w-[95vw] h-[95vh] pointer-events-none z-0 opacity-65;
+    background: radial-gradient(circle at 70% 70%, rgba(220, 38, 38, 0.4) 0%, transparent 70%);
+    filter: blur(100px);
   }
 
-  /* Particle Animation */
+  /* Particle Animation - Opacity 0 > 100 > 0 */
   @keyframes particle-fade {
-    0%, 100% { opacity: 0; transform: translateY(0) scale(0.5); }
-    50% { opacity: 0.3; transform: translateY(-20px) scale(1.2); }
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1.2); }
   }
 
   .animate-particle {
