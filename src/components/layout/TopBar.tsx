@@ -63,9 +63,9 @@ export const TopBar = () => {
     <header className="sticky top-0 w-full flex justify-center z-50 pt-6 md:pt-10 pb-5 pointer-events-none px-4">
       <div className="flex items-center gap-2 md:gap-3 pointer-events-auto max-w-full overflow-x-auto no-scrollbar">
         
-        {/* Main Page Capsule */}
+        {/* Main Page Capsule - Hidden on Mobile */}
         <div 
-          className="flex items-center gap-3 md:gap-[14px] px-4 md:px-6 py-2.5 md:py-3 rounded-full bg-[#141415] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300 flex-shrink-0"
+          className="hidden sm:flex items-center gap-3 md:gap-[14px] px-4 md:px-6 py-2.5 md:py-3 rounded-full bg-[#141415] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300 flex-shrink-0"
         >
           <div className="flex items-center gap-2 md:gap-3">
             <Icon 
@@ -77,9 +77,8 @@ export const TopBar = () => {
             </h1>
           </div>
 
-          {/* Divider and Subtitle - Hidden on Mobile */}
-          <div className="hidden sm:block w-px h-[16px] bg-[#303030]" />
-          <span className="hidden sm:block text-[0.68rem] text-[#888] font-medium tracking-wide leading-none whitespace-nowrap">
+          <div className="w-px h-[16px] bg-[#303030]" />
+          <span className="text-[0.68rem] text-[#888] font-medium tracking-wide leading-none whitespace-nowrap">
             {subtitle}
           </span>
         </div>
