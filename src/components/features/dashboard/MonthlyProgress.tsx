@@ -87,37 +87,37 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
             <div 
               key={i} 
               className={cn(
-                "group flex flex-col justify-between p-4 min-h-[120px] rounded-2xl border transition-all duration-300 relative overflow-hidden shadow-md shadow-black/20",
+                "group flex flex-col justify-between p-3.5 min-h-[105px] rounded-2xl border transition-all duration-300 relative overflow-hidden shadow-md shadow-black/20",
                 "bg-gradient-to-br hover:opacity-90",
                 stat.bgGradient,
                 stat.borderColor
               )}
             >
               {/* Top Row: Icon, Label and Counter */}
-              <div className="relative z-10 space-y-1 mb-auto">
+              <div className="relative z-10 space-y-0.5 mb-auto">
                 <div className="flex items-center gap-2">
                    <div className="p-1.5 rounded-lg bg-black/40 border border-white/5 shrink-0">
                       <stat.icon className={cn("h-3.5 w-3.5", stat.color)} />
                    </div>
-                   <span className="text-[13px] font-black uppercase tracking-widest text-white truncate">
+                   <span className="text-[15px] font-black uppercase tracking-widest text-white truncate">
                      {stat.label}
                    </span>
                 </div>
                 {stat.count && (
-                  <p className="text-[9px] font-bold text-white/40 uppercase tracking-tighter ml-8">
+                  <p className="text-[10px] font-medium text-white/40 uppercase tracking-tighter ml-8">
                     {stat.count} completados
                   </p>
                 )}
               </div>
 
               {/* Bottom Section: Percentage and Progress Bar */}
-              <div className="relative z-10 space-y-1.5 mt-4">
+              <div className="relative z-10 space-y-1 mt-3">
                 <div className="flex justify-end">
-                   <span className="text-[13px] font-black font-rajdhani text-white">
+                   <span className="text-[15px] font-black font-rajdhani text-white leading-none">
                      {Math.round(stat.progress)}%
                    </span>
                 </div>
-                <div className="w-full h-2.5 bg-black/40 rounded-full overflow-hidden border border-white/5 p-0.5">
+                <div className="w-full h-3 bg-black/40 rounded-full overflow-hidden border border-white/5 p-0.5">
                   <div 
                     className={cn("h-full transition-all duration-1000 rounded-full", stat.bgColor)} 
                     style={{ width: `${stat.progress}%` }}
