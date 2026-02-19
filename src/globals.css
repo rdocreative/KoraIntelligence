@@ -8,7 +8,7 @@
   :root {
     --background: 0 90% 4%; /* #0d0101 */
     --foreground: 240 6% 95%;
-    --card: 240 4% 10%; /* Cinza escuro neutro */
+    --card: 240 4% 10%; 
     --border: 240 5% 20%; 
     --radius: 1rem;
   }
@@ -25,17 +25,17 @@
 }
 
 @layer components {
-  /* Ghost Card: Neutral gray to prevent red tinting */
-  .card-ghost {
-    @apply bg-[#121212]/90 border border-white/10 rounded-2xl backdrop-blur-md shadow-2xl shadow-black/80;
+  /* Novo padrão de Glass Card: 3% opacidade cinza, blur forte e borda sutil */
+  .card-glass {
+    @apply bg-white/[0.03] border border-white/10 rounded-2xl backdrop-blur-xl shadow-2xl shadow-black/80;
   }
 
-  /* Internal items */
-  .item-ghost {
-    @apply bg-white/[0.03] border border-white/5 rounded-xl hover:bg-white/[0.05] transition-all;
+  /* Itens internos */
+  .item-glass {
+    @apply bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/[0.04] transition-all;
   }
 
-  /* Particle Animation */
+  /* Animação de Partículas */
   @keyframes particle-fade {
     0%, 100% { opacity: 0; transform: scale(0.5); }
     50% { opacity: 1; transform: scale(1.2); }

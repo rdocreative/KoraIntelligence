@@ -18,37 +18,37 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       value: habitsCount, 
       icon: CheckCircle2, 
       color: "text-red-500",
-      bgGradient: "from-red-500/10 to-transparent",
-      borderColor: "group-hover:border-red-500/30"
+      stroke: "stroke-red-500",
+      bgGradient: "from-red-500/5 to-transparent"
     },
     { 
       label: "Tarefas", 
       value: "0", 
       icon: ListTodo, 
       color: "text-blue-500",
-      bgGradient: "from-blue-500/10 to-transparent",
-      borderColor: "group-hover:border-blue-500/30"
+      stroke: "stroke-blue-500",
+      bgGradient: "from-blue-500/5 to-transparent"
     },
     { 
       label: "Metas", 
       value: "0", 
       icon: Target, 
       color: "text-emerald-500",
-      bgGradient: "from-emerald-500/10 to-transparent",
-      borderColor: "group-hover:border-emerald-500/30"
+      stroke: "stroke-emerald-500",
+      bgGradient: "from-emerald-500/5 to-transparent"
     },
     { 
       label: "XP Total", 
       value: totalPoints, 
       icon: Zap, 
       color: "text-amber-500",
-      bgGradient: "from-amber-500/10 to-transparent",
-      borderColor: "group-hover:border-amber-500/30"
+      stroke: "stroke-amber-500",
+      bgGradient: "from-amber-500/5 to-transparent"
     },
   ];
 
   return (
-    <Card className="bg-[#121212] border border-white/10 rounded-2xl shadow-2xl shadow-black/80 overflow-hidden">
+    <Card className="card-glass overflow-hidden border-white/10">
       <CardHeader className="pb-4 border-b border-white/5">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
@@ -66,7 +66,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
              <span>Progresso de Nível</span>
              <span className="font-rajdhani font-bold text-white text-sm">{totalPoints} / {MONTHLY_XP_TARGET} XP</span>
           </div>
-          <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+          <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
             <div 
                 className="h-full bg-gradient-to-r from-red-600 to-red-400 shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-1000 ease-out"
                 style={{ width: `${progressPercentage}%` }}
@@ -79,17 +79,16 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
             <div 
               key={i} 
               className={cn(
-                "group flex flex-col justify-between p-4 rounded-xl border transition-all cursor-default shadow-lg shadow-black/40 relative overflow-hidden",
-                "bg-[#1a1a1a] border-white/5",
-                stat.borderColor
+                "group flex flex-col justify-between p-4 rounded-xl border border-white/5 transition-all cursor-default relative overflow-hidden",
+                "bg-white/[0.02] hover:bg-white/[0.04]",
+                "hover:border-white/10"
               )}
             >
-              {/* Background Gradient */}
-              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-50", stat.bgGradient)} />
+              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-30", stat.bgGradient)} />
               
               <div className="relative z-10 flex justify-between items-start mb-2">
-                 <stat.icon className={cn("h-4 w-4", stat.color)} />
-                 <ChevronRight className="h-3 w-3 text-white/30 group-hover:text-white transition-colors" />
+                 <stat.icon className={cn("h-4 w-4", stat.color, stat.stroke)} />
+                 <ChevronRight className="h-3 w-3 text-white/20 group-hover:text-white transition-colors" />
               </div>
               <div className="relative z-10">
                 <span className="block text-2xl font-rajdhani font-bold text-white">{stat.value}</span>
