@@ -39,13 +39,13 @@ const App = () => (
               <Toaster />
               <Sonner theme="dark" />
               <BrowserRouter>
-                <div className="min-h-screen bg-[#0f0f12] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
+                <div className="min-h-screen bg-[#060608] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                   
                   {/* Background Layers */}
                   <ParticleBackground />
                   
-                  {/* Central Grayish-Red Glow Gradient */}
-                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(100,90,90,0.12),transparent_75%)]" />
+                  {/* Central Grayish-Red Glow Gradient - Reduced opacity by 30% */}
+                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(100,90,90,0.08),transparent_75%)]" />
 
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
