@@ -15,17 +15,15 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
   const stats = [
     { 
       label: "Hábitos", 
-      value: habitsCount, 
       icon: CheckCircle2, 
       color: "text-red-500",
       bgColor: "bg-red-500",
       borderColor: "border-red-500/20",
       bgGradient: "from-red-950/15 to-red-600/15",
-      progress: Math.min(100, (habitsCount / 10) * 100) // Exemplo: meta de 10 hábitos
+      progress: Math.min(100, (habitsCount / 10) * 100)
     },
     { 
       label: "Tarefas", 
-      value: "0", 
       icon: ListTodo, 
       color: "text-blue-400",
       bgColor: "bg-blue-400",
@@ -35,7 +33,6 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
     },
     { 
       label: "Metas", 
-      value: "0", 
       icon: Target, 
       color: "text-emerald-400",
       bgColor: "bg-emerald-400",
@@ -45,7 +42,6 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
     },
     { 
       label: "XP Total", 
-      value: totalPoints, 
       icon: Zap, 
       color: "text-amber-400",
       bgColor: "bg-amber-400",
@@ -87,35 +83,35 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
             <div 
               key={i} 
               className={cn(
-                "group flex flex-col justify-between p-4 rounded-2xl border transition-all duration-300 relative overflow-hidden shadow-md shadow-black/20",
+                "group flex flex-col justify-between p-4 min-h-[110px] rounded-2xl border transition-all duration-300 relative overflow-hidden shadow-md shadow-black/20",
                 "bg-gradient-to-br hover:opacity-90",
                 stat.bgGradient,
                 stat.borderColor
               )}
             >
               {/* Top Row: Icon and Label */}
-              <div className="relative z-10 flex items-center gap-2 mb-3">
+              <div className="relative z-10 flex items-center gap-2 mb-auto">
                  <div className="p-1.5 rounded-lg bg-black/40 border border-white/5 shrink-0">
                     <stat.icon className={cn("h-3.5 w-3.5", stat.color)} />
                  </div>
-                 <span className="text-[13px] font-black uppercase tracking-widest text-white transition-colors truncate">
+                 <span className="text-[13px] font-black uppercase tracking-widest text-white truncate">
                    {stat.label}
                  </span>
               </div>
 
-              {/* Progress Bar Layer */}
-              <div className="relative z-10 w-full h-1 bg-black/40 rounded-full mb-3 overflow-hidden border border-white/5">
-                <div 
-                  className={cn("h-full transition-all duration-1000", stat.bgColor)} 
-                  style={{ width: `${stat.progress}%` }}
-                />
-              </div>
-
-              {/* Bottom Row: Value */}
-              <div className="relative z-10">
-                <span className="block text-2xl font-rajdhani font-black text-white leading-none tracking-tight">
-                  {stat.value}
-                </span>
+              {/* Bottom Section: Percentage and Progress Bar */}
+              <div className="relative z-10 space-y-1.5 mt-4">
+                <div className="flex justify-end">
+                   <span className="text-[11px] font-black font-rajdhani text-white/60">
+                     {Math.round(stat.progress)}%
+                   </span>
+                </div>
+                <div className="w-full h-2.5 bg-black/40 rounded-full overflow-hidden border border-white/5 p-0.5">
+                  <div 
+                    className={cn("h-full transition-all duration-1000 rounded-full", stat.bgColor)} 
+                    style={{ width: `${stat.progress}%` }}
+                  />
+                </div>
               </div>
 
               {/* Decorative chevron */}
