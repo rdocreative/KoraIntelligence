@@ -19,7 +19,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       icon: CheckCircle2, 
       color: "text-red-500",
       borderColor: "border-red-500/20",
-      bgGradient: "from-red-950/25 to-red-600/25"
+      bgGradient: "from-red-950/15 to-red-600/15"
     },
     { 
       label: "Tarefas", 
@@ -27,7 +27,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       icon: ListTodo, 
       color: "text-blue-500",
       borderColor: "border-blue-500/20",
-      bgGradient: "from-blue-950/25 to-blue-600/25"
+      bgGradient: "from-blue-950/15 to-blue-600/15"
     },
     { 
       label: "Metas", 
@@ -35,7 +35,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       icon: Target, 
       color: "text-emerald-500",
       borderColor: "border-emerald-500/20",
-      bgGradient: "from-emerald-950/25 to-emerald-600/25"
+      bgGradient: "from-emerald-950/15 to-emerald-600/15"
     },
     { 
       label: "XP Total", 
@@ -43,7 +43,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       icon: Zap, 
       color: "text-amber-500",
       borderColor: "border-amber-500/20",
-      bgGradient: "from-amber-950/25 to-amber-600/25"
+      bgGradient: "from-amber-950/15 to-amber-600/15"
     },
   ];
 
