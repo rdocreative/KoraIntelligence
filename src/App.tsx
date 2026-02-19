@@ -44,11 +44,11 @@ const App = () => (
                   {/* Background Layers */}
                   <ParticleBackground />
                   
-                  {/* Expanded Red Gradient coming from top-right */}
-                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(225deg,rgba(153,27,27,0.35)_0%,rgba(6,6,8,0)_60%)]" />
+                  {/* Darkened Red Gradient coming from top-right */}
+                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(225deg,rgba(110,20,20,0.35)_0%,rgba(6,6,8,0)_65%)]" />
                   
-                  {/* Subtle Vignette adjusted to complement the side gradient */}
-                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_80%_0%,rgba(220,38,38,0.15),transparent_80%)]" />
+                  {/* Darkened Vignette for depth */}
+                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_80%_0%,rgba(160,20,20,0.12),transparent_85%)]" />
 
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
