@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 export interface Habit {
   id: string;
@@ -12,7 +12,17 @@ export interface DailyRecord {
   points: number;
 }
 
-export const useHabitTracker = () => {
+interface HabitContextType {
+  habits: Habit[];
+  totalPoints: number;
+  history: DailyRecord[];
+  completeHabit: (id: string) => void;
+  addHabit: (title: string) => void;
+}
+
+const HabitContext = createContext<HabitContextType | undefined>(undefined);
+
+export const HabitProvider = ({ children }: { children: React.ReactNode }) => {
   const [habits, setHabits] = useState<Habit[]>([
     { id: "1", title: "Beber 2L de água", completed: false, streak: 5 },
     { id: "2", title: "Ler 10 páginas", completed: false, streak: 12 },
@@ -21,7 +31,7 @@ export const useHabitTracker = () => {
 
   const [totalPoints, setTotalPoints] = useState(750);
   
-  // Mock history data for the chart
+  // Mock history data
   const [history] = useState<DailyRecord[]>(() => {
     const data = [];
     const today = new Date();
@@ -30,7 +40,7 @@ export const useHabitTracker = () => {
       d.setDate(today.getDate() - i);
       data.push({
         date: d.toISOString().split('T')[0],
-        points: Math.floor(Math.random() * 100) + (i * 20) // Increasing trend mock
+        points: Math.floor(Math.random() * 100) + (i * 20)
       });
     }
     return data;
@@ -40,7 +50,6 @@ export const useHabitTracker = () => {
     setHabits(prev => prev.map(habit => {
       if (habit.id === id) {
         const isCompleting = !habit.completed;
-        // Update points
         if (isCompleting) setTotalPoints(p => p + 10);
         else setTotalPoints(p => Math.max(0, p - 10));
         
@@ -64,11 +73,17 @@ export const useHabitTracker = () => {
     setHabits(prev => [...prev, newHabit]);
   };
 
-  return {
-    habits,
-    totalPoints,
-    history,
-    completeHabit,
-    addHabit
-  };
+  return (
+    <HabitContext.Provider value={{ habits, totalPoints, history, completeHabit, addHabit }}>
+      {children}
+    </HabitContext.Provider>
+  );
+};
+
+export const useHabitTracker = () => {
+  const context = useContext(HabitContext);
+  if (context === undefined) {
+    throw new Error("useHabitTracker must be used within a HabitProvider");
+  }
+  return context;
 };
