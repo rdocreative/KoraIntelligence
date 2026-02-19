@@ -44,24 +44,11 @@ const App = () => (
                   {/* Background Layers */}
                   <ParticleBackground />
                   
-                  {/* Atmospheric Glows - Enhanced Visibility */}
-                  <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                    {/* Top Left */}
-                    <div className="absolute -top-[10%] -left-[10%] w-[600px] h-[600px] bg-red-600/15 blur-[140px] rounded-full animate-pulse" style={{ animationDuration: '8s' }} />
-                    {/* Mid Right */}
-                    <div className="absolute top-[20%] -right-[5%] w-[500px] h-[500px] bg-red-900/10 blur-[120px] rounded-full animate-pulse" style={{ animationDuration: '12s' }} />
-                    {/* Mid Left */}
-                    <div className="absolute top-[45%] -left-[15%] w-[700px] h-[700px] bg-red-600/10 blur-[160px] rounded-full animate-pulse" style={{ animationDuration: '10s' }} />
-                    {/* Bottom Right */}
-                    <div className="absolute -bottom-[10%] -right-[10%] w-[600px] h-[600px] bg-red-600/15 blur-[140px] rounded-full animate-pulse" style={{ animationDuration: '9s' }} />
-                    {/* Bottom Left */}
-                    <div className="absolute bottom-[15%] left-[10%] w-[400px] h-[400px] bg-red-950/20 blur-[100px] rounded-full animate-pulse" style={{ animationDuration: '15s' }} />
-                    {/* Top Center */}
-                    <div className="absolute -top-[5%] left-[35%] w-[500px] h-[500px] bg-red-600/5 blur-[130px] rounded-full animate-pulse" style={{ animationDuration: '11s' }} />
-                  </div>
+                  {/* New Top-to-Bottom Red Gradient Background */}
+                  <div className="fixed inset-0 pointer-events-none bg-gradient-to-b from-red-900/20 via-transparent to-transparent" />
                   
-                  {/* Central Glow Gradient - Subtle touch */}
-                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(220,38,38,0.04),transparent_80%)]" />
+                  {/* Subtle Vignette for depth */}
+                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(220,38,38,0.1),transparent_70%)]" />
 
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
