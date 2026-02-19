@@ -42,8 +42,6 @@ const App = () => (
                 <div className="min-h-screen bg-[#060606] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                   
                   {/* Background Layers */}
-                  <div className="corner-glow-tl" />
-                  <div className="corner-glow-br" />
                   <ParticleBackground />
 
                   <div className="relative z-10 flex flex-col min-h-screen">

@@ -104,12 +104,6 @@ const MasterplanPage = () => {
 
   return (
     <div className="min-h-screen text-white pb-32">
-      {/* Background Ambience */}
-      <div className="fixed inset-0 pointer-events-none">
-          <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-neutral-900/20 to-transparent" />
-          <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] bg-red-600/5 rounded-full blur-[150px]" />
-      </div>
-
       <div className="relative z-10 max-w-7xl mx-auto space-y-6">
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
