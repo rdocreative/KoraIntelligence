@@ -35,16 +35,28 @@
     @apply bg-white/[0.01] border border-white/10 rounded-xl hover:bg-white/[0.03] transition-all;
   }
 
-  /* Red Glows for Screen Corners - Enhanced and larger */
+  /* Red Glows for Screen Corners - Significantly Larger to avoid cuts */
   .corner-glow-tl {
-    @apply fixed top-[-25%] left-[-25%] w-[85vw] h-[85vh] pointer-events-none z-0 opacity-55 mix-blend-screen;
-    background: radial-gradient(circle at 30% 30%, rgba(220, 38, 38, 0.45) 0%, transparent 70%);
-    filter: blur(80px);
+    @apply fixed pointer-events-none -z-10 mix-blend-screen;
+    /* Positioned to ensure center is well within screen corner */
+    top: -50vh;
+    left: -50vw;
+    width: 150vw;
+    height: 150vh;
+    /* Stronger opacity (0.6) and larger spread (transparent at 60%) */
+    background: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.55) 0%, rgba(220, 38, 38, 0.1) 40%, transparent 60%);
+    filter: blur(100px);
+    opacity: 1; 
   }
 
   .corner-glow-br {
-    @apply fixed bottom-[-25%] right-[-25%] w-[85vw] h-[85vh] pointer-events-none z-0 opacity-45 mix-blend-screen;
-    background: radial-gradient(circle at 70% 70%, rgba(220, 38, 38, 0.35) 0%, transparent 70%);
-    filter: blur(100px);
+    @apply fixed pointer-events-none -z-10 mix-blend-screen;
+    bottom: -50vh;
+    right: -50vw;
+    width: 150vw;
+    height: 150vh;
+    background: radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.45) 0%, rgba(220, 38, 38, 0.05) 45%, transparent 65%);
+    filter: blur(120px);
+    opacity: 0.9;
   }
 }
