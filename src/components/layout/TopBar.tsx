@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/dialog";
 import { ProfilePopover } from '../features/profile/ProfilePopover';
 import { AchievementsPopover } from '../features/achievements/AchievementsPopover';
-import { cn } from '@/lib/utils';
 
 // Configuração das páginas
 interface PageConfig {
@@ -81,93 +80,69 @@ const pageConfigs: Record<string, PageConfig> = {
     icon: Settings
   },
   '/masterplan': {
-    title: 'Master Plan', // Default para a rota
+    title: 'Master Plan',
     subtitle: 'Para onde você está indo',
-    color: '#a855f7', // Cor da Visão
+    color: '#a855f7',
     icon: Eye
   }
 };
 
 export const TopBar = () => {
   const location = useLocation();
-  
-  // Determina a configuração atual baseada na rota
   const currentPath = location.pathname;
-  // Fallback melhorado para subrotas se necessário
   const config = pageConfigs[currentPath] || pageConfigs['/'];
   const { title, subtitle, color, icon: Icon } = config;
 
   return (
     <header 
-      className="sticky top-0 z-40 w-full flex items-center justify-between px-6 transition-all duration-300"
-      style={{
-        height: '64px',
-        backgroundColor: 'rgba(10, 10, 12, 0.8)', // #0a0a0c com transparência
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        borderBottom: '1px solid #222230',
-      }}
+      className="sticky top-0 z-40 w-full flex items-center justify-between px-6 bg-transparent"
+      style={{ height: '80px' }}
     >
-      {/* Linha de Gradiente Superior */}
-      <div 
-        className="absolute top-0 left-0 w-full h-[1px]"
-        style={{
-          background: `linear-gradient(90deg, ${color} 0%, transparent 100%)`,
-          opacity: 0.5
-        }}
-      />
+      {/* Lado Esquerdo: Espaçador para manter o equilíbrio (ou Logo se desejar) */}
+      <div className="flex-1 hidden md:flex" />
 
-      {/* Lado Esquerdo: Identidade da Página */}
-      <div className="flex items-center gap-4">
-        {/* Ícone da Página */}
+      {/* Centro: Identidade da Página (Centralizado) */}
+      <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-3">
         <div 
-          className="w-10 h-10 rounded-[10px] flex items-center justify-center transition-all duration-500"
+          className="w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-500 shadow-lg"
           style={{
-            backgroundColor: `${color}1A`, // ~10% opacity
-            borderColor: `${color}40`, // ~25% opacity
-            borderWidth: '1px',
-            borderStyle: 'solid',
+            backgroundColor: `${color}15`,
+            border: `1px solid ${color}30`,
           }}
         >
           <Icon 
-            size={20} 
+            size={18} 
             style={{ color: color }} 
-            strokeWidth={2}
+            strokeWidth={2.5}
           />
         </div>
 
-        {/* Textos */}
-        <div className="flex flex-col justify-center h-full">
-          <h1 
-            className="font-bold text-[18px] leading-none tracking-tight text-white"
-          >
+        <div className="flex flex-col items-start">
+          <h1 className="font-bold text-[16px] leading-tight tracking-tight text-white/90">
             {title}
           </h1>
-          <span className="font-normal text-[11px] text-[#6b6b7a] leading-tight mt-1">
+          <span className="font-medium text-[10px] text-white/40 leading-tight uppercase tracking-widest">
             {subtitle}
           </span>
         </div>
       </div>
 
       {/* Lado Direito: Ações Globais */}
-      <div className="flex items-center gap-2">
-        
-        {/* Busca */}
+      <div className="flex-1 flex items-center justify-end gap-1">
         <Button 
           variant="ghost" 
           size="icon" 
-          className="w-9 h-9 text-[#6b6b7a] hover:text-white hover:bg-white/[0.03] rounded-xl transition-colors"
+          className="w-9 h-9 text-white/40 hover:text-white hover:bg-white/5 rounded-full transition-all"
         >
           <Search size={18} />
         </Button>
 
-        {/* Títulos */}
         <Dialog>
           <DialogTrigger asChild>
             <Button 
               variant="ghost" 
               size="icon" 
-              className="w-9 h-9 text-[#6b6b7a] hover:text-white hover:bg-white/[0.03] rounded-xl transition-colors"
+              className="w-9 h-9 text-white/40 hover:text-white hover:bg-white/5 rounded-full transition-all"
             >
                 <Trophy size={18} />
             </Button>
@@ -177,25 +152,21 @@ export const TopBar = () => {
           </DialogContent>
         </Dialog>
 
-        {/* Notificações */}
         <Button 
           variant="ghost" 
           size="icon" 
-          className="relative w-9 h-9 text-[#6b6b7a] hover:text-white hover:bg-white/[0.03] rounded-xl transition-colors"
+          className="relative w-9 h-9 text-white/40 hover:text-white hover:bg-white/5 rounded-full transition-all"
         >
             <Bell size={18} />
-            <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-red-600 rounded-full shadow-[0_0_8px_rgba(220,38,38,0.8)] animate-pulse"></span>
+            <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-red-500 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
         </Button>
         
-        {/* Divisor */}
-        <div className="w-[1px] h-5 bg-[#222230] mx-2" />
+        <div className="w-[1px] h-4 bg-white/10 mx-2" />
 
-        {/* Avatar */}
         <Dialog>
           <DialogTrigger asChild>
             <div 
-              className="w-9 h-9 rounded-full bg-transparent border border-[#222230] flex items-center justify-center text-white font-bold text-[10px] cursor-pointer hover:border-white/20 hover:bg-white/[0.03] transition-all"
-              title="Meu Perfil"
+              className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/80 font-bold text-[10px] cursor-pointer hover:border-white/20 hover:bg-white/10 transition-all"
             >
               ME
             </div>
