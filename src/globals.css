@@ -8,7 +8,7 @@
   :root {
     --background: 0 0% 2%; /* #060606 */
     --foreground: 240 6% 95%;
-    --card: 0 0% 100% / 0.1; 
+    --card: 0 0% 100% / 0.06; 
     --border: 240 10% 20%; 
     --radius: 1rem;
   }
@@ -25,14 +25,14 @@
 }
 
 @layer components {
-  /* Refined Ghost Card: Lower opacity, higher blur, more visible stroke */
+  /* Ultra-transparent card style (6% opacity) with heavy blur and sharp stroke */
   .card-ghost {
-    @apply bg-white/[0.10] border border-white/20 rounded-2xl backdrop-blur-xl shadow-2xl shadow-black/40;
+    @apply bg-white/[0.06] border border-white/20 rounded-2xl backdrop-blur-2xl shadow-2xl shadow-black/60;
   }
 
-  /* Internal items */
+  /* Internal items even more transparent */
   .item-ghost {
-    @apply bg-white/[0.04] border border-white/10 rounded-xl hover:bg-white/[0.08] transition-all;
+    @apply bg-white/[0.02] border border-white/10 rounded-xl hover:bg-white/[0.05] transition-all;
   }
 
   /* Red Glows for Screen Corners */
