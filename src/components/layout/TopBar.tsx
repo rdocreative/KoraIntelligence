@@ -16,17 +16,11 @@ import {
   Coins,
   Trophy,
   UserCircle,
-  X,
-  TrendingUp,
-  Award,
-  Star
+  Award
 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 
 // Configuração das páginas para cores e textos
@@ -55,7 +49,6 @@ export const TopBar = () => {
   const config = pageConfigs[currentPath] || pageConfigs['/'];
   const { title, subtitle, color, icon: Icon } = config;
 
-  // Estados para os modais
   const [activeModal, setActiveModal] = useState<'coins' | 'achievements' | 'profile' | null>(null);
 
   const userStats = {
@@ -68,65 +61,65 @@ export const TopBar = () => {
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-10 pb-5 pointer-events-none">
-      <div 
-        className="flex items-center gap-[14px] px-6 py-3 rounded-full bg-gradient-to-r from-[#141415] to-[#1b1b1c] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300 pointer-events-auto"
-      >
-        {/* Page Icon & Title */}
-        <div className="flex items-center gap-3">
-          <Icon 
-            size={18} 
-            style={{ color: color, filter: `drop-shadow(0 0 5px ${color}88)` }}
-            className="transition-all duration-500"
-          />
-          <h1 className="text-[0.9rem] font-bold text-[#f0f0f0] tracking-tight leading-none">
-            {title}
-          </h1>
+      <div className="flex items-center gap-3 pointer-events-auto">
+        
+        {/* Main Page Capsule */}
+        <div 
+          className="flex items-center gap-[14px] px-6 py-3 rounded-full bg-gradient-to-r from-[#141415] to-[#1b1b1c] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300"
+        >
+          <div className="flex items-center gap-3">
+            <Icon 
+              size={18} 
+              style={{ color: color, filter: `drop-shadow(0 0 5px ${color}88)` }}
+            />
+            <h1 className="text-[0.9rem] font-bold text-[#f0f0f0] tracking-tight leading-none">
+              {title}
+            </h1>
+          </div>
+
+          <div className="w-px h-[16px] bg-[#303030]" />
+
+          <span className="text-[0.68rem] text-[#888] font-medium tracking-wide leading-none">
+            {subtitle}
+          </span>
         </div>
 
-        <div className="w-px h-[16px] bg-[#303030]" />
-
-        <span className="text-[0.68rem] text-[#888] font-medium tracking-wide leading-none mr-2">
-          {subtitle}
-        </span>
-
-        <div className="w-px h-[16px] bg-[#303030]" />
-
-        {/* User Stats Clicáveis */}
-        <div className="flex items-center gap-4 ml-1">
-          {/* Coins */}
+        {/* Action Buttons Group */}
+        <div className="flex items-center gap-2">
+          {/* Coins Button */}
           <button 
             onClick={() => setActiveModal('coins')}
-            className="flex items-center gap-1.5 group outline-none"
+            className="w-11 h-11 flex items-center justify-center rounded-[18px] bg-gradient-to-r from-[#141415] to-[#1b1b1c] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none"
           >
-            <Coins 
-              size={14} 
-              className="text-[#fb923c] transition-all duration-300 group-hover:scale-110 group-active:scale-95" 
-              style={{ filter: 'drop-shadow(0 0 4px #fb923c66)' }}
-            />
-            <span className="text-[0.75rem] font-bold text-[#f0f0f0]">{userStats.coins}</span>
+            <div className="relative flex flex-col items-center">
+              <Coins 
+                size={18} 
+                className="text-[#fb923c] transition-transform duration-300 group-hover:scale-110" 
+                style={{ filter: 'drop-shadow(0 0 4px #fb923c66)' }}
+              />
+            </div>
           </button>
 
-          {/* Achievements */}
+          {/* Achievements Button */}
           <button 
             onClick={() => setActiveModal('achievements')}
-            className="flex items-center gap-1.5 group outline-none"
+            className="w-11 h-11 flex items-center justify-center rounded-[18px] bg-gradient-to-r from-[#141415] to-[#1b1b1c] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none"
           >
             <Trophy 
-              size={14} 
-              className="text-[#a855f7] transition-all duration-300 group-hover:scale-110 group-active:scale-95"
+              size={18} 
+              className="text-[#a855f7] transition-transform duration-300 group-hover:scale-110"
               style={{ filter: 'drop-shadow(0 0 4px #a855f766)' }}
             />
-            <span className="text-[0.75rem] font-bold text-[#f0f0f0]">{userStats.titles}</span>
           </button>
 
-          {/* Profile */}
+          {/* Profile Button */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className="flex items-center justify-center pl-1 group outline-none"
+            className="w-11 h-11 flex items-center justify-center rounded-[18px] bg-gradient-to-r from-[#141415] to-[#1b1b1c] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none"
           >
             <UserCircle 
-              size={20} 
-              className="text-[#38bdf8] transition-all duration-300 group-hover:scale-110 group-active:scale-95"
+              size={22} 
+              className="text-[#38bdf8] transition-transform duration-300 group-hover:scale-110"
               style={{ filter: 'drop-shadow(0 0 4px #38bdf866)' }}
             />
           </button>
@@ -135,11 +128,11 @@ export const TopBar = () => {
 
       {/* Modais de Informação */}
       <Dialog open={activeModal !== null} onOpenChange={() => setActiveModal(null)}>
-        <DialogContent className="bg-[#141415] border-[#303030] text-[#f0f0f0] sm:max-w-[400px] rounded-[24px] p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+        <DialogContent className="bg-[#141415] border-[#303030] text-[#f0f0f0] sm:max-w-[400px] rounded-[32px] p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] outline-none border-opacity-50">
           
           {activeModal === 'coins' && (
             <div className="p-8 flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-[#fb923c22] flex items-center justify-center mb-4">
+              <div className="w-16 h-16 rounded-[22px] bg-gradient-to-br from-[#fb923c22] to-transparent border border-[#fb923c33] flex items-center justify-center mb-4">
                 <Coins size={32} className="text-[#fb923c]" />
               </div>
               <h2 className="text-xl font-bold mb-1">Suas Moedas</h2>
@@ -149,7 +142,7 @@ export const TopBar = () => {
                   <span className="text-sm text-[#888]">Saldo Total</span>
                   <span className="text-lg font-bold text-[#fb923c]">{userStats.coins}</span>
                 </div>
-                <button className="w-full py-3 rounded-2xl bg-[#fb923c] text-black font-bold text-sm hover:opacity-90 transition-opacity">
+                <button className="w-full py-4 rounded-2xl bg-[#fb923c] text-black font-bold text-sm hover:brightness-110 transition-all active:scale-[0.98]">
                   Ir para a Loja
                 </button>
               </div>
@@ -158,16 +151,16 @@ export const TopBar = () => {
 
           {activeModal === 'achievements' && (
             <div className="p-8 flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-[#a855f722] flex items-center justify-center mb-4">
+              <div className="w-16 h-16 rounded-[22px] bg-gradient-to-br from-[#a855f722] to-transparent border border-[#a855f733] flex items-center justify-center mb-4">
                 <Trophy size={32} className="text-[#a855f7]" />
               </div>
               <h2 className="text-xl font-bold mb-1">Conquistas</h2>
               <p className="text-sm text-[#888] mb-6">Você desbloqueou {userStats.titles} títulos épicos.</p>
               <div className="grid grid-cols-2 gap-3 w-full">
                 {['Mestre do Foco', 'Persistente', 'Explorador', 'Visionário'].map((title) => (
-                  <div key={title} className="p-3 rounded-2xl bg-[#1b1b1c] border border-[#303030] flex flex-col items-center gap-2">
+                  <div key={title} className="p-4 rounded-2xl bg-[#1b1b1c] border border-[#303030] flex flex-col items-center gap-2 group hover:border-[#a855f744] transition-colors">
                     <Award size={20} className="text-[#a855f7]" />
-                    <span className="text-[0.7rem] font-medium">{title}</span>
+                    <span className="text-[0.7rem] font-medium text-[#ccc]">{title}</span>
                   </div>
                 ))}
               </div>
@@ -177,24 +170,24 @@ export const TopBar = () => {
           {activeModal === 'profile' && (
             <div className="p-8 flex flex-col items-center text-center">
               <div className="relative mb-4">
-                <div className="w-20 h-20 rounded-full bg-[#38bdf822] flex items-center justify-center border-2 border-[#38bdf844]">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#38bdf822] to-transparent flex items-center justify-center border-2 border-[#38bdf833] shadow-[0_0_20px_rgba(56,189,248,0.2)]">
                   <UserCircle size={48} className="text-[#38bdf8]" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 bg-[#38bdf8] text-black text-[0.6rem] font-black px-2 py-0.5 rounded-full">
+                <div className="absolute -bottom-1 -right-1 bg-[#38bdf8] text-black text-[0.65rem] font-black px-2.5 py-1 rounded-full shadow-lg">
                   LVL {userStats.level}
                 </div>
               </div>
               <h2 className="text-xl font-bold mb-1">Usuário Mestre</h2>
               <p className="text-sm text-[#888] mb-6">Membro desde Outubro 2023</p>
               
-              <div className="w-full bg-[#1b1b1c] rounded-2xl p-4 border border-[#303030]">
-                <div className="flex justify-between text-[0.7rem] mb-2 text-[#888]">
+              <div className="w-full bg-[#1b1b1c] rounded-2xl p-5 border border-[#303030]">
+                <div className="flex justify-between text-[0.7rem] mb-2.5 text-[#888] font-medium">
                   <span>Progresso de XP</span>
                   <span>{userStats.xp} / {userStats.nextLevelXp}</span>
                 </div>
-                <div className="w-full h-2 bg-[#303030] rounded-full overflow-hidden">
+                <div className="w-full h-2.5 bg-[#141415] rounded-full overflow-hidden border border-[#303030]">
                   <div 
-                    className="h-full bg-gradient-to-r from-[#38bdf8] to-[#818cf8] transition-all duration-500"
+                    className="h-full bg-gradient-to-r from-[#38bdf8] to-[#818cf8] transition-all duration-700 shadow-[0_0_10px_rgba(56,189,248,0.4)]"
                     style={{ width: `${(userStats.xp / userStats.nextLevelXp) * 100}%` }}
                   />
                 </div>
