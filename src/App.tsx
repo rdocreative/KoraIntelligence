@@ -47,11 +47,11 @@ const App = () => (
                   {/* Main App Background Gradient */}
                   <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgb(20,20,21)_0%,rgb(28,28,29)_100%)] opacity-80 -z-10" />
                   
-                  {/* Vibrant red gradient from top to bottom */}
-                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(232,40,58,0.18)_0%,transparent_60%)] -z-10" />
+                  {/* Intense red gradient from top to bottom at 100% opacity start */}
+                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(232,40,58,1)_0%,transparent_70%)] opacity-30 -z-10" />
                   
                   {/* Dark gradient from bottom to top for depth */}
-                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.5)_0%,transparent_40%)] -z-10" />
+                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.6)_0%,transparent_50%)] -z-10" />
 
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
