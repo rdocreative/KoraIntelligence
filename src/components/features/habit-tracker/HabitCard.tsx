@@ -21,11 +21,11 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
     <div 
       className={cn(
         "group relative flex flex-col gap-3 p-5 rounded-3xl border transition-all duration-300 backdrop-blur-xl overflow-hidden shadow-2xl shadow-black/80",
-        "bg-[#0d0d0f] hover:bg-[#121214] border-white/10 hover:border-red-600/40",
+        "bg-[#1c1c21] hover:bg-[#242429] border-white/10 hover:border-red-600/40",
         habit.completed && "opacity-60"
       )}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-red-600/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute inset-0 bg-gradient-to-br from-red-600/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       
       <div className="flex items-center gap-4 relative z-10">
         <div className={cn(

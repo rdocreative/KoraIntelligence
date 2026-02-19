@@ -8,8 +8,8 @@
   :root {
     --background: 240 5% 4%;
     --foreground: 240 6% 95%;
-    --card: 240 4% 6%; 
-    --border: 240 5% 12%; 
+    --card: 240 4% 12%; 
+    --border: 240 5% 18%; 
     --radius: 1.5rem;
   }
 
@@ -22,12 +22,12 @@
 
 @layer components {
   .card-glass {
-    @apply bg-[#0d0d0f]/95 border border-white/10 rounded-3xl backdrop-blur-2xl 
+    @apply bg-[#1a1a1e]/95 border border-white/10 rounded-3xl backdrop-blur-2xl 
     shadow-2xl shadow-black/80;
   }
 
   .item-glass {
-    @apply bg-[#0d0d0f]/60 border border-white/5 rounded-2xl hover:bg-[#0d0d0f]/90 
+    @apply bg-[#222226]/60 border border-white/5 rounded-2xl hover:bg-[#222226]/90 
     backdrop-blur-md transition-all duration-300 shadow-xl shadow-black/40;
   }
 }
