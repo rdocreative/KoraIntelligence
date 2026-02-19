@@ -6,15 +6,15 @@
 
 @layer base {
   :root {
-    --background: 0 0% 2%; /* #060606 */
+    --background: 0 90% 4%; /* Vermelho extremamente escuro sólido */
     --foreground: 240 6% 95%;
     --card: 0 0% 100% / 0.02; 
-    --border: 240 10% 20%; 
+    --border: 0 50% 15%; 
     --radius: 1rem;
   }
 
   body {
-    @apply bg-[#060606] text-[#f0f0f2] antialiased;
+    @apply bg-[#0d0101] text-[#f0f0f2] antialiased;
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
   }
