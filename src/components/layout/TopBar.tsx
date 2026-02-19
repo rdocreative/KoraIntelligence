@@ -86,7 +86,7 @@ export const TopBar = () => {
   const { title, subtitle, color } = config;
 
   return (
-    <header className="sticky top-0 w-full flex justify-center z-50 py-6 bg-gradient-to-b from-[#0a0a0c] via-[#0a0a0c]/80 to-transparent backdrop-blur-md">
+    <header className="sticky top-0 w-full flex justify-center z-50 py-6 bg-[#0a0a0c]/95 backdrop-blur-xl border-b border-white/[0.02]">
       <div 
         className="flex items-center gap-[12px] px-6 py-3 rounded-full bg-[#1c1c1c] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300"
       >
