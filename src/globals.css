@@ -10,7 +10,7 @@
     --foreground: 240 6% 95%;
     --card: 240 4% 10%; 
     --border: 240 5% 15%; 
-    --radius: 1.25rem;
+    --radius: 1.5rem; /* Padrão de 24px para consistência */
   }
 
   body {
@@ -21,15 +21,13 @@
 }
 
 @layer components {
-  /* Glass Card: Fundo levemente mais claro para permitir ver o degradê e transparência */
   .card-glass {
-    @apply bg-white/[0.03] border border-white/10 rounded-[2rem] backdrop-blur-[50px] 
-    shadow-[0_50px_100px_-20px_rgba(0,0,0,1),0_0_20px_rgba(0,0,0,0.5)];
+    @apply bg-[#121214]/80 border border-white/10 rounded-3xl backdrop-blur-xl 
+    shadow-[0_40px_80px_-15px_rgba(0,0,0,0.8)];
   }
 
   .item-glass {
-    @apply bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.05] 
-    backdrop-blur-3xl transition-all duration-300 
-    shadow-[0_20px_40px_rgba(0,0,0,0.8)];
+    @apply bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/[0.06] 
+    backdrop-blur-md transition-all duration-300;
   }
 }
