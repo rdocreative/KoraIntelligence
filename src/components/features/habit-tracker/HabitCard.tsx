@@ -1,3 +1,5 @@
+"use client";
+
 import { Habit } from '@/hooks/useHabitTracker';
 import { Button } from '@/components/ui/button';
 import { Check, Trophy } from 'lucide-react';
@@ -19,7 +21,7 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
     <div 
       className={cn(
         "group relative flex flex-col gap-3 p-4 rounded-2xl border transition-all duration-300 backdrop-blur-xl",
-        "bg-white/[0.03] hover:bg-white/[0.05]",
+        "bg-white/[0.02] hover:bg-white/[0.04]",
         "border-white/10 hover:border-red-500/40",
         "shadow-2xl shadow-black/80",
         habit.completed && "opacity-60"

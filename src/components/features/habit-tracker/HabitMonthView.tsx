@@ -1,3 +1,5 @@
+"use client";
+
 import { useHabitTracker } from "@/hooks/useHabitTracker";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
@@ -20,7 +22,7 @@ export const HabitMonthView = () => {
   });
 
   return (
-    <div className="bg-[#121212] rounded-2xl border border-white/5 p-4 overflow-hidden shadow-lg">
+    <div className="card-glass p-4 overflow-hidden">
       <div className="flex items-center justify-between mb-6">
          <h3 className="font-bold text-white flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-red-500"></span>
@@ -52,7 +54,7 @@ export const HabitMonthView = () => {
           {/* Habit Rows */}
           {habits.map((habit) => (
             <div key={habit.id} className="flex items-center gap-1 group hover:bg-white/5 p-1 rounded-lg transition-colors">
-               <div className="w-48 sticky left-0 z-10 bg-[#121212] group-hover:bg-[#1a1a1a] transition-colors pr-4 flex items-center justify-end border-r border-white/5 shadow-[5px_0_10px_-5px_rgba(0,0,0,0.5)]">
+               <div className="w-48 sticky left-0 z-10 bg-transparent group-hover:bg-white/5 backdrop-blur-md transition-colors pr-4 flex items-center justify-end border-r border-white/5 shadow-[5px_0_10px_-5px_rgba(0,0,0,0.5)]">
                   <span className="text-xs font-bold text-neutral-400 truncate text-right w-full uppercase tracking-tight group-hover:text-white transition-colors">
                     {habit.title}
                   </span>
@@ -70,7 +72,7 @@ export const HabitMonthView = () => {
                         "w-6 h-6 rounded-md transition-all duration-300 border flex items-center justify-center",
                         isCompleted 
                             ? "bg-red-600 border-red-500 shadow-[0_0_8px_rgba(220,38,38,0.6)]" 
-                            : "bg-[#1a1a1a] border-white/5",
+                            : "bg-white/[0.05] border-white/5",
                         !isCompleted && !isFuture && "opacity-50",
                         !isCompleted && isFuture && "opacity-20 border-dashed border-white/20 bg-transparent",
                         isToday && !isCompleted && "border-red-500/50 animate-pulse bg-red-900/10"

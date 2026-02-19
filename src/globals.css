@@ -25,14 +25,14 @@
 }
 
 @layer components {
-  /* Novo padrão de Glass Card: 3% opacidade cinza, blur forte e borda sutil */
+  /* Glass Card: 2% opacidade cinza, blur forte e borda sutil */
   .card-glass {
-    @apply bg-white/[0.03] border border-white/10 rounded-2xl backdrop-blur-xl shadow-2xl shadow-black/80;
+    @apply bg-white/[0.02] border border-white/10 rounded-2xl backdrop-blur-xl shadow-2xl shadow-black/80;
   }
 
   /* Itens internos */
   .item-glass {
-    @apply bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/[0.04] transition-all;
+    @apply bg-white/[0.01] border border-white/5 rounded-xl hover:bg-white/[0.02] transition-all;
   }
 
   /* Animação de Partículas */
