@@ -47,8 +47,8 @@ const App = () => (
                   {/* Main App Background Gradient */}
                   <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgb(20,20,21)_0%,rgb(28,28,29)_100%)] opacity-80 -z-10" />
                   
-                  {/* Light white gradient from top to bottom */}
-                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(255,255,255,0.03)_0%,transparent_40%)] -z-10" />
+                  {/* Light red gradient from top to bottom */}
+                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(232,40,58,0.06)_0%,transparent_50%)] -z-10" />
                   
                   {/* Dark gradient from bottom to top for depth */}
                   <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.4)_0%,transparent_50%)] -z-10" />
