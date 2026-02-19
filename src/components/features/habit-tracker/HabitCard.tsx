@@ -20,40 +20,36 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
   return (
     <div 
       className={cn(
-        "group relative flex flex-col gap-3 p-5 rounded-[2rem] border transition-all duration-500 backdrop-blur-[50px] overflow-hidden",
-        "bg-gradient-to-br from-white/[0.08] to-transparent hover:from-red-600/10 hover:to-transparent",
-        "border-white/10 hover:border-red-600/50",
-        "shadow-[0_40px_80px_-15px_rgba(0,0,0,1)] hover:shadow-[0_40px_80px_-15px_rgba(220,38,38,0.2)]",
+        "group relative flex flex-col gap-3 p-5 rounded-[2.5rem] border transition-all duration-500 backdrop-blur-3xl overflow-hidden",
+        "bg-white/[0.06] hover:bg-white/[0.1] border-white/10 hover:border-red-600/50",
+        "shadow-[0_40px_80px_-15px_rgba(0,0,0,0.8)]",
         habit.completed && "opacity-60"
       )}
     >
-      {/* Decorative Gradient Glow */}
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-red-600/5 blur-[60px] pointer-events-none group-hover:bg-red-600/15 transition-colors duration-700" />
+      {/* Vibrant background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-600/[0.05] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
       
       <div className="flex items-center gap-4 relative z-10">
-        {/* Rank Number */}
         <div className={cn(
-          "font-rajdhani font-black text-2xl italic w-8 text-center",
-          index < 3 ? "text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.5)]" : "text-white/20"
+          "font-rajdhani font-black text-3xl italic w-10 text-center",
+          index < 3 ? "text-red-600 drop-shadow-[0_0_12px_rgba(220,38,38,0.6)]" : "text-white/10"
         )}>
           {index + 1}
         </div>
 
-        {/* Icon Container */}
         <div className={cn(
           "h-14 w-14 rounded-2xl flex items-center justify-center border transition-all duration-500",
           habit.completed 
-            ? "bg-green-600/20 border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.2)]" 
-            : "bg-white/[0.05] border-white/10 group-hover:border-red-600 group-hover:bg-red-600/20 group-hover:shadow-[0_0_20px_rgba(220,38,38,0.3)]"
+            ? "bg-green-600/20 border-green-500/50" 
+            : "bg-black/40 border-white/10 group-hover:border-red-600 group-hover:bg-red-600/20"
         )}>
           {habit.completed ? (
               <Check className="w-6 h-6 text-green-500" />
           ) : (
-              <Trophy className="w-6 h-6 text-white/40 group-hover:text-red-500 group-hover:scale-110 transition-transform" />
+              <Trophy className="w-6 h-6 text-white/30 group-hover:text-red-500 group-hover:scale-110 transition-transform" />
           )}
         </div>
 
-        {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <h3 className={cn("font-bold text-lg tracking-tight truncate", habit.completed ? "text-white/20 line-through" : "text-white")}>
@@ -66,14 +62,14 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
             )}
           </div>
           
-          <div className="flex items-center gap-3 text-[11px] font-bold text-white/40 uppercase tracking-widest">
+          <div className="flex items-center gap-3 text-[11px] font-bold text-white/30 uppercase tracking-widest">
             <div className="flex gap-2">
               {DAY_NAMES.map((day, i) => (
                 <span 
                   key={day} 
                   className={cn(
                     "transition-colors",
-                    habit.days.includes(i) ? (habit.completed ? "text-green-500/40" : "text-red-600") : "text-white/10"
+                    habit.days.includes(i) ? (habit.completed ? "text-green-500/40" : "text-red-600") : "text-white/5"
                   )}
                 >
                   {day[0]}
@@ -81,23 +77,22 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
               ))}
             </div>
             <span className="w-1 h-1 rounded-full bg-red-600/30" />
-            <span className="font-rajdhani text-base text-red-500 font-bold drop-shadow-[0_0_10px_rgba(220,38,38,0.3)]">{habit.points} XP</span>
+            <span className="font-rajdhani text-base text-red-500 font-bold drop-shadow-[0_0_10px_rgba(220,38,38,0.4)]">{habit.points} XP</span>
           </div>
         </div>
 
-        {/* Action */}
         <div className="shrink-0">
           <Button
             size="sm"
             onClick={() => onComplete(habit.id)}
             disabled={habit.completed || !isForToday}
             className={cn(
-              "h-11 px-6 rounded-2xl text-xs font-black uppercase tracking-widest transition-all duration-500",
+              "h-12 px-6 rounded-2xl text-xs font-black uppercase tracking-widest transition-all duration-500",
               habit.completed 
                 ? "bg-green-600/10 text-green-500 border border-green-500/20" 
                 : isForToday 
-                  ? "bg-red-700 hover:bg-red-600 text-white shadow-[0_15px_30px_-5px_rgba(220,38,38,0.5)] border border-red-500/50" 
-                  : "bg-white/5 text-white/20 border border-white/5 cursor-not-allowed"
+                  ? "bg-red-600 hover:bg-red-500 text-white shadow-[0_15px_30px_-5px_rgba(220,38,38,0.6)] border border-red-500/40" 
+                  : "bg-white/5 text-white/10 border border-white/5 cursor-not-allowed"
             )}
           >
             {habit.completed ? 'Feito' : 'Check'}

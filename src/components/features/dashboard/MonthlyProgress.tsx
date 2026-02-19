@@ -18,36 +18,36 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       value: habitsCount, 
       icon: CheckCircle2, 
       color: "text-red-500",
-      borderColor: "border-red-500/20 hover:border-red-500/50",
-      stroke: "stroke-red-500",
-      bgGradient: "from-red-600/20 via-red-900/10 to-transparent"
+      borderColor: "border-red-500/30",
+      iconGlow: "shadow-[0_0_15px_rgba(239,68,68,0.5)]",
+      bgGradient: "from-red-600/15 via-red-600/5 to-transparent"
     },
     { 
       label: "Tarefas", 
       value: "0", 
       icon: ListTodo, 
       color: "text-blue-500",
-      borderColor: "border-blue-500/20 hover:border-blue-500/50",
-      stroke: "stroke-blue-500",
-      bgGradient: "from-blue-600/20 via-blue-900/10 to-transparent"
+      borderColor: "border-blue-500/30",
+      iconGlow: "shadow-[0_0_15px_rgba(59,130,246,0.5)]",
+      bgGradient: "from-blue-600/15 via-blue-600/5 to-transparent"
     },
     { 
       label: "Metas", 
       value: "0", 
       icon: Target, 
       color: "text-emerald-500",
-      borderColor: "border-emerald-500/20 hover:border-emerald-500/50",
-      stroke: "stroke-emerald-500",
-      bgGradient: "from-emerald-600/20 via-emerald-900/10 to-transparent"
+      borderColor: "border-emerald-500/30",
+      iconGlow: "shadow-[0_0_15px_rgba(16,185,129,0.5)]",
+      bgGradient: "from-emerald-600/15 via-emerald-600/5 to-transparent"
     },
     { 
       label: "XP Total", 
       value: totalPoints, 
       icon: Zap, 
       color: "text-amber-500",
-      borderColor: "border-amber-500/20 hover:border-amber-500/50",
-      stroke: "stroke-amber-500",
-      bgGradient: "from-amber-600/20 via-amber-900/10 to-transparent"
+      borderColor: "border-amber-500/30",
+      iconGlow: "shadow-[0_0_15px_rgba(245,158,11,0.5)]",
+      bgGradient: "from-amber-600/15 via-amber-600/5 to-transparent"
     },
   ];
 
@@ -83,21 +83,23 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
             <div 
               key={i} 
               className={cn(
-                "group flex flex-col justify-between p-5 rounded-[1.5rem] border transition-all duration-500 cursor-default relative overflow-hidden",
-                "bg-black/40 hover:bg-black/60 backdrop-blur-3xl",
+                "group flex flex-col justify-between p-5 rounded-[2rem] border transition-all duration-500 cursor-default relative overflow-hidden",
+                "bg-white/[0.04] hover:bg-white/[0.08] backdrop-blur-2xl",
                 "hover:scale-[1.02]",
                 stat.borderColor
               )}
             >
-              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-40", stat.bgGradient)} />
+              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-100", stat.bgGradient)} />
               
-              <div className="relative z-10 flex justify-between items-start mb-3">
-                 <stat.icon className={cn("h-5 w-5 drop-shadow-[0_0_8px_currentColor]", stat.color)} />
+              <div className="relative z-10 flex justify-between items-start mb-4">
+                 <div className={cn("p-2 rounded-xl bg-black/20 border border-white/5", stat.iconGlow)}>
+                    <stat.icon className={cn("h-5 w-5", stat.color)} />
+                 </div>
                  <ChevronRight className="h-4 w-4 text-white/10 group-hover:text-white transition-colors" />
               </div>
               <div className="relative z-10">
-                <span className="block text-3xl font-rajdhani font-black text-white leading-none mb-1">{stat.value}</span>
-                <span className="text-[10px] font-black uppercase tracking-[0.15em] text-white/30 group-hover:text-white/60 transition-colors">{stat.label}</span>
+                <span className="block text-4xl font-rajdhani font-black text-white leading-none mb-1">{stat.value}</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 group-hover:text-white/80 transition-colors">{stat.label}</span>
               </div>
             </div>
           ))}
