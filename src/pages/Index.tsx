@@ -1,61 +1,64 @@
+"use client";
+
+import React from 'react';
 import { useHabitTracker } from '@/hooks/useHabitTracker';
-import { HabitCard } from '@/components/features/habit-tracker/HabitCard';
+import { DashboardHeader } from '@/components/features/dashboard/DashboardHeader';
 import { MonthlyProgress } from '@/components/features/dashboard/MonthlyProgress';
 import { MonthlyChart } from '@/components/features/dashboard/MonthlyChart';
+import { FAQSection } from '@/components/features/dashboard/FAQSection';
+import { HabitList } from '@/components/features/habit-tracker/HabitList';
 import { Gamification } from '@/components/features/habit-tracker/Gamification';
+import { AddHabitForm } from '@/components/features/habit-tracker/AddHabitForm';
+import BackgroundParticles from '@/components/ui/BackgroundParticles';
 
 const Index = () => {
   const { 
     habits, 
-    totalPoints, 
-    history, 
-    streak, 
+    addHabit, 
     completeHabit, 
-    getCurrentBadge,
-    getNextBadge
+    stats, 
+    history 
   } = useHabitTracker();
 
-  const currentBadge = getCurrentBadge();
-  const nextBadge = getNextBadge();
-
   return (
-    <div className="space-y-6 outline-none relative animate-in fade-in slide-in-from-bottom-4 duration-700">
-      
-      {/* Status Mensal no Topo (Full Width) */}
-      <MonthlyProgress totalPoints={totalPoints} habitsCount={habits.length} />
+    <div className="relative min-h-screen pb-20 overflow-x-hidden">
+      {/* Background Elements */}
+      <div className="corner-glow-tl" />
+      <div className="corner-glow-br" />
+      <BackgroundParticles />
 
-      <div className="grid lg:grid-cols-3 gap-8 items-start">
-          {/* Coluna da Esquerda: Gráficos e Detalhes */}
-          <div className="lg:col-span-2 space-y-8">
-            <MonthlyChart history={history} />
-          </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <DashboardHeader stats={stats} />
 
-          {/* Coluna da Direita: Gamificação e Hábitos */}
-          <div className="lg:col-span-1 space-y-8">
-            <Gamification 
-              currentBadge={currentBadge} 
-              nextBadge={nextBadge} 
-              totalPoints={totalPoints}
-              streak={streak}
-            />
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between px-1">
-                  <h3 className="font-bold text-lg text-white">Tarefas Prioritárias</h3>
-                  <span className="text-xs text-red-500 font-bold cursor-pointer hover:underline">Ver todas</span>
-              </div>
-              <div className="space-y-4">
-                {habits.slice(0, 5).map((habit, index) => (
-                  <HabitCard 
-                    key={habit.id} 
-                    habit={habit} 
-                    onComplete={completeHabit}
-                    index={index} 
-                  />
-                ))}
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+          {/* Left Column - Habits & Actions */}
+          <div className="lg:col-span-8 space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <AddHabitForm onAdd={addHabit} />
+              <Gamification 
+                currentBadge={stats.badge}
+                nextBadge={stats.nextBadge}
+                totalPoints={stats.totalPoints}
+                streak={stats.streak}
+              />
             </div>
+            
+            <HabitList 
+              habits={habits} 
+              onComplete={completeHabit} 
+            />
           </div>
+
+          {/* Right Column - Stats & Charts */}
+          <div className="lg:col-span-4 space-y-8">
+            <MonthlyProgress 
+              totalPoints={stats.totalPoints} 
+              habitsCount={habits.length} 
+            />
+            <MonthlyChart history={history} />
+            <FAQSection />
+          </div>
+        </div>
       </div>
     </div>
   );
