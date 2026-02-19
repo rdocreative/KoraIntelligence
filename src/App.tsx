@@ -14,7 +14,6 @@ import MasterplanPage from "./pages/Masterplan";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
-// New Pages
 import TasksPage from "./pages/Tasks";
 import GoalsPage from "./pages/Goals";
 import MissionsPage from "./pages/Missions";
@@ -39,10 +38,12 @@ const App = () => (
               <Toaster />
               <Sonner theme="dark" />
               <BrowserRouter>
-                {/* Reverted background to simple dark #060606 */}
                 <div className="min-h-screen bg-[#060606] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                   
-                  {/* Conteúdo principal */}
+                  {/* Background Corner Glows */}
+                  <div className="corner-glow-tl" />
+                  <div className="corner-glow-br" />
+
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
                     <main className="flex-1 p-6 pb-32 max-w-5xl mx-auto w-full">

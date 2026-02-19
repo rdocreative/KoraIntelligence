@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&family=Rajdhani:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,67 +6,15 @@
 
 @layer base {
   :root {
-    /* Standard Dark Palette */
-    --background: 240 10% 2%; /* #060606 equivalent approx */
+    --background: 0 0% 2%; /* #060606 */
     --foreground: 240 6% 95%;
-
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 84% 60%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 0 84% 60%;
-
+    --card: 0 0% 100% / 0.05; /* fallback */
+    --border: 240 17% 16%; /* #222230 */
     --radius: 1rem;
   }
 
-  .dark {
-    --background: 240 10% 2%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 84% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 0 84% 60%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
   body {
-    @apply bg-[#060606] text-[#f0f0f2] antialiased selection:bg-red-900/50 selection:text-white;
+    @apply bg-[#060606] text-[#f0f0f2] antialiased;
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
   }
@@ -74,38 +22,27 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold text-white;
   }
-
-  /* Specific typography overrides */
-  .text-secondary-custom {
-    @apply text-[#6b6b7a] font-normal;
-  }
-  
-  .text-numeric {
-    @apply font-rajdhani font-bold text-white;
-  }
-  
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    @apply bg-[#060606];
-  }
-  ::-webkit-scrollbar-thumb {
-    @apply bg-[#222230] rounded-full hover:bg-[#2d2d3d] transition-colors;
-  }
 }
 
 @layer components {
-  .glow-text {
-    text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+  /* 15% Grayish Opacity Card Style */
+  .card-ghost {
+    @apply bg-white/[0.05] border border-[#222230] rounded-2xl backdrop-blur-md shadow-none;
   }
-  
-  .glow-box {
-    box-shadow: 0 0 20px -5px rgba(239, 68, 68, 0.3);
+
+  /* Internal items with slightly different background */
+  .item-ghost {
+    @apply bg-white/[0.02] border border-[#1e1e2a] rounded-xl hover:bg-white/[0.06] transition-all;
   }
-  
-  /* Restored standard card */
-  .card, .glass-card {
-     @apply bg-[#111] border border-white/10 rounded-2xl;
+
+  /* Red Glows for Screen Corners */
+  .corner-glow-tl {
+    @apply fixed top-0 left-0 w-[50vw] h-[50vh] pointer-events-none z-0;
+    background: radial-gradient(circle at 0% 0%, rgba(220, 38, 38, 0.15) 0%, transparent 70%);
+  }
+
+  .corner-glow-br {
+    @apply fixed bottom-0 right-0 w-[50vw] h-[50vh] pointer-events-none z-0;
+    background: radial-gradient(circle at 100% 100%, rgba(220, 38, 38, 0.1) 0%, transparent 70%);
   }
 }
