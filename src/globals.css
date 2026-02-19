@@ -6,43 +6,28 @@
 
 @layer base {
   :root {
-    --background: 0 90% 4%; /* #0d0101 */
+    --background: 0 0% 2%; /* Praticamente preto */
     --foreground: 240 6% 95%;
-    --card: 240 4% 10%; 
-    --border: 240 5% 20%; 
-    --radius: 1rem;
+    --card: 0 0% 5%; 
+    --border: 0 0% 15%; 
+    --radius: 1.25rem;
   }
 
   body {
-    @apply bg-[#0d0101] text-[#f0f0f2] antialiased;
+    @apply bg-[#050000] text-[#f0f0f2] antialiased;
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-bold text-white;
   }
 }
 
 @layer components {
-  /* Glass Card: Opacidade extrema de 1%, blur triplo e saturação zero */
+  /* Glass Card: Fundo preto profundo com opacidade maior para contraste, blur máximo */
   .card-glass {
-    @apply bg-white/[0.01] border border-white/10 rounded-2xl backdrop-blur-[40px] backdrop-saturate-0 shadow-2xl shadow-black/90;
+    @apply bg-black/60 border border-white/10 rounded-[2rem] backdrop-blur-[50px] backdrop-saturate-150 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.9)];
   }
 
-  /* Itens internos ainda mais sutis */
+  /* Itens internos mais escuros */
   .item-glass {
-    @apply bg-white/[0.005] border border-white/5 rounded-xl hover:bg-white/[0.015] backdrop-blur-3xl backdrop-saturate-0 transition-all;
-  }
-
-  /* Animação de Partículas */
-  @keyframes particle-fade {
-    0%, 100% { opacity: 0; transform: scale(0.5); }
-    50% { opacity: 1; transform: scale(1.2); }
-  }
-
-  .animate-particle {
-    animation: particle-fade infinite ease-in-out;
-    will-change: opacity, transform;
+    @apply bg-black/40 border border-white/5 rounded-2xl hover:bg-black/60 backdrop-blur-3xl transition-all duration-300;
   }
 }
