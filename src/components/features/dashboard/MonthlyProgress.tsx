@@ -80,11 +80,11 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
               key={i} 
               className={cn(
                 "group flex flex-col justify-between p-4 rounded-xl border border-white/5 transition-all cursor-default relative overflow-hidden",
-                "bg-white/[0.02] hover:bg-white/[0.04]",
+                "bg-zinc-500/[0.02] hover:bg-zinc-500/[0.04] backdrop-blur-lg backdrop-saturate-0",
                 "hover:border-white/10"
               )}
             >
-              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-30", stat.bgGradient)} />
+              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-20", stat.bgGradient)} />
               
               <div className="relative z-10 flex justify-between items-start mb-2">
                  <stat.icon className={cn("h-4 w-4", stat.color, stat.stroke)} />
