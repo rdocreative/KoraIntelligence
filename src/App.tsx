@@ -9,7 +9,6 @@ import { HabitProvider } from "./hooks/useHabitTracker";
 import { MasterplanProvider } from "./hooks/useMasterplan";
 import { FloatingNavbar } from "./components/layout/FloatingNavbar";
 import { TopBar } from "./components/layout/TopBar"; 
-import ParticleBackground from "./components/layout/ParticleBackground";
 import Index from "./pages/Index";
 import MasterplanPage from "./pages/Masterplan";
 import Settings from "./pages/Settings";
@@ -42,8 +41,6 @@ const App = () => (
                 <div className="min-h-screen bg-[#141415] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                   
                   {/* Background Layers */}
-                  <ParticleBackground />
-                  
                   {/* Main App Background - Clean dark style using requested colors */}
                   <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgb(20,20,21)_0%,rgb(28,28,29)_100%)] opacity-50" />
                   
