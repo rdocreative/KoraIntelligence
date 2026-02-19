@@ -83,31 +83,43 @@ export const TopBar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
   const config = pageConfigs[currentPath] || pageConfigs['/'];
-  const { title, subtitle, color } = config;
+  const { title, subtitle, color, icon: Icon } = config;
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-10 pb-5 pointer-events-none">
       <div 
-        className="flex items-center gap-[12px] px-6 py-3 rounded-full bg-[#1c1c1c] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300 pointer-events-auto"
+        className="flex items-center gap-[12px] px-6 py-3 rounded-full bg-gradient-to-r from-[#121212] to-[#2a2a2a] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300 pointer-events-auto"
       >
         {/* 1. Status dot */}
         <div 
-          className="w-[8px] h-[8px] rounded-full transition-all duration-500"
+          className="w-[6px] h-[6px] rounded-full transition-all duration-500"
           style={{ 
             backgroundColor: color,
             boxShadow: `0 0 10px ${color}cc`
           }}
         />
 
-        {/* 2. Page title */}
+        {/* 2. Glowing Icon */}
+        <div className="flex items-center justify-center">
+          <Icon 
+            size={16} 
+            style={{ 
+              color: color,
+              filter: `drop-shadow(0 0 5px ${color}88)`
+            }}
+            className="transition-all duration-500"
+          />
+        </div>
+
+        {/* 3. Page title */}
         <h1 className="text-[0.9rem] font-bold text-[#f0f0f0] tracking-tight leading-none">
           {title}
         </h1>
 
-        {/* 3. Vertical separator */}
+        {/* 4. Vertical separator */}
         <div className="w-px h-[16px] bg-[#303030]" />
 
-        {/* 4. Page subtitle */}
+        {/* 5. Page subtitle */}
         <span className="text-[0.68rem] text-[#777] font-semibold uppercase tracking-[0.05em] leading-none">
           {subtitle}
         </span>
