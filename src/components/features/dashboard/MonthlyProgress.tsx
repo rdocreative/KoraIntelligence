@@ -19,8 +19,8 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
   ];
 
   return (
-    <Card className="bg-white/[0.02] border border-white/20 rounded-2xl shadow-2xl shadow-black/80 backdrop-blur-3xl overflow-hidden">
-      <CardHeader className="pb-4 border-b border-white/10">
+    <Card className="bg-[#121212] border border-white/10 rounded-2xl shadow-2xl shadow-black/80 overflow-hidden">
+      <CardHeader className="pb-4 border-b border-white/5">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
@@ -37,7 +37,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
              <span>Progresso de Nível</span>
              <span className="font-rajdhani font-bold text-white text-sm">{totalPoints} / {MONTHLY_XP_TARGET} XP</span>
           </div>
-          <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+          <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
             <div 
                 className="h-full bg-gradient-to-r from-red-600 to-red-400 shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-1000 ease-out"
                 style={{ width: `${progressPercentage}%` }}
@@ -47,7 +47,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((stat, i) => (
-            <div key={i} className="group flex flex-col justify-between p-4 rounded-xl bg-white/[0.01] border border-white/10 hover:bg-white/[0.04] transition-all cursor-default shadow-lg shadow-black/40">
+            <div key={i} className="group flex flex-col justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] transition-all cursor-default shadow-lg shadow-black/40">
               <div className="flex justify-between items-start mb-2">
                  <stat.icon className={`h-4 w-4 ${stat.color}`} />
                  <ChevronRight className="h-3 w-3 text-white/30 group-hover:text-white" />

@@ -9,8 +9,8 @@ import { HelpCircle } from "lucide-react";
 
 export const FAQSection = () => {
   return (
-    <Card className="bg-white/[0.02] border border-white/20 rounded-2xl shadow-xl backdrop-blur-3xl">
-      <CardHeader className="pb-2 border-b border-white/10">
+    <Card className="bg-[#121212] border border-white/10 rounded-2xl shadow-xl">
+      <CardHeader className="pb-2 border-b border-white/5">
         <CardTitle className="text-lg font-bold flex items-center gap-2 text-white">
           <HelpCircle className="h-5 w-5 text-red-500" />
           Perguntas Frequentes
@@ -18,7 +18,7 @@ export const FAQSection = () => {
       </CardHeader>
       <CardContent className="pt-4">
         <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="item-1" className="border-white/10">
+          <AccordionItem value="item-1" className="border-white/5">
             <AccordionTrigger className="text-[#f0f0f2] font-bold hover:no-underline hover:text-red-400">
               Como ganho badges novos?
             </AccordionTrigger>
@@ -26,7 +26,7 @@ export const FAQSection = () => {
               Os badges são desbloqueados automaticamente quando você atinge certos marcos de XP total. Continue completando hábitos diariamente para acumular pontos.
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-2" className="border-white/10">
+          <AccordionItem value="item-2" className="border-white/5">
             <AccordionTrigger className="text-[#f0f0f2] font-bold hover:no-underline hover:text-red-400">
               O que acontece se eu quebrar o streak?
             </AccordionTrigger>
@@ -34,7 +34,7 @@ export const FAQSection = () => {
               Se você ficar um dia sem completar nenhuma atividade, seu contador de sequência (streak) voltará a zero. Tente manter a consistência mesmo nos finais de semana!
             </AccordionContent>
           </AccordionItem>
-          <AccordionItem value="item-3" className="border-white/10">
+          <AccordionItem value="item-3" className="border-white/5">
             <AccordionTrigger className="text-[#f0f0f2] font-bold hover:no-underline hover:text-red-400">
               Posso editar um hábito criado?
             </AccordionTrigger>

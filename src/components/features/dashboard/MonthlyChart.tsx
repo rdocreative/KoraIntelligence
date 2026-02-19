@@ -24,8 +24,8 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
   }
 
   return (
-    <Card className="bg-white/[0.02] border border-white/20 rounded-2xl shadow-2xl shadow-black/80 backdrop-blur-3xl overflow-hidden">
-      <CardHeader className="border-b border-white/10 pb-4">
+    <Card className="bg-[#121212] border border-white/10 rounded-2xl shadow-2xl shadow-black/80 overflow-hidden">
+      <CardHeader className="border-b border-white/5 pb-4">
         <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
             <Activity className="w-5 h-5 text-red-500" />
             Evolução de XP
@@ -41,7 +41,7 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
                   <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.08)" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
               <XAxis 
                 dataKey="date" 
                 tickLine={false} 
@@ -53,14 +53,13 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
               <Tooltip 
                 contentStyle={{ 
                   borderRadius: '16px', 
-                  border: '1px solid rgba(255,255,255,0.2)', 
-                  backgroundColor: 'rgba(10, 10, 15, 0.95)',
+                  border: '1px solid rgba(255,255,255,0.1)', 
+                  backgroundColor: '#1a1a1a',
                   color: '#f0f0f2',
-                  backdropFilter: 'blur(10px)',
                   boxShadow: '0 20px 40px -10px rgba(0,0,0,0.8)'
                 }}
                 itemStyle={{ color: '#ef4444', fontWeight: 700 }}
-                cursor={{ stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1 }}
+                cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }}
               />
               <Area 
                 type="monotone" 
