@@ -85,16 +85,25 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
                 stat.borderColor
               )}
             >
-              <div className="relative z-10 flex justify-between items-start mb-3">
-                 <div className="p-1.5 rounded-lg bg-black/40 border border-white/5">
-                    <stat.icon className={cn("h-4 w-4", stat.color)} />
+              {/* Top Row: Icon and Label */}
+              <div className="relative z-10 flex items-center gap-2 mb-4">
+                 <div className="p-1.5 rounded-lg bg-black/40 border border-white/5 shrink-0">
+                    <stat.icon className={cn("h-3.5 w-3.5", stat.color)} />
                  </div>
-                 <ChevronRight className="h-3 w-3 text-white/10 group-hover:text-white/40 transition-colors" />
+                 <span className="text-[9px] font-black uppercase tracking-widest text-white/30 group-hover:text-white/60 transition-colors truncate">
+                   {stat.label}
+                 </span>
               </div>
+
+              {/* Bottom Row: Value */}
               <div className="relative z-10">
-                <span className="block text-2xl font-rajdhani font-black text-white leading-none mb-1">{stat.value}</span>
-                <span className="text-[9px] font-black uppercase tracking-widest text-white/30 group-hover:text-white/60">{stat.label}</span>
+                <span className="block text-2xl font-rajdhani font-black text-white leading-none tracking-tight">
+                  {stat.value}
+                </span>
               </div>
+
+              {/* Decorative chevron (optional, but kept subtle) */}
+              <ChevronRight className="absolute top-4 right-4 h-3 w-3 text-white/5 group-hover:text-white/20 transition-colors" />
             </div>
           ))}
         </div>
