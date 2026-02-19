@@ -6,15 +6,15 @@
 
 @layer base {
   :root {
-    --background: 240 5% 6%;
+    --background: 240 5% 4%;
     --foreground: 240 6% 95%;
-    --card: 240 4% 10%; 
-    --border: 240 5% 15%; 
-    --radius: 1.5rem; /* Padrão de 24px para consistência */
+    --card: 240 4% 6%; 
+    --border: 240 5% 12%; 
+    --radius: 1.5rem;
   }
 
   body {
-    @apply bg-[#0f0f12] text-[#f0f0f2] antialiased;
+    @apply bg-[#08080a] text-[#f0f0f2] antialiased;
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
   }
@@ -22,12 +22,12 @@
 
 @layer components {
   .card-glass {
-    @apply bg-[#121214]/80 border border-white/10 rounded-3xl backdrop-blur-xl 
-    shadow-[0_40px_80px_-15px_rgba(0,0,0,0.8)];
+    @apply bg-[#0d0d0f]/95 border border-white/10 rounded-3xl backdrop-blur-2xl 
+    shadow-2xl shadow-black/80;
   }
 
   .item-glass {
-    @apply bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/[0.06] 
-    backdrop-blur-md transition-all duration-300;
+    @apply bg-[#0d0d0f]/60 border border-white/5 rounded-2xl hover:bg-[#0d0d0f]/90 
+    backdrop-blur-md transition-all duration-300 shadow-xl shadow-black/40;
   }
 }
