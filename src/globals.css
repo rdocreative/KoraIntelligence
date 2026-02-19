@@ -21,15 +21,15 @@
 }
 
 @layer components {
-  /* Glass Card: Sombra brutal com 3 camadas de preto puro para profundidade máxima */
+  /* Glass Card: Fundo levemente mais claro para permitir ver o degradê e transparência */
   .card-glass {
-    @apply bg-[#0d0d0f] border border-white/10 rounded-[2rem] backdrop-blur-[50px] 
-    shadow-[0_50px_100px_-20px_rgba(0,0,0,1),0_30px_60px_-30px_rgba(0,0,0,1),0_0_20px_rgba(0,0,0,1)];
+    @apply bg-white/[0.03] border border-white/10 rounded-[2rem] backdrop-blur-[50px] 
+    shadow-[0_50px_100px_-20px_rgba(0,0,0,1),0_0_20px_rgba(0,0,0,0.5)];
   }
 
   .item-glass {
     @apply bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.05] 
     backdrop-blur-3xl transition-all duration-300 
-    shadow-[0_20px_40px_rgba(0,0,0,1)];
+    shadow-[0_20px_40px_rgba(0,0,0,0.8)];
   }
 }
