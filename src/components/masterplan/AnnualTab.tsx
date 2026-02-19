@@ -186,7 +186,7 @@ export const AnnualTab = ({
       
       {/* Analytics Hero */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-[#111111] border-white/5 md:col-span-2">
+          <Card className="bg-white/[0.10] backdrop-blur-md border border-white/10 md:col-span-2">
               <CardHeader>
                   <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
                       <BarChart3 className="w-4 h-4 mr-2" /> Status Geral do Ano
@@ -219,7 +219,7 @@ export const AnnualTab = ({
               </CardContent>
           </Card>
 
-          <Card className="bg-[#111111] border-white/5">
+          <Card className="bg-white/[0.10] backdrop-blur-md border border-white/10">
               <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
                       <TrendingUp className="w-4 h-4" /> Estatísticas
@@ -250,7 +250,7 @@ export const AnnualTab = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* GRAPH 1: PIE CHART (Distribution) */}
-        <Card className="bg-[#111111] border-white/5">
+        <Card className="bg-white/[0.10] backdrop-blur-md border border-white/10">
             <CardHeader>
                 <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
                     DISTRIBUIÇÃO DE ESFORÇO
@@ -324,14 +324,14 @@ export const AnnualTab = ({
         </Card>
 
         {/* GRAPH 2: LINE CHART (Evolution) */}
-        <Card className="bg-[#111111] border-white/5">
+        <Card className="bg-white/[0.10] backdrop-blur-md border border-white/10">
             <CardHeader>
                 <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
                     EVOLUÇÃO AO LONGO DO ANO
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="h-[250px] w-full bg-[#0D0D0D] rounded-lg p-2 border border-white/5 relative">
+                <div className="h-[250px] w-full bg-white/5 rounded-lg p-2 border border-white/5 relative">
                      <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={evolutionData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                             <CartesianGrid strokeDasharray="3 3" stroke="#1A1A1A" vertical={false} />
@@ -391,7 +391,7 @@ export const AnnualTab = ({
       </div>
 
       {/* Main Annual Goal Editor */}
-      <Card className="bg-[#111111] border-white/5">
+      <Card className="bg-white/[0.10] backdrop-blur-md border border-white/10">
           <CardHeader>
                <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-[#E8251A]">
                    <Target className="w-4 h-4 mr-2" /> Objetivo Principal
@@ -404,7 +404,7 @@ export const AnnualTab = ({
                   <Input 
                       value={data.annual.objective}
                       onChange={(e) => updateAnnual({ objective: e.target.value })}
-                      className="bg-[#0A0A0A] border-white/10 h-12 text-lg font-bold text-white"
+                      className="bg-black/20 border-white/10 h-12 text-lg font-bold text-white"
                   />
               </div>
               <div className="space-y-2">
@@ -412,7 +412,7 @@ export const AnnualTab = ({
                   <Textarea 
                       value={data.annual.successCriteria}
                       onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                      className="bg-[#0A0A0A] border-white/10 min-h-[100px] text-neutral-300"
+                      className="bg-black/20 border-white/10 min-h-[100px] text-neutral-300"
                   />
               </div>
           </CardContent>
@@ -432,7 +432,7 @@ export const AnnualTab = ({
                               "flex items-center gap-3 p-4 rounded-xl border transition-all min-w-[140px] md:min-w-0",
                               isActive 
                                   ? "shadow-lg" 
-                                  : "bg-[#111111] border-white/5 text-neutral-500 hover:text-white"
+                                  : "bg-white/5 border-white/5 text-neutral-500 hover:text-white"
                           )}
                           style={{
                               borderColor: isActive ? area.color : undefined,
@@ -461,7 +461,7 @@ export const AnnualTab = ({
           {/* Content */}
           <div className="md:col-span-3">
               <Card 
-                className="bg-[#111111] min-h-[400px] transition-all duration-500"
+                className="bg-white/[0.10] backdrop-blur-md min-h-[400px] transition-all duration-500"
                 style={{ 
                     borderColor: currentArea.color, 
                     borderWidth: '2px',
@@ -498,7 +498,7 @@ export const AnnualTab = ({
                               value={newItemText}
                               onChange={(e) => setNewItemText(e.target.value)}
                               onKeyDown={(e) => e.key === 'Enter' && handleAddItem()}
-                              className="bg-black/40 border-white/10"
+                              className="bg-black/40 border-white/10 text-white"
                           />
                           <Button onClick={handleAddItem} className="bg-[#E8251A] hover:bg-[#c91e14] shrink-0">
                               <Plus className="w-4 h-4" />

@@ -56,7 +56,7 @@ const Settings = () => {
       </div>
 
       <div className="grid gap-6">
-        <Card className="glass-card border-none bg-[#121212]">
+        <Card className="glass-card border-none bg-white/[0.10] backdrop-blur-md">
           <CardHeader className="border-b border-white/5 pb-4">
             <div className="flex items-center gap-2">
               <User className="w-5 h-5 text-red-500" />
@@ -66,12 +66,12 @@ const Settings = () => {
           <CardContent className="pt-6">
             <div className="space-y-2">
               <Label className="text-xs font-black uppercase text-neutral-400">Nome de Exibição</Label>
-              <Input value={localName} onChange={handleNameChange} className="bg-[#0a0a0a] border-white/10" />
+              <Input value={localName} onChange={handleNameChange} className="bg-black/20 border-white/10 text-white" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="glass-card border border-red-900/20 bg-red-950/5">
+        <Card className="glass-card border border-red-900/20 bg-red-950/10 backdrop-blur-md">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-2 text-red-600">
               <ShieldAlert className="w-5 h-5" />
@@ -79,7 +79,7 @@ const Settings = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between p-4 bg-[#0a0a0a]/50 rounded-2xl border border-red-900/10">
+            <div className="flex items-center justify-between p-4 bg-black/30 rounded-2xl border border-red-900/10">
               <div>
                 <p className="text-sm font-bold text-white">Resetar Tudo</p>
                 <p className="text-xs text-neutral-500">Apaga hábitos, XP e histórico.</p>

@@ -19,7 +19,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
   ];
 
   return (
-    <Card className="bg-transparent border border-[#222230] rounded-2xl shadow-none">
+    <Card className="bg-white/[0.10] backdrop-blur-md border border-[#222230] rounded-2xl shadow-none">
       <CardHeader className="pb-4 border-b border-[#222230]">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
@@ -47,7 +47,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((stat, i) => (
-            <div key={i} className="group relative flex flex-col justify-between p-4 rounded-xl bg-transparent border border-[#1e1e2a] hover:bg-white/[0.03] transition-all cursor-default">
+            <div key={i} className="group relative flex flex-col justify-between p-4 rounded-xl bg-white/[0.05] border border-[#1e1e2a] hover:bg-white/[0.08] transition-all cursor-default">
               <div className="flex justify-between items-start mb-2">
                  <stat.icon className={`h-5 w-5 ${stat.color} opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-transform`} />
                  <ChevronRight className="h-3 w-3 text-[#6b6b7a] group-hover:text-white" />

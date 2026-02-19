@@ -12,11 +12,9 @@ const RemindersPage = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       
-      {/* Header removido pois agora temos o TopBar global */}
-      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {reminders.map((reminder) => (
-          <Card key={reminder.id} className="bg-transparent border border-[#222230] hover:border-[#2d2d3d] hover:bg-white/[0.02] transition-all group rounded-2xl">
+          <Card key={reminder.id} className="bg-white/[0.10] backdrop-blur-md border border-[#222230] hover:border-[#2d2d3d] hover:bg-white/[0.15] transition-all group rounded-2xl">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-lg font-bold text-white group-hover:text-pink-400 transition-colors">
                 {reminder.title}
@@ -37,7 +35,7 @@ const RemindersPage = () => {
           </Card>
         ))}
         
-        <Card className="bg-transparent border border-dashed border-[#222230] flex flex-col items-center justify-center p-8 hover:border-[#2d2d3d] hover:bg-white/[0.02] transition-all cursor-pointer group min-h-[200px] rounded-2xl">
+        <Card className="bg-white/[0.05] backdrop-blur-md border border-dashed border-[#222230] flex flex-col items-center justify-center p-8 hover:border-[#2d2d3d] hover:bg-white/[0.10] transition-all cursor-pointer group min-h-[200px] rounded-2xl">
           <div className="w-12 h-12 rounded-full bg-transparent border border-[#222230] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
             <Bell className="w-5 h-5 text-[#6b6b7a] group-hover:text-white" />
           </div>
