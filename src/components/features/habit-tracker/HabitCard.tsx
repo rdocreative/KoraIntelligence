@@ -21,6 +21,7 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
         "group relative flex flex-col gap-3 p-4 rounded-2xl border transition-all duration-300",
         "bg-white/[0.015] hover:bg-white/[0.04] backdrop-blur-3xl",
         "border-white/20 hover:border-red-500/40",
+        "shadow-2xl shadow-black/80", // Adicionado shadow
         habit.completed && "opacity-60"
       )}
     >
