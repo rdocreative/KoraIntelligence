@@ -60,8 +60,9 @@ export const TopBar = () => {
   };
 
   return (
-    <header className="sticky top-0 w-full flex justify-center z-50 pt-6 md:pt-10 pb-2 pointer-events-none px-4">
-      <div className="flex items-center gap-2 md:gap-3 pointer-events-auto max-w-full overflow-x-auto no-scrollbar py-4 px-2">
+    <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none px-4">
+      {/* Container de scroll com padding generoso para não cortar sombras */}
+      <div className="flex items-center gap-2 md:gap-3 pointer-events-auto max-w-full overflow-x-auto no-scrollbar py-12 px-6 -my-8">
         
         {/* Main Page Capsule - Hidden on Mobile */}
         <div 
