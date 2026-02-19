@@ -39,16 +39,16 @@ const App = () => (
               <Toaster />
               <Sonner theme="dark" />
               <BrowserRouter>
-                <div className="min-h-screen bg-[#060608] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
+                <div className="min-h-screen bg-[#141415] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                   
                   {/* Background Layers */}
                   <ParticleBackground />
                   
-                  {/* Even Darker Red to Charcoal Gradient */}
-                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(225deg,rgba(70,10,10,0.4)_0%,rgba(10,10,12,0.98)_75%)]" />
+                  {/* Main App Background Gradient - Red from bottom using requested colors */}
+                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(232,40,58,0.08)_0%,rgba(28,28,29,1)_50%,rgba(20,20,21,1)_100%)]" />
                   
-                  {/* Final depth layer */}
-                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_85%_10%,rgba(140,20,20,0.06),transparent_80%)]" />
+                  {/* Depth overlay */}
+                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_center_bottom,rgba(232,40,58,0.05),transparent_70%)]" />
 
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
