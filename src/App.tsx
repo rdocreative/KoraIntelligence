@@ -43,6 +43,9 @@ const App = () => (
                   
                   {/* Background Layers */}
                   <ParticleBackground />
+                  
+                  {/* Central Red Glow Gradient */}
+                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(220,38,38,0.08),transparent_70%)]" />
 
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
