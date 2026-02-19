@@ -18,6 +18,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       value: habitsCount, 
       icon: CheckCircle2, 
       color: "text-red-500",
+      borderColor: "border-red-500/20 hover:border-red-500/50",
       stroke: "stroke-red-500",
       bgGradient: "from-red-600/20 via-red-900/10 to-transparent"
     },
@@ -26,6 +27,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       value: "0", 
       icon: ListTodo, 
       color: "text-blue-500",
+      borderColor: "border-blue-500/20 hover:border-blue-500/50",
       stroke: "stroke-blue-500",
       bgGradient: "from-blue-600/20 via-blue-900/10 to-transparent"
     },
@@ -34,6 +36,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       value: "0", 
       icon: Target, 
       color: "text-emerald-500",
+      borderColor: "border-emerald-500/20 hover:border-emerald-500/50",
       stroke: "stroke-emerald-500",
       bgGradient: "from-emerald-600/20 via-emerald-900/10 to-transparent"
     },
@@ -42,6 +45,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       value: totalPoints, 
       icon: Zap, 
       color: "text-amber-500",
+      borderColor: "border-amber-500/20 hover:border-amber-500/50",
       stroke: "stroke-amber-500",
       bgGradient: "from-amber-600/20 via-amber-900/10 to-transparent"
     },
@@ -79,9 +83,10 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
             <div 
               key={i} 
               className={cn(
-                "group flex flex-col justify-between p-5 rounded-[1.5rem] border border-white/5 transition-all duration-500 cursor-default relative overflow-hidden",
+                "group flex flex-col justify-between p-5 rounded-[1.5rem] border transition-all duration-500 cursor-default relative overflow-hidden",
                 "bg-black/40 hover:bg-black/60 backdrop-blur-3xl",
-                "hover:border-white/20 hover:scale-[1.02]"
+                "hover:scale-[1.02]",
+                stat.borderColor
               )}
             >
               <div className={cn("absolute inset-0 bg-gradient-to-br opacity-40", stat.bgGradient)} />
