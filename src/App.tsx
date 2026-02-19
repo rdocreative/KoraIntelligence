@@ -1,37 +1,84 @@
-"use client";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "./components/providers/ThemeProvider";
+import { SettingsProvider } from "./hooks/useSettings"; 
+import { HabitProvider } from "./hooks/useHabitTracker";
+import { MasterplanProvider } from "./hooks/useMasterplan";
+import { FloatingNavbar } from "./components/layout/FloatingNavbar";
+import { TopBar } from "./components/layout/TopBar"; 
+import ParticleBackground from "./components/layout/ParticleBackground";
+import Index from "./pages/Index";
+import MasterplanPage from "./pages/Masterplan";
+import Settings from "./pages/Settings";
+import NotFound from "./pages/NotFound";
 
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { TopBar } from './components/layout/TopBar';
-import Index from './pages/Index';
+import TasksPage from "./pages/Tasks";
+import GoalsPage from "./pages/Goals";
+import MissionsPage from "./pages/Missions";
+import CommunityPage from "./pages/Community";
+import StorePage from "./pages/Store";
+import RemindersPage from "./pages/Reminders";
 
-function App() {
-  return (
-    <Router>
-      <div className="relative min-h-screen bg-[#0a0a0b] text-[#f0f0f0] selection:bg-[#e8283a33] selection:text-[#e8283a] overflow-x-hidden">
-        {/* Background Gradient Effect - Bottom to Top */}
-        <div 
-          className="fixed inset-0 pointer-events-none z-0"
-          style={{
-            background: 'linear-gradient(to top, rgba(232, 40, 58, 0.12) 0%, rgba(232, 40, 58, 0.05) 20%, transparent 60%)',
-          }}
-        />
-        
-        {/* Glassmorphism Grain Overlay (Optional but looks great) */}
-        <div className="fixed inset-0 pointer-events-none z-0 opacity-[0.03] mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+const queryClient = new QueryClient();
 
-        <div className="relative z-10 flex flex-col min-h-screen">
-          <TopBar />
-          <main className="flex-1 w-full max-w-7xl mx-auto px-4 md:px-6 pb-24">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              {/* Adicione outras rotas conforme necessário */}
-            </Routes>
-          </main>
-        </div>
-      </div>
-    </Router>
-  );
-}
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <ThemeProvider 
+      attribute="class" 
+      defaultTheme="dark" 
+      enableSystem={false}
+      storageKey="app-theme"
+    >
+      <SettingsProvider>
+        <HabitProvider>
+          <MasterplanProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner theme="dark" />
+              <BrowserRouter>
+                <div className="min-h-screen bg-[#060608] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
+                  
+                  {/* Background Layers */}
+                  <ParticleBackground />
+                  
+                  {/* Even Darker Red to Charcoal Gradient */}
+                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(225deg,rgba(70,10,10,0.4)_0%,rgba(10,10,12,0.98)_75%)]" />
+                  
+                  {/* Final depth layer */}
+                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_85%_10%,rgba(140,20,20,0.06),transparent_80%)]" />
+
+                  <div className="relative z-10 flex flex-col min-h-screen">
+                    <TopBar />
+                    <main className="flex-1 p-6 pb-32 max-w-5xl mx-auto w-full">
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/masterplan" element={<MasterplanPage />} />
+                        <Route path="/habitos" element={<MasterplanPage />} />
+                        <Route path="/tarefas" element={<TasksPage />} />
+                        <Route path="/metas" element={<GoalsPage />} />
+                        <Route path="/lembretes" element={<RemindersPage />} />
+                        <Route path="/missoes" element={<MissionsPage />} />
+                        <Route path="/comunidade" element={<CommunityPage />} />
+                        <Route path="/financa" element={<StorePage />} />
+                        <Route path="/loja" element={<StorePage />} />
+                        <Route path="/inventario" element={<StorePage />} />
+                        <Route path="/configuracoes" element={<Settings />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </main>
+                    <FloatingNavbar />
+                  </div>
+                </div>
+              </BrowserRouter>
+            </TooltipProvider>
+          </MasterplanProvider>
+        </HabitProvider>
+      </SettingsProvider>
+    </ThemeProvider>
+  </QueryClientProvider>
+);
 
 export default App;
