@@ -9,19 +9,21 @@ import {
   Users,
   ShoppingBag, 
   Settings,
-  ChevronUp
+  ChevronUp,
+  Bell
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'INÍCIO', path: '/' },
-  { icon: Crown, label: 'MASTERPLAN', path: '/masterplan' },
-  { icon: ClipboardList, label: 'TAREFAS', path: '/tarefas' },
-  { icon: Target, label: 'METAS', path: '/metas' },
-  { icon: Swords, label: 'MISSÕES', path: '/missoes' },
-  { icon: Users, label: 'COMUNIDADE', path: '/comunidade' },
-  { icon: ShoppingBag, label: 'LOJA', path: '/loja' },
-  { icon: Settings, label: 'CONFIGURAÇÕES', path: '/configuracoes' },
+  { icon: LayoutDashboard, label: 'INÍCIO', path: '/', color: 'rgba(239, 68, 68, 1)', shadowColor: 'rgba(239, 68, 68, 0.6)' }, // Red
+  { icon: Crown, label: 'MASTERPLAN', path: '/masterplan', color: 'rgba(168, 85, 247, 1)', shadowColor: 'rgba(168, 85, 247, 0.6)' }, // Purple
+  { icon: ClipboardList, label: 'TAREFAS', path: '/tarefas', color: 'rgba(59, 130, 246, 1)', shadowColor: 'rgba(59, 130, 246, 0.6)' }, // Blue
+  { icon: Target, label: 'METAS', path: '/metas', color: 'rgba(34, 197, 94, 1)', shadowColor: 'rgba(34, 197, 94, 0.6)' }, // Green
+  { icon: Bell, label: 'LEMBRETES', path: '/lembretes', color: 'rgba(236, 72, 153, 1)', shadowColor: 'rgba(236, 72, 153, 0.6)' }, // Pink
+  { icon: Swords, label: 'MISSÕES', path: '/missoes', color: 'rgba(249, 115, 22, 1)', shadowColor: 'rgba(249, 115, 22, 0.6)' }, // Orange
+  { icon: Users, label: 'COMUNIDADE', path: '/comunidade', color: 'rgba(6, 182, 212, 1)', shadowColor: 'rgba(6, 182, 212, 0.6)' }, // Cyan
+  { icon: ShoppingBag, label: 'LOJA', path: '/loja', color: 'rgba(234, 179, 8, 1)', shadowColor: 'rgba(234, 179, 8, 0.6)' }, // Yellow
+  { icon: Settings, label: 'CONFIGURAÇÕES', path: '/configuracoes', color: 'rgba(148, 163, 184, 1)', shadowColor: 'rgba(148, 163, 184, 0.6)' }, // Slate
 ];
 
 export const FloatingNavbar = () => {
@@ -92,19 +94,29 @@ export const FloatingNavbar = () => {
                   )}>
                       <item.icon 
                           size={20} 
+                          style={{ 
+                            color: isActive ? item.color : 'inherit',
+                            filter: isActive ? `drop-shadow(0 0 8px ${item.shadowColor})` : 'none'
+                          }}
                           className={cn(
                               "transition-all duration-300",
-                              isActive && "drop-shadow-[0_0_12px_rgba(239,68,68,0.6)] fill-red-500/10"
+                              isActive && "fill-current/10"
                           )} 
                           strokeWidth={isActive ? 2.5 : 2}
                       />
                   </div>
 
                   {/* Active Dot Indicator */}
-                  <span className={cn(
-                    "absolute -bottom-0.5 w-1 h-1 rounded-full bg-red-500 transition-all duration-300 shadow-[0_0_10px_rgba(239,68,68,1)]",
-                    isActive ? "opacity-100 scale-100" : "opacity-0 scale-0"
-                  )} />
+                  <span 
+                    style={{ 
+                      backgroundColor: item.color,
+                      boxShadow: `0 0 10px ${item.color}`
+                    }}
+                    className={cn(
+                      "absolute -bottom-0.5 w-1 h-1 rounded-full transition-all duration-300",
+                      isActive ? "opacity-100 scale-100" : "opacity-0 scale-0"
+                    )} 
+                  />
 
                   {/* Hover Background Glow */}
                   <div className="absolute inset-0 bg-white/5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />

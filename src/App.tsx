@@ -20,6 +20,7 @@ import GoalsPage from "./pages/Goals";
 import MissionsPage from "./pages/Missions";
 import CommunityPage from "./pages/Community";
 import StorePage from "./pages/Store";
+import RemindersPage from "./pages/Reminders";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ const App = () => (
                         <Route path="/habitos" element={<MasterplanPage />} />
                         <Route path="/tarefas" element={<TasksPage />} />
                         <Route path="/metas" element={<GoalsPage />} />
+                        <Route path="/lembretes" element={<RemindersPage />} />
                         <Route path="/missoes" element={<MissionsPage />} />
                         <Route path="/comunidade" element={<CommunityPage />} />
                         <Route path="/financa" element={<StorePage />} /> {/* Usando StorePage temporariamente ou criar FinancePage? O prompt não pediu Finance, mas Store. Vou usar Store para /loja */}
