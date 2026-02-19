@@ -95,33 +95,27 @@ export const TopBar = () => {
 
   return (
     <header 
-      className="sticky top-0 z-40 w-full h-24 px-6 flex items-center justify-between pointer-events-none"
+      className="sticky top-0 z-40 w-full h-28 px-6 flex items-center justify-between pointer-events-none"
     >
       {/* Lado Esquerdo: Espaçador */}
       <div className="flex-1 hidden md:flex" />
 
       {/* Centro: Ilha Flutuante */}
       <div className="absolute left-1/2 -translate-x-1/2 pointer-events-auto z-50">
-        <div className="flex items-center gap-3 pl-1.5 pr-5 py-1.5 rounded-full bg-[#0a0a0c]/80 backdrop-blur-xl border border-white/5 shadow-2xl transition-all duration-300 hover:bg-[#0f0f12]/90 hover:border-white/10 hover:shadow-white/5">
-          <div 
-            className="w-9 h-9 rounded-full flex items-center justify-center shadow-inner transition-colors duration-300"
-            style={{
-              backgroundColor: `${color}15`,
-              border: `1px solid ${color}20`,
-            }}
-          >
-            <Icon 
-              size={16} 
-              style={{ color: color }} 
-              strokeWidth={2.5}
-            />
-          </div>
+        <div className="flex items-center gap-4 px-6 py-3 rounded-full bg-gradient-to-b from-[#1f1f23] to-[#0a0a0c] border border-white/10 shadow-2xl transition-transform duration-300 hover:scale-[1.02]">
+          
+          <Icon 
+            size={22} 
+            style={{ color: color }} 
+            strokeWidth={2.5}
+            className="drop-shadow-md"
+          />
 
           <div className="flex flex-col items-start gap-0.5">
-            <h1 className="font-bold text-sm text-white/90 leading-none tracking-tight">
+            <h1 className="font-bold text-base text-white/90 leading-none tracking-tight">
               {title}
             </h1>
-            <span className="font-medium text-[10px] text-white/40 leading-none uppercase tracking-wider">
+            <span className="font-medium text-[11px] text-white/50 leading-none uppercase tracking-wider">
               {subtitle}
             </span>
           </div>
@@ -134,9 +128,9 @@ export const TopBar = () => {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="w-8 h-8 text-white/40 hover:text-white hover:bg-white/10 rounded-full transition-all"
+            className="w-9 h-9 text-white/40 hover:text-white hover:bg-white/10 rounded-full transition-all"
           >
-            <Search size={16} />
+            <Search size={18} />
           </Button>
 
           <Dialog>
@@ -144,9 +138,9 @@ export const TopBar = () => {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="w-8 h-8 text-white/40 hover:text-white hover:bg-white/10 rounded-full transition-all"
+                className="w-9 h-9 text-white/40 hover:text-white hover:bg-white/10 rounded-full transition-all"
               >
-                  <Trophy size={16} />
+                  <Trophy size={18} />
               </Button>
             </DialogTrigger>
             <DialogContent className="p-0 border-none bg-transparent shadow-none sm:max-w-fit">
@@ -157,17 +151,17 @@ export const TopBar = () => {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="relative w-8 h-8 text-white/40 hover:text-white hover:bg-white/10 rounded-full transition-all"
+            className="relative w-9 h-9 text-white/40 hover:text-white hover:bg-white/10 rounded-full transition-all"
           >
-              <Bell size={16} />
-              <span className="absolute top-2 right-2.5 w-1.5 h-1.5 bg-red-500 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
+              <Bell size={18} />
+              <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-red-500 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.6)]"></span>
           </Button>
         </div>
         
         <Dialog>
           <DialogTrigger asChild>
             <div 
-              className="w-10 h-10 ml-2 rounded-full bg-[#0a0a0c] border border-white/10 flex items-center justify-center text-white/80 font-bold text-xs cursor-pointer hover:border-white/20 hover:bg-white/5 transition-all shadow-xl hover:scale-105 active:scale-95"
+              className="w-11 h-11 ml-2 rounded-full bg-gradient-to-b from-[#1f1f23] to-[#0a0a0c] border border-white/10 flex items-center justify-center text-white/80 font-bold text-xs cursor-pointer hover:border-white/20 transition-all shadow-xl hover:scale-105 active:scale-95"
             >
               ME
             </div>
