@@ -18,32 +18,40 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       value: habitsCount, 
       icon: CheckCircle2, 
       color: "text-red-500",
+      bgColor: "bg-red-500",
       borderColor: "border-red-500/20",
-      bgGradient: "from-red-950/15 to-red-600/15"
+      bgGradient: "from-red-950/15 to-red-600/15",
+      progress: Math.min(100, (habitsCount / 10) * 100) // Exemplo: meta de 10 hábitos
     },
     { 
       label: "Tarefas", 
       value: "0", 
       icon: ListTodo, 
-      color: "text-blue-500",
+      color: "text-blue-400",
+      bgColor: "bg-blue-400",
       borderColor: "border-blue-500/20",
-      bgGradient: "from-blue-950/15 to-blue-600/15"
+      bgGradient: "from-blue-950/15 to-blue-600/15",
+      progress: 0
     },
     { 
       label: "Metas", 
       value: "0", 
       icon: Target, 
-      color: "text-emerald-500",
+      color: "text-emerald-400",
+      bgColor: "bg-emerald-400",
       borderColor: "border-emerald-500/20",
-      bgGradient: "from-emerald-950/15 to-emerald-600/15"
+      bgGradient: "from-emerald-950/15 to-emerald-600/15",
+      progress: 0
     },
     { 
       label: "XP Total", 
       value: totalPoints, 
       icon: Zap, 
-      color: "text-amber-500",
+      color: "text-amber-400",
+      bgColor: "bg-amber-400",
       borderColor: "border-amber-500/20",
-      bgGradient: "from-amber-950/15 to-amber-600/15"
+      bgGradient: "from-amber-950/15 to-amber-600/15",
+      progress: progressPercentage
     },
   ];
 
@@ -86,13 +94,21 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
               )}
             >
               {/* Top Row: Icon and Label */}
-              <div className="relative z-10 flex items-center gap-2 mb-4">
+              <div className="relative z-10 flex items-center gap-2 mb-3">
                  <div className="p-1.5 rounded-lg bg-black/40 border border-white/5 shrink-0">
                     <stat.icon className={cn("h-3.5 w-3.5", stat.color)} />
                  </div>
-                 <span className="text-[10px] font-black uppercase tracking-widest text-white transition-colors truncate">
+                 <span className="text-[13px] font-black uppercase tracking-widest text-white transition-colors truncate">
                    {stat.label}
                  </span>
+              </div>
+
+              {/* Progress Bar Layer */}
+              <div className="relative z-10 w-full h-1 bg-black/40 rounded-full mb-3 overflow-hidden border border-white/5">
+                <div 
+                  className={cn("h-full transition-all duration-1000", stat.bgColor)} 
+                  style={{ width: `${stat.progress}%` }}
+                />
               </div>
 
               {/* Bottom Row: Value */}
