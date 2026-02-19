@@ -49,7 +49,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
 
   return (
     <Card className="card-glass overflow-hidden">
-      <CardHeader className="pb-4 border-b border-white/5 bg-white/[0.01]">
+      <CardHeader className="pb-4 border-b border-white/5 bg-gradient-to-r from-white/[0.03] to-transparent">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.8)]"></span>
@@ -60,7 +60,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
           </span>
         </div>
       </CardHeader>
-      <CardContent className="space-y-8 pt-8">
+      <CardContent className="space-y-8 pt-8 bg-gradient-to-r from-transparent to-white/[0.02]">
         <div className="space-y-2">
           <div className="flex justify-between text-[10px] text-white/40 font-black uppercase tracking-widest">
              <span>Progresso de Nível</span>

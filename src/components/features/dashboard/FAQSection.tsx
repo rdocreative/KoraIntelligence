@@ -10,13 +10,13 @@ import { HelpCircle } from "lucide-react";
 export const FAQSection = () => {
   return (
     <Card className="card-glass overflow-hidden">
-      <CardHeader className="pb-2 border-b border-white/5">
+      <CardHeader className="pb-2 border-b border-white/5 bg-gradient-to-r from-white/[0.03] to-transparent">
         <CardTitle className="text-lg font-bold flex items-center gap-2 text-white">
           <HelpCircle className="h-5 w-5 text-red-500" />
           Perguntas Frequentes
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-4">
+      <CardContent className="pt-4 bg-gradient-to-r from-transparent to-white/[0.02]">
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1" className="border-white/5">
             <AccordionTrigger className="text-[#f0f0f2] font-bold hover:no-underline hover:text-red-400">

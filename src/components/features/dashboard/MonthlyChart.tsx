@@ -25,13 +25,13 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
 
   return (
     <Card className="card-glass border-white/10 overflow-hidden">
-      <CardHeader className="border-b border-white/5 pb-4">
+      <CardHeader className="border-b border-white/5 pb-4 bg-gradient-to-r from-white/[0.03] to-transparent">
         <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
             <Activity className="w-5 h-5 text-red-500" />
             Evolução de XP
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-6">
+      <CardContent className="pt-6 bg-gradient-to-r from-transparent to-white/[0.02]">
         <div className="h-[250px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={data}>
