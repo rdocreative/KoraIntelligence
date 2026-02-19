@@ -86,29 +86,29 @@ export const TopBar = () => {
   const { title, subtitle, color } = config;
 
   return (
-    <header className="fixed top-4 left-0 w-full flex justify-center z-50 pointer-events-none">
+    <header className="sticky top-0 w-full flex justify-center z-50 py-6 bg-gradient-to-b from-[#0a0a0c] via-[#0a0a0c]/80 to-transparent backdrop-blur-md">
       <div 
-        className="flex items-center gap-[10px] px-5 py-2 rounded-full bg-[#1c1c1c] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] pointer-events-auto"
+        className="flex items-center gap-[12px] px-6 py-3 rounded-full bg-[#1c1c1c] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300"
       >
         {/* 1. Status dot */}
         <div 
-          className="w-[7px] h-[7px] rounded-full transition-all duration-500"
+          className="w-[8px] h-[8px] rounded-full transition-all duration-500"
           style={{ 
             backgroundColor: color,
-            boxShadow: `0 0 8px ${color}99`
+            boxShadow: `0 0 10px ${color}cc`
           }}
         />
 
         {/* 2. Page title */}
-        <h1 className="text-[0.82rem] font-bold text-[#f0f0f0] tracking-tight leading-none">
+        <h1 className="text-[0.9rem] font-bold text-[#f0f0f0] tracking-tight leading-none">
           {title}
         </h1>
 
         {/* 3. Vertical separator */}
-        <div className="w-px h-[14px] bg-[#303030]" />
+        <div className="w-px h-[16px] bg-[#303030]" />
 
         {/* 4. Page subtitle */}
-        <span className="text-[0.62rem] text-[#555] font-medium uppercase tracking-wider leading-none">
+        <span className="text-[0.68rem] text-[#777] font-semibold uppercase tracking-[0.05em] leading-none">
           {subtitle}
         </span>
       </div>
