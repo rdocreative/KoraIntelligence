@@ -24,8 +24,8 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
   }
 
   return (
-    <Card className="bg-white/[0.05] border border-[#222230] rounded-2xl shadow-none backdrop-blur-md">
-      <CardHeader className="border-b border-white/[0.05] pb-4">
+    <Card className="bg-white/[0.10] border border-white/20 rounded-2xl shadow-xl backdrop-blur-xl overflow-hidden">
+      <CardHeader className="border-b border-white/10 pb-4">
         <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
             <Activity className="w-5 h-5 text-red-500" />
             Evolução de XP
@@ -41,25 +41,26 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
                   <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.08)" />
               <XAxis 
                 dataKey="date" 
                 tickLine={false} 
                 axisLine={false} 
-                tick={{ fill: '#6b6b7a', fontSize: 10, fontWeight: 700 }} 
+                tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10, fontWeight: 700 }} 
                 minTickGap={30}
                 dy={10}
               />
               <Tooltip 
                 contentStyle={{ 
                   borderRadius: '16px', 
-                  border: '1px solid #222230', 
-                  backgroundColor: 'rgba(10, 10, 12, 0.95)',
+                  border: '1px solid rgba(255,255,255,0.2)', 
+                  backgroundColor: 'rgba(20, 20, 25, 0.9)',
                   color: '#f0f0f2',
-                  boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.5)'
+                  backdropFilter: 'blur(10px)',
+                  boxShadow: '0 20px 40px -10px rgba(0,0,0,0.7)'
                 }}
                 itemStyle={{ color: '#ef4444', fontWeight: 700 }}
-                cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }}
+                cursor={{ stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1 }}
               />
               <Area 
                 type="monotone" 
