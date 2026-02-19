@@ -19,7 +19,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       icon: CheckCircle2, 
       color: "text-red-500",
       borderColor: "border-red-500/20",
-      bgGradient: "from-red-600/10 via-red-600/0 to-transparent"
+      bgGradient: "from-red-950/25 to-red-600/25"
     },
     { 
       label: "Tarefas", 
@@ -27,7 +27,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       icon: ListTodo, 
       color: "text-blue-500",
       borderColor: "border-blue-500/20",
-      bgGradient: "from-blue-600/10 via-blue-600/0 to-transparent"
+      bgGradient: "from-blue-950/25 to-blue-600/25"
     },
     { 
       label: "Metas", 
@@ -35,7 +35,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       icon: Target, 
       color: "text-emerald-500",
       borderColor: "border-emerald-500/20",
-      bgGradient: "from-emerald-600/10 via-emerald-600/0 to-transparent"
+      bgGradient: "from-emerald-950/25 to-emerald-600/25"
     },
     { 
       label: "XP Total", 
@@ -43,7 +43,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
       icon: Zap, 
       color: "text-amber-500",
       borderColor: "border-amber-500/20",
-      bgGradient: "from-amber-600/10 via-amber-600/0 to-transparent"
+      bgGradient: "from-amber-950/25 to-amber-600/25"
     },
   ];
 
@@ -79,13 +79,12 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
             <div 
               key={i} 
               className={cn(
-                "group flex flex-col justify-between p-4 rounded-2xl border transition-all duration-300 relative overflow-hidden shadow-2xl shadow-black/80",
-                "bg-[#121215] hover:bg-[#18181b]",
+                "group flex flex-col justify-between p-4 rounded-2xl border transition-all duration-300 relative overflow-hidden shadow-xl shadow-black/30",
+                "bg-gradient-to-br hover:opacity-90",
+                stat.bgGradient,
                 stat.borderColor
               )}
             >
-              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-100", stat.bgGradient)} />
-              
               <div className="relative z-10 flex justify-between items-start mb-3">
                  <div className="p-1.5 rounded-lg bg-black/40 border border-white/5">
                     <stat.icon className={cn("h-4 w-4", stat.color)} />

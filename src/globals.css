@@ -28,6 +28,6 @@
 
   .item-glass {
     @apply bg-[#161619]/60 border border-white/5 rounded-2xl hover:bg-[#161619]/90 
-    backdrop-blur-md transition-all duration-300 shadow-xl shadow-black/40;
+    backdrop-blur-md transition-all duration-300 shadow-xl shadow-black/30;
   }
 }
