@@ -13,31 +13,31 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
   
   const stats = [
     { label: "Hábitos", value: habitsCount, icon: CheckCircle2, color: "text-red-500" },
-    { label: "Tarefas", value: "0", icon: ListTodo, color: "text-neutral-500" },
-    { label: "Metas", value: "0", icon: Target, color: "text-neutral-500" },
+    { label: "Tarefas", value: "0", icon: ListTodo, color: "text-[#6b6b7a]" },
+    { label: "Metas", value: "0", icon: Target, color: "text-[#6b6b7a]" },
     { label: "XP Total", value: totalPoints, icon: Zap, color: "text-yellow-500" },
   ];
 
   return (
-    <Card className="glass-card border-none bg-[#121212]">
-      <CardHeader className="pb-4 border-b border-white/5">
+    <Card className="bg-transparent border border-[#222230] rounded-2xl shadow-none">
+      <CardHeader className="pb-4 border-b border-[#222230]">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
             Status Mensal
           </CardTitle>
-          <span className="text-xs font-mono text-red-500 bg-red-950/30 px-2 py-1 rounded border border-red-900/50">
+          <span className="text-xs font-mono text-red-500 bg-red-950/20 px-2 py-1 rounded border border-red-900/40">
             {Math.round(progressPercentage)}% COMPLETADO
           </span>
         </div>
       </CardHeader>
       <CardContent className="space-y-6 pt-6">
         <div className="space-y-2">
-          <div className="flex justify-between text-xs text-neutral-400 mb-1">
+          <div className="flex justify-between text-xs text-[#6b6b7a] mb-1 font-normal">
              <span>Progresso de Nível</span>
-             <span>{totalPoints} / {MONTHLY_XP_TARGET} XP</span>
+             <span className="font-rajdhani font-bold text-white text-sm">{totalPoints} / {MONTHLY_XP_TARGET} XP</span>
           </div>
-          <div className="h-2 w-full bg-[#1a1a1a] rounded-full overflow-hidden border border-white/5">
+          <div className="h-2 w-full bg-[#1e1e28] rounded-full overflow-hidden border border-[#222230]">
             <div 
                 className="h-full bg-gradient-to-r from-red-600 to-orange-500 shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-1000 ease-out"
                 style={{ width: `${progressPercentage}%` }}
@@ -47,14 +47,14 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((stat, i) => (
-            <div key={i} className="group relative flex flex-col justify-between p-4 rounded-xl bg-[#181818] border border-white/5 hover:border-red-500/30 hover:bg-[#1c1c1c] transition-all cursor-default">
+            <div key={i} className="group relative flex flex-col justify-between p-4 rounded-xl bg-transparent border border-[#1e1e2a] hover:bg-white/[0.03] transition-all cursor-default">
               <div className="flex justify-between items-start mb-2">
                  <stat.icon className={`h-5 w-5 ${stat.color} opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-transform`} />
-                 <ChevronRight className="h-3 w-3 text-neutral-700 group-hover:text-neutral-500" />
+                 <ChevronRight className="h-3 w-3 text-[#6b6b7a] group-hover:text-white" />
               </div>
               <div>
-                <span className="block text-2xl font-black text-white group-hover:text-red-100 transition-colors">{stat.value}</span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500">{stat.label}</span>
+                <span className="block text-2xl font-rajdhani font-bold text-white group-hover:text-red-100 transition-colors">{stat.value}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#6b6b7a]">{stat.label}</span>
               </div>
             </div>
           ))}

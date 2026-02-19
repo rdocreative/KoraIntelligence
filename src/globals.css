@@ -6,64 +6,55 @@
 
 @layer base {
   :root {
-    /* Cor de fundo principal: #060606 */
-    --background: 0 0% 2%; 
-    --foreground: 0 0% 95%;
+    /* Ghost Mode Palette */
+    --background: 240 9% 4%; /* #0a0a0c */
+    --foreground: 240 6% 95%; /* #f0f0f2 */
 
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 0% 0; /* Transparent */
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 7%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 240 9% 4%;
+    --popover-foreground: 0 0% 100%;
 
     --primary: 0 84% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 90%;
+    --secondary: 240 17% 16%; /* #222230 */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 240 17% 16%;
+    --muted-foreground: 240 7% 48%; /* #6b6b7a */
 
-    --accent: 0 0% 12%;
-    --accent-foreground: 0 0% 95%;
+    --accent: 240 17% 16%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
+    --border: 240 17% 16%; /* #222230 */
+    --input: 240 17% 16%;
     --ring: 0 84% 60%;
 
-    --radius: 1rem;
-
-    --sidebar-background: 0 0% 5%;
-    --sidebar-foreground: 0 0% 90%;
-    --sidebar-primary: 0 84% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 12%;
-    --sidebar-ring: 0 84% 60%;
+    --radius: 1rem; /* 16px */
   }
 
   .dark {
-    --background: 0 0% 2%;
-    --foreground: 0 0% 95%;
-    --card: 0 0% 7%;
-    --card-foreground: 0 0% 95%;
+    --background: 240 9% 4%;
+    --foreground: 240 6% 95%;
+    --card: 0 0% 0% 0;
+    --card-foreground: 0 0% 100%;
     --primary: 0 84% 60%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 90%;
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 60%;
-    --accent: 0 0% 12%;
-    --accent-foreground: 0 0% 95%;
+    --secondary: 240 17% 16%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 17% 16%;
+    --muted-foreground: 240 7% 48%;
+    --accent: 240 17% 16%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
+    --border: 240 17% 16%;
+    --input: 240 17% 16%;
     --ring: 0 84% 60%;
   }
 }
@@ -73,33 +64,44 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased selection:bg-red-900/50 selection:text-white;
+    @apply bg-[#0a0a0c] text-[#f0f0f2] antialiased selection:bg-red-900/50 selection:text-white;
     font-family: 'Exo 2', sans-serif;
-    font-weight: 400;
+    font-weight: 600; /* Body bold per request */
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold;
+    @apply font-bold text-white; /* Titles white and bold */
+  }
+
+  /* Specific typography overrides */
+  .text-secondary-custom {
+    @apply text-[#6b6b7a] font-normal;
+  }
+  
+  .text-numeric {
+    @apply font-rajdhani font-bold text-white;
   }
   
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-background;
+    @apply bg-[#0a0a0c];
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-neutral-800 rounded-full hover:bg-neutral-700 transition-colors;
+    @apply bg-[#222230] rounded-full hover:bg-[#2d2d3d] transition-colors;
   }
 }
 
 @layer components {
-  .glass-card {
-    @apply bg-[#121212] border border-white/5 shadow-[0_8px_30px_rgb(0,0,0,0.5)] backdrop-blur-sm;
-    box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.5),
-      0 2px 4px -1px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  /* Global Ghost Card Styles */
+  .card, .glass-card {
+    @apply bg-transparent border border-[#222230] rounded-2xl shadow-none backdrop-blur-none;
+  }
+
+  /* Internal Cards (Items) */
+  .card-internal {
+    @apply bg-transparent border border-[#1e1e2a] rounded-xl hover:bg-white/[0.03] transition-colors;
   }
   
   .glow-text {
@@ -111,13 +113,13 @@
   }
 
   .bg-circuit-pattern {
-    @apply fixed inset-0 pointer-events-none z-0 opacity-60;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cpath d='M10,100 L60,100 L60,60 L100,60' stroke='rgba(232,37,26,0.08)' stroke-width='1' fill='none'/%3E%3Ccircle cx='100' cy='60' r='2' fill='rgba(232,37,26,0.15)'/%3E%3Cpath d='M100,60 L140,60 L140,100 L190,100' stroke='rgba(232,37,26,0.06)' stroke-width='1' fill='none'/%3E%3Cpath d='M60,100 L60,150 L120,150' stroke='rgba(255,255,255,0.03)' stroke-width='1' fill='none'/%3E%3Ccircle cx='120' cy='150' r='2' fill='rgba(255,255,255,0.06)'/%3E%3Cpath d='M120,150 L120,190' stroke='rgba(255,255,255,0.03)' stroke-width='1' fill='none'/%3E%3Cpath d='M0,40 L40,40 L40,10 L80,10' stroke='rgba(232,37,26,0.05)' stroke-width='1' fill='none'/%3E%3Cpath d='M160,200 L160,160 L200,160' stroke='rgba(232,37,26,0.04)' stroke-width='1' fill='none'/%3E%3Ccircle cx='160' cy='160' r='2' fill='rgba(232,37,26,0.1)'/%3E%3C/svg%3E");
+    @apply fixed inset-0 pointer-events-none z-0 opacity-30;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cpath d='M10,100 L60,100 L60,60 L100,60' stroke='rgba(34,34,48,0.3)' stroke-width='1' fill='none'/%3E%3Ccircle cx='100' cy='60' r='2' fill='rgba(34,34,48,0.5)'/%3E%3Cpath d='M100,60 L140,60 L140,100 L190,100' stroke='rgba(34,34,48,0.2)' stroke-width='1' fill='none'/%3E%3Cpath d='M60,100 L60,150 L120,150' stroke='rgba(34,34,48,0.2)' stroke-width='1' fill='none'/%3E%3Ccircle cx='120' cy='150' r='2' fill='rgba(34,34,48,0.4)'/%3E%3Cpath d='M120,150 L120,190' stroke='rgba(34,34,48,0.2)' stroke-width='1' fill='none'/%3E%3C/svg%3E");
     background-size: 200px 200px;
   }
 
   .bg-cyber-glow {
     @apply fixed inset-0 pointer-events-none z-0;
-    background: radial-gradient(ellipse at 15% 85%, rgba(232,37,26,0.1) 0%, transparent 45%);
+    background: radial-gradient(circle at 50% 0%, rgba(239, 68, 68, 0.05) 0%, transparent 60%);
   }
 }

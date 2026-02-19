@@ -14,38 +14,38 @@ export const Gamification = ({ currentBadge, nextBadge, totalPoints, streak }: G
     : 100;
 
   return (
-    <Card className="glass-card bg-gradient-to-br from-[#121212] to-[#0a0a0a] border border-white/5 h-full">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 border-b border-white/5">
-        <CardTitle className="text-sm font-bold text-neutral-400 uppercase tracking-widest">Seu Nível</CardTitle>
+    <Card className="bg-transparent border border-[#222230] rounded-2xl h-full shadow-none">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 border-b border-[#222230]">
+        <CardTitle className="text-sm font-bold text-[#6b6b7a] uppercase tracking-widest">Seu Nível</CardTitle>
         <Crown className="h-5 w-5 text-yellow-500" />
       </CardHeader>
       <CardContent className="pt-6 space-y-6">
         <div className="flex items-center gap-4">
-            <div className="h-16 w-16 rounded-2xl bg-[#1a1a1a] flex items-center justify-center text-3xl shadow-inner border border-white/5">
+            <div className="h-16 w-16 rounded-2xl bg-transparent flex items-center justify-center text-3xl border border-[#1e1e2a]">
                 {currentBadge.icon}
             </div>
             <div>
-                <div className="text-2xl font-black text-white glow-text">{currentBadge.name}</div>
+                <div className="text-2xl font-bold text-white glow-text">{currentBadge.name}</div>
                 <div className="text-xs text-red-500 font-bold uppercase tracking-wider mt-1 flex items-center gap-1">
-                    <Zap size={10} fill="currentColor" /> {streak} Dias de Streak
+                    <Zap size={10} fill="currentColor" /> <span className="font-rajdhani text-lg leading-none">{streak}</span> Dias de Streak
                 </div>
             </div>
         </div>
 
         {nextBadge ? (
           <div className="space-y-2">
-             <div className="flex justify-between text-[10px] font-bold text-neutral-500 uppercase">
-                <span>XP Atual: {totalPoints}</span>
-                <span>Próximo: {nextBadge.threshold}</span>
+             <div className="flex justify-between text-[10px] font-bold text-[#6b6b7a] uppercase">
+                <span className="font-rajdhani text-sm">XP Atual: {totalPoints}</span>
+                <span className="font-rajdhani text-sm">Próximo: {nextBadge.threshold}</span>
              </div>
-             <div className="h-1.5 w-full bg-[#1a1a1a] rounded-full overflow-hidden">
+             <div className="h-1.5 w-full bg-[#1e1e28] rounded-full overflow-hidden border border-[#222230]">
                 <div 
                     className="h-full bg-red-600 shadow-[0_0_8px_rgba(239,68,68,0.8)]" 
                     style={{ width: `${progress}%` }} 
                 />
              </div>
-             <p className="text-xs text-neutral-600 text-center mt-2">
-               Faltam <span className="text-white">{nextBadge.threshold - totalPoints} XP</span> para {nextBadge.name}
+             <p className="text-xs text-[#6b6b7a] text-center mt-2 font-normal">
+               Faltam <span className="text-white font-rajdhani font-bold">{nextBadge.threshold - totalPoints} XP</span> para {nextBadge.name}
              </p>
           </div>
         ) : (

@@ -8,7 +8,7 @@ import { SettingsProvider } from "./hooks/useSettings";
 import { HabitProvider } from "./hooks/useHabitTracker";
 import { MasterplanProvider } from "./hooks/useMasterplan";
 import { FloatingNavbar } from "./components/layout/FloatingNavbar";
-import { TopBar } from "./components/layout/TopBar"; // Mantendo TopBar global, mas o PageHeader estará no conteúdo
+import { TopBar } from "./components/layout/TopBar"; 
 import Index from "./pages/Index";
 import MasterplanPage from "./pages/Masterplan";
 import Settings from "./pages/Settings";
@@ -40,7 +40,7 @@ const App = () => (
               <Sonner theme="dark" />
               <BrowserRouter>
                 {/* Container principal com a nova cor de fundo e overflow controlado */}
-                <div className="min-h-screen bg-[#060606] text-foreground font-sans flex flex-col relative overflow-x-hidden">
+                <div className="min-h-screen bg-[#0a0a0c] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                   
                   {/* Camadas de fundo fixas */}
                   <div className="bg-circuit-pattern" />
@@ -59,9 +59,9 @@ const App = () => (
                         <Route path="/lembretes" element={<RemindersPage />} />
                         <Route path="/missoes" element={<MissionsPage />} />
                         <Route path="/comunidade" element={<CommunityPage />} />
-                        <Route path="/financa" element={<StorePage />} /> {/* Usando StorePage temporariamente ou criar FinancePage? O prompt não pediu Finance, mas Store. Vou usar Store para /loja */}
+                        <Route path="/financa" element={<StorePage />} />
                         <Route path="/loja" element={<StorePage />} />
-                        <Route path="/inventario" element={<StorePage />} /> {/* Usando StorePage como placeholder melhorado */}
+                        <Route path="/inventario" element={<StorePage />} />
                         <Route path="/configuracoes" element={<Settings />} />
                         <Route path="*" element={<NotFound />} />
                       </Routes>

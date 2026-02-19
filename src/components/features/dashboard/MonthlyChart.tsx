@@ -24,8 +24,8 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
   }
 
   return (
-    <Card className="glass-card bg-[#121212] border-none">
-      <CardHeader className="border-b border-white/5 pb-4">
+    <Card className="bg-transparent border border-[#222230] rounded-2xl shadow-none">
+      <CardHeader className="border-b border-[#222230] pb-4">
         <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
             <Activity className="w-5 h-5 text-red-500" />
             Evolução de XP
@@ -41,25 +41,25 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
                   <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#262626" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#222230" />
               <XAxis 
                 dataKey="date" 
                 tickLine={false} 
                 axisLine={false} 
-                tick={{ fill: '#525252', fontSize: 10, fontWeight: 700 }} 
+                tick={{ fill: '#6b6b7a', fontSize: 10, fontWeight: 600 }} 
                 minTickGap={30}
                 dy={10}
               />
               <Tooltip 
                 contentStyle={{ 
-                  borderRadius: '12px', 
-                  border: '1px solid #333', 
-                  backgroundColor: '#0a0a0a',
-                  color: '#fff',
+                  borderRadius: '16px', 
+                  border: '1px solid #222230', 
+                  backgroundColor: '#0a0a0c',
+                  color: '#f0f0f2',
                   boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.5)'
                 }}
                 itemStyle={{ color: '#ef4444' }}
-                cursor={{ stroke: '#333', strokeWidth: 1 }}
+                cursor={{ stroke: '#222230', strokeWidth: 1 }}
               />
               <Area 
                 type="monotone" 

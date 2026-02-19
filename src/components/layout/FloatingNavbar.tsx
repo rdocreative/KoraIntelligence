@@ -15,15 +15,15 @@ import {
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'INÍCIO', path: '/', color: 'rgba(239, 68, 68, 1)', shadowColor: 'rgba(239, 68, 68, 0.6)' }, // Red
-  { icon: Crown, label: 'MASTERPLAN', path: '/masterplan', color: 'rgba(168, 85, 247, 1)', shadowColor: 'rgba(168, 85, 247, 0.6)' }, // Purple
-  { icon: ClipboardList, label: 'TAREFAS', path: '/tarefas', color: 'rgba(59, 130, 246, 1)', shadowColor: 'rgba(59, 130, 246, 0.6)' }, // Blue
-  { icon: Target, label: 'METAS', path: '/metas', color: 'rgba(34, 197, 94, 1)', shadowColor: 'rgba(34, 197, 94, 0.6)' }, // Green
-  { icon: Bell, label: 'LEMBRETES', path: '/lembretes', color: 'rgba(236, 72, 153, 1)', shadowColor: 'rgba(236, 72, 153, 0.6)' }, // Pink
-  { icon: Swords, label: 'MISSÕES', path: '/missoes', color: 'rgba(249, 115, 22, 1)', shadowColor: 'rgba(249, 115, 22, 0.6)' }, // Orange
-  { icon: Users, label: 'COMUNIDADE', path: '/comunidade', color: 'rgba(6, 182, 212, 1)', shadowColor: 'rgba(6, 182, 212, 0.6)' }, // Cyan
-  { icon: ShoppingBag, label: 'LOJA', path: '/loja', color: 'rgba(234, 179, 8, 1)', shadowColor: 'rgba(234, 179, 8, 0.6)' }, // Yellow
-  { icon: Settings, label: 'CONFIGURAÇÕES', path: '/configuracoes', color: 'rgba(148, 163, 184, 1)', shadowColor: 'rgba(148, 163, 184, 0.6)' }, // Slate
+  { icon: LayoutDashboard, label: 'INÍCIO', path: '/', color: 'rgba(239, 68, 68, 1)', shadowColor: 'rgba(239, 68, 68, 0.6)' },
+  { icon: Crown, label: 'MASTERPLAN', path: '/masterplan', color: 'rgba(168, 85, 247, 1)', shadowColor: 'rgba(168, 85, 247, 0.6)' },
+  { icon: ClipboardList, label: 'TAREFAS', path: '/tarefas', color: 'rgba(59, 130, 246, 1)', shadowColor: 'rgba(59, 130, 246, 0.6)' },
+  { icon: Target, label: 'METAS', path: '/metas', color: 'rgba(34, 197, 94, 1)', shadowColor: 'rgba(34, 197, 94, 0.6)' },
+  { icon: Bell, label: 'LEMBRETES', path: '/lembretes', color: 'rgba(236, 72, 153, 1)', shadowColor: 'rgba(236, 72, 153, 0.6)' },
+  { icon: Swords, label: 'MISSÕES', path: '/missoes', color: 'rgba(249, 115, 22, 1)', shadowColor: 'rgba(249, 115, 22, 0.6)' },
+  { icon: Users, label: 'COMUNIDADE', path: '/comunidade', color: 'rgba(6, 182, 212, 1)', shadowColor: 'rgba(6, 182, 212, 0.6)' },
+  { icon: ShoppingBag, label: 'LOJA', path: '/loja', color: 'rgba(234, 179, 8, 1)', shadowColor: 'rgba(234, 179, 8, 0.6)' },
+  { icon: Settings, label: 'CONFIGURAÇÕES', path: '/configuracoes', color: 'rgba(148, 163, 184, 1)', shadowColor: 'rgba(148, 163, 184, 0.6)' },
 ];
 
 export const FloatingNavbar = () => {
@@ -55,7 +55,7 @@ export const FloatingNavbar = () => {
   };
 
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center font-rajdhani">
+    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
       {/* Container Principal */}
       <div 
         onMouseEnter={stopTimer}
@@ -67,24 +67,24 @@ export const FloatingNavbar = () => {
           isMinimized ? "translate-y-[120%] opacity-0 pointer-events-none scale-90" : "translate-y-0 opacity-100 scale-100"
         )}
       >
-        <nav className="flex items-center gap-1 bg-[#121212]/90 backdrop-blur-2xl border border-white/10 px-3 py-3 rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.9)]">
+        <nav className="flex items-center gap-1 bg-[#0a0a0c]/90 backdrop-blur-2xl border border-[#222230] px-3 py-3 rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)]">
           {navItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
               className={({ isActive }) => cn(
                 "relative group flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300",
-                isActive ? "text-white" : "text-neutral-500 hover:text-neutral-300"
+                isActive ? "text-white" : "text-[#6b6b7a] hover:text-[#f0f0f2]"
               )}
             >
               {({ isActive }) => (
                 <>
                   {/* Tooltip Pop-up */}
-                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-[#181818] border border-white/10 rounded-xl opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none shadow-2xl z-[60]">
+                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-[#0a0a0c] border border-[#222230] rounded-xl opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none shadow-xl z-[60]">
                     <span className="text-[10px] font-bold tracking-widest text-white whitespace-nowrap uppercase">
                       {item.label}
                     </span>
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#181818] border-r border-b border-white/10 rotate-45"></div>
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#0a0a0c] border-r border-b border-[#222230] rotate-45"></div>
                   </div>
 
                   {/* Icon */}
@@ -119,7 +119,7 @@ export const FloatingNavbar = () => {
                   />
 
                   {/* Hover Background Glow */}
-                  <div className="absolute inset-0 bg-white/5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute inset-0 bg-white/[0.03] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                 </>
               )}
             </NavLink>
