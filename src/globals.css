@@ -21,12 +21,12 @@
 }
 
 @layer components {
-  /* Glass Card: Sombra reforçada para flutuar sobre o fundo */
+  /* Glass Card: Sombra ultra-forte com múltiplas camadas de preto puro */
   .card-glass {
-    @apply bg-[#0a0a0c]/80 border border-white/10 rounded-[2rem] backdrop-blur-[50px] backdrop-saturate-150 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)];
+    @apply bg-[#0a0a0c]/90 border border-white/10 rounded-[2rem] backdrop-blur-[50px] shadow-[0_40px_80px_-15px_rgba(0,0,0,1),0_15px_30px_-10px_rgba(0,0,0,0.8)];
   }
 
   .item-glass {
-    @apply bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.05] backdrop-blur-3xl transition-all duration-300 shadow-lg;
+    @apply bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.05] backdrop-blur-3xl transition-all duration-300 shadow-2xl;
   }
 }
