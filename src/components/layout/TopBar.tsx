@@ -11,7 +11,10 @@ import {
   ShoppingBag,
   Settings,
   Eye,
-  LucideIcon
+  LucideIcon,
+  Coins,
+  Trophy,
+  UserCircle
 } from 'lucide-react';
 
 // Configuração das páginas para cores e textos
@@ -85,12 +88,18 @@ export const TopBar = () => {
   const config = pageConfigs[currentPath] || pageConfigs['/'];
   const { title, subtitle, color, icon: Icon } = config;
 
+  // Mock de dados do usuário
+  const userStats = {
+    coins: "1.250",
+    titles: 12
+  };
+
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-10 pb-5 pointer-events-none">
       <div 
         className="flex items-center gap-[14px] px-6 py-3 rounded-full bg-gradient-to-r from-[#141415] to-[#1b1b1c] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300 pointer-events-auto"
       >
-        {/* 1. Glowing Icon */}
+        {/* 1. Glowing Page Icon */}
         <div className="flex items-center justify-center">
           <Icon 
             size={18} 
@@ -111,9 +120,44 @@ export const TopBar = () => {
         <div className="w-px h-[16px] bg-[#303030]" />
 
         {/* 4. Page subtitle */}
-        <span className="text-[0.68rem] text-[#888] font-medium tracking-wide leading-none">
+        <span className="text-[0.68rem] text-[#888] font-medium tracking-wide leading-none mr-2">
           {subtitle}
         </span>
+
+        {/* 5. Vertical separator for User Info */}
+        <div className="w-px h-[16px] bg-[#303030]" />
+
+        {/* 6. User Stats & Profile */}
+        <div className="flex items-center gap-4 ml-1">
+          {/* Coins */}
+          <div className="flex items-center gap-1.5 group cursor-pointer">
+            <Coins 
+              size={14} 
+              className="text-[#fb923c] transition-all duration-300 group-hover:scale-110" 
+              style={{ filter: 'drop-shadow(0 0 4px #fb923c66)' }}
+            />
+            <span className="text-[0.75rem] font-bold text-[#f0f0f0]">{userStats.coins}</span>
+          </div>
+
+          {/* Achievements/Titles */}
+          <div className="flex items-center gap-1.5 group cursor-pointer">
+            <Trophy 
+              size={14} 
+              className="text-[#a855f7] transition-all duration-300 group-hover:scale-110"
+              style={{ filter: 'drop-shadow(0 0 4px #a855f766)' }}
+            />
+            <span className="text-[0.75rem] font-bold text-[#f0f0f0]">{userStats.titles}</span>
+          </div>
+
+          {/* Profile Icon */}
+          <div className="flex items-center justify-center pl-1">
+            <UserCircle 
+              size={20} 
+              className="text-[#38bdf8] cursor-pointer hover:opacity-80 transition-all duration-300"
+              style={{ filter: 'drop-shadow(0 0 4px #38bdf866)' }}
+            />
+          </div>
+        </div>
       </div>
     </header>
   );
