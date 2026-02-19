@@ -60,12 +60,15 @@ export const TopBar = () => {
   };
 
   return (
-    <header className="sticky top-0 w-full flex justify-center z-50 pt-6 md:pt-10 pb-5 pointer-events-none px-4">
-      <div className="flex items-center gap-2 md:gap-3 pointer-events-auto max-w-full overflow-x-auto no-scrollbar">
+    <header className="sticky top-0 w-full flex justify-center z-50 pt-6 md:pt-10 pb-6 pointer-events-none px-4">
+      <div className="flex items-center gap-2 md:gap-3 pointer-events-auto max-w-full overflow-x-auto no-scrollbar relative">
         
+        {/* Glow Effect from Bottom */}
+        <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[80%] h-px bg-gradient-to-r from-transparent via-[#e8283a88] to-transparent blur-md pointer-events-none" />
+
         {/* Main Page Capsule - Hidden on Mobile */}
         <div 
-          className="hidden sm:flex items-center gap-3 md:gap-[14px] px-4 md:px-6 py-2.5 md:py-3 rounded-full bg-[#141415] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300 flex-shrink-0"
+          className="hidden sm:flex items-center gap-3 md:gap-[14px] px-4 md:px-6 py-2.5 md:py-3 rounded-full bg-[#141415] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300 flex-shrink-0 hover:bg-[#1b1b1c] group"
         >
           <div className="flex items-center gap-2 md:gap-3">
             <Icon 
@@ -84,19 +87,20 @@ export const TopBar = () => {
         </div>
 
         {/* Stats and Action Group */}
-        <div className="flex items-center gap-1.5 md:gap-2 flex-shrink-0">
+        <div className="flex items-center gap-1.5 md:gap-2 flex-shrink-0 relative">
           
           {/* XP Pill */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className="h-9 md:h-11 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#e8283a44] active:scale-95 outline-none"
+            className="h-9 md:h-11 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:bg-[#1b1b1c] hover:border-[#e8283a44] active:scale-95 outline-none overflow-hidden relative"
           >
+            <div className="absolute inset-0 bg-gradient-to-t from-[#e8283a11] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <Zap 
               size={14} 
-              className="text-[#e8283a] fill-[#e8283a22] md:w-4 md:h-4" 
+              className="text-[#e8283a] fill-[#e8283a22] md:w-4 md:h-4 z-10" 
               style={{ filter: 'drop-shadow(0 0 4px #e8283a66)' }}
             />
-            <span className="text-[0.75rem] md:text-[0.85rem] font-bold text-[#e8283a] tracking-tight">
+            <span className="text-[0.75rem] md:text-[0.85rem] font-bold text-[#e8283a] tracking-tight z-10">
               {userStats.xp}
             </span>
           </button>
@@ -104,14 +108,15 @@ export const TopBar = () => {
           {/* Coins Pill */}
           <button 
             onClick={() => setActiveModal('coins')}
-            className="h-9 md:h-11 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none"
+            className="h-9 md:h-11 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:bg-[#1b1b1c] hover:border-[#fb923c44] active:scale-95 outline-none overflow-hidden relative"
           >
+            <div className="absolute inset-0 bg-gradient-to-t from-[#fb923c11] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <Coins 
               size={14} 
-              className="text-[#fb923c] md:w-4 md:h-4" 
+              className="text-[#fb923c] md:w-4 md:h-4 z-10" 
               style={{ filter: 'drop-shadow(0 0 4px #fb923c66)' }}
             />
-            <span className="text-[0.75rem] md:text-[0.85rem] font-bold text-[#fb923c] tracking-tight">
+            <span className="text-[0.75rem] md:text-[0.85rem] font-bold text-[#fb923c] tracking-tight z-10">
               {userStats.coins}
             </span>
           </button>
@@ -119,11 +124,12 @@ export const TopBar = () => {
           {/* Achievement Square */}
           <button 
             onClick={() => setActiveModal('achievements')}
-            className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none"
+            className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:bg-[#1b1b1c] hover:border-[#a855f744] active:scale-95 outline-none relative overflow-hidden"
           >
+            <div className="absolute inset-0 bg-gradient-to-t from-[#a855f711] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <Trophy 
               size={16} 
-              className="text-[#a855f7] md:w-[18px] md:h-[18px]"
+              className="text-[#a855f7] md:w-[18px] md:h-[18px] z-10"
               style={{ filter: 'drop-shadow(0 0 4px #a855f766)' }}
             />
           </button>
@@ -131,11 +137,12 @@ export const TopBar = () => {
           {/* Profile Square */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none"
+            className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:bg-[#1b1b1c] hover:border-[#38bdf844] active:scale-95 outline-none relative overflow-hidden"
           >
+            <div className="absolute inset-0 bg-gradient-to-t from-[#38bdf811] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <UserCircle 
               size={18} 
-              className="text-[#38bdf8] md:w-[22px] md:h-[22px]"
+              className="text-[#38bdf8] md:w-[22px] md:h-[22px] z-10"
               style={{ filter: 'drop-shadow(0 0 4px #38bdf866)' }}
             />
           </button>
