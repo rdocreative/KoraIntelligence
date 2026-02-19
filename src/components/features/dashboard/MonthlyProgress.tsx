@@ -87,24 +87,26 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
             <div 
               key={i} 
               className={cn(
-                "group flex flex-col justify-center p-3.5 h-[100px] rounded-2xl border transition-all duration-300 relative overflow-hidden shadow-md shadow-black/20",
+                "group flex flex-col justify-center p-3.5 h-[105px] rounded-2xl border transition-all duration-300 relative overflow-hidden shadow-md shadow-black/20",
                 "bg-gradient-to-br hover:opacity-90",
                 stat.bgGradient,
                 stat.borderColor
               )}
             >
-              <span className="absolute top-3 right-3 text-[14px] font-black font-rajdhani text-white/90">
-                {Math.round(stat.progress)}%
-              </span>
-
               <div className="relative z-10 flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                   <div className="p-1.5 rounded-lg bg-black/40 border border-white/5 shrink-0">
-                      <stat.icon className={cn("h-3.5 w-3.5", stat.color)} />
-                   </div>
-                   <span className="text-[14px] font-black uppercase tracking-widest text-white truncate">
-                     {stat.label}
-                   </span>
+                {/* Alinhamento perfeito entre Ícone+Título e Porcentagem */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                     <div className="p-1.5 rounded-lg bg-black/40 border border-white/5 shrink-0">
+                        <stat.icon className={cn("h-3.5 w-3.5", stat.color)} />
+                     </div>
+                     <span className="text-[13px] font-black uppercase tracking-widest text-white truncate">
+                       {stat.label}
+                     </span>
+                  </div>
+                  <span className="text-[14px] font-black font-rajdhani text-white/90">
+                    {Math.round(stat.progress)}%
+                  </span>
                 </div>
 
                 <div className="w-full h-2 bg-black/40 rounded-full overflow-hidden border border-white/5 p-0.5">
