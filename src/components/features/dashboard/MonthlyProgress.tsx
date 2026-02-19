@@ -93,13 +93,11 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
                 stat.borderColor
               )}
             >
-              {/* Percentage in top right */}
               <span className="absolute top-3 right-3 text-[14px] font-black font-rajdhani text-white/90">
                 {Math.round(stat.progress)}%
               </span>
 
               <div className="relative z-10 flex flex-col gap-2">
-                {/* Icon + Title Row */}
                 <div className="flex items-center gap-2">
                    <div className="p-1.5 rounded-lg bg-black/40 border border-white/5 shrink-0">
                       <stat.icon className={cn("h-3.5 w-3.5", stat.color)} />
@@ -109,7 +107,6 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
                    </span>
                 </div>
 
-                {/* Progress Bar */}
                 <div className="w-full h-2 bg-black/40 rounded-full overflow-hidden border border-white/5 p-0.5">
                   <div 
                     className={cn("h-full transition-all duration-1000 rounded-full", stat.bgColor)} 
@@ -117,9 +114,8 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
                   />
                 </div>
                 
-                {/* Stats Info (Below icon and text) */}
                 {stat.count && (
-                  <p className="text-[9px] font-medium text-white/40 uppercase tracking-tight">
+                  <p className="text-[10px] font-medium text-white/60 uppercase tracking-tight">
                     {stat.count} completados
                   </p>
                 )}
