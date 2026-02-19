@@ -60,44 +60,44 @@ export const TopBar = () => {
   };
 
   return (
-    <header className="sticky top-0 w-full flex justify-center z-50 pt-10 pb-5 pointer-events-none">
-      <div className="flex items-center gap-3 pointer-events-auto">
+    <header className="sticky top-0 w-full flex justify-center z-50 pt-6 md:pt-10 pb-5 pointer-events-none px-4">
+      <div className="flex items-center gap-2 md:gap-3 pointer-events-auto max-w-full overflow-x-auto no-scrollbar">
         
         {/* Main Page Capsule */}
         <div 
-          className="flex items-center gap-[14px] px-6 py-3 rounded-full bg-[#141415] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300"
+          className="flex items-center gap-3 md:gap-[14px] px-4 md:px-6 py-2.5 md:py-3 rounded-full bg-[#141415] border border-[#303030] shadow-[0_8px_32px_rgba(0,0,0,0.8)] transition-all duration-300 flex-shrink-0"
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             <Icon 
               size={18} 
               style={{ color: color, filter: `drop-shadow(0 0 5px ${color}88)` }}
             />
-            <h1 className="text-[0.9rem] font-bold text-[#f0f0f0] tracking-tight leading-none">
+            <h1 className="text-[0.85rem] md:text-[0.9rem] font-bold text-[#f0f0f0] tracking-tight leading-none whitespace-nowrap">
               {title}
             </h1>
           </div>
 
-          <div className="w-px h-[16px] bg-[#303030]" />
-
-          <span className="text-[0.68rem] text-[#888] font-medium tracking-wide leading-none">
+          {/* Divider and Subtitle - Hidden on Mobile */}
+          <div className="hidden sm:block w-px h-[16px] bg-[#303030]" />
+          <span className="hidden sm:block text-[0.68rem] text-[#888] font-medium tracking-wide leading-none whitespace-nowrap">
             {subtitle}
           </span>
         </div>
 
         {/* Stats and Action Group */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 md:gap-2 flex-shrink-0">
           
           {/* XP Pill */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className="h-11 px-4 flex items-center gap-3 rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#e8283a44] active:scale-95 outline-none"
+            className="h-9 md:h-11 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#e8283a44] active:scale-95 outline-none"
           >
             <Zap 
-              size={16} 
-              className="text-[#e8283a] fill-[#e8283a22]" 
+              size={14} 
+              className="text-[#e8283a] fill-[#e8283a22] md:w-4 md:h-4" 
               style={{ filter: 'drop-shadow(0 0 4px #e8283a66)' }}
             />
-            <span className="text-[0.85rem] font-bold text-[#e8283a] tracking-tight">
+            <span className="text-[0.75rem] md:text-[0.85rem] font-bold text-[#e8283a] tracking-tight">
               {userStats.xp}
             </span>
           </button>
@@ -105,14 +105,14 @@ export const TopBar = () => {
           {/* Coins Pill */}
           <button 
             onClick={() => setActiveModal('coins')}
-            className="h-11 px-4 flex items-center gap-3 rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none"
+            className="h-9 md:h-11 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none"
           >
             <Coins 
-              size={16} 
-              className="text-[#fb923c]" 
+              size={14} 
+              className="text-[#fb923c] md:w-4 md:h-4" 
               style={{ filter: 'drop-shadow(0 0 4px #fb923c66)' }}
             />
-            <span className="text-[0.85rem] font-bold text-[#fb923c] tracking-tight">
+            <span className="text-[0.75rem] md:text-[0.85rem] font-bold text-[#fb923c] tracking-tight">
               {userStats.coins}
             </span>
           </button>
@@ -120,11 +120,11 @@ export const TopBar = () => {
           {/* Achievement Square */}
           <button 
             onClick={() => setActiveModal('achievements')}
-            className="w-11 h-11 flex items-center justify-center rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none"
+            className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none"
           >
             <Trophy 
-              size={18} 
-              className="text-[#a855f7]"
+              size={16} 
+              className="text-[#a855f7] md:w-[18px] md:h-[18px]"
               style={{ filter: 'drop-shadow(0 0 4px #a855f766)' }}
             />
           </button>
@@ -132,11 +132,11 @@ export const TopBar = () => {
           {/* Profile Square */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className="w-11 h-11 flex items-center justify-center rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none"
+            className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none"
           >
             <UserCircle 
-              size={22} 
-              className="text-[#38bdf8]"
+              size={18} 
+              className="text-[#38bdf8] md:w-[22px] md:h-[22px]"
               style={{ filter: 'drop-shadow(0 0 4px #38bdf866)' }}
             />
           </button>
@@ -145,7 +145,7 @@ export const TopBar = () => {
 
       {/* Modais de Informação */}
       <Dialog open={activeModal !== null} onOpenChange={() => setActiveModal(null)}>
-        <DialogContent className="bg-[#141415] border-[#303030] text-[#f0f0f0] sm:max-w-[400px] rounded-[32px] p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] outline-none border-opacity-50">
+        <DialogContent className="bg-[#141415] border-[#303030] text-[#f0f0f0] w-[90vw] sm:max-w-[400px] rounded-[32px] p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] outline-none border-opacity-50 mx-auto">
           
           {activeModal === 'coins' && (
             <div className="p-8 flex flex-col items-center text-center">
