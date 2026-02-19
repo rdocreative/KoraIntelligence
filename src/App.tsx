@@ -1,5 +1,5 @@
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster as Sonner } from "@/components/ Sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -44,8 +44,18 @@ const App = () => (
                   {/* Background Layers */}
                   <ParticleBackground />
                   
-                  {/* Central Grayish-Red Glow Gradient - Reduced opacity by 30% */}
-                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(100,90,90,0.08),transparent_75%)]" />
+                  {/* Atmospheric Glows */}
+                  <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-50">
+                    <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-red-900/10 blur-[120px] rounded-full" />
+                    <div className="absolute top-[20%] right-[-5%] w-[400px] h-[400px] bg-red-950/5 blur-[100px] rounded-full" />
+                    <div className="absolute top-[50%] left-[-10%] w-[600px] h-[600px] bg-red-900/5 blur-[150px] rounded-full" />
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-red-900/10 blur-[120px] rounded-full" />
+                    <div className="absolute bottom-[20%] left-[20%] w-[300px] h-[300px] bg-red-950/5 blur-[80px] rounded-full" />
+                    <div className="absolute top-[-5%] left-[40%] w-[450px] h-[450px] bg-red-900/5 blur-[110px] rounded-full" />
+                  </div>
+                  
+                  {/* Central Grayish-Red Glow Gradient */}
+                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_50%,rgba(100,90,90,0.06),transparent_75%)]" />
 
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
