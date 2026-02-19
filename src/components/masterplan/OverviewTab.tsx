@@ -63,8 +63,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
   const weekCompleted = currentWeek?.tasks.filter((t: any) => t.completed).length || 0;
   const weekProgress = weekTotal === 0 ? 0 : (weekCompleted / weekTotal) * 100;
 
-  // Common card styles with glassmorphism
-  const cardBaseStyle = "bg-white/[0.10] backdrop-blur-md border border-white/10 shadow-sm rounded-2xl";
+  // Common card styles
+  const cardBaseStyle = "bg-[#161616] border-white/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.4)]";
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -105,7 +105,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               const Icon = config.icon;
               return (
                 <div key={area.id} className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg bg-white/5 border border-white/5 ${config.color}`}>
+                  <div className={`p-2 rounded-lg bg-[#0A0A0A] border border-white/5 ${config.color}`}>
                     <Icon size={16} />
                   </div>
                   <div className="flex-1">
@@ -136,10 +136,10 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               <CardContent className="p-5 flex flex-col h-full justify-between gap-4">
                 <div>
                   <div className="flex justify-between items-start mb-4">
-                    <div className={`p-2.5 rounded-xl bg-white/5 border border-white/5 ${config.color} group-hover:scale-110 transition-transform`}>
+                    <div className={`p-2.5 rounded-xl bg-[#0A0A0A] border border-white/5 ${config.color} group-hover:scale-110 transition-transform`}>
                       <Icon size={20} />
                     </div>
-                    <Badge variant="outline" className="border-white/5 bg-white/5 text-neutral-400">
+                    <Badge variant="outline" className="border-white/5 bg-[#0A0A0A] text-neutral-400">
                       {area.completed}/{area.total}
                     </Badge>
                   </div>

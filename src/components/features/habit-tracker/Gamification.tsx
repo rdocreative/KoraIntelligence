@@ -14,14 +14,14 @@ export const Gamification = ({ currentBadge, nextBadge, totalPoints, streak }: G
     : 100;
 
   return (
-    <Card className="bg-white/[0.10] backdrop-blur-md border border-[#222230] rounded-2xl h-full shadow-none">
+    <Card className="bg-transparent border border-[#222230] rounded-2xl h-full shadow-none">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 border-b border-[#222230]">
         <CardTitle className="text-sm font-bold text-[#6b6b7a] uppercase tracking-widest">Seu Nível</CardTitle>
         <Crown className="h-5 w-5 text-yellow-500" />
       </CardHeader>
       <CardContent className="pt-6 space-y-6">
         <div className="flex items-center gap-4">
-            <div className="h-16 w-16 rounded-2xl bg-white/[0.05] flex items-center justify-center text-3xl border border-[#1e1e2a]">
+            <div className="h-16 w-16 rounded-2xl bg-transparent flex items-center justify-center text-3xl border border-[#1e1e2a]">
                 {currentBadge.icon}
             </div>
             <div>

@@ -7,10 +7,10 @@
 @layer base {
   :root {
     /* Standard Dark Palette */
-    --background: 240 10% 2%;
+    --background: 240 10% 2%; /* #060606 equivalent approx */
     --foreground: 240 6% 95%;
 
-    --card: 0 0% 100%; /* Using white base for opacity calculation */
+    --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
 
     --popover: 240 10% 3.9%;
@@ -41,7 +41,23 @@
   .dark {
     --background: 240 10% 2%;
     --foreground: 0 0% 98%;
-    /* Keep card variables consistent */
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 84% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 0 84% 60%;
   }
 }
 
@@ -59,6 +75,7 @@
     @apply font-bold text-white;
   }
 
+  /* Specific typography overrides */
   .text-secondary-custom {
     @apply text-[#6b6b7a] font-normal;
   }
@@ -87,8 +104,8 @@
     box-shadow: 0 0 20px -5px rgba(239, 68, 68, 0.3);
   }
   
-  /* Glassmorphic Card Style */
+  /* Restored standard card */
   .card, .glass-card {
-     @apply bg-white/[0.10] backdrop-blur-md border border-white/10 rounded-2xl shadow-sm;
+     @apply bg-[#111] border border-white/10 rounded-2xl;
   }
 }
