@@ -21,38 +21,13 @@
 }
 
 @layer components {
-  /* Técnica de Gradient Border combinada com Gradient Background */
   .card-glass {
-    position: relative;
-    background: linear-gradient(135deg, #1a1a1e 0%, #0c0c0e 100%);
-    @apply rounded-3xl backdrop-blur-2xl shadow-2xl shadow-black/80;
-    border: 1px solid transparent;
-    background-clip: padding-box;
-  }
-
-  .card-glass::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    z-index: -1;
-    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.02) 100%);
-    @apply rounded-[inherit];
+    @apply bg-[#121214]/95 border border-white/10 rounded-3xl backdrop-blur-2xl 
+    shadow-2xl shadow-black/80;
   }
 
   .item-glass {
-    position: relative;
-    background: linear-gradient(135deg, #1e1e22 0%, #121215 100%);
-    @apply rounded-2xl backdrop-blur-md transition-all duration-300 shadow-xl shadow-black/40;
-    border: 1px solid transparent;
-    background-clip: padding-box;
-  }
-
-  .item-glass::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    z-index: -1;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.01) 100%);
-    @apply rounded-[inherit];
+    @apply bg-[#161619]/60 border border-white/5 rounded-2xl hover:bg-[#161619]/90 
+    backdrop-blur-md transition-all duration-300 shadow-xl shadow-black/40;
   }
 }
