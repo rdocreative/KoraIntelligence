@@ -44,11 +44,11 @@ const App = () => (
                   {/* Background Layers */}
                   <ParticleBackground />
                   
-                  {/* Darkened Red Gradient coming from top-right */}
-                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(225deg,rgba(110,20,20,0.35)_0%,rgba(6,6,8,0)_65%)]" />
+                  {/* Darker Red to Dark Grey Gradient */}
+                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(225deg,rgba(70,10,10,0.4)_0%,rgba(20,20,24,0.95)_70%)]" />
                   
-                  {/* Darkened Vignette for depth */}
-                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_80%_0%,rgba(160,20,20,0.12),transparent_85%)]" />
+                  {/* Final depth layer */}
+                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_85%_10%,rgba(140,20,20,0.08),transparent_75%)]" />
 
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
