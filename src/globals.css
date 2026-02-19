@@ -25,14 +25,14 @@
 }
 
 @layer components {
-  /* Glass Card: 2% opacidade zinc, blur forte, saturação zero e borda sutil */
+  /* Glass Card: Opacidade extrema de 1%, blur triplo e saturação zero */
   .card-glass {
-    @apply bg-zinc-500/[0.02] border border-white/10 rounded-2xl backdrop-blur-2xl backdrop-saturate-0 shadow-2xl shadow-black/80;
+    @apply bg-white/[0.01] border border-white/10 rounded-2xl backdrop-blur-[40px] backdrop-saturate-0 shadow-2xl shadow-black/90;
   }
 
-  /* Itens internos */
+  /* Itens internos ainda mais sutis */
   .item-glass {
-    @apply bg-zinc-500/[0.01] border border-white/5 rounded-xl hover:bg-zinc-500/[0.02] backdrop-blur-md backdrop-saturate-0 transition-all;
+    @apply bg-white/[0.005] border border-white/5 rounded-xl hover:bg-white/[0.015] backdrop-blur-3xl backdrop-saturate-0 transition-all;
   }
 
   /* Animação de Partículas */

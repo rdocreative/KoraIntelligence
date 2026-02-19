@@ -80,7 +80,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
               key={i} 
               className={cn(
                 "group flex flex-col justify-between p-4 rounded-xl border border-white/5 transition-all cursor-default relative overflow-hidden",
-                "bg-zinc-500/[0.02] hover:bg-zinc-500/[0.04] backdrop-blur-lg backdrop-saturate-0",
+                "bg-white/[0.01] hover:bg-white/[0.03] backdrop-blur-[40px] backdrop-saturate-0",
                 "hover:border-white/10"
               )}
             >
