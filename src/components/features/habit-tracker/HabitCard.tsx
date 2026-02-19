@@ -20,7 +20,7 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
   return (
     <div 
       className={cn(
-        "group relative flex flex-col gap-3 p-5 rounded-3xl border transition-all duration-300 backdrop-blur-xl overflow-hidden shadow-xl shadow-black/30",
+        "group relative flex flex-col gap-3 p-5 rounded-3xl border transition-all duration-300 backdrop-blur-xl overflow-hidden shadow-md shadow-black/20",
         "bg-gradient-to-br from-red-950/15 to-red-600/15 border-white/10 hover:border-red-600/40",
         habit.completed && "opacity-60"
       )}
@@ -85,7 +85,7 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
             onClick={() => onComplete(habit.id)}
             disabled={habit.completed || !isForToday}
             className={cn(
-              "h-10 px-5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-xl shadow-black/40",
+              "h-10 px-5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-md shadow-black/30",
               habit.completed 
                 ? "bg-green-600/10 text-green-500 border border-green-500/20" 
                 : isForToday 
