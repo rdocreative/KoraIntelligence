@@ -39,7 +39,7 @@ const App = () => (
               <Toaster />
               <Sonner theme="dark" />
               <BrowserRouter>
-                <div className="min-h-screen bg-[#0d0101] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
+                <div className="min-h-screen bg-[#0f0f12] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                   
                   {/* Background Layers */}
                   <ParticleBackground />

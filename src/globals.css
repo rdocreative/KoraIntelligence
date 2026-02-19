@@ -6,28 +6,28 @@
 
 @layer base {
   :root {
-    --background: 0 0% 2%; /* Praticamente preto */
+    --background: 240 5% 6%; /* Cinza muito escuro e neutro */
     --foreground: 240 6% 95%;
-    --card: 0 0% 5%; 
-    --border: 0 0% 15%; 
+    --card: 240 4% 10%; 
+    --border: 240 5% 15%; 
     --radius: 1.25rem;
   }
 
   body {
-    @apply bg-[#050000] text-[#f0f0f2] antialiased;
+    @apply bg-[#0f0f12] text-[#f0f0f2] antialiased;
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
   }
 }
 
 @layer components {
-  /* Glass Card: Fundo preto profundo com opacidade maior para contraste, blur máximo */
+  /* Glass Card: Fundo escuro com blur intenso e bordas sutis */
   .card-glass {
-    @apply bg-black/60 border border-white/10 rounded-[2rem] backdrop-blur-[50px] backdrop-saturate-150 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.9)];
+    @apply bg-[#0a0a0c]/80 border border-white/10 rounded-[2rem] backdrop-blur-[50px] backdrop-saturate-150 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)];
   }
 
-  /* Itens internos mais escuros */
+  /* Itens internos mais integrados ao cinza */
   .item-glass {
-    @apply bg-black/40 border border-white/5 rounded-2xl hover:bg-black/60 backdrop-blur-3xl transition-all duration-300;
+    @apply bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.05] backdrop-blur-3xl transition-all duration-300;
   }
 }
