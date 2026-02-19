@@ -1,6 +1,7 @@
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Target, CheckCircle2, ListTodo, Zap, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface MonthlyProgressProps {
   totalPoints: number;
@@ -12,10 +13,38 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
   const progressPercentage = Math.min(100, (totalPoints / MONTHLY_XP_TARGET) * 100);
   
   const stats = [
-    { label: "Hábitos", value: habitsCount, icon: CheckCircle2, color: "text-red-500" },
-    { label: "Tarefas", value: "0", icon: ListTodo, color: "text-[#888899]" },
-    { label: "Metas", value: "0", icon: Target, color: "text-[#888899]" },
-    { label: "XP Total", value: totalPoints, icon: Zap, color: "text-yellow-500" },
+    { 
+      label: "Hábitos", 
+      value: habitsCount, 
+      icon: CheckCircle2, 
+      color: "text-red-500",
+      bgGradient: "from-red-500/10 to-transparent",
+      borderColor: "group-hover:border-red-500/30"
+    },
+    { 
+      label: "Tarefas", 
+      value: "0", 
+      icon: ListTodo, 
+      color: "text-blue-500",
+      bgGradient: "from-blue-500/10 to-transparent",
+      borderColor: "group-hover:border-blue-500/30"
+    },
+    { 
+      label: "Metas", 
+      value: "0", 
+      icon: Target, 
+      color: "text-emerald-500",
+      bgGradient: "from-emerald-500/10 to-transparent",
+      borderColor: "group-hover:border-emerald-500/30"
+    },
+    { 
+      label: "XP Total", 
+      value: totalPoints, 
+      icon: Zap, 
+      color: "text-amber-500",
+      bgGradient: "from-amber-500/10 to-transparent",
+      borderColor: "group-hover:border-amber-500/30"
+    },
   ];
 
   return (
@@ -47,12 +76,22 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {stats.map((stat, i) => (
-            <div key={i} className="group flex flex-col justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] transition-all cursor-default shadow-lg shadow-black/40">
-              <div className="flex justify-between items-start mb-2">
-                 <stat.icon className={`h-4 w-4 ${stat.color}`} />
-                 <ChevronRight className="h-3 w-3 text-white/30 group-hover:text-white" />
+            <div 
+              key={i} 
+              className={cn(
+                "group flex flex-col justify-between p-4 rounded-xl border transition-all cursor-default shadow-lg shadow-black/40 relative overflow-hidden",
+                "bg-[#1a1a1a] border-white/5",
+                stat.borderColor
+              )}
+            >
+              {/* Background Gradient */}
+              <div className={cn("absolute inset-0 bg-gradient-to-br opacity-50", stat.bgGradient)} />
+              
+              <div className="relative z-10 flex justify-between items-start mb-2">
+                 <stat.icon className={cn("h-4 w-4", stat.color)} />
+                 <ChevronRight className="h-3 w-3 text-white/30 group-hover:text-white transition-colors" />
               </div>
-              <div>
+              <div className="relative z-10">
                 <span className="block text-2xl font-rajdhani font-bold text-white">{stat.value}</span>
                 <span className="text-[9px] font-bold uppercase tracking-widest text-white/40">{stat.label}</span>
               </div>
