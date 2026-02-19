@@ -60,10 +60,7 @@ export const TopBar = () => {
   };
 
   return (
-    <header className="sticky top-0 w-full flex justify-center z-50 pt-6 md:pt-10 pb-10 pointer-events-none px-4">
-      {/* Red Gradient Background coming from bottom */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#e8283a0a] via-transparent to-transparent -z-10 h-[120%] pointer-events-none" />
-      
+    <header className="sticky top-0 w-full flex justify-center z-50 pt-6 md:pt-10 pb-5 pointer-events-none px-4">
       <div className="flex items-center gap-2 md:gap-3 pointer-events-auto max-w-full overflow-x-auto no-scrollbar">
         
         {/* Main Page Capsule - Hidden on Mobile */}
@@ -92,7 +89,7 @@ export const TopBar = () => {
           {/* XP Pill */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className="h-9 md:h-11 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:bg-[#1b1b1c] hover:border-[#e8283a44] active:scale-95 outline-none"
+            className="h-9 md:h-11 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#e8283a44] active:scale-95 outline-none"
           >
             <Zap 
               size={14} 
@@ -107,7 +104,7 @@ export const TopBar = () => {
           {/* Coins Pill */}
           <button 
             onClick={() => setActiveModal('coins')}
-            className="h-9 md:h-11 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:bg-[#1b1b1c] hover:border-[#fb923c44] active:scale-95 outline-none"
+            className="h-9 md:h-11 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none"
           >
             <Coins 
               size={14} 
@@ -122,7 +119,7 @@ export const TopBar = () => {
           {/* Achievement Square */}
           <button 
             onClick={() => setActiveModal('achievements')}
-            className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:bg-[#1b1b1c] hover:border-[#a855f744] active:scale-95 outline-none"
+            className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none"
           >
             <Trophy 
               size={16} 
@@ -134,7 +131,7 @@ export const TopBar = () => {
           {/* Profile Square */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:bg-[#1b1b1c] hover:border-[#38bdf844] active:scale-95 outline-none"
+            className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] shadow-[0_4px_16px_rgba(0,0,0,0.4)] group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none"
           >
             <UserCircle 
               size={18} 
