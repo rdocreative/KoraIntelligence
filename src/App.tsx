@@ -41,13 +41,13 @@ const App = () => (
                 <div className="min-h-screen bg-[#141415] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                   
                   {/* Background Layers */}
-                  <div className="fixed inset-0 pointer-events-none bg-[#141415] -z-20" />
+                  <div className="fixed inset-0 pointer-events-none bg-[#0a0a0b] -z-20" />
 
-                  {/* Red Glow Gradient from Top - 100% intensity at the very top */}
-                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(232,40,58,0.4)_0%,rgba(232,40,58,0.1)_25%,transparent_60%)] -z-10" />
+                  {/* Soft Red Glow Gradient from Top - Adjusted for a "leves" feel */}
+                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(220,38,38,0.12)_0%,rgba(220,38,38,0.04)_20%,transparent_50%)] -z-10" />
                   
-                  {/* Subtle noise or texture could go here, but keeping it clean for now */}
-                  <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.8)_0%,transparent_50%)] -z-10" />
+                  {/* Bottom Vignette for depth */}
+                  <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_bottom,rgba(0,0,0,0.4)_0%,transparent_70%)] -z-10" />
 
                   <div className="relative z-10 flex flex-col min-h-screen">
                     <TopBar />
