@@ -90,7 +90,7 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
                  <div className="p-1.5 rounded-lg bg-black/40 border border-white/5 shrink-0">
                     <stat.icon className={cn("h-3.5 w-3.5", stat.color)} />
                  </div>
-                 <span className="text-[9px] font-black uppercase tracking-widest text-white/30 group-hover:text-white/60 transition-colors truncate">
+                 <span className="text-[10px] font-black uppercase tracking-widest text-white transition-colors truncate">
                    {stat.label}
                  </span>
               </div>
@@ -102,8 +102,8 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
                 </span>
               </div>
 
-              {/* Decorative chevron (optional, but kept subtle) */}
-              <ChevronRight className="absolute top-4 right-4 h-3 w-3 text-white/5 group-hover:text-white/20 transition-colors" />
+              {/* Decorative chevron */}
+              <ChevronRight className="absolute top-4 right-4 h-3 w-3 text-white/10 group-hover:text-white/20 transition-colors" />
             </div>
           ))}
         </div>
