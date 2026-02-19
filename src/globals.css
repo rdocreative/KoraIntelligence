@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 240 5% 6%; /* Cinza muito escuro e neutro */
+    --background: 240 5% 6%;
     --foreground: 240 6% 95%;
     --card: 240 4% 10%; 
     --border: 240 5% 15%; 
@@ -21,13 +21,12 @@
 }
 
 @layer components {
-  /* Glass Card: Fundo escuro com blur intenso e bordas sutis */
+  /* Glass Card: Sombra reforçada para flutuar sobre o fundo */
   .card-glass {
-    @apply bg-[#0a0a0c]/80 border border-white/10 rounded-[2rem] backdrop-blur-[50px] backdrop-saturate-150 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8)];
+    @apply bg-[#0a0a0c]/80 border border-white/10 rounded-[2rem] backdrop-blur-[50px] backdrop-saturate-150 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)];
   }
 
-  /* Itens internos mais integrados ao cinza */
   .item-glass {
-    @apply bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.05] backdrop-blur-3xl transition-all duration-300;
+    @apply bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.05] backdrop-blur-3xl transition-all duration-300 shadow-lg;
   }
 }

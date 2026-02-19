@@ -23,7 +23,7 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
         "group relative flex flex-col gap-3 p-5 rounded-[2rem] border transition-all duration-500 backdrop-blur-[50px]",
         "bg-black/60 hover:bg-black/80",
         "border-white/5 hover:border-red-600/50",
-        "shadow-2xl shadow-black",
+        "shadow-[0_20px_40px_-12px_rgba(0,0,0,0.8)] hover:shadow-[0_25px_50px_-12px_rgba(220,38,38,0.15)]",
         habit.completed && "opacity-60"
       )}
     >
