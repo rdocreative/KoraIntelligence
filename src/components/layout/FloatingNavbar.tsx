@@ -1,135 +1,65 @@
-import { useState, useEffect, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Crown, 
-  ClipboardList,
-  Target, 
-  Swords,
-  Users,
-  ShoppingBag, 
-  Settings,
-  ChevronUp,
-  Bell
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+"use client";
 
-const navItems = [
-  { icon: LayoutDashboard, label: 'INÍCIO', path: '/', color: '#4adbc8', shadowColor: 'rgba(74, 219, 200, 0.6)' },
-  { icon: Crown, label: 'MASTERPLAN', path: '/masterplan', color: 'rgba(168, 85, 247, 1)', shadowColor: 'rgba(168, 85, 247, 0.6)' },
-  { icon: ClipboardList, label: 'TAREFAS', path: '/tarefas', color: 'rgba(59, 130, 246, 1)', shadowColor: 'rgba(59, 130, 246, 0.6)' },
-  { icon: Target, label: 'METAS', path: '/metas', color: 'rgba(34, 197, 94, 1)', shadowColor: 'rgba(34, 197, 94, 0.6)' },
-  { icon: Bell, label: 'LEMBRETES', path: '/lembretes', color: 'rgba(236, 72, 153, 1)', shadowColor: 'rgba(236, 72, 153, 0.6)' },
-  { icon: Swords, label: 'MISSÕES', path: '/missoes', color: 'rgba(249, 115, 22, 1)', shadowColor: 'rgba(249, 115, 22, 0.6)' },
-  { icon: Users, label: 'COMUNIDADE', path: '/comunidade', color: 'rgba(6, 182, 212, 1)', shadowColor: 'rgba(6, 182, 212, 0.6)' },
-  { icon: ShoppingBag, label: 'LOJA', path: '/loja', color: 'rgba(234, 179, 8, 1)', shadowColor: 'rgba(234, 179, 8, 0.6)' },
-  { icon: Settings, label: 'CONFIGURAÇÕES', path: '/configuracoes', color: 'rgba(148, 163, 184, 1)', shadowColor: 'rgba(148, 163, 184, 0.6)' },
+import { useLocation, useNavigate } from "react-router-dom";
+import { 
+  Home, 
+  Target, 
+  Zap, 
+  Settings, 
+  LucideIcon,
+  Layers,
+  LayoutGrid
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface NavItem {
+  icon: LucideIcon;
+  label: string;
+  path: string;
+}
+
+const navItems: NavItem[] = [
+  { icon: Home, label: "Início", path: "/" },
+  { icon: Target, label: "Metas", path: "/metas" },
+  { icon: Layers, label: "Plan", path: "/masterplan" },
+  { icon: Zap, label: "Missões", path: "/missoes" },
+  { icon: Settings, label: "Ajustes", path: "/configuracoes" },
 ];
 
 export const FloatingNavbar = () => {
-  const [isMinimized, setIsMinimized] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const startTimer = () => {
-    stopTimer();
-    timeoutRef.current = setTimeout(() => {
-      setIsMinimized(true);
-    }, 5000);
-  };
-
-  const stopTimer = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-  };
-
-  useEffect(() => {
-    startTimer();
-    return () => stopTimer();
-  }, []);
-
-  const handleExpand = () => {
-    setIsMinimized(false);
-    startTimer();
-  };
+  const location = useLocation();
+  const navigate = useNavigate();
 
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
-      <div 
-        onMouseEnter={stopTimer}
-        onMouseLeave={() => {
-          if (!isMinimized) startTimer();
-        }}
-        className={cn(
-          "transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]",
-          isMinimized ? "translate-y-[120%] opacity-0 pointer-events-none scale-90" : "translate-y-0 opacity-100 scale-100"
-        )}
-      >
-        <nav className="flex items-center gap-1 bg-[#0a0a0c]/90 backdrop-blur-2xl border border-[#222230] px-3 py-3 rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)]">
-          {navItems.map((item) => (
-            <NavLink
+    <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+      <div className="flex items-center gap-1.5 p-2 bg-[#040e0d]/90 backdrop-blur-3xl rounded-[32px] border border-[#4adbc8]/10 shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <button
               key={item.path}
-              to={item.path}
-              className={({ isActive }) => cn(
-                "relative group flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300",
-                isActive ? "text-white" : "text-[#6b6b7a] hover:text-[#f0f0f2]"
+              onClick={() => navigate(item.path)}
+              className={cn(
+                "relative flex items-center justify-center w-14 h-14 rounded-2xl transition-all duration-500 overflow-hidden group",
+                isActive 
+                  ? "bg-[#4adbc8] shadow-[0_0_20px_rgba(74,219,200,0.3)]" 
+                  : "hover:bg-[#4adbc8]/10 text-white/40 hover:text-[#4adbc8]"
               )}
             >
-              {({ isActive }) => (
-                <>
-                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-[#0a0a0c] border border-[#222230] rounded-xl opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none shadow-xl z-[60]">
-                    <span className="text-[10px] font-bold tracking-widest text-white whitespace-nowrap uppercase">
-                      {item.label}
-                    </span>
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#0a0a0c] border-r border-b border-[#222230] rotate-45"></div>
-                  </div>
-
-                  <div className={cn(
-                      "relative flex items-center justify-center transition-transform duration-300",
-                      isActive && "scale-110"
-                  )}>
-                      <item.icon 
-                          size={20} 
-                          style={{ 
-                            color: isActive ? item.color : 'inherit',
-                            filter: isActive ? `drop-shadow(0 0 8px ${item.shadowColor})` : 'none'
-                          }}
-                          className={cn(
-                              "transition-all duration-300",
-                              isActive && "fill-current/10"
-                          )} 
-                          strokeWidth={isActive ? 2.5 : 2}
-                      />
-                  </div>
-
-                  <span 
-                    style={{ 
-                      backgroundColor: item.color,
-                      boxShadow: `0 0 10px ${item.color}`
-                    }}
-                    className={cn(
-                      "absolute -bottom-0.5 w-1 h-1 rounded-full transition-all duration-300",
-                      isActive ? "opacity-100 scale-100" : "opacity-0 scale-0"
-                    )} 
-                  />
-                  <div className="absolute inset-0 bg-white/[0.03] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                </>
+              <item.icon 
+                className={cn(
+                  "w-6 h-6 transition-transform duration-300",
+                  isActive ? "text-black scale-110" : "group-hover:scale-110"
+                )} 
+              />
+              
+              {isActive && (
+                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
               )}
-            </NavLink>
-          ))}
-        </nav>
+            </button>
+          );
+        })}
       </div>
-
-      <button
-        onClick={handleExpand}
-        className={cn(
-          "absolute bottom-0 p-3 bg-[#4adbc8]/10 hover:bg-[#4adbc8]/20 border border-[#4adbc8]/30 rounded-full text-[#4adbc8] transition-all duration-500 shadow-lg shadow-[#4adbc8]/10 backdrop-blur-md",
-          isMinimized ? "translate-y-0 opacity-100 scale-100" : "translate-y-20 opacity-0 scale-50 pointer-events-none"
-        )}
-      >
-        <ChevronUp size={24} className="animate-bounce-slow" />
-      </button>
-    </div>
+    </nav>
   );
 };

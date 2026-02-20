@@ -6,18 +6,26 @@
 
 @layer base {
   :root {
-    --background: 240 5% 4%;
-    --foreground: 240 6% 95%;
-    --card: 240 4% 8%; 
-    --border: 240 5% 15%; 
+    /* Base baseada em #4adbc8 (172°), mas com brilho mínimo (3-4%) */
+    --background: 172 40% 3%;
+    --foreground: 172 10% 95%;
+    
+    /* Cards com leve tom azulado profundo */
+    --card: 172 35% 5%;
+    --card-foreground: 172 5% 90%;
+    
+    /* Bordas com tom azulado sutil */
+    --border: 172 20% 12%; 
     --radius: 1.5rem;
-    /* Novo tom #4adbc8 em HSL */
+    
+    /* Primária original */
     --primary: 172 67% 57%;
-    --primary-foreground: 240 5% 4%;
+    --primary-foreground: 172 40% 4%;
   }
 
   body {
-    @apply bg-[#08080a] text-[#f0f0f2] antialiased;
+    /* Fundo ultra escuro azulado em vez de preto puro */
+    @apply bg-[#020807] text-[#f0f9f8] antialiased;
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
   }
@@ -25,12 +33,13 @@
 
 @layer components {
   .card-glass {
-    @apply bg-[#121214]/95 border border-white/10 rounded-3xl backdrop-blur-2xl 
+    /* Vidro matizado com azul profundo */
+    @apply bg-[#040e0d]/95 border border-[#4adbc8]/10 rounded-3xl backdrop-blur-2xl 
     shadow-2xl shadow-black/80;
   }
 
   .item-glass {
-    @apply bg-[#161619]/60 border border-white/5 rounded-2xl hover:bg-[#161619]/90 
+    @apply bg-[#051312]/60 border border-[#4adbc8]/5 rounded-2xl hover:bg-[#071a19]/90 
     backdrop-blur-md transition-all duration-300 shadow-xl shadow-black/30;
   }
 }

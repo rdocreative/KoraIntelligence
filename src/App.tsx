@@ -37,7 +37,7 @@ const ProtectedRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-    return <div className="h-screen w-full flex items-center justify-center bg-[#141415]"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
+    return <div className="h-screen w-full flex items-center justify-center bg-[#020807]"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (!session) {
@@ -60,7 +60,7 @@ const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-[#141415]"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
+     return <div className="h-screen w-full flex items-center justify-center bg-[#020807]"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (session) {
@@ -86,25 +86,24 @@ const App = () => (
                 <Toaster />
                 <Sonner theme="dark" />
                 <BrowserRouter>
-                  <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
+                  <div className="min-h-screen text-[#f0f9f8] font-sans flex flex-col relative overflow-x-hidden">
                     
-                    {/* Background Layers */}
-                    <div className="fixed inset-0 pointer-events-none bg-[#141415] -z-30" />
+                    {/* Background Layers - Tinted Teal-Black */}
+                    <div className="fixed inset-0 pointer-events-none bg-[#020807] -z-30" />
                     
-                    {/* Top Center Theme Glow (Alterado para #4adbc8) */}
-                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-45%,rgba(74,219,200,0.18)_0%,transparent_60%)] -z-20" />
+                    {/* Top Center Theme Glow - Teal Tinted */}
+                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-45%,rgba(74,219,200,0.15)_0%,transparent_70%)] -z-20" />
                     
-                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.3)_0%,transparent_10%)] -z-10" />
+                    {/* Subtle Overlay Gradient */}
+                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(0,0,0,0)_60%,rgba(2,8,7,0.8)_100%)] -z-10" />
 
                     <Routes>
-                      {/* Rotas Públicas (Auth) */}
                       <Route element={<PublicRoute />}>
                         <Route path="/login" element={<Login />} />
                         <Route path="/cadastro" element={<SignUp />} />
                         <Route path="/recuperar-senha" element={<ForgotPassword />} />
                       </Route>
 
-                      {/* Rotas Protegidas (App) */}
                       <Route element={<ProtectedRoute />}>
                         <Route path="/" element={<Index />} />
                         <Route path="/masterplan" element={<MasterplanPage />} />
