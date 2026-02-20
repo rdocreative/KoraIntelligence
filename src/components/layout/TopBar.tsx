@@ -62,7 +62,8 @@ export const TopBar = () => {
   };
 
   const commonShadow = "shadow-[0_8px_32px_rgba(0,0,0,0.4)]";
-  const commonBg = "bg-gradient-to-b from-[#0d1716] to-[#050f0e]";
+  // Esquerda mais escuro (#050f0e) -> Direita mais claro (#0d1716)
+  const commonBg = "bg-gradient-to-r from-[#050f0e] to-[#0d1716]";
   const commonBorder = "border-[#2a4441]";
 
   return (
