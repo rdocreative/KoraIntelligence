@@ -32,15 +32,12 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 
 const queryClient = new QueryClient();
 
+// Componente para proteger rotas privadas
 const ProtectedRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center bg-[#140000]">
-        <div className="w-10 h-10 border-4 border-[#FF3232] border-t-transparent rounded-full animate-spin shadow-[0_0_15px_#FF3232]"></div>
-      </div>
-    );
+    return <div className="h-screen w-full flex items-center justify-center bg-[#020808]"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (!session) {
@@ -58,15 +55,12 @@ const ProtectedRoute = () => {
   );
 };
 
+// Componente para rotas públicas (Login/Cadastro) - Redireciona se já estiver logado
 const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return (
-       <div className="h-screen w-full flex items-center justify-center bg-[#140000]">
-         <div className="w-10 h-10 border-4 border-[#FF3232] border-t-transparent rounded-full animate-spin shadow-[0_0_15px_#FF3232]"></div>
-       </div>
-     );
+     return <div className="h-screen w-full flex items-center justify-center bg-[#020808]"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (session) {
@@ -94,21 +88,24 @@ const App = () => (
                 <BrowserRouter>
                   <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                     
-                    {/* Background Solid #140000 */}
-                    <div className="fixed inset-0 pointer-events-none bg-[#140000] -z-30" />
+                    {/* Background Layers - Substituído #141415 pelo turquesa profundo #040d0c */}
+                    <div className="fixed inset-0 pointer-events-none bg-[#040d0c] -z-30" />
                     
-                    {/* Red Glow #FF3232 */}
-                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-40%,rgba(255,50,50,0.15)_0%,transparent_60%)] -z-20" />
+                    {/* Top Center Theme Glow (Turquesa #4adbc8) */}
+                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-45%,rgba(74,219,200,0.18)_0%,transparent_60%)] -z-20" />
                     
-                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.6)_0%,transparent_20%)] -z-10" />
+                    {/* Gradiente de profundidade ajustado para tons azulados/pretos */}
+                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,10,10,0.4)_0%,transparent_15%)] -z-10" />
 
                     <Routes>
+                      {/* Rotas Públicas (Auth) */}
                       <Route element={<PublicRoute />}>
                         <Route path="/login" element={<Login />} />
                         <Route path="/cadastro" element={<SignUp />} />
                         <Route path="/recuperar-senha" element={<ForgotPassword />} />
                       </Route>
 
+                      {/* Rotas Protegidas (App) */}
                       <Route element={<ProtectedRoute />}>
                         <Route path="/" element={<Index />} />
                         <Route path="/masterplan" element={<MasterplanPage />} />
