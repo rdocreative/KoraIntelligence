@@ -6,6 +6,8 @@ import { MonthlyProgress } from '@/components/features/dashboard/MonthlyProgress
 import { MonthlyChart } from '@/components/features/dashboard/MonthlyChart';
 import { Gamification } from '@/components/features/habit-tracker/Gamification';
 import { BADGES } from '@/hooks/useHabitTracker';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CheckSquare } from 'lucide-react';
 
 const Index = () => {
   // Hooks existentes
@@ -69,27 +71,35 @@ const Index = () => {
               streak={streak}
             />
 
-            <div className="space-y-4">
-              <div className="flex items-center justify-between px-1">
-                  <h3 className="font-bold text-lg text-white">Tarefas Prioritárias</h3>
-                  <span className="text-xs text-[#4adbc8] font-bold cursor-pointer hover:underline">Ver todas</span>
-              </div>
-              <div className="space-y-4">
-                {habits.slice(0, 5).map((habit, index) => (
-                  <HabitCard 
-                    key={habit.id} 
-                    habit={habit} 
-                    onComplete={completeHabit}
-                    index={index} 
-                  />
-                ))}
-                {habits.length === 0 && (
-                  <div className="text-center py-8 border border-dashed border-white/10 rounded-xl bg-white/5">
-                    <p className="text-sm text-neutral-500">Nenhum hábito ativo.</p>
+            {/* Seção de Tarefas Prioritárias envelopada em Card */}
+            <Card className="card-glass border-white/10 overflow-hidden shadow-2xl shadow-black/60">
+              <CardHeader className="border-b border-white/5 pb-4 bg-gradient-to-r from-white/[0.03] to-transparent">
+                  <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
+                        <CheckSquare className="w-5 h-5 text-[#4adbc8]" />
+                        Tarefas Prioritárias
+                      </CardTitle>
+                      <span className="text-xs text-[#4adbc8] font-bold cursor-pointer hover:underline">Ver todas</span>
                   </div>
-                )}
-              </div>
-            </div>
+              </CardHeader>
+              <CardContent className="pt-6 bg-gradient-to-r from-transparent to-white/[0.02]">
+                <div className="space-y-4">
+                  {habits.slice(0, 5).map((habit, index) => (
+                    <HabitCard 
+                      key={habit.id} 
+                      habit={habit} 
+                      onComplete={completeHabit}
+                      index={index} 
+                    />
+                  ))}
+                  {habits.length === 0 && (
+                    <div className="text-center py-8 border border-dashed border-white/10 rounded-xl bg-white/5">
+                      <p className="text-sm text-neutral-400 font-medium">Nenhum hábito ativo.</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </div>
       </div>
     </div>

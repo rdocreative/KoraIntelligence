@@ -73,7 +73,7 @@ export const FloatingNavbar = () => {
               to={item.path}
               className={({ isActive }) => cn(
                 "relative group flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300",
-                isActive ? "text-white" : "text-[#6b6b7a] hover:text-[#f0f0f2]"
+                isActive ? "text-white" : "text-neutral-400 hover:text-white"
               )}
             >
               {({ isActive }) => (

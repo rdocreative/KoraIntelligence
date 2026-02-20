@@ -1,4 +1,4 @@
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DailyRecord } from "@/hooks/useHabitTracker";
 import { Activity } from "lucide-react";
@@ -34,21 +34,30 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
       <CardContent className="pt-6 bg-gradient-to-r from-transparent to-white/[0.02]">
         <div className="h-[250px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data}>
+            <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorXp" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#4adbc8" stopOpacity={0.3}/>
                   <stop offset="95%" stopColor="#4adbc8" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+              <CartesianGrid 
+                strokeDasharray="3 3" 
+                vertical={true} 
+                stroke="rgba(255,255,255,0.03)" 
+              />
               <XAxis 
                 dataKey="date" 
                 tickLine={false} 
                 axisLine={false} 
-                tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10, fontWeight: 700 }} 
+                tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontWeight: 500 }} 
                 minTickGap={30}
                 dy={10}
+              />
+              <YAxis 
+                tickLine={false} 
+                axisLine={false} 
+                tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontWeight: 500 }}
               />
               <Tooltip 
                 contentStyle={{ 
@@ -65,7 +74,7 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
                 type="monotone" 
                 dataKey="xp" 
                 stroke="#4adbc8" 
-                strokeWidth={3}
+                strokeWidth={2}
                 fillOpacity={1} 
                 fill="url(#colorXp)" 
                 activeDot={{ r: 6, fill: '#4adbc8', stroke: '#fff', strokeWidth: 2 }}
