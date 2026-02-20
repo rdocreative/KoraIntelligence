@@ -85,16 +85,17 @@ const App = () => (
                 <Toaster />
                 <Sonner theme="dark" />
                 <BrowserRouter>
-                  <div className="min-h-screen bg-[#141415] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
+                  <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                     
                     {/* Background Layers */}
+                    {/* Base Solid Background */}
                     <div className="fixed inset-0 pointer-events-none bg-[#0a0a0b] -z-30" />
                     
-                    {/* Top Red Gradient */}
-                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(220,38,38,0.15)_0%,transparent_50%)] -z-20" />
+                    {/* Top Red Gradient (Vibrant but subtle) */}
+                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(239,68,68,0.22)_0%,transparent_65%)] -z-20" />
                     
-                    {/* Bottom Black Gradient */}
-                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.8)_0%,transparent_40%)] -z-10" />
+                    {/* Bottom Black Gradient (Depth) */}
+                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.98)_0%,transparent_55%)] -z-10" />
 
                     <Routes>
                       {/* Rotas Públicas (Auth) */}
