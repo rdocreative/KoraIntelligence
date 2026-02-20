@@ -6,28 +6,28 @@
 
 @layer base {
   :root {
-    /* Fundo principal: #0a0000 (Preto mais profundo) */
-    --background: 0 100% 2%;
+    /* Fundo principal: #140000 */
+    --background: 0 100% 4%;
     --foreground: 0 0% 98%;
     
-    /* Cards e Borders - Mais discretos */
-    --card: 0 100% 1%; 
-    --border: 0 100% 8%; 
+    /* Cards e Borders */
+    --card: 0 100% 3%; 
+    --border: 0 100% 12%; 
     --radius: 1.25rem;
 
     /* Destaque principal: #FF3232 */
     --primary: 0 100% 60%; 
     --primary-foreground: 0 0% 100%;
 
-    --muted: 0 100% 4%;
-    --muted-foreground: 0 0% 50%;
+    --muted: 0 100% 8%;
+    --muted-foreground: 0 0% 60%;
     
-    --accent: 0 100% 10%;
+    --accent: 0 100% 15%;
     --accent-foreground: 0 100% 60%;
   }
 
   body {
-    @apply bg-[#0a0000] text-[#f0f0f2] antialiased;
+    @apply bg-[#140000] text-[#f0f0f2] antialiased;
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
   }
@@ -35,12 +35,12 @@
 
 @layer components {
   .card-glass {
-    @apply bg-black/80 border border-white/5 rounded-3xl backdrop-blur-3xl 
-    shadow-2xl shadow-black;
+    @apply bg-[#1a0000]/90 border border-[#FF3232]/15 rounded-3xl backdrop-blur-xl 
+    shadow-2xl shadow-black/80;
   }
 
   .item-glass {
-    @apply bg-black/40 border border-white/5 rounded-2xl hover:bg-black/60 
+    @apply bg-[#250000]/40 border border-[#FF3232]/10 rounded-2xl hover:bg-[#2a0000]/60 
     backdrop-blur-md transition-all duration-300;
   }
 }

@@ -24,66 +24,66 @@ export const MonthlyProgress = ({
       label: "Hábitos", 
       count: `${habitsCount} ativos`,
       icon: CheckCircle2, 
-      color: "text-[#FF3232]",
-      bgColor: "bg-[#FF3232]",
-      borderColor: "border-[#FF3232]/10",
-      bgGradient: "from-black to-red-950/20",
+      color: "text-[#e8251a]",
+      bgColor: "bg-[#e8251a]",
+      borderColor: "border-[#e8251a]/20",
+      bgGradient: "from-red-950/15 to-red-600/15",
       progress: habitsCount > 0 ? 100 : 0 
     },
     { 
       label: "Tarefas", 
       count: `${tasksCount} pendentes`,
       icon: ListTodo, 
-      color: "text-blue-500",
-      bgColor: "bg-blue-500",
-      borderColor: "border-blue-500/10",
-      bgGradient: "from-black to-blue-950/20",
+      color: "text-blue-400",
+      bgColor: "bg-blue-400",
+      borderColor: "border-blue-500/20",
+      bgGradient: "from-blue-950/15 to-blue-600/15",
       progress: tasksCount > 0 ? 50 : 0 
     },
     { 
       label: "Metas", 
       count: `${goalsCount} ativas`,
       icon: Target, 
-      color: "text-emerald-500",
-      bgColor: "bg-emerald-500",
-      borderColor: "border-emerald-500/10",
-      bgGradient: "from-black to-emerald-950/20",
+      color: "text-emerald-400",
+      bgColor: "bg-emerald-400",
+      borderColor: "border-emerald-500/20",
+      bgGradient: "from-emerald-950/15 to-emerald-600/15",
       progress: goalsCount > 0 ? 25 : 0 
     },
     { 
       label: "XP Total", 
       count: null,
       icon: Zap, 
-      color: "text-amber-500",
-      bgColor: "bg-amber-500",
-      borderColor: "border-amber-500/10",
-      bgGradient: "from-black to-amber-950/20",
+      color: "text-amber-400",
+      bgColor: "bg-amber-400",
+      borderColor: "border-amber-500/20",
+      bgGradient: "from-amber-950/15 to-amber-600/15",
       progress: progressPercentage
     },
   ];
 
   return (
-    <Card className="card-glass overflow-hidden border-[#FF3232]/5 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-      <CardHeader className="pb-4 border-b border-white/5 bg-black/40">
+    <Card className="card-glass overflow-hidden shadow-2xl shadow-black/60 border-white/10">
+      <CardHeader className="pb-4 border-b border-white/5 bg-gradient-to-r from-white/[0.03] to-transparent">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#FF3232] shadow-[0_0_5px_#FF3232]"></span>
+            <span className="w-2 h-2 rounded-full bg-[#4adbc8] shadow-[0_0_8px_rgba(74,219,200,0.8)]"></span>
             Status Mensal
           </CardTitle>
-          <span className="text-[10px] font-black text-black bg-[#FF3232] px-3 py-1 rounded-full">
+          <span className="text-[10px] font-black text-black bg-[#4adbc8] px-3 py-1 rounded-full">
             {Math.round(progressPercentage)}%
           </span>
         </div>
       </CardHeader>
-      <CardContent className="space-y-8 pt-8 bg-black/20">
+      <CardContent className="space-y-8 pt-8 bg-gradient-to-r from-transparent to-white/[0.02]">
         <div className="space-y-2">
           <div className="flex justify-between text-[10px] text-white/40 font-black uppercase tracking-widest">
              <span>Progresso de Nível</span>
-             <span className="font-rajdhani text-sm text-[#FF3232]">{totalPoints} / {MONTHLY_XP_TARGET} XP</span>
+             <span className="font-rajdhani text-sm text-[#4adbc8]">{totalPoints} / {MONTHLY_XP_TARGET} XP</span>
           </div>
-          <div className="h-2 w-full bg-black rounded-full overflow-hidden border border-white/5">
+          <div className="h-2 w-full bg-black/60 rounded-full overflow-hidden border border-white/5">
             <div 
-                className="h-full bg-[#FF3232] shadow-[0_0_10px_rgba(255,50,50,0.3)] transition-all duration-1000"
+                className="h-full bg-gradient-to-r from-[#3bc7b6] to-[#4adbc8] shadow-[0_0_15px_rgba(74,219,200,0.4)] transition-all duration-1000"
                 style={{ width: `${progressPercentage}%` }}
             />
           </div>
@@ -94,31 +94,38 @@ export const MonthlyProgress = ({
             <div 
               key={i} 
               className={cn(
-                "group flex flex-col justify-center p-3.5 h-[105px] rounded-2xl border transition-all duration-300 relative overflow-hidden",
-                "bg-gradient-to-br",
+                "group flex flex-col justify-center p-3.5 h-[105px] rounded-2xl border transition-all duration-300 relative overflow-hidden shadow-md shadow-black/20",
+                "bg-gradient-to-br hover:opacity-90",
                 stat.bgGradient,
                 stat.borderColor
               )}
             >
               <div className="relative z-10 flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                   <div className="p-1.5 rounded-lg bg-black border border-white/5 shrink-0">
-                      <stat.icon className={cn("h-3.5 w-3.5", stat.color)} />
-                   </div>
-                   <span className="text-[11px] font-bold text-white/80 uppercase tracking-wider truncate">
-                     {stat.label}
-                   </span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                     <div className="p-1.5 rounded-lg bg-black/40 border border-white/5 shrink-0">
+                        <stat.icon className={cn("h-3.5 w-3.5", stat.color)} />
+                     </div>
+                     <span className="text-[13px] font-black uppercase tracking-widest text-white truncate">
+                       {stat.label}
+                     </span>
+                  </div>
+                  {stat.label === "XP Total" && (
+                    <span className="text-[14px] font-black font-rajdhani text-white/90">
+                        {Math.round(stat.progress)}%
+                    </span>
+                  )}
                 </div>
 
-                <div className="w-full h-1.5 bg-black/60 rounded-full overflow-hidden border border-white/5 mt-1">
+                <div className="w-full h-2 bg-black/40 rounded-full overflow-hidden border border-white/5 p-0.5">
                   <div 
-                    className={cn("h-full transition-all duration-1000 rounded-full opacity-70", stat.bgColor)} 
+                    className={cn("h-full transition-all duration-1000 rounded-full", stat.bgColor)} 
                     style={{ width: `${stat.progress}%` }}
                   />
                 </div>
                 
                 {stat.count && (
-                  <p className="text-[10px] font-medium text-white/40 uppercase tracking-tight truncate">
+                  <p className="text-[10px] font-medium text-white/60 uppercase tracking-tight truncate">
                     {stat.count}
                   </p>
                 )}

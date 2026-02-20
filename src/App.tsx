@@ -37,8 +37,8 @@ const ProtectedRoute = () => {
 
   if (loading) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-[#0a0000]">
-        <div className="w-10 h-10 border-4 border-[#FF3232] border-t-transparent rounded-full animate-spin"></div>
+      <div className="h-screen w-full flex items-center justify-center bg-[#140000]">
+        <div className="w-10 h-10 border-4 border-[#FF3232] border-t-transparent rounded-full animate-spin shadow-[0_0_15px_#FF3232]"></div>
       </div>
     );
   }
@@ -63,8 +63,8 @@ const PublicRoute = () => {
 
   if (loading) {
      return (
-       <div className="h-screen w-full flex items-center justify-center bg-[#0a0000]">
-         <div className="w-10 h-10 border-4 border-[#FF3232] border-t-transparent rounded-full animate-spin"></div>
+       <div className="h-screen w-full flex items-center justify-center bg-[#140000]">
+         <div className="w-10 h-10 border-4 border-[#FF3232] border-t-transparent rounded-full animate-spin shadow-[0_0_15px_#FF3232]"></div>
        </div>
      );
   }
@@ -94,14 +94,13 @@ const App = () => (
                 <BrowserRouter>
                   <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                     
-                    {/* Background Solid #0a0000 (Mais escuro que o anterior para puxar pro preto) */}
-                    <div className="fixed inset-0 pointer-events-none bg-[#0a0000] -z-30" />
+                    {/* Background Solid #140000 */}
+                    <div className="fixed inset-0 pointer-events-none bg-[#140000] -z-30" />
                     
-                    {/* Red Glow #FF3232 - Reduzido em 30% (de 60% para 42%) e mais sutil */}
-                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-45%,rgba(255,50,50,0.12)_0%,transparent_42%)] -z-20" />
+                    {/* Red Glow #FF3232 */}
+                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-40%,rgba(255,50,50,0.15)_0%,transparent_60%)] -z-20" />
                     
-                    {/* Degrade puxando pro preto mais escuro na base */}
-                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.8)_0%,transparent_35%)] -z-10" />
+                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.6)_0%,transparent_20%)] -z-10" />
 
                     <Routes>
                       <Route element={<PublicRoute />}>

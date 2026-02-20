@@ -24,52 +24,51 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
   }
 
   return (
-    <Card className="card-glass border-white/5 overflow-hidden shadow-2xl">
-      <CardHeader className="border-b border-white/5 pb-4 bg-black/40">
+    <Card className="card-glass border-white/10 overflow-hidden shadow-2xl shadow-black/60">
+      <CardHeader className="border-b border-white/5 pb-4 bg-gradient-to-r from-white/[0.03] to-transparent">
         <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
-            <Activity className="w-5 h-5 text-[#FF3232]" />
+            <Activity className="w-5 h-5 text-[#4adbc8]" />
             Evolução de XP
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-6 bg-black/20">
+      <CardContent className="pt-6 bg-gradient-to-r from-transparent to-white/[0.02]">
         <div className="h-[250px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={data}>
               <defs>
                 <linearGradient id="colorXp" x1="0" y1="0" x2="0" y2="1">
-                  {/* Gradiente 30% menor e mais escuro */}
-                  <stop offset="2%" stopColor="#FF3232" stopOpacity={0.2}/>
-                  <stop offset="50%" stopColor="#FF3232" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#4adbc8" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#4adbc8" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
               <XAxis 
                 dataKey="date" 
                 tickLine={false} 
                 axisLine={false} 
-                tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontWeight: 700 }} 
+                tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 10, fontWeight: 700 }} 
                 minTickGap={30}
                 dy={10}
               />
               <Tooltip 
                 contentStyle={{ 
                   borderRadius: '16px', 
-                  border: '1px solid rgba(255,255,255,0.05)', 
-                  backgroundColor: '#000000',
+                  border: '1px solid rgba(255,255,255,0.1)', 
+                  backgroundColor: '#1a1a1a',
                   color: '#f0f0f2',
-                  boxShadow: '0 20px 40px rgba(0,0,0,0.9)'
+                  boxShadow: '0 20px 40px -10px rgba(0,0,0,0.8)'
                 }}
-                itemStyle={{ color: '#FF3232', fontWeight: 700 }}
-                cursor={{ stroke: 'rgba(255,255,255,0.05)', strokeWidth: 1 }}
+                itemStyle={{ color: '#4adbc8', fontWeight: 700 }}
+                cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }}
               />
               <Area 
                 type="monotone" 
                 dataKey="xp" 
-                stroke="#FF3232" 
-                strokeWidth={2}
+                stroke="#4adbc8" 
+                strokeWidth={3}
                 fillOpacity={1} 
                 fill="url(#colorXp)" 
-                activeDot={{ r: 4, fill: '#FF3232', stroke: '#000', strokeWidth: 2 }}
+                activeDot={{ r: 6, fill: '#4adbc8', stroke: '#fff', strokeWidth: 2 }}
               />
             </AreaChart>
           </ResponsiveContainer>
