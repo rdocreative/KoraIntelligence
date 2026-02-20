@@ -1,3 +1,4 @@
+cima com cores #050f0e e #0d1716, e stroke mais claro.">
 import { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
@@ -66,7 +67,7 @@ export const FloatingNavbar = () => {
           isMinimized ? "translate-y-[120%] opacity-0 pointer-events-none scale-90" : "translate-y-0 opacity-100 scale-100"
         )}
       >
-        <nav className="flex items-center gap-1 bg-gradient-to-t from-[#050f0e] to-[#0d1716] backdrop-blur-2xl border border-[#203533] px-3 py-3 rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.8)]">
+        <nav className="flex items-center gap-1 bg-gradient-to-t from-[#050f0e] to-[#0d1716] backdrop-blur-2xl border border-[#2a4441] px-3 py-3 rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.8)]">
           {navItems.map((item) => (
             <NavLink
               key={item.path}
@@ -78,11 +79,11 @@ export const FloatingNavbar = () => {
             >
               {({ isActive }) => (
                 <>
-                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-[#050f0e] border border-[#203533] rounded-xl opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none shadow-xl z-[60]">
+                  <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-[#050f0e] border border-[#2a4441] rounded-xl opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none shadow-xl z-[60]">
                     <span className="text-[10px] font-bold tracking-widest text-white whitespace-nowrap uppercase">
                       {item.label}
                     </span>
-                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#050f0e] border-r border-b border-[#203533] rotate-45"></div>
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#050f0e] border-r border-b border-[#2a4441] rotate-45"></div>
                   </div>
 
                   <div className={cn(
@@ -124,7 +125,7 @@ export const FloatingNavbar = () => {
       <button
         onClick={handleExpand}
         className={cn(
-          "absolute bottom-0 p-3 bg-gradient-to-t from-[#050f0e] to-[#0d1716] hover:brightness-125 border border-[#203533] rounded-full text-[#4adbc8] transition-all duration-500 shadow-2xl shadow-black/80 backdrop-blur-md",
+          "absolute bottom-0 p-3 bg-gradient-to-t from-[#050f0e] to-[#0d1716] hover:brightness-125 border border-[#2a4441] rounded-full text-[#4adbc8] transition-all duration-500 shadow-2xl shadow-black/80 backdrop-blur-md",
           isMinimized ? "translate-y-0 opacity-100 scale-100" : "translate-y-20 opacity-0 scale-50 pointer-events-none"
         )}
       >
