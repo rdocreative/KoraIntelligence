@@ -91,11 +91,11 @@ const App = () => (
                     {/* Base Solid Gray Background */}
                     <div className="fixed inset-0 pointer-events-none bg-[#141415] -z-30" />
                     
-                    {/* Top Left Red Glow (Stronger but smaller) */}
-                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_0%_0%,rgba(239,68,68,0.3)_0%,transparent_40%)] -z-20" />
+                    {/* Top Left Red Glow (More concentrated) */}
+                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_0%_0%,rgba(239,68,68,0.35)_0%,transparent_25%)] -z-20" />
                     
-                    {/* Bottom Black Gradient (Softer/Subtle) */}
-                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.6)_0%,transparent_25%)] -z-10" />
+                    {/* Bottom Black Gradient (Subtle) */}
+                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.5)_0%,transparent_20%)] -z-10" />
 
                     <Routes>
                       {/* Rotas Públicas (Auth) */}
