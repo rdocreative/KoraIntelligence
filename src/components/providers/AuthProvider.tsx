@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import { Loader2 } from "lucide-react";
 
 interface AuthContextType {
   session: Session | null;
@@ -22,29 +23,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Verificar sessão atual
-    const checkSession = async () => {
+    let mounted = true;
+
+    // 1. Verifica sessão inicial ao carregar o app
+    const initSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        setSession(session);
-        setUser(session?.user ?? null);
+        if (mounted) {
+          if (session) {
+            setSession(session);
+            setUser(session.user);
+          }
+        }
       } catch (error) {
-        console.error("Erro ao verificar sessão:", error);
+        console.error("Erro ao inicializar sessão:", error);
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
-    checkSession();
+    initSession();
 
-    // Escutar mudanças na autenticação
+    // 2. Monitora mudanças de sessão em tempo real
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
+      if (mounted) {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
@@ -52,6 +64,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = async () => {
     await supabase.auth.signOut();
   };
+
+  // 3. Mostra loading enquanto verifica a sessão
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider value={{ session, user, loading, signOut }}>
