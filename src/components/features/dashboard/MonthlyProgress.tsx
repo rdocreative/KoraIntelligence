@@ -24,10 +24,10 @@ export const MonthlyProgress = ({
       label: "Hábitos", 
       count: `${habitsCount} ativos`,
       icon: CheckCircle2, 
-      color: "text-[#4adbc8]",
-      bgColor: "bg-[#4adbc8]",
-      borderColor: "border-[#4adbc8]/20",
-      bgGradient: "from-emerald-950/15 to-[#4adbc8]/15",
+      color: "text-[#e8251a]",
+      bgColor: "bg-[#e8251a]",
+      borderColor: "border-[#e8251a]/20",
+      bgGradient: "from-red-950/15 to-red-600/15",
       progress: habitsCount > 0 ? 100 : 0 
     },
     { 

@@ -33,7 +33,7 @@ interface PageConfig {
 }
 
 const pageConfigs: Record<string, PageConfig> = {
-  '/': { title: 'Início', subtitle: 'Visão total do seu progresso', color: '#4adbc8', icon: Home },
+  '/': { title: 'Início', subtitle: 'Visão total do seu progresso', color: '#e8251a', icon: Home },
   '/tarefas': { title: 'Tarefas', subtitle: 'Gerenciamento do seu dia', color: '#38bdf8', icon: ClipboardList },
   '/metas': { title: 'Metas', subtitle: 'Foco nos grandes objetivos', color: '#34d399', icon: Target },
   '/missoes': { title: 'Missões', subtitle: 'Desafios e conquistas épicas', color: '#f0b429', icon: Zap },
