@@ -62,8 +62,8 @@ export const TopBar = () => {
   };
 
   const commonShadow = "shadow-[0_8px_32px_rgba(0,0,0,0.4)]";
-  // Esquerda mais escuro (#050f0e) -> Direita mais claro (#0d1716)
-  const commonBg = "bg-gradient-to-r from-[#050f0e] to-[#0d1716]";
+  // Esquerda: rgb(5, 15, 14) -> Direita: rgb(13, 23, 22)
+  const commonBg = "bg-gradient-to-r from-[rgb(5,15,14)] to-[rgb(13,23,22)]";
   const commonBorder = "border-[#2a4441]";
 
   return (
