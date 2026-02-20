@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useProfile } from '@/hooks/useProfile';
 import { 
   Home,
   ClipboardList,
@@ -48,15 +49,18 @@ export const TopBar = () => {
   const currentPath = location.pathname;
   const config = pageConfigs[currentPath] || pageConfigs['/'];
   const { title, subtitle, color, icon: Icon } = config;
+  const { profile } = useProfile();
 
   const [activeModal, setActiveModal] = useState<'coins' | 'achievements' | 'profile' | null>(null);
 
+  // Dados reais ou fallback
   const userStats = {
-    coins: "1.250",
-    titles: 12,
-    level: 24,
-    xp: 850,
-    nextLevelXp: 1000
+    name: profile?.nome || "Usuário",
+    coins: profile?.coins || 0,
+    titles: 0, // Ainda sem tabela de títulos
+    level: profile?.nivel || 1,
+    xp: profile?.xp_total || 0,
+    nextLevelXp: (profile?.nivel || 1) * 1000 // Lógica simples de próximo nível
   };
 
   // Shadow constante para todos os elementos
@@ -196,8 +200,8 @@ export const TopBar = () => {
                   LVL {userStats.level}
                 </div>
               </div>
-              <h2 className="text-xl font-bold mb-1">Usuário Mestre</h2>
-              <p className="text-sm text-[#888] mb-6">Membro desde Outubro 2023</p>
+              <h2 className="text-xl font-bold mb-1">{userStats.name}</h2>
+              <p className="text-sm text-[#888] mb-6">Membro da Comunidade</p>
               
               <div className="w-full bg-[#1b1b1c] rounded-2xl p-5 border border-[#303030]">
                 <div className="flex justify-between text-[0.7rem] mb-2.5 text-[#888] font-medium">

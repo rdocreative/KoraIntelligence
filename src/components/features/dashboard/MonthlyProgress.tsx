@@ -6,42 +6,49 @@ import { cn } from "@/lib/utils";
 interface MonthlyProgressProps {
   totalPoints: number;
   habitsCount: number;
+  tasksCount?: number;
+  goalsCount?: number;
 }
 
-export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressProps) => {
+export const MonthlyProgress = ({ 
+  totalPoints, 
+  habitsCount,
+  tasksCount = 0,
+  goalsCount = 0
+}: MonthlyProgressProps) => {
   const MONTHLY_XP_TARGET = 1000;
   const progressPercentage = Math.min(100, (totalPoints / MONTHLY_XP_TARGET) * 100);
   
   const stats = [
     { 
       label: "Hábitos", 
-      count: `0/${habitsCount}`,
+      count: `${habitsCount} ativos`,
       icon: CheckCircle2, 
       color: "text-red-500",
       bgColor: "bg-red-500",
       borderColor: "border-red-500/20",
       bgGradient: "from-red-950/15 to-red-600/15",
-      progress: 0
+      progress: habitsCount > 0 ? 100 : 0 // Visual placeholder
     },
     { 
       label: "Tarefas", 
-      count: "0/0",
+      count: `${tasksCount} pendentes`,
       icon: ListTodo, 
       color: "text-blue-400",
       bgColor: "bg-blue-400",
       borderColor: "border-blue-500/20",
       bgGradient: "from-blue-950/15 to-blue-600/15",
-      progress: 0
+      progress: tasksCount > 0 ? 50 : 0 // Visual placeholder
     },
     { 
       label: "Metas", 
-      count: "0/0",
+      count: `${goalsCount} ativas`,
       icon: Target, 
       color: "text-emerald-400",
       bgColor: "bg-emerald-400",
       borderColor: "border-emerald-500/20",
       bgGradient: "from-emerald-950/15 to-emerald-600/15",
-      progress: 0
+      progress: goalsCount > 0 ? 25 : 0 // Visual placeholder
     },
     { 
       label: "XP Total", 
@@ -104,9 +111,12 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
                        {stat.label}
                      </span>
                   </div>
-                  <span className="text-[14px] font-black font-rajdhani text-white/90">
-                    {Math.round(stat.progress)}%
-                  </span>
+                  {/* Removido a porcentagem individual para deixar o contador mais visível nos outros cards, exceto XP */}
+                  {stat.label === "XP Total" && (
+                    <span className="text-[14px] font-black font-rajdhani text-white/90">
+                        {Math.round(stat.progress)}%
+                    </span>
+                  )}
                 </div>
 
                 <div className="w-full h-2 bg-black/40 rounded-full overflow-hidden border border-white/5 p-0.5">
@@ -117,8 +127,8 @@ export const MonthlyProgress = ({ totalPoints, habitsCount }: MonthlyProgressPro
                 </div>
                 
                 {stat.count && (
-                  <p className="text-[10px] font-medium text-white/60 uppercase tracking-tight">
-                    {stat.count} completados
+                  <p className="text-[10px] font-medium text-white/60 uppercase tracking-tight truncate">
+                    {stat.count}
                   </p>
                 )}
               </div>
