@@ -23,41 +23,41 @@ export const MonthlyProgress = ({
       label: "Hábitos", 
       count: `${habitsCount} ativos`,
       icon: CheckCircle2, 
-      // Verde Esmeralda
-      gradient: "bg-[radial-gradient(circle_at_center,_#10b981_0%,_#064e3b_100%)]",
-      borderColor: "border-emerald-400/40",
-      iconColor: "text-emerald-100",
+      // Verde Esmeralda (30% opacidade)
+      gradient: "bg-[radial-gradient(circle_at_center,_rgba(16,185,129,0.3)_0%,_rgba(6,78,59,0.3)_100%)]",
+      borderColor: "border-emerald-500/20",
+      iconColor: "text-emerald-400",
     },
     { 
       label: "Tarefas", 
       count: `${tasksCount} pendentes`,
       icon: ListTodo, 
-      // Azul Ciano/Celeste
-      gradient: "bg-[radial-gradient(circle_at_center,_#06b6d4_0%,_#083344_100%)]",
-      borderColor: "border-cyan-400/40",
-      iconColor: "text-cyan-100",
+      // Azul Ciano (30% opacidade)
+      gradient: "bg-[radial-gradient(circle_at_center,_rgba(6,182,212,0.3)_0%,_rgba(8,51,68,0.3)_100%)]",
+      borderColor: "border-cyan-500/20",
+      iconColor: "text-cyan-400",
     },
     { 
       label: "Metas", 
       count: `${goalsCount} ativas`,
       icon: Target, 
-      // Roxo/Violeta
-      gradient: "bg-[radial-gradient(circle_at_center,_#8b5cf6_0%,_#2e1065_100%)]",
-      borderColor: "border-violet-400/40",
-      iconColor: "text-violet-100",
+      // Roxo/Violeta (30% opacidade)
+      gradient: "bg-[radial-gradient(circle_at_center,_rgba(139,92,246,0.3)_0%,_rgba(46,16,101,0.3)_100%)]",
+      borderColor: "border-violet-500/20",
+      iconColor: "text-violet-400",
     },
     { 
       label: "XP Total", 
       count: `${totalPoints} XP`,
       icon: Zap, 
-      // Laranja Dourado
-      gradient: "bg-[radial-gradient(circle_at_center,_#f59e0b_0%,_#451a03_100%)]",
-      borderColor: "border-amber-400/40",
-      iconColor: "text-amber-100",
+      // Laranja Dourado (30% opacidade)
+      gradient: "bg-[radial-gradient(circle_at_center,_rgba(245,158,11,0.3)_0%,_rgba(69,26,3,0.3)_100%)]",
+      borderColor: "border-amber-500/20",
+      iconColor: "text-amber-400",
     },
   ];
 
-  const lightSweepClass = "after:absolute after:inset-0 after:bg-[linear-gradient(110deg,transparent_30%,rgba(255,255,255,0.12)_50%,transparent_70%)] after:pointer-events-none";
+  const lightSweepClass = "after:absolute after:inset-0 after:bg-[linear-gradient(110deg,transparent_30%,rgba(255,255,255,0.05)_50%,transparent_70%)] after:pointer-events-none";
 
   return (
     <Card className="card-glass overflow-hidden shadow-2xl shadow-black/60 border-white/10">
@@ -101,10 +101,10 @@ export const MonthlyProgress = ({
             >
               <div className="relative z-10 flex flex-col gap-2">
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 shrink-0">
+                  <div className="p-2 rounded-xl bg-black/20 backdrop-blur-sm border border-white/5 shrink-0">
                     <stat.icon className={cn("h-4 w-4", stat.iconColor)} />
                   </div>
-                  <span className="text-[12px] font-black uppercase tracking-[0.15em] text-white">
+                  <span className="text-[12px] font-black uppercase tracking-[0.15em] text-white/90">
                     {stat.label}
                   </span>
                 </div>
@@ -113,8 +113,8 @@ export const MonthlyProgress = ({
                   <p className="text-[14px] font-black text-white uppercase tracking-tight">
                     {stat.count}
                   </p>
-                  <div className="h-1 w-full bg-black/20 rounded-full mt-2 overflow-hidden">
-                    <div className="h-full bg-white/40 w-full" />
+                  <div className="h-1 w-full bg-black/40 rounded-full mt-2 overflow-hidden">
+                    <div className={cn("h-full w-full opacity-50", stat.iconColor.replace('text-', 'bg-'))} />
                   </div>
                 </div>
               </div>
