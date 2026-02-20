@@ -15,7 +15,7 @@ import {
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'INÍCIO', path: '/', color: 'rgba(239, 68, 68, 1)', shadowColor: 'rgba(239, 68, 68, 0.6)' },
+  { icon: LayoutDashboard, label: 'INÍCIO', path: '/', color: '#4adbc8', shadowColor: 'rgba(74, 219, 200, 0.6)' },
   { icon: Crown, label: 'MASTERPLAN', path: '/masterplan', color: 'rgba(168, 85, 247, 1)', shadowColor: 'rgba(168, 85, 247, 0.6)' },
   { icon: ClipboardList, label: 'TAREFAS', path: '/tarefas', color: 'rgba(59, 130, 246, 1)', shadowColor: 'rgba(59, 130, 246, 0.6)' },
   { icon: Target, label: 'METAS', path: '/metas', color: 'rgba(34, 197, 94, 1)', shadowColor: 'rgba(34, 197, 94, 0.6)' },
@@ -56,7 +56,6 @@ export const FloatingNavbar = () => {
 
   return (
     <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
-      {/* Container Principal */}
       <div 
         onMouseEnter={stopTimer}
         onMouseLeave={() => {
@@ -79,7 +78,6 @@ export const FloatingNavbar = () => {
             >
               {({ isActive }) => (
                 <>
-                  {/* Tooltip Pop-up */}
                   <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-[#0a0a0c] border border-[#222230] rounded-xl opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none shadow-xl z-[60]">
                     <span className="text-[10px] font-bold tracking-widest text-white whitespace-nowrap uppercase">
                       {item.label}
@@ -87,7 +85,6 @@ export const FloatingNavbar = () => {
                     <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#0a0a0c] border-r border-b border-[#222230] rotate-45"></div>
                   </div>
 
-                  {/* Icon */}
                   <div className={cn(
                       "relative flex items-center justify-center transition-transform duration-300",
                       isActive && "scale-110"
@@ -106,7 +103,6 @@ export const FloatingNavbar = () => {
                       />
                   </div>
 
-                  {/* Active Dot Indicator */}
                   <span 
                     style={{ 
                       backgroundColor: item.color,
@@ -117,8 +113,6 @@ export const FloatingNavbar = () => {
                       isActive ? "opacity-100 scale-100" : "opacity-0 scale-0"
                     )} 
                   />
-
-                  {/* Hover Background Glow */}
                   <div className="absolute inset-0 bg-white/[0.03] rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                 </>
               )}
@@ -127,11 +121,10 @@ export const FloatingNavbar = () => {
         </nav>
       </div>
 
-      {/* Trigger Button */}
       <button
         onClick={handleExpand}
         className={cn(
-          "absolute bottom-0 p-3 bg-red-600/10 hover:bg-red-600/20 border border-red-500/30 rounded-full text-red-500 transition-all duration-500 shadow-lg shadow-red-500/10 backdrop-blur-md",
+          "absolute bottom-0 p-3 bg-[#4adbc8]/10 hover:bg-[#4adbc8]/20 border border-[#4adbc8]/30 rounded-full text-[#4adbc8] transition-all duration-500 shadow-lg shadow-[#4adbc8]/10 backdrop-blur-md",
           isMinimized ? "translate-y-0 opacity-100 scale-100" : "translate-y-20 opacity-0 scale-50 pointer-events-none"
         )}
       >

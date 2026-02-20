@@ -33,7 +33,7 @@ interface PageConfig {
 }
 
 const pageConfigs: Record<string, PageConfig> = {
-  '/': { title: 'Início', subtitle: 'Visão total do seu progresso', color: '#e8283a', icon: Home },
+  '/': { title: 'Início', subtitle: 'Visão total do seu progresso', color: '#4adbc8', icon: Home },
   '/tarefas': { title: 'Tarefas', subtitle: 'Gerenciamento do seu dia', color: '#38bdf8', icon: ClipboardList },
   '/metas': { title: 'Metas', subtitle: 'Foco nos grandes objetivos', color: '#34d399', icon: Target },
   '/missoes': { title: 'Missões', subtitle: 'Desafios e conquistas épicas', color: '#f0b429', icon: Zap },
@@ -68,10 +68,9 @@ export const TopBar = () => {
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none">
-      {/* Container: justify-center no mobile e justify-between no desktop para alinhar com os cards */}
       <div className="flex items-center justify-center sm:justify-between w-full max-w-5xl pointer-events-auto py-8 px-6 -my-8 overflow-visible">
         
-        {/* LADO ESQUERDO: Main Page Capsule - Escondida no Mobile */}
+        {/* LADO ESQUERDO: Main Page Capsule */}
         <div 
           className={`hidden sm:flex items-center gap-3 px-5 py-3 rounded-full bg-[#141415] border border-[#303030] ${commonShadow} transition-all duration-300 flex-shrink-0`}
         >
@@ -91,10 +90,9 @@ export const TopBar = () => {
           </span>
         </div>
 
-        {/* GRUPO DE STATS: Centralizado no mobile por conta do pai justify-center */}
+        {/* GRUPO DE STATS */}
         <div className="flex items-center gap-2.5 md:gap-3 flex-shrink-0">
           
-          {/* COINS Pill */}
           <button 
             className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none`}
           >
@@ -108,22 +106,20 @@ export const TopBar = () => {
             </span>
           </button>
 
-          {/* XP Pill */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#e8283a44] active:scale-95 outline-none`}
+            className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#4adbc844] active:scale-95 outline-none`}
           >
             <Zap 
               size={15} 
-              className="text-[#e8283a] fill-[#e8283a22] md:w-[19px] md:h-[19px]" 
-              style={{ filter: 'drop-shadow(0 0 4px #e8283a44)' }}
+              className="text-[#4adbc8] fill-[#4adbc822] md:w-[19px] md:h-[19px]" 
+              style={{ filter: 'drop-shadow(0 0 4px #4adbc844)' }}
             />
-            <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#e8283a] tracking-tight">
+            <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#4adbc8] tracking-tight">
               {userStats.xp}
             </span>
           </button>
 
-          {/* Achievement Square */}
           <button 
             onClick={() => setActiveModal('achievements')}
             className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none`}
@@ -135,7 +131,6 @@ export const TopBar = () => {
             />
           </button>
 
-          {/* Profile Square */}
           <button 
             onClick={() => setActiveModal('profile')}
             className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none`}

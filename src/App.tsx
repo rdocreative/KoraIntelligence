@@ -12,7 +12,6 @@ import { MasterplanProvider } from "./hooks/useMasterplan";
 import { AuthProvider, useAuth } from "./components/providers/AuthProvider";
 import { FloatingNavbar } from "./components/layout/FloatingNavbar";
 import { TopBar } from "./components/layout/TopBar"; 
-import { LoadingScreen } from "./components/masterplan/LoadingScreen";
 
 // Pages
 import Index from "./pages/Index";
@@ -38,7 +37,7 @@ const ProtectedRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-    return <div className="h-screen w-full flex items-center justify-center bg-[#141415]"><div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div></div>;
+    return <div className="h-screen w-full flex items-center justify-center bg-[#141415]"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (!session) {
@@ -61,7 +60,7 @@ const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-[#141415]"><div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div></div>;
+     return <div className="h-screen w-full flex items-center justify-center bg-[#141415]"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (session) {
@@ -90,13 +89,11 @@ const App = () => (
                   <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                     
                     {/* Background Layers */}
-                    {/* Base Solid Gray Background */}
                     <div className="fixed inset-0 pointer-events-none bg-[#141415] -z-30" />
                     
-                    {/* Top Center Red Glow (Shifted much further up for minimalism) */}
-                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-45%,rgba(239,68,68,0.18)_0%,transparent_60%)] -z-20" />
+                    {/* Top Center Theme Glow (Alterado para #4adbc8) */}
+                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-45%,rgba(74,219,200,0.18)_0%,transparent_60%)] -z-20" />
                     
-                    {/* Bottom Black Gradient (Extremely Subtle) */}
                     <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.3)_0%,transparent_10%)] -z-10" />
 
                     <Routes>
@@ -123,7 +120,6 @@ const App = () => (
                         <Route path="/configuracoes" element={<Settings />} />
                       </Route>
 
-                      {/* Fallback */}
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </div>

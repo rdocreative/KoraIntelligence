@@ -34,7 +34,6 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     const text = areaInputs[key];
     if (!text || !text.trim()) return;
     
-    // Check limit before adding (although UI should hide input)
     // @ts-ignore
     if (data.areas[key].length >= 3) return;
 
@@ -47,9 +46,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     if (data.areas[key].length >= 3) return;
     
     setAreaInputs(prev => ({ ...prev, [key]: tip }));
-    setActiveTipPillar(null); // Close tips after selection to let user edit or just see it in input
-    // Optionally auto-add? The requirement says "preenche automaticamente o campo de input". 
-    // Let's just fill the input so they can edit X or values if needed.
+    setActiveTipPillar(null);
   };
 
   // Smart Validation Logic
@@ -58,14 +55,14 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     const length = text.length;
     
     if (length === 0) return null;
-    if (length < 8) return { status: 'weak', message: 'Muito curto. Seja mais específico.', color: 'text-[#E8251A]', icon: AlertCircle };
+    if (length < 8) return { status: 'weak', message: 'Muito curto. Seja mais específico.', color: 'text-red-500', icon: AlertCircle };
     
     const vagueWords = ['melhor', 'sucesso', 'feliz', 'rico', 'vida', 'coisas'];
     const hasVagueWords = vagueWords.some(w => text.toLowerCase().includes(w));
     
     if (hasVagueWords && length < 20) return { status: 'medium', message: 'Tente definir o que isso significa na prática.', color: 'text-yellow-500', icon: AlertCircle };
     
-    return { status: 'strong', message: '✓ EXCELENTE OBJETIVO.', color: 'text-green-500', icon: Check };
+    return { status: 'strong', message: '✓ EXCELENTE OBJETIVO.', color: 'text-[#4adbc8]', icon: Check };
   }, [data.annual.objective]);
 
   const criteriaAnalysis = useMemo(() => {
@@ -77,15 +74,13 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     const hasNumbers = /\d/.test(text);
     if (!hasNumbers) return { status: 'medium', message: 'Dica: Inclua números ou valores (R$, kg, %).', color: 'text-blue-400', icon: Sparkles };
     
-    return { status: 'strong', message: 'Critério mensurável. Ótimo.', color: 'text-green-500', icon: Check };
+    return { status: 'strong', message: 'Critério mensurável. Ótimo.', color: 'text-[#4adbc8]', icon: Check };
   }, [data.annual.successCriteria]);
   
-  // Strict Blocking
   const isAnnualValid = 
     data.annual.objective.trim().length > 5 && 
     data.annual.successCriteria.trim().length > 5;
   
-  // Progress Logic for Step 3
   const filledPillarsCount = [
     data.areas.work.length > 0,
     data.areas.studies.length > 0,
@@ -95,7 +90,6 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
   const allPillarsFilled = filledPillarsCount === 4;
 
-  // Render Helpers
   const Feedback = ({ analysis }: { analysis: any }) => {
     if (!analysis) return null;
     const Icon = analysis.icon;
@@ -106,7 +100,6 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     );
   };
 
-  // Tactical Background Component
   const AppBackground = () => (
     <div 
       className="fixed inset-0 pointer-events-none -z-10 bg-[#0A0A0A]"
@@ -120,14 +113,12 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
     />
   );
 
-  // --- WELCOME SCREEN (STEP 0) ---
   if (step === 0 && !hasShownWelcome) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-6 overflow-hidden">
         <AppBackground />
         
         <div className="w-full max-w-4xl space-y-12 relative z-10 flex flex-col items-center">
-           {/* Logo Section */}
            <div className="flex flex-col items-center animate-in fade-in zoom-in duration-700">
                <span className="text-[12px] tracking-[0.4em] text-white/80 uppercase font-bold mb-[-2rem] relative z-0">
                   Bem-vindo ao
@@ -135,13 +126,12 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                <img 
                   src="/MasterPlan.png" 
                   alt="MasterPlan Logo" 
-                  style={{ filter: 'drop-shadow(0 0 20px rgba(232, 37, 26, 0.9))' }}
+                  style={{ filter: 'drop-shadow(0 0 20px rgba(74, 219, 200, 0.9))' }}
                   className="h-32 md:h-40 w-auto object-contain relative z-10" 
                />
                <span className="text-[10px] tracking-[0.6em] text-white/60 mt-6 uppercase font-medium">Sistema Ativo</span>
            </div>
 
-           {/* Modular Architecture */}
            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200 fill-mode-backwards px-4 md:px-0 items-stretch">
                <div className="bg-black/60 backdrop-blur-xl border-l-[4px] border-neutral-600 p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
                    <div className="relative z-10">
@@ -153,14 +143,14 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                    </div>
                </div>
 
-               <div className="bg-black/60 backdrop-blur-xl border-l-[4px] border-[#E8251A] p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
+               <div className="bg-black/60 backdrop-blur-xl border-l-[4px] border-[#4adbc8] p-6 flex flex-col gap-3 text-left hover:bg-black/80 transition-colors relative overflow-hidden group">
                    <div className="relative z-10">
-                       <span className="text-[10px] text-[#E8251A] font-bold tracking-widest uppercase">Vetor de Expansão</span>
+                       <span className="text-[10px] text-[#4adbc8] font-bold tracking-widest uppercase">Vetor de Expansão</span>
                        <div className="h-8 flex items-center justify-start">
                            <img 
                               src="/MasterPlan.png" 
                               alt="MasterPlan" 
-                              style={{ filter: 'drop-shadow(0 0 8px rgba(232, 37, 26, 0.5))' }}
+                              style={{ filter: 'drop-shadow(0 0 8px rgba(74, 219, 200, 0.5))' }}
                               className="h-10 w-auto object-contain object-left"
                            />
                        </div>
@@ -171,7 +161,6 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                </div>
            </div>
 
-           {/* Footer Command */}
            <div className="w-full max-w-lg mx-auto flex flex-col gap-8 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-500 fill-mode-backwards mt-16">
                <div className="border-y border-white/20 py-6 text-center bg-black/50 backdrop-blur-md">
                    <p className="text-white font-mono text-[10px] md:text-[11px] uppercase tracking-[0.15em] leading-relaxed">
@@ -185,7 +174,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                          setHasShownWelcome(true);
                          setStep(1);
                      }}
-                     className="w-full h-12 bg-[#E8251A] hover:bg-[#c91e14] text-white font-bold text-xs uppercase tracking-widest rounded-[8px] shadow-[0_0_25px_rgba(232,37,26,0.4)] transition-all duration-300 transform hover:-translate-y-1"
+                     className="w-full h-12 bg-[#4adbc8] hover:bg-[#3bc7b6] text-black font-bold text-xs uppercase tracking-widest rounded-[8px] shadow-[0_0_25px_rgba(74,219,200,0.4)] transition-all duration-300 transform hover:-translate-y-1"
                  >
                      ATIVAR PROTOCOLO
                  </Button>
@@ -197,16 +186,13 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
   }
 
   const renderContent = () => {
-    // --- STEP 1: BRIEFING TÁTICO ---
     if (step === 1) {
       return (
         <div className="flex flex-col h-full animate-in fade-in zoom-in-95 duration-700 relative">
              <div className="flex-1 flex flex-col px-10 py-12 text-left overflow-y-auto custom-scrollbar">
-                 
-                 {/* Header Centered */}
                  <div className="mb-12 text-center flex flex-col items-center">
-                     <div className="w-12 h-12 bg-[#E8251A]/10 rounded-xl border border-[#E8251A]/20 flex items-center justify-center mb-6">
-                        <Layers className="w-6 h-6 text-[#E8251A]" />
+                     <div className="w-12 h-12 bg-[#4adbc8]/10 rounded-xl border border-[#4adbc8]/20 flex items-center justify-center mb-6">
+                        <Layers className="w-6 h-6 text-[#4adbc8]" />
                      </div>
                      <h2 className="text-[32px] font-extrabold text-white uppercase tracking-tight whitespace-nowrap">
                          A CIÊNCIA POR TRÁS DA FORJA
@@ -214,41 +200,37 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                  </div>
 
                  <div className="space-y-10">
-                     {/* Section 1 */}
-                     <div className="border-l-[3px] border-[#E8251A] pl-5 space-y-2">
+                     <div className="border-l-[3px] border-[#4adbc8] pl-5 space-y-2">
                          <h4 className="text-white text-[10px] font-bold uppercase tracking-[0.25em]">O Método</h4>
                          <p className="text-[#AAAAAA] font-light text-[13px] leading-[1.7]">
-                            Adaptamos o <span className="text-white font-medium">Nenkan Mokuhyo</span> — um método japonês de planejamento milenar — para o ritmo da vida digital. Ficamos com o que importa: a <span className="text-[#E8251A] font-medium">Cascata de Foco</span>.
+                            Adaptamos o <span className="text-white font-medium">Nenkan Mokuhyo</span> — um método japonês de planejamento milenar — para o ritmo da vida digital. Ficamos com o que importa: a <span className="text-[#4adbc8] font-medium">Cascata de Foco</span>.
                          </p>
                      </div>
 
-                     {/* Section 2 */}
-                     <div className="border-l-[3px] border-[#E8251A] pl-5 space-y-2">
+                     <div className="border-l-[3px] border-[#4adbc8] pl-5 space-y-2">
                          <h4 className="text-white text-[10px] font-bold uppercase tracking-[0.25em]">O Que Nos Diferencia</h4>
                          <p className="text-[#AAAAAA] font-light text-[13px] leading-[1.7]">
                             A maioria dos apps trata suas metas como itens de uma lista. Aqui é diferente: separamos o que te mantém no trilho (<span className="text-white font-medium">Hábitos</span>) do que vai te levar longe (<span className="text-white font-medium">Masterplan</span>).
                          </p>
                      </div>
 
-                     {/* Gold Rule Card */}
                      <div className="bg-[#0A0A0A] rounded-xl relative overflow-hidden p-6 pl-7 mt-4">
-                         <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-[#E8251A]" />
+                         <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-[#4adbc8]" />
                          
-                         <h4 className="text-[#E8251A] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">A Regra de Ouro</h4>
+                         <h4 className="text-[#4adbc8] text-[10px] font-bold uppercase tracking-[0.25em] mb-4">A Regra de Ouro</h4>
                          
                          <div className="space-y-1.5 text-[13px] text-neutral-400 font-light">
                              <p><span className="text-white font-bold">O Ano</span> dita o Mês.</p>
                              <p><span className="text-white font-bold">O Mês</span> dita a Semana.</p>
-                             <p>A Semana dita o <span className="text-[#E8251A] font-bold">foco de hoje.</span></p>
+                             <p>A Semana dita o <span className="text-[#4adbc8] font-bold">foco de hoje.</span></p>
                          </div>
                      </div>
                  </div>
 
-                 {/* CTA */}
                  <div className="mt-12 flex justify-center pb-2">
                      <Button 
                          onClick={() => setStep(2)}
-                         className="w-[320px] h-14 bg-[#E8251A] hover:bg-[#c91e14] text-white font-bold text-[13px] uppercase tracking-[0.15em] rounded-[10px] shadow-[0_4px_24px_rgba(232,37,26,0.25)] hover:shadow-[0_8px_32px_rgba(232,37,26,0.4)] transition-all transform hover:-translate-y-[1px]"
+                         className="w-[320px] h-14 bg-[#4adbc8] hover:bg-[#3bc7b6] text-black font-bold text-[13px] uppercase tracking-[0.15em] rounded-[10px] shadow-[0_4px_24px_rgba(74,219,200,0.25)] hover:shadow-[0_8px_32px_rgba(74,219,200,0.4)] transition-all transform hover:-translate-y-[1px]"
                      >
                          Começar Agora →
                      </Button>
@@ -258,24 +240,22 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
       );
     }
 
-    // --- STEP 2: ANNUAL ---
     if (step === 2) {
         return (
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500 px-8 pt-6">
                 <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-6 custom-scrollbar pr-2">
                     <div className="space-y-4 text-center mb-6 pt-2">
-                         <div className="inline-flex items-center justify-center p-3 bg-[#E8251A]/10 rounded-full border border-[#E8251A]/20 mb-2 relative">
-                            {/* Pulsing glow background */}
-                            <div className="absolute inset-0 bg-[#E8251A]/30 rounded-full animate-ping opacity-20" />
-                            <Target className="w-6 h-6 text-[#E8251A] relative z-10" />
+                         <div className="inline-flex items-center justify-center p-3 bg-[#4adbc8]/10 rounded-full border border-[#4adbc8]/20 mb-2 relative">
+                            <div className="absolute inset-0 bg-[#4adbc8]/30 rounded-full animate-ping opacity-20" />
+                            <Target className="w-6 h-6 text-[#4adbc8] relative z-10" />
                          </div>
                          <h2 className="text-2xl font-black text-white uppercase tracking-tight">O Alvo Único</h2>
                     </div>
 
-                    <div className="bg-[#0D0D0D] border-l-[3px] border-l-[#E8251A] rounded-r-xl p-5 mb-8 relative overflow-hidden group shadow-lg">
+                    <div className="bg-[#0D0D0D] border-l-[3px] border-l-[#4adbc8] rounded-r-xl p-5 mb-8 relative overflow-hidden group shadow-lg">
                         <div className="flex gap-4">
                             <div className="shrink-0 mt-0.5">
-                                <Info className="w-5 h-5 text-[#E8251A]" />
+                                <Info className="w-5 h-5 text-[#4adbc8]" />
                             </div>
                             <div className="space-y-3">
                                 <h4 className="text-white font-bold text-sm uppercase tracking-wide">A Lei do Foco Extremo</h4>
@@ -294,7 +274,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                                 placeholder="Ex: Faturar R$10k/mês com meu negócio digital" 
                                 value={data.annual.objective}
                                 onChange={(e) => updateAnnual({ objective: e.target.value })}
-                                className="bg-black/60 backdrop-blur-md border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-[#E8251A] text-white"
+                                className="bg-black/60 backdrop-blur-md border-white/10 h-16 text-lg font-bold px-4 focus-visible:ring-2 focus-visible:ring-[#4adbc8] text-white"
                             />
                             <Feedback analysis={objectiveAnalysis} />
                         </div>
@@ -318,7 +298,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                                 placeholder="Ex: Receita recorrente de R$10k por 3 meses seguidos" 
                                 value={data.annual.successCriteria}
                                 onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                                className="bg-black/60 backdrop-blur-md border-white/10 min-h-[120px] text-base px-4 py-4 resize-none text-white focus-visible:ring-2 focus-visible:ring-[#E8251A]"
+                                className="bg-black/60 backdrop-blur-md border-white/10 min-h-[120px] text-base px-4 py-4 resize-none text-white focus-visible:ring-2 focus-visible:ring-[#4adbc8]"
                             />
                             <Feedback analysis={criteriaAnalysis} />
                         </div>
@@ -331,7 +311,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                         onClick={() => setStep(3)}
                         className={`font-bold px-10 rounded-[10px] h-12 transition-all duration-300 
                             ${isAnnualValid 
-                                ? 'bg-[#E8251A] hover:bg-[#c91e14] text-white shadow-[0_4px_20px_rgba(232,37,26,0.3)] hover:shadow-[0_4px_25px_rgba(232,37,26,0.5)] transform hover:-translate-y-0.5' 
+                                ? 'bg-[#4adbc8] hover:bg-[#3bc7b6] text-black shadow-[0_4px_20px_rgba(74,219,200,0.3)] hover:shadow-[0_4px_25px_rgba(74,219,200,0.5)] transform hover:-translate-y-0.5' 
                                 : 'bg-neutral-800 text-neutral-500 cursor-not-allowed opacity-50'
                             }`}
                     >
@@ -342,81 +322,23 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
         );
     }
 
-    // --- STEP 3: AREAS ---
     if (step === 3) {
         const areasConfig = [
-            { 
-                id: 'work', 
-                label: 'Trabalho', 
-                icon: Briefcase, 
-                colorClass: 'text-blue-500', 
-                borderColor: 'border-blue-500',
-                placeholder: "Escreva sua meta ou escolha uma dica...",
-                items: data.areas.work,
-                tips: [
-                    "Conseguir uma promoção ou aumento",
-                    "Fechar X novos clientes",
-                    "Lançar um produto ou serviço",
-                    "Aprender uma habilidade que aumenta minha renda"
-                ]
-            },
-            { 
-                id: 'studies', 
-                label: 'Estudos', 
-                icon: GraduationCap, 
-                colorClass: 'text-violet-500', 
-                borderColor: 'border-violet-500',
-                placeholder: "Escreva sua meta ou escolha uma dica...",
-                items: data.areas.studies,
-                tips: [
-                    "Terminar um curso ou certificação",
-                    "Ler X livros este ano",
-                    "Aprender um novo idioma",
-                    "Estudar X horas por semana de forma consistente"
-                ] 
-            },
-            { 
-                id: 'health', 
-                label: 'Saúde', 
-                icon: Heart, 
-                colorClass: 'text-emerald-500', 
-                borderColor: 'border-emerald-500',
-                placeholder: "Escreva sua meta ou escolha uma dica...",
-                items: data.areas.health,
-                tips: [
-                    "Correr X km ou completar uma corrida",
-                    "Perder X kg ou ganhar massa muscular",
-                    "Dormir 7-8h por noite de forma consistente",
-                    "Criar uma rotina de exercícios 4x por semana"
-                ]
-            },
-            { 
-                id: 'personal', 
-                label: 'Pessoal', 
-                icon: User, 
-                colorClass: 'text-amber-500', 
-                borderColor: 'border-amber-500',
-                placeholder: "Escreva sua meta ou escolha uma dica...",
-                items: data.areas.personal,
-                tips: [
-                    "Fazer uma viagem que sempre quis",
-                    "Fortalecer relações com família e amigos",
-                    "Desenvolver um hobby novo",
-                    "Dedicar tempo semanal para algo que me faz bem"
-                ]
-            },
+            { id: 'work', label: 'Trabalho', icon: Briefcase, colorClass: 'text-blue-500', borderColor: 'border-blue-500', placeholder: "Escreva sua meta...", items: data.areas.work, tips: ["Conseguir aumento", "Fechar X clientes"] },
+            { id: 'studies', label: 'Estudos', icon: GraduationCap, colorClass: 'text-violet-500', borderColor: 'border-violet-500', placeholder: "Escreva sua meta...", items: data.areas.studies, tips: ["Terminar curso", "Ler X livros"] },
+            { id: 'health', label: 'Saúde', icon: Heart, colorClass: 'text-emerald-500', borderColor: 'border-emerald-500', placeholder: "Escreva sua meta...", items: data.areas.health, tips: ["Correr X km", "Perder X kg"] },
+            { id: 'personal', label: 'Pessoal', icon: User, colorClass: 'text-amber-500', borderColor: 'border-amber-500', placeholder: "Escreva sua meta...", items: data.areas.personal, tips: ["Fazer viagem", "Hobby novo"] },
         ];
 
         return (
             <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-8 duration-500 px-8 pt-6">
                 <div className="flex-1 overflow-y-auto px-1 -mx-1 pb-6 custom-scrollbar pr-2">
-                    {/* Header */}
                     <div className="space-y-2 text-center mb-8 pt-2">
-                         <span className="text-[10px] font-bold text-[#E8251A] uppercase tracking-[0.2em]">
+                         <span className="text-[10px] font-bold text-[#4adbc8] uppercase tracking-[0.2em]">
                             Seus 4 Pilares
                          </span>
                          <h2 className="text-xl font-medium text-neutral-400">
-                             Defina pelo menos 1 meta para cada área. <br/>Você pode adicionar mais depois.
+                             Defina pelo menos 1 meta para cada área.
                          </h2>
                     </div>
 
@@ -424,57 +346,14 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                         {areasConfig.map((area) => {
                           const isFull = area.items.length >= 3;
                           const hasItems = area.items.length > 0;
-                          
-                          // Border logic: 
-                          // If locked and empty: Subtle pulse + red border? The prompt says pulse red.
-                          // But prompt also says border color is the pillar color.
-                          // "Pilares que ainda estão vazios devem ter uma borda pulsante sutil em vermelho (animation: pulse)"
-                          // Let's interpret: Border is Pillar Color. If empty, maybe shadow pulse? 
-                          // Or override border color to red if empty?
-                          // Let's use the pillar color for the border as requested in "Cores dos pilares" section,
-                          // but add a pulse animation if empty to draw attention.
-                          
-                          const borderStyle = hasItems 
-                            ? `${area.borderColor} border-opacity-100` 
-                            : `${area.borderColor} border-opacity-40 animate-pulse`;
+                          const borderStyle = hasItems ? `${area.borderColor} border-opacity-100` : `${area.borderColor} border-opacity-40 animate-pulse`;
 
                           return (
                             <div key={area.id} className={`p-5 rounded-2xl bg-[#0A0A0A] border-l-[2px] border-y border-r border-y-white/5 border-r-white/5 ${borderStyle} transition-all duration-500`}>
                                 <div className="flex items-center justify-between mb-4">
-                                    <div className="flex items-center gap-3">
-                                        <Label className={`flex items-center gap-2 text-xs uppercase font-black tracking-widest ${area.colorClass}`}>
-                                            <area.icon className="w-4 h-4" /> {area.label}
-                                        </Label>
-                                        
-                                        {/* Tips Button */}
-                                        <div className="relative">
-                                            <button 
-                                                onClick={() => setActiveTipPillar(activeTipPillar === area.id ? null : area.id)}
-                                                className="w-5 h-5 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-neutral-400 hover:text-white transition-colors"
-                                            >
-                                                <Lightbulb className="w-3 h-3" />
-                                            </button>
-                                            
-                                            {/* Tips Dropdown */}
-                                            {activeTipPillar === area.id && (
-                                                <div className="absolute left-0 top-6 z-20 w-64 bg-[#1A1A1A] border border-white/10 rounded-lg shadow-2xl p-2 animate-in zoom-in-95 duration-200">
-                                                    <div className="text-[10px] uppercase font-bold text-neutral-500 px-2 py-1 mb-1">Sugestões</div>
-                                                    <div className="flex flex-col gap-1">
-                                                        {area.tips.map((tip, idx) => (
-                                                            <button 
-                                                                key={idx}
-                                                                onClick={() => handleAddTip(area.id as any, tip)}
-                                                                className="text-left text-xs text-neutral-300 hover:text-white hover:bg-[#2A2A2A] p-2 rounded-md transition-colors"
-                                                            >
-                                                                {tip}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-
+                                    <Label className={`flex items-center gap-2 text-xs uppercase font-black tracking-widest ${area.colorClass}`}>
+                                        <area.icon className="w-4 h-4" /> {area.label}
+                                    </Label>
                                     {hasItems && <CheckCircle2 className={`w-4 h-4 ${area.colorClass}`} />}
                                 </div>
                                 
@@ -486,7 +365,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                                                 onChange={(e) => handleAreaInputChange(area.id as keyof typeof areaInputs, e.target.value)}
                                                 onKeyDown={(e) => e.key === 'Enter' && handleAddAreaItem(area.id as keyof typeof areaInputs)}
                                                 placeholder={area.placeholder}
-                                                className="bg-black/40 border-white/10 text-sm h-11 text-white placeholder:text-neutral-600 focus:border-white/20" 
+                                                className="bg-black/40 border-white/10 text-sm h-11 text-white focus:border-white/20" 
                                             />
                                             <Button size="icon" className="h-11 w-11 bg-white/5 hover:bg-white/10 border border-white/5 shrink-0" onClick={() => handleAddAreaItem(area.id as keyof typeof areaInputs)}>
                                                 <Plus className="w-5 h-5"/>
@@ -494,7 +373,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                                         </>
                                     ) : (
                                         <div className="w-full h-11 flex items-center justify-center bg-white/5 rounded-md border border-white/5">
-                                            <span className="text-xs text-neutral-500 font-medium">Máximo de 3 metas por pilar.</span>
+                                            <span className="text-xs text-neutral-500 font-medium">Máximo de 3 metas.</span>
                                         </div>
                                     )}
                                 </div>
@@ -502,7 +381,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                                 {area.items.map((i: any) => (
                                     <div key={i.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 mt-2 animate-in slide-in-from-top-2">
                                         <span className="text-sm font-medium text-neutral-200">{i.text}</span>
-                                        <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="text-neutral-600 hover:text-[#E8251A] transition-colors">
+                                        <button onClick={() => deleteAreaItem(area.id as any, i.id)} className="text-neutral-600 hover:text-[#4adbc8] transition-colors">
                                             <X className="w-4 h-4" />
                                         </button>
                                     </div>
@@ -513,14 +392,11 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                     </div>
                 </div>
 
-                {/* Footer Controls */}
                 <div className="flex flex-col gap-4 pt-4 border-t border-white/5 flex-shrink-0 mt-auto pb-6">
-                    
-                    {/* Progress Indicator */}
                     <div className="w-full space-y-2">
                         <div className="flex justify-between items-center text-[10px] uppercase font-bold tracking-widest">
                             {allPillarsFilled ? (
-                                <span className="text-green-500 flex items-center gap-1.5"><Check className="w-3 h-3"/> Todos os pilares definidos. Pronto para começar.</span>
+                                <span className="text-green-500 flex items-center gap-1.5"><Check className="w-3 h-3"/> Tudo pronto.</span>
                             ) : (
                                 <span className="text-neutral-500">{filledPillarsCount} de 4 pilares preenchidos</span>
                             )}
@@ -528,7 +404,7 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
                         </div>
                         <div className="h-1 w-full bg-neutral-800 rounded-full overflow-hidden">
                             <div 
-                                className={`h-full transition-all duration-500 ${allPillarsFilled ? 'bg-green-500' : 'bg-[#E8251A]'}`} 
+                                className={`h-full transition-all duration-500 ${allPillarsFilled ? 'bg-green-500' : 'bg-[#4adbc8]'}`} 
                                 style={{ width: `${(filledPillarsCount / 4) * 100}%` }} 
                             />
                         </div>
@@ -536,138 +412,72 @@ export const OnboardingWizard = ({ onComplete }: { onComplete: () => void }) => 
 
                     <div className="flex justify-between items-center">
                         <Button variant="ghost" onClick={() => setStep(2)} className="text-neutral-500 hover:text-white font-medium text-xs">VOLTAR</Button>
-                        
-                        <div className="relative overflow-hidden rounded-[10px]">
-                             <Button 
-                                disabled={!allPillarsFilled}
-                                onClick={() => setStep(4)}
-                                className={`font-bold px-8 h-12 transition-all duration-300 relative z-10 
-                                    ${allPillarsFilled 
-                                        ? 'bg-[#E8251A] hover:bg-[#c91e14] text-white shadow-[0_4px_20px_rgba(232,37,26,0.3)] group' 
-                                        : 'bg-[#2A2A2A] text-[#555] cursor-not-allowed border border-white/5'
-                                    }`}
-                            >
-                                {allPillarsFilled ? (
-                                    <>
-                                        ATIVAR SISTEMA →
-                                        {/* Shimmer Effect on Unlock */}
-                                        <div className="absolute inset-0 -translate-x-full animate-[shimmer_1s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-0 pointer-events-none" />
-                                    </>
-                                ) : (
-                                    <span className="flex items-center gap-2"><Lock className="w-3 h-3" /> ATIVAR SISTEMA</span>
-                                )}
-                            </Button>
-                        </div>
+                        <Button 
+                            disabled={!allPillarsFilled}
+                            onClick={() => setStep(4)}
+                            className={`font-bold px-8 h-12 transition-all duration-300 
+                                ${allPillarsFilled 
+                                    ? 'bg-[#4adbc8] hover:bg-[#3bc7b6] text-black shadow-[0_4px_20px_rgba(74,219,200,0.3)]' 
+                                    : 'bg-[#2A2A2A] text-[#555] cursor-not-allowed border border-white/5'
+                                }`}
+                        >
+                            ATIVAR SISTEMA →
+                        </Button>
                     </div>
                 </div>
             </div>
         );
     }
 
-    // --- STEP 4: SUCCESS ---
     if (step === 4) {
         return (
             <div className="flex flex-col items-center justify-center py-6 h-full overflow-hidden px-8 relative">
-                
-                {/* Check Animation SVG */}
                 <div className="relative mb-8 flex items-center justify-center">
-                    {/* Radial Glow */}
-                    <div 
-                        className="absolute inset-0 rounded-full animate-in fade-in duration-1000"
-                        style={{ background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%)', transform: 'scale(2.5)' }} 
-                    />
-                    
+                    <div className="absolute inset-0 rounded-full animate-in fade-in duration-1000" style={{ background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%)', transform: 'scale(2.5)' }} />
                     <svg width="100" height="100" viewBox="0 0 100 100" className="relative z-10">
-                        <circle 
-                            cx="50" cy="50" r="45" 
-                            fill="none" 
-                            stroke="#10B981" 
-                            strokeWidth="4"
-                            strokeDasharray="283"
-                            strokeDashoffset="283"
-                            className="animate-[circle-draw_0.8s_ease-out_forwards]"
-                        />
-                        <path 
-                            d="M30 52 L45 67 L70 35" 
-                            fill="none" 
-                            stroke="#10B981" 
-                            strokeWidth="5"
-                            strokeLinecap="round" 
-                            strokeLinejoin="round"
-                            strokeDasharray="100"
-                            strokeDashoffset="100"
-                            className="animate-[check-draw_0.5s_ease-out_0.6s_forwards]"
-                        />
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="#10B981" strokeWidth="4" strokeDasharray="283" strokeDashoffset="283" className="animate-[circle-draw_0.8s_ease-out_forwards]" />
+                        <path d="M30 52 L45 67 L70 35" fill="none" stroke="#10B981" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="100" strokeDashoffset="100" className="animate-[check-draw_0.5s_ease-out_0.6s_forwards]" />
                     </svg>
                 </div>
 
-                {/* Text Content with Staggered Delay */}
                 <div className="text-center space-y-4 animate-in slide-in-from-bottom-4 fade-in duration-700 delay-700 fill-mode-backwards">
                     <h3 className="text-3xl font-black text-white uppercase tracking-tight leading-tight">
                         Tudo pronto.<br/>
                         <span className="text-[#10B981]">Seu Masterplan está ativo.</span>
                     </h3>
-                    
-                    <p className="text-neutral-400 font-light text-sm tracking-wide">
-                        A partir de agora, cada ação conta.
-                    </p>
                 </div>
 
-                {/* Button with Shimmer */}
-                <div className="mt-12 w-full max-w-sm animate-in slide-in-from-bottom-8 fade-in duration-700 delay-1000 fill-mode-backwards relative overflow-hidden rounded-[10px]">
+                <div className="mt-12 w-full max-sm animate-in slide-in-from-bottom-8 fade-in duration-700 delay-1000 fill-mode-backwards relative overflow-hidden rounded-[10px]">
                     <Button 
                         onClick={onComplete} 
-                        className="w-full bg-[#E8251A] hover:bg-[#c91e14] text-white font-black uppercase tracking-widest h-14 rounded-[10px] shadow-[0_0_30px_rgba(232,37,26,0.3)] transition-all relative overflow-hidden group"
+                        className="w-full bg-[#4adbc8] hover:bg-[#3bc7b6] text-black font-black uppercase tracking-widest h-14 rounded-[10px] shadow-[0_0_30px_rgba(74,219,200,0.3)] transition-all relative overflow-hidden group"
                     >
                         <span className="relative z-10">ENTRAR NO CAMPO DE BATALHA</span>
-                        
-                        {/* Shimmer Effect */}
-                        <div className="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-0" />
                     </Button>
                 </div>
-
-                {/* Keyframes (Injected via style tag for simplicity in this component scope) */}
-                <style dangerouslySetInnerHTML={{__html: `
-                    @keyframes circle-draw {
-                        to { stroke-dashoffset: 0; }
-                    }
-                    @keyframes check-draw {
-                        to { stroke-dashoffset: 0; }
-                    }
-                    @keyframes shimmer {
-                        100% { transform: translateX(100%); }
-                    }
-                `}} />
             </div>
         );
     }
   };
 
-  // Determine card style based on step
-  const cardStyles = step === 1 
-    ? "w-full max-w-lg bg-[#0E0E0E] shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col" 
-    : "w-full max-w-lg bg-[#111111] border-white/10 ring-1 ring-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col";
+  const cardStyles = "w-full max-w-lg bg-[#111111] border-white/10 ring-1 ring-white/10 shadow-2xl relative overflow-hidden h-[90vh] md:h-[760px] flex flex-col";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden bg-[#0A0A0A]">
       <AppBackground />
-
       <Card className={cardStyles}>
-        
-        {/* Render Progress Bar ONLY if step > 1 (Actual Inputs) */}
         {step >= 2 && step <= 3 && (
             <div className="px-8 pt-8 pb-6 flex justify-between items-end flex-shrink-0 animate-in fade-in slide-in-from-top-4 duration-500">
                 <div className="space-y-1">
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400">Passo {step - 1} de 2</span>
                     <div className="flex gap-1.5">
                         {[2, 3].map((i) => (
-                            <div key={i} className={`h-1 rounded-full transition-all duration-500 ${step >= i ? 'w-8 bg-[#E8251A] shadow-[0_0_10px_rgba(232,37,26,0.5)]' : 'w-2 bg-neutral-800'}`} />
+                            <div key={i} className={`h-1 rounded-full transition-all duration-500 ${step >= i ? 'w-8 bg-[#4adbc8] shadow-[0_0_10px_rgba(74,219,200,0.5)]' : 'w-2 bg-neutral-800'}`} />
                         ))}
                     </div>
                 </div>
             </div>
         )}
-
         <CardContent className="flex-1 p-0 relative z-10 flex flex-col overflow-hidden">
             {renderContent()}
         </CardContent>

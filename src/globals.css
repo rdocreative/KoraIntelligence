@@ -11,6 +11,9 @@
     --card: 240 4% 8%; 
     --border: 240 5% 15%; 
     --radius: 1.5rem;
+    /* Novo tom #4adbc8 em HSL */
+    --primary: 172 67% 57%;
+    --primary-foreground: 240 5% 4%;
   }
 
   body {
