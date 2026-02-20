@@ -16,7 +16,8 @@ import {
   LucideIcon,
   Trophy,
   UserCircle,
-  Award
+  Award,
+  Coins
 } from 'lucide-react';
 import {
   Dialog,
@@ -50,7 +51,7 @@ export const TopBar = () => {
   const { title, subtitle, color, icon: Icon } = config;
   const { profile } = useProfile();
 
-  const [activeModal, setActiveModal] = useState<'achievements' | 'profile' | null>(null);
+  const [activeModal, setActiveModal] = useState<'achievements' | 'profile' | 'wallet' | null>(null);
 
   // Dados reais ou fallback
   const userStats = {
@@ -58,6 +59,7 @@ export const TopBar = () => {
     titles: 0, 
     level: profile?.nivel || 1,
     xp: profile?.xp_total || 0,
+    coins: profile?.moedas || 0,
     nextLevelXp: (profile?.nivel || 1) * 1000 
   };
 
@@ -66,66 +68,81 @@ export const TopBar = () => {
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none px-4">
-      <div className="flex items-center gap-2.5 md:gap-4 pointer-events-auto max-w-full overflow-x-auto no-scrollbar py-12 px-6 -my-8">
+      {/* Container ajustado para justify-between para separar os lados */}
+      <div className="flex items-center justify-between w-full max-w-7xl pointer-events-auto py-8 px-2 -my-8 overflow-visible">
         
-        {/* Main Page Capsule - Hidden on Mobile */}
+        {/* LADO ESQUERDO: Main Page Capsule */}
         <div 
-          className={`hidden sm:flex items-center gap-3 md:gap-[14px] px-5 md:px-8 py-3 md:py-4 rounded-full bg-[#141415] border border-[#303030] ${commonShadow} transition-all duration-300 flex-shrink-0`}
+          className={`flex items-center gap-2.5 md:gap-3 px-4 md:px-6 py-2.5 md:py-3.5 rounded-full bg-[#141415] border border-[#303030] ${commonShadow} transition-all duration-300 flex-shrink-0`}
         >
-          <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex items-center gap-2 md:gap-2.5">
             <Icon 
-              size={20} 
+              size={18} 
               style={{ color: color, filter: `drop-shadow(0 0 4px ${color}44)` }}
             />
-            <h1 className="text-[0.9rem] md:text-[1rem] font-bold text-[#f0f0f0] tracking-tight leading-none whitespace-nowrap">
+            <h1 className="text-[0.85rem] md:text-[0.95rem] font-bold text-[#f0f0f0] tracking-tight leading-none whitespace-nowrap">
               {title}
             </h1>
           </div>
 
-          <div className="w-px h-[18px] bg-[#303030]" />
-          <span className="text-[0.72rem] text-[#888] font-medium tracking-wide leading-none whitespace-nowrap">
+          <div className="hidden sm:block w-px h-[14px] bg-[#303030]" />
+          <span className="hidden sm:block text-[0.68rem] text-[#888] font-medium tracking-wide leading-none whitespace-nowrap">
             {subtitle}
           </span>
         </div>
 
-        {/* Stats and Action Group */}
-        <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+        {/* LADO DIREITO: Stats and Action Group */}
+        <div className="flex items-center gap-2 md:gap-2.5 flex-shrink-0">
           
-          {/* XP Pill - Aumentado em ~30% */}
+          {/* COINS Pill */}
+          <button 
+            className={`h-[40px] md:h-[50px] px-3 md:px-5 flex items-center gap-2 md:gap-3 rounded-[16px] md:rounded-[22px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none`}
+          >
+            <Coins 
+              size={16} 
+              className="text-[#fb923c] fill-[#fb923c22] md:w-[20px] md:h-[20px]" 
+              style={{ filter: 'drop-shadow(0 0 4px #fb923c44)' }}
+            />
+            <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#fb923c] tracking-tight">
+              {userStats.coins}
+            </span>
+          </button>
+
+          {/* XP Pill */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className={`h-[46px] md:h-[58px] px-4 md:px-6 flex items-center gap-2.5 md:gap-4 rounded-[18px] md:rounded-[24px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#e8283a44] active:scale-95 outline-none`}
+            className={`h-[40px] md:h-[50px] px-3 md:px-5 flex items-center gap-2 md:gap-3 rounded-[16px] md:rounded-[22px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#e8283a44] active:scale-95 outline-none`}
           >
             <Zap 
-              size={18} 
-              className="text-[#e8283a] fill-[#e8283a22] md:w-[22px] md:h-[22px]" 
+              size={16} 
+              className="text-[#e8283a] fill-[#e8283a22] md:w-[20px] md:h-[20px]" 
               style={{ filter: 'drop-shadow(0 0 4px #e8283a44)' }}
             />
-            <span className="text-[0.85rem] md:text-[1rem] font-bold text-[#e8283a] tracking-tight">
+            <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#e8283a] tracking-tight">
               {userStats.xp}
             </span>
           </button>
 
-          {/* Achievement Square - Aumentado em ~30% */}
+          {/* Achievement Square */}
           <button 
             onClick={() => setActiveModal('achievements')}
-            className={`w-[46px] h-[46px] md:w-[58px] md:h-[58px] flex items-center justify-center rounded-[18px] md:rounded-[24px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none`}
+            className={`w-[40px] h-[40px] md:w-[50px] md:h-[50px] flex items-center justify-center rounded-[16px] md:rounded-[22px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none`}
           >
             <Trophy 
-              size={20} 
-              className="text-[#a855f7] md:w-[26px] md:h-[26px]"
+              size={18} 
+              className="text-[#a855f7] md:w-[22px] md:h-[22px]"
               style={{ filter: 'drop-shadow(0 0 4px #a855f744)' }}
             />
           </button>
 
-          {/* Profile Square - Aumentado em ~30% */}
+          {/* Profile Square */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className={`w-[46px] h-[46px] md:w-[58px] md:h-[58px] flex items-center justify-center rounded-[18px] md:rounded-[24px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none`}
+            className={`w-[40px] h-[40px] md:w-[50px] md:h-[50px] flex items-center justify-center rounded-[16px] md:rounded-[22px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none`}
           >
             <UserCircle 
-              size={24} 
-              className="text-[#38bdf8] md:w-[32px] md:h-[32px]"
+              size={22} 
+              className="text-[#38bdf8] md:w-[28px] md:h-[28px]"
               style={{ filter: 'drop-shadow(0 0 4px #38bdf844)' }}
             />
           </button>
