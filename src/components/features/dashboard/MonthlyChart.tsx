@@ -27,7 +27,7 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
     <Card className="card-glass border-white/10 overflow-hidden shadow-2xl shadow-black/60">
       <CardHeader className="border-b border-white/5 pb-4 bg-gradient-to-r from-white/[0.03] to-transparent">
         <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
-            <Activity className="w-5 h-5 text-red-500" />
+            <Activity className="w-5 h-5 text-[#4adbc8]" />
             Evolução de XP
         </CardTitle>
       </CardHeader>
@@ -37,8 +37,8 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
             <AreaChart data={data}>
               <defs>
                 <linearGradient id="colorXp" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#4adbc8" stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor="#4adbc8" stopOpacity={0}/>
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
@@ -58,17 +58,17 @@ export const MonthlyChart = ({ history }: MonthlyChartProps) => {
                   color: '#f0f0f2',
                   boxShadow: '0 20px 40px -10px rgba(0,0,0,0.8)'
                 }}
-                itemStyle={{ color: '#ef4444', fontWeight: 700 }}
+                itemStyle={{ color: '#4adbc8', fontWeight: 700 }}
                 cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 1 }}
               />
               <Area 
                 type="monotone" 
                 dataKey="xp" 
-                stroke="#ef4444" 
+                stroke="#4adbc8" 
                 strokeWidth={3}
                 fillOpacity={1} 
                 fill="url(#colorXp)" 
-                activeDot={{ r: 6, fill: '#ef4444', stroke: '#fff', strokeWidth: 2 }}
+                activeDot={{ r: 6, fill: '#4adbc8', stroke: '#fff', strokeWidth: 2 }}
               />
             </AreaChart>
           </ResponsiveContainer>

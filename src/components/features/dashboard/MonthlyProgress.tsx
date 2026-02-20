@@ -24,11 +24,11 @@ export const MonthlyProgress = ({
       label: "Hábitos", 
       count: `${habitsCount} ativos`,
       icon: CheckCircle2, 
-      color: "text-red-500",
-      bgColor: "bg-red-500",
-      borderColor: "border-red-500/20",
-      bgGradient: "from-red-950/15 to-red-600/15",
-      progress: habitsCount > 0 ? 100 : 0 // Visual placeholder
+      color: "text-[#4adbc8]",
+      bgColor: "bg-[#4adbc8]",
+      borderColor: "border-[#4adbc8]/20",
+      bgGradient: "from-emerald-950/15 to-[#4adbc8]/15",
+      progress: habitsCount > 0 ? 100 : 0 
     },
     { 
       label: "Tarefas", 
@@ -38,7 +38,7 @@ export const MonthlyProgress = ({
       bgColor: "bg-blue-400",
       borderColor: "border-blue-500/20",
       bgGradient: "from-blue-950/15 to-blue-600/15",
-      progress: tasksCount > 0 ? 50 : 0 // Visual placeholder
+      progress: tasksCount > 0 ? 50 : 0 
     },
     { 
       label: "Metas", 
@@ -48,7 +48,7 @@ export const MonthlyProgress = ({
       bgColor: "bg-emerald-400",
       borderColor: "border-emerald-500/20",
       bgGradient: "from-emerald-950/15 to-emerald-600/15",
-      progress: goalsCount > 0 ? 25 : 0 // Visual placeholder
+      progress: goalsCount > 0 ? 25 : 0 
     },
     { 
       label: "XP Total", 
@@ -67,10 +67,10 @@ export const MonthlyProgress = ({
       <CardHeader className="pb-4 border-b border-white/5 bg-gradient-to-r from-white/[0.03] to-transparent">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.8)]"></span>
+            <span className="w-2 h-2 rounded-full bg-[#4adbc8] shadow-[0_0_8px_rgba(74,219,200,0.8)]"></span>
             Status Mensal
           </CardTitle>
-          <span className="text-[10px] font-black text-white bg-red-700/80 px-3 py-1 rounded-full">
+          <span className="text-[10px] font-black text-black bg-[#4adbc8] px-3 py-1 rounded-full">
             {Math.round(progressPercentage)}%
           </span>
         </div>
@@ -79,11 +79,11 @@ export const MonthlyProgress = ({
         <div className="space-y-2">
           <div className="flex justify-between text-[10px] text-white/40 font-black uppercase tracking-widest">
              <span>Progresso de Nível</span>
-             <span className="font-rajdhani text-sm text-red-500">{totalPoints} / {MONTHLY_XP_TARGET} XP</span>
+             <span className="font-rajdhani text-sm text-[#4adbc8]">{totalPoints} / {MONTHLY_XP_TARGET} XP</span>
           </div>
           <div className="h-2 w-full bg-black/60 rounded-full overflow-hidden border border-white/5">
             <div 
-                className="h-full bg-gradient-to-r from-red-800 to-red-500 shadow-[0_0_15px_rgba(239,68,68,0.4)] transition-all duration-1000"
+                className="h-full bg-gradient-to-r from-[#3bc7b6] to-[#4adbc8] shadow-[0_0_15px_rgba(74,219,200,0.4)] transition-all duration-1000"
                 style={{ width: `${progressPercentage}%` }}
             />
           </div>
@@ -101,7 +101,6 @@ export const MonthlyProgress = ({
               )}
             >
               <div className="relative z-10 flex flex-col gap-2">
-                {/* Alinhamento perfeito entre Ícone+Título e Porcentagem */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                      <div className="p-1.5 rounded-lg bg-black/40 border border-white/5 shrink-0">
@@ -111,7 +110,6 @@ export const MonthlyProgress = ({
                        {stat.label}
                      </span>
                   </div>
-                  {/* Removido a porcentagem individual para deixar o contador mais visível nos outros cards, exceto XP */}
                   {stat.label === "XP Total" && (
                     <span className="text-[14px] font-black font-rajdhani text-white/90">
                         {Math.round(stat.progress)}%
