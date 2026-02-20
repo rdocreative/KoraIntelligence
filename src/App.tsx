@@ -36,7 +36,7 @@ const ProtectedRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-    return <div className="h-screen w-full flex items-center justify-center bg-[#0a0a0b]"><div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div></div>;
+    return <div className="h-screen w-full flex items-center justify-center bg-[#141415]"><div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (!session) {
@@ -59,7 +59,7 @@ const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-[#0a0a0b]"><div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div></div>;
+     return <div className="h-screen w-full flex items-center justify-center bg-[#141415]"><div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (session) {
@@ -88,14 +88,14 @@ const App = () => (
                   <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                     
                     {/* Background Layers */}
-                    {/* Base Solid Background */}
-                    <div className="fixed inset-0 pointer-events-none bg-[#0a0a0b] -z-30" />
+                    {/* Base Solid Gray Background */}
+                    <div className="fixed inset-0 pointer-events-none bg-[#141415] -z-30" />
                     
-                    {/* Top Red Gradient (Vibrant but subtle) */}
-                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(239,68,68,0.22)_0%,transparent_65%)] -z-20" />
+                    {/* Top Red Gradient (Smaller/Shorter) */}
+                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(239,68,68,0.18)_0%,transparent_35%)] -z-20" />
                     
-                    {/* Bottom Black Gradient (Depth) */}
-                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.98)_0%,transparent_55%)] -z-10" />
+                    {/* Bottom Black Gradient (Smaller/Shorter) */}
+                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.9)_0%,transparent_30%)] -z-10" />
 
                     <Routes>
                       {/* Rotas Públicas (Auth) */}
