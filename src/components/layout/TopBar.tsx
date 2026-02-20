@@ -14,7 +14,6 @@ import {
   Settings,
   Eye,
   LucideIcon,
-  Coins,
   Trophy,
   UserCircle,
   Award
@@ -51,12 +50,11 @@ export const TopBar = () => {
   const { title, subtitle, color, icon: Icon } = config;
   const { profile } = useProfile();
 
-  const [activeModal, setActiveModal] = useState<'coins' | 'achievements' | 'profile' | null>(null);
+  const [activeModal, setActiveModal] = useState<'achievements' | 'profile' | null>(null);
 
   // Dados reais ou fallback
   const userStats = {
     name: profile?.nome || "Usuário",
-    coins: profile?.coins || 0,
     titles: 0, // Ainda sem tabela de títulos
     level: profile?.nivel || 1,
     xp: profile?.xp_total || 0,
@@ -108,21 +106,6 @@ export const TopBar = () => {
             </span>
           </button>
 
-          {/* Coins Pill */}
-          <button 
-            onClick={() => setActiveModal('coins')}
-            className={`h-9 md:h-11 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none`}
-          >
-            <Coins 
-              size={14} 
-              className="text-[#fb923c] md:w-4 md:h-4" 
-              style={{ filter: 'drop-shadow(0 0 4px #fb923c44)' }}
-            />
-            <span className="text-[0.75rem] md:text-[0.85rem] font-bold text-[#fb923c] tracking-tight">
-              {userStats.coins}
-            </span>
-          </button>
-
           {/* Achievement Square */}
           <button 
             onClick={() => setActiveModal('achievements')}
@@ -153,25 +136,6 @@ export const TopBar = () => {
       <Dialog open={activeModal !== null} onOpenChange={() => setActiveModal(null)}>
         <DialogContent className="bg-[#141415] border-[#303030] text-[#f0f0f0] w-[90vw] sm:max-w-[400px] rounded-[32px] p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] outline-none border-opacity-50 mx-auto">
           
-          {activeModal === 'coins' && (
-            <div className="p-8 flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-[22px] bg-gradient-to-br from-[#fb923c22] to-transparent border border-[#fb923c33] flex items-center justify-center mb-4">
-                <Coins size={32} className="text-[#fb923c]" />
-              </div>
-              <h2 className="text-xl font-bold mb-1">Suas Moedas</h2>
-              <p className="text-sm text-[#888] mb-6">Você acumulou {userStats.coins} moedas de ouro.</p>
-              <div className="w-full space-y-3">
-                <div className="p-4 rounded-2xl bg-[#1b1b1c] border border-[#303030] flex justify-between items-center">
-                  <span className="text-sm text-[#888]">Saldo Total</span>
-                  <span className="text-lg font-bold text-[#fb923c]">{userStats.coins}</span>
-                </div>
-                <button className="w-full py-4 rounded-2xl bg-[#fb923c] text-black font-bold text-sm hover:brightness-110 transition-all active:scale-[0.98]">
-                  Ir para a Loja
-                </button>
-              </div>
-            </div>
-          )}
-
           {activeModal === 'achievements' && (
             <div className="p-8 flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-[22px] bg-gradient-to-br from-[#a855f722] to-transparent border border-[#a855f733] flex items-center justify-center mb-4">

@@ -9,15 +9,13 @@ export interface Profile {
   xp_total: number;
   streak_atual: number;
   avatar_emoji: string;
-  coins: number;
 }
 
 const DEFAULT_PROFILE = {
   nivel: 1,
   xp_total: 0,
   streak_atual: 0,
-  avatar_emoji: "👤",
-  coins: 0
+  avatar_emoji: "👤"
 };
 
 export const useProfile = () => {
