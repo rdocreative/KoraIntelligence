@@ -6,23 +6,28 @@
 
 @layer base {
   :root {
-    /* Fundo principal: Um turquesa extremamente escuro (substituindo o cinza 240 5% 4%) */
-    --background: 172 60% 2%;
-    --foreground: 172 20% 98%;
+    /* Fundo principal: #140000 */
+    --background: 0 100% 4%;
+    --foreground: 0 0% 98%;
     
-    /* Cards: Versão ligeiramente mais clara do fundo turquesa escuro */
-    --card: 172 50% 4%; 
-    --border: 172 30% 12%; 
-    --radius: 1.5rem;
+    /* Cards e Borders */
+    --card: 0 100% 3%; 
+    --border: 0 100% 12%; 
+    --radius: 1.25rem;
 
-    /* Destaque principal */
-    --primary: 172 67% 57%; /* #4adbc8 */
-    --primary-foreground: 172 60% 4%;
+    /* Destaque principal: #FF3232 */
+    --primary: 0 100% 60%; 
+    --primary-foreground: 0 0% 100%;
+
+    --muted: 0 100% 8%;
+    --muted-foreground: 0 0% 60%;
+    
+    --accent: 0 100% 15%;
+    --accent-foreground: 0 100% 60%;
   }
 
   body {
-    /* Fundo do body: #020808 (Um turquesa quase preto) */
-    @apply bg-[#020808] text-[#f0f0f2] antialiased;
+    @apply bg-[#140000] text-[#f0f0f2] antialiased;
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
   }
@@ -30,14 +35,12 @@
 
 @layer components {
   .card-glass {
-    /* Vidro escuro com matiz turquesa profundo */
-    @apply bg-[#061211]/95 border border-[#4adbc8]/10 rounded-3xl backdrop-blur-2xl 
+    @apply bg-[#1a0000]/90 border border-[#FF3232]/15 rounded-3xl backdrop-blur-xl 
     shadow-2xl shadow-black/80;
   }
 
   .item-glass {
-    /* Itens com matiz turquesa profundo */
-    @apply bg-[#0a1a19]/60 border border-[#4adbc8]/5 rounded-2xl hover:bg-[#0d2221]/90 
-    backdrop-blur-md transition-all duration-300 shadow-xl shadow-black/30;
+    @apply bg-[#250000]/40 border border-[#FF3232]/10 rounded-2xl hover:bg-[#2a0000]/60 
+    backdrop-blur-md transition-all duration-300;
   }
 }
