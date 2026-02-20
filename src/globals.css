@@ -6,28 +6,28 @@
 
 @layer base {
   :root {
-    /* Fundo principal: #0a0000 (Preto mais profundo) */
-    --background: 0 100% 2%;
+    /* Fundo principal: #140000 */
+    --background: 0 100% 4%;
     --foreground: 0 0% 98%;
     
-    /* Cards e Borders - Mais discretos */
-    --card: 0 100% 1%; 
-    --border: 0 100% 8%; 
+    /* Cards e Borders */
+    --card: 0 100% 3%; 
+    --border: 0 100% 12%; 
     --radius: 1.25rem;
 
     /* Destaque principal: #FF3232 */
     --primary: 0 100% 60%; 
     --primary-foreground: 0 0% 100%;
 
-    --muted: 0 100% 4%;
-    --muted-foreground: 0 0% 50%;
+    --muted: 0 100% 8%;
+    --muted-foreground: 0 0% 60%;
     
-    --accent: 0 100% 10%;
+    --accent: 0 100% 15%;
     --accent-foreground: 0 100% 60%;
   }
 
   body {
-    @apply bg-[#0a0000] text-[#f0f0f2] antialiased;
+    @apply bg-[#140000] text-[#f0f0f2] antialiased;
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
   }
