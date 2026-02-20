@@ -24,7 +24,6 @@ import {
   DialogContent,
 } from "@/components/ui/dialog";
 
-// Configuração das páginas para cores e textos
 interface PageConfig {
   title: string;
   subtitle: string;
@@ -53,7 +52,6 @@ export const TopBar = () => {
 
   const [activeModal, setActiveModal] = useState<'achievements' | 'profile' | 'wallet' | null>(null);
 
-  // Dados reais ou fallback
   const userStats = {
     name: profile?.nome || "Usuário",
     titles: 0, 
@@ -63,8 +61,9 @@ export const TopBar = () => {
     nextLevelXp: (profile?.nivel || 1) * 1000 
   };
 
-  // Shadow constante para todos os elementos
-  const commonShadow = "shadow-[0_8px_24px_rgba(0,0,0,0.3)]";
+  const commonShadow = "shadow-[0_8px_32px_rgba(0,0,0,0.4)]";
+  const commonBg = "bg-gradient-to-b from-[#0d1716] to-[#050f0e]";
+  const commonBorder = "border-[#2a4441]";
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none">
@@ -72,7 +71,7 @@ export const TopBar = () => {
         
         {/* LADO ESQUERDO: Main Page Capsule */}
         <div 
-          className={`hidden sm:flex items-center gap-3 px-5 py-3 rounded-full bg-[#141415] border border-[#303030] ${commonShadow} transition-all duration-300 flex-shrink-0`}
+          className={`hidden sm:flex items-center gap-3 px-5 py-3 rounded-full ${commonBg} border ${commonBorder} ${commonShadow} transition-all duration-300 flex-shrink-0`}
         >
           <div className="flex items-center gap-2.5">
             <Icon 
@@ -84,7 +83,7 @@ export const TopBar = () => {
             </h1>
           </div>
 
-          <div className="w-px h-[14px] bg-[#303030] mx-1" />
+          <div className="w-px h-[14px] bg-[#2a4441] mx-1" />
           <span className="text-[0.68rem] text-[#888] font-medium tracking-wide leading-none whitespace-nowrap">
             {subtitle}
           </span>
@@ -94,7 +93,7 @@ export const TopBar = () => {
         <div className="flex items-center gap-2.5 md:gap-3 flex-shrink-0">
           
           <button 
-            className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none`}
+            className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none`}
           >
             <Coins 
               size={15} 
@@ -108,7 +107,7 @@ export const TopBar = () => {
 
           <button 
             onClick={() => setActiveModal('profile')}
-            className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#4adbc844] active:scale-95 outline-none`}
+            className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#4adbc844] active:scale-95 outline-none`}
           >
             <Zap 
               size={15} 
@@ -122,7 +121,7 @@ export const TopBar = () => {
 
           <button 
             onClick={() => setActiveModal('achievements')}
-            className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none`}
+            className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none`}
           >
             <Trophy 
               size={17} 
@@ -133,7 +132,7 @@ export const TopBar = () => {
 
           <button 
             onClick={() => setActiveModal('profile')}
-            className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none`}
+            className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none`}
           >
             <UserCircle 
               size={22} 
@@ -146,7 +145,7 @@ export const TopBar = () => {
 
       {/* Modais de Informação */}
       <Dialog open={activeModal !== null} onOpenChange={() => setActiveModal(null)}>
-        <DialogContent className="bg-[#141415] border-[#303030] text-[#f0f0f0] w-[90vw] sm:max-w-[400px] rounded-[32px] p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] outline-none border-opacity-50 mx-auto">
+        <DialogContent className={`${commonBg} border ${commonBorder} text-[#f0f0f0] w-[90vw] sm:max-w-[400px] rounded-[32px] p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] outline-none mx-auto`}>
           
           {activeModal === 'achievements' && (
             <div className="p-8 flex flex-col items-center text-center">
@@ -157,7 +156,7 @@ export const TopBar = () => {
               <p className="text-sm text-[#888] mb-6">Você desbloqueou {userStats.titles} títulos épicos.</p>
               <div className="grid grid-cols-2 gap-3 w-full">
                 {['Mestre do Foco', 'Persistente', 'Explorador', 'Visionário'].map((title) => (
-                  <div key={title} className="p-4 rounded-2xl bg-[#1b1b1c] border border-[#303030] flex flex-col items-center gap-2 group hover:border-[#a855f744] transition-colors">
+                  <div key={title} className={`p-4 rounded-2xl ${commonBg} border ${commonBorder} flex flex-col items-center gap-2 group hover:border-[#a855f744] transition-colors`}>
                     <Award size={20} className="text-[#a855f7]" />
                     <span className="text-[0.7rem] font-medium text-[#ccc]">{title}</span>
                   </div>
@@ -179,12 +178,12 @@ export const TopBar = () => {
               <h2 className="text-xl font-bold mb-1">{userStats.name}</h2>
               <p className="text-sm text-[#888] mb-6">Membro da Comunidade</p>
               
-              <div className="w-full bg-[#1b1b1c] rounded-2xl p-5 border border-[#303030]">
+              <div className={`w-full ${commonBg} rounded-2xl p-5 border ${commonBorder}`}>
                 <div className="flex justify-between text-[0.7rem] mb-2.5 text-[#888] font-medium">
                   <span>Progresso de XP</span>
                   <span>{userStats.xp} / {userStats.nextLevelXp}</span>
                 </div>
-                <div className="w-full h-2.5 bg-[#141415] rounded-full overflow-hidden border border-[#303030]">
+                <div className="w-full h-2.5 bg-[#050f0e] rounded-full overflow-hidden border border-[#2a4441]">
                   <div 
                     className="h-full bg-gradient-to-r from-[#38bdf8] to-[#818cf8] transition-all duration-700 shadow-[0_0_10px_rgba(56,189,248,0.4)]"
                     style={{ width: `${(userStats.xp / userStats.nextLevelXp) * 100}%` }}
