@@ -68,42 +68,42 @@ export const TopBar = () => {
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none">
-      {/* Container com max-w-5xl e px-6 para alinhar perfeitamente com os cards do conteúdo principal */}
+      {/* Container alinhado com max-w-5xl e px-6 */}
       <div className="flex items-center justify-between w-full max-w-5xl pointer-events-auto py-8 px-6 -my-8 overflow-visible">
         
-        {/* LADO ESQUERDO: Main Page Capsule */}
+        {/* LADO ESQUERDO: Main Page Capsule - Escondida no Mobile (hidden sm:flex) */}
         <div 
-          className={`flex items-center gap-2.5 md:gap-3 px-4 md:px-5 py-2 md:py-3 rounded-full bg-[#141415] border border-[#303030] ${commonShadow} transition-all duration-300 flex-shrink-0`}
+          className={`hidden sm:flex items-center gap-3 px-5 py-3 rounded-full bg-[#141415] border border-[#303030] ${commonShadow} transition-all duration-300 flex-shrink-0`}
         >
-          <div className="flex items-center gap-2 md:gap-2.5">
+          <div className="flex items-center gap-2.5">
             <Icon 
-              size={17} 
+              size={18} 
               style={{ color: color, filter: `drop-shadow(0 0 4px ${color}44)` }}
             />
-            <h1 className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#f0f0f0] tracking-tight leading-none whitespace-nowrap">
+            <h1 className="text-[0.95rem] font-bold text-[#f0f0f0] tracking-tight leading-none whitespace-nowrap">
               {title}
             </h1>
           </div>
 
-          <div className="hidden sm:block w-px h-[12px] bg-[#303030]" />
-          <span className="hidden sm:block text-[0.65rem] text-[#888] font-medium tracking-wide leading-none whitespace-nowrap">
+          <div className="w-px h-[14px] bg-[#303030] mx-1" />
+          <span className="text-[0.68rem] text-[#888] font-medium tracking-wide leading-none whitespace-nowrap">
             {subtitle}
           </span>
         </div>
 
-        {/* LADO DIREITO: Stats and Action Group */}
-        <div className="flex items-center gap-2 md:gap-2 flex-shrink-0">
+        {/* LADO DIREITO: Stats and Action Group - No mobile justify-end garante que fique na direita se o da esquerda sumir */}
+        <div className="flex items-center gap-2.5 md:gap-3 ml-auto sm:ml-0 flex-shrink-0">
           
           {/* COINS Pill */}
           <button 
-            className={`h-[38px] md:h-[44px] px-3 md:px-4 flex items-center gap-2 md:gap-2.5 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none`}
+            className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none`}
           >
             <Coins 
-              size={14} 
-              className="text-[#fb923c] fill-[#fb923c22] md:w-[18px] md:h-[18px]" 
+              size={15} 
+              className="text-[#fb923c] fill-[#fb923c22] md:w-[19px] md:h-[19px]" 
               style={{ filter: 'drop-shadow(0 0 4px #fb923c44)' }}
             />
-            <span className="text-[0.75rem] md:text-[0.85rem] font-bold text-[#fb923c] tracking-tight">
+            <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#fb923c] tracking-tight">
               {userStats.coins}
             </span>
           </button>
@@ -111,14 +111,14 @@ export const TopBar = () => {
           {/* XP Pill */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className={`h-[38px] md:h-[44px] px-3 md:px-4 flex items-center gap-2 md:gap-2.5 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#e8283a44] active:scale-95 outline-none`}
+            className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#e8283a44] active:scale-95 outline-none`}
           >
             <Zap 
-              size={14} 
-              className="text-[#e8283a] fill-[#e8283a22] md:w-[18px] md:h-[18px]" 
+              size={15} 
+              className="text-[#e8283a] fill-[#e8283a22] md:w-[19px] md:h-[19px]" 
               style={{ filter: 'drop-shadow(0 0 4px #e8283a44)' }}
             />
-            <span className="text-[0.75rem] md:text-[0.85rem] font-bold text-[#e8283a] tracking-tight">
+            <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#e8283a] tracking-tight">
               {userStats.xp}
             </span>
           </button>
@@ -126,11 +126,11 @@ export const TopBar = () => {
           {/* Achievement Square */}
           <button 
             onClick={() => setActiveModal('achievements')}
-            className={`w-[38px] h-[38px] md:w-[44px] md:h-[44px] flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none`}
+            className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none`}
           >
             <Trophy 
-              size={16} 
-              className="text-[#a855f7] md:w-[20px] md:h-[20px]"
+              size={17} 
+              className="text-[#a855f7] md:w-[21px] md:h-[21px]"
               style={{ filter: 'drop-shadow(0 0 4px #a855f744)' }}
             />
           </button>
@@ -138,11 +138,11 @@ export const TopBar = () => {
           {/* Profile Square */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className={`w-[38px] h-[38px] md:w-[44px] md:h-[44px] flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none`}
+            className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none`}
           >
             <UserCircle 
-              size={20} 
-              className="text-[#38bdf8] md:w-[24px] md:h-[24px]"
+              size={22} 
+              className="text-[#38bdf8] md:w-[26px] md:h-[26px]"
               style={{ filter: 'drop-shadow(0 0 4px #38bdf844)' }}
             />
           </button>
