@@ -55,10 +55,10 @@ export const TopBar = () => {
   // Dados reais ou fallback
   const userStats = {
     name: profile?.nome || "Usuário",
-    titles: 0, // Ainda sem tabela de títulos
+    titles: 0, 
     level: profile?.nivel || 1,
     xp: profile?.xp_total || 0,
-    nextLevelXp: (profile?.nivel || 1) * 1000 // Lógica simples de próximo nível
+    nextLevelXp: (profile?.nivel || 1) * 1000 
   };
 
   // Shadow constante para todos os elementos
@@ -66,66 +66,66 @@ export const TopBar = () => {
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none px-4">
-      <div className="flex items-center gap-2 md:gap-3 pointer-events-auto max-w-full overflow-x-auto no-scrollbar py-12 px-6 -my-8">
+      <div className="flex items-center gap-2.5 md:gap-4 pointer-events-auto max-w-full overflow-x-auto no-scrollbar py-12 px-6 -my-8">
         
         {/* Main Page Capsule - Hidden on Mobile */}
         <div 
-          className={`hidden sm:flex items-center gap-3 md:gap-[14px] px-4 md:px-6 py-2.5 md:py-3 rounded-full bg-[#141415] border border-[#303030] ${commonShadow} transition-all duration-300 flex-shrink-0`}
+          className={`hidden sm:flex items-center gap-3 md:gap-[14px] px-5 md:px-8 py-3 md:py-4 rounded-full bg-[#141415] border border-[#303030] ${commonShadow} transition-all duration-300 flex-shrink-0`}
         >
           <div className="flex items-center gap-2 md:gap-3">
             <Icon 
-              size={18} 
+              size={20} 
               style={{ color: color, filter: `drop-shadow(0 0 4px ${color}44)` }}
             />
-            <h1 className="text-[0.85rem] md:text-[0.9rem] font-bold text-[#f0f0f0] tracking-tight leading-none whitespace-nowrap">
+            <h1 className="text-[0.9rem] md:text-[1rem] font-bold text-[#f0f0f0] tracking-tight leading-none whitespace-nowrap">
               {title}
             </h1>
           </div>
 
-          <div className="w-px h-[16px] bg-[#303030]" />
-          <span className="text-[0.68rem] text-[#888] font-medium tracking-wide leading-none whitespace-nowrap">
+          <div className="w-px h-[18px] bg-[#303030]" />
+          <span className="text-[0.72rem] text-[#888] font-medium tracking-wide leading-none whitespace-nowrap">
             {subtitle}
           </span>
         </div>
 
         {/* Stats and Action Group */}
-        <div className="flex items-center gap-1.5 md:gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
           
-          {/* XP Pill */}
+          {/* XP Pill - Aumentado em ~30% */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className={`h-9 md:h-11 px-3 md:px-4 flex items-center gap-2 md:gap-3 rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#e8283a44] active:scale-95 outline-none`}
+            className={`h-[46px] md:h-[58px] px-4 md:px-6 flex items-center gap-2.5 md:gap-4 rounded-[18px] md:rounded-[24px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#e8283a44] active:scale-95 outline-none`}
           >
             <Zap 
-              size={14} 
-              className="text-[#e8283a] fill-[#e8283a22] md:w-4 md:h-4" 
+              size={18} 
+              className="text-[#e8283a] fill-[#e8283a22] md:w-[22px] md:h-[22px]" 
               style={{ filter: 'drop-shadow(0 0 4px #e8283a44)' }}
             />
-            <span className="text-[0.75rem] md:text-[0.85rem] font-bold text-[#e8283a] tracking-tight">
+            <span className="text-[0.85rem] md:text-[1rem] font-bold text-[#e8283a] tracking-tight">
               {userStats.xp}
             </span>
           </button>
 
-          {/* Achievement Square */}
+          {/* Achievement Square - Aumentado em ~30% */}
           <button 
             onClick={() => setActiveModal('achievements')}
-            className={`w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none`}
+            className={`w-[46px] h-[46px] md:w-[58px] md:h-[58px] flex items-center justify-center rounded-[18px] md:rounded-[24px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none`}
           >
             <Trophy 
-              size={16} 
-              className="text-[#a855f7] md:w-[18px] md:h-[18px]"
+              size={20} 
+              className="text-[#a855f7] md:w-[26px] md:h-[26px]"
               style={{ filter: 'drop-shadow(0 0 4px #a855f744)' }}
             />
           </button>
 
-          {/* Profile Square */}
+          {/* Profile Square - Aumentado em ~30% */}
           <button 
             onClick={() => setActiveModal('profile')}
-            className={`w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-[14px] md:rounded-[18px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none`}
+            className={`w-[46px] h-[46px] md:w-[58px] md:h-[58px] flex items-center justify-center rounded-[18px] md:rounded-[24px] bg-[#141415] border border-[#303030] ${commonShadow} group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none`}
           >
             <UserCircle 
-              size={18} 
-              className="text-[#38bdf8] md:w-[22px] md:h-[22px]"
+              size={24} 
+              className="text-[#38bdf8] md:w-[32px] md:h-[32px]"
               style={{ filter: 'drop-shadow(0 0 4px #38bdf844)' }}
             />
           </button>
