@@ -36,7 +36,6 @@ const ProtectedRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-    // Usando uma div simples de loading ou o componente LoadingScreen
     return <div className="h-screen w-full flex items-center justify-center bg-[#0a0a0b]"><div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
@@ -89,9 +88,13 @@ const App = () => (
                   <div className="min-h-screen bg-[#141415] text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                     
                     {/* Background Layers */}
-                    <div className="fixed inset-0 pointer-events-none bg-[#0a0a0b] -z-20" />
-                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(220,38,38,0.12)_0%,rgba(220,38,38,0.04)_20%,transparent_50%)] -z-10" />
-                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_bottom,rgba(0,0,0,0.4)_0%,transparent_70%)] -z-10" />
+                    <div className="fixed inset-0 pointer-events-none bg-[#0a0a0b] -z-30" />
+                    
+                    {/* Top Red Gradient */}
+                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(220,38,38,0.15)_0%,transparent_50%)] -z-20" />
+                    
+                    {/* Bottom Black Gradient */}
+                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.8)_0%,transparent_40%)] -z-10" />
 
                     <Routes>
                       {/* Rotas Públicas (Auth) */}
