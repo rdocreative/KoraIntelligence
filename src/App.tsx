@@ -12,6 +12,7 @@ import { MasterplanProvider } from "./hooks/useMasterplan";
 import { AuthProvider, useAuth } from "./components/providers/AuthProvider";
 import { FloatingNavbar } from "./components/layout/FloatingNavbar";
 import { TopBar } from "./components/layout/TopBar"; 
+import FallingParticles from "./components/ui/FallingParticles";
 
 // Pages
 import Index from "./pages/Index";
@@ -88,13 +89,16 @@ const App = () => (
                 <BrowserRouter>
                   <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                     
-                    {/* Background Layers - Substituído #141415 pelo turquesa profundo #040d0c */}
-                    <div className="fixed inset-0 pointer-events-none bg-[#040d0c] -z-30" />
+                    {/* Background Layers */}
+                    <div className="fixed inset-0 pointer-events-none bg-[#020808] -z-30" />
                     
-                    {/* Top Center Theme Glow (Turquesa #4adbc8) */}
+                    {/* Partículas Otimizadas */}
+                    <FallingParticles />
+                    
+                    {/* Top Center Theme Glow */}
                     <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-45%,rgba(74,219,200,0.18)_0%,transparent_60%)] -z-20" />
                     
-                    {/* Gradiente de profundidade ajustado para tons azulados/pretos */}
+                    {/* Gradiente de profundidade */}
                     <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,10,10,0.4)_0%,transparent_15%)] -z-10" />
 
                     <Routes>
