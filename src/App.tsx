@@ -1,3 +1,5 @@
+"use client";
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -91,11 +93,11 @@ const App = () => (
                     {/* Base Solid Gray Background */}
                     <div className="fixed inset-0 pointer-events-none bg-[#141415] -z-30" />
                     
-                    {/* Top Center Red Glow (Centered and less opaque) */}
-                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_0%,rgba(239,68,68,0.22)_0%,transparent_40%)] -z-20" />
+                    {/* Top Center Red Glow (Shifted further up out of bounds) */}
+                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-15%,rgba(239,68,68,0.22)_0%,transparent_50%)] -z-20" />
                     
-                    {/* Bottom Black Gradient (Subtle) */}
-                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.5)_0%,transparent_20%)] -z-10" />
+                    {/* Bottom Black Gradient (Very Subtle) */}
+                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,0,0,0.4)_0%,transparent_15%)] -z-10" />
 
                     <Routes>
                       {/* Rotas Públicas (Auth) */}
