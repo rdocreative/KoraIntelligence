@@ -68,10 +68,10 @@ export const TopBar = () => {
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none">
-      {/* Container alinhado com max-w-5xl e px-6 */}
-      <div className="flex items-center justify-between w-full max-w-5xl pointer-events-auto py-8 px-6 -my-8 overflow-visible">
+      {/* Container: justify-center no mobile e justify-between no desktop para alinhar com os cards */}
+      <div className="flex items-center justify-center sm:justify-between w-full max-w-5xl pointer-events-auto py-8 px-6 -my-8 overflow-visible">
         
-        {/* LADO ESQUERDO: Main Page Capsule - Escondida no Mobile (hidden sm:flex) */}
+        {/* LADO ESQUERDO: Main Page Capsule - Escondida no Mobile */}
         <div 
           className={`hidden sm:flex items-center gap-3 px-5 py-3 rounded-full bg-[#141415] border border-[#303030] ${commonShadow} transition-all duration-300 flex-shrink-0`}
         >
@@ -91,8 +91,8 @@ export const TopBar = () => {
           </span>
         </div>
 
-        {/* LADO DIREITO: Stats and Action Group - No mobile justify-end garante que fique na direita se o da esquerda sumir */}
-        <div className="flex items-center gap-2.5 md:gap-3 ml-auto sm:ml-0 flex-shrink-0">
+        {/* GRUPO DE STATS: Centralizado no mobile por conta do pai justify-center */}
+        <div className="flex items-center gap-2.5 md:gap-3 flex-shrink-0">
           
           {/* COINS Pill */}
           <button 
