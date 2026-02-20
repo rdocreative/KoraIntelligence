@@ -76,7 +76,7 @@ const Settings = () => {
                 onClick={handleSave} 
                 disabled={!hasChanges} 
                 size="sm" 
-                className={`font-rajdhani font-bold px-6 shadow-lg transition-all ${hasChanges ? "bg-red-600 hover:bg-red-500 text-white" : "bg-neutral-800 text-neutral-500 opacity-50"}`}
+                className={`font-rajdhani font-bold px-6 shadow-lg transition-all ${hasChanges ? "bg-[#4adbc8] hover:bg-[#3bc7b6] text-black" : "bg-neutral-800 text-neutral-500 opacity-50"}`}
             >
                 <Save className="w-3.5 h-3.5 mr-2" /> Salvar
             </Button>
@@ -95,7 +95,7 @@ const Settings = () => {
         <Card className="glass-card border-none bg-[#121212]">
           <CardHeader className="border-b border-white/5 pb-4">
             <div className="flex items-center gap-2">
-              <User className="w-5 h-5 text-red-500" />
+              <User className="w-5 h-5 text-[#4adbc8]" />
               <CardTitle className="text-lg font-bold text-white">Perfil</CardTitle>
             </div>
           </CardHeader>

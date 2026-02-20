@@ -8,7 +8,7 @@ import { Gamification } from '@/components/features/habit-tracker/Gamification';
 import { BADGES } from '@/hooks/useHabitTracker';
 
 const Index = () => {
-  // Hooks existentes (mantendo lógica de hábitos por enquanto, mas usando dados do perfil para gamificação)
+  // Hooks existentes
   const { 
     habits, 
     history, 
@@ -38,7 +38,7 @@ const Index = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[50vh]">
-        <div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -72,7 +72,7 @@ const Index = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between px-1">
                   <h3 className="font-bold text-lg text-white">Tarefas Prioritárias</h3>
-                  <span className="text-xs text-red-500 font-bold cursor-pointer hover:underline">Ver todas</span>
+                  <span className="text-xs text-[#4adbc8] font-bold cursor-pointer hover:underline">Ver todas</span>
               </div>
               <div className="space-y-4">
                 {habits.slice(0, 5).map((habit, index) => (
