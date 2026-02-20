@@ -17,26 +17,21 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
   const todayWeekday = new Date().getDay();
   const isForToday = habit.days.includes(todayWeekday);
 
-  // Cor Temática: Verde Neon (#00FF7F)
-  const themeColor = "text-[#00FF7F]";
-  const themeBg = "bg-[#00FF7F]";
-  const themeBorder = "border-[#00FF7F]";
-
   return (
     <div 
       className={cn(
         "group relative flex flex-col gap-3 p-5 rounded-3xl border transition-all duration-300 backdrop-blur-xl overflow-hidden shadow-md shadow-black/20",
-        "bg-[#0A0A0A] border-white/5 hover:border-[#00FF7F]/30",
-        habit.completed && "opacity-50"
+        "bg-gradient-to-br from-red-950/15 to-red-600/15 border-white/10 hover:border-red-600/40",
+        habit.completed && "opacity-60"
       )}
     >
-      {/* Efeito Neon Sweep na borda inferior ao passar o mouse */}
-      <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-[#00FF7F] group-hover:w-full transition-all duration-500 shadow-[0_0_15px_#00FF7F]" />
+      {/* Glow effect on hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-red-600/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       
       <div className="flex items-center gap-4 relative z-10">
         <div className={cn(
           "font-rajdhani font-black text-2xl italic w-8 text-center",
-          index < 3 ? "text-[#00FF7F] drop-shadow-[0_0_8px_rgba(0,255,127,0.4)]" : "text-white/10"
+          index < 3 ? "text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.4)]" : "text-white/10"
         )}>
           {index + 1}
         </div>
@@ -44,13 +39,13 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
         <div className={cn(
           "h-12 w-12 rounded-xl flex items-center justify-center border transition-all duration-300",
           habit.completed 
-            ? "bg-[#00FF7F]/10 border-[#00FF7F]/30" 
-            : "bg-black/60 border-white/10 group-hover:border-[#00FF7F]/50 group-hover:bg-[#00FF7F]/5"
+            ? "bg-green-600/10 border-green-500/30" 
+            : "bg-black/60 border-white/10 group-hover:border-red-600/50 group-hover:bg-red-600/10"
         )}>
           {habit.completed ? (
-              <Check className="w-5 h-5 text-[#00FF7F]" />
+              <Check className="w-5 h-5 text-green-500" />
           ) : (
-              <Trophy className="w-5 h-5 text-white/20 group-hover:text-[#00FF7F]" />
+              <Trophy className="w-5 h-5 text-white/20 group-hover:text-red-500" />
           )}
         </div>
 
@@ -73,14 +68,14 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
                   key={day} 
                   className={cn(
                     "transition-colors",
-                    habit.days.includes(i) ? (habit.completed ? "text-[#00FF7F]/40" : themeColor) : "text-white/5"
+                    habit.days.includes(i) ? (habit.completed ? "text-green-500/30" : "text-red-600") : "text-white/5"
                   )}
                 >
                   {day[0]}
                 </span>
               ))}
             </div>
-            <span className="font-rajdhani text-sm text-[#FFB300] font-bold">{habit.points} XP</span>
+            <span className="font-rajdhani text-sm text-red-500 font-bold">{habit.points} XP</span>
           </div>
         </div>
 
@@ -92,9 +87,9 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
             className={cn(
               "h-10 px-5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-md shadow-black/30",
               habit.completed 
-                ? "bg-[#00FF7F]/10 text-[#00FF7F] border border-[#00FF7F]/20" 
+                ? "bg-green-600/10 text-green-500 border border-green-500/20" 
                 : isForToday 
-                  ? "bg-[#00FF7F] hover:bg-[#00E070] text-black shadow-[0_0_15px_rgba(0,255,127,0.3)]" 
+                  ? "bg-red-700 hover:bg-red-600 text-white" 
                   : "bg-white/5 text-white/10 border border-white/5"
             )}
           >

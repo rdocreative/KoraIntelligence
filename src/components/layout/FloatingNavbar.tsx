@@ -14,33 +14,15 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// MAPA DE CORES DO NOVO SISTEMA DE DESIGN
 const navItems = [
-  // Inicio / Dashboard: Geral, mantém o Teal neutro ou usa um mix
   { icon: LayoutDashboard, label: 'INÍCIO', path: '/', color: '#4adbc8', shadowColor: 'rgba(74, 219, 200, 0.6)' },
-  
-  // Masterplan: Metas/Visão -> ROXO
-  { icon: Crown, label: 'MASTERPLAN', path: '/masterplan', color: '#BF5FFF', shadowColor: 'rgba(191, 95, 255, 0.6)' },
-  
-  // Tarefas: Foco -> CIANO
-  { icon: ClipboardList, label: 'TAREFAS', path: '/tarefas', color: '#00E5FF', shadowColor: 'rgba(0, 229, 255, 0.6)' },
-  
-  // Metas: Visão -> ROXO (Repetindo o conceito de visão)
-  { icon: Target, label: 'METAS', path: '/metas', color: '#BF5FFF', shadowColor: 'rgba(191, 95, 255, 0.6)' },
-  
-  // Lembretes: Geral/Neutro (Rosa para diferenciar ainda)
+  { icon: Crown, label: 'MASTERPLAN', path: '/masterplan', color: 'rgba(168, 85, 247, 1)', shadowColor: 'rgba(168, 85, 247, 0.6)' },
+  { icon: ClipboardList, label: 'TAREFAS', path: '/tarefas', color: 'rgba(59, 130, 246, 1)', shadowColor: 'rgba(59, 130, 246, 0.6)' },
+  { icon: Target, label: 'METAS', path: '/metas', color: 'rgba(34, 197, 94, 1)', shadowColor: 'rgba(34, 197, 94, 0.6)' },
   { icon: Bell, label: 'LEMBRETES', path: '/lembretes', color: 'rgba(236, 72, 153, 1)', shadowColor: 'rgba(236, 72, 153, 0.6)' },
-  
-  // Missões: XP/Energia -> DOURADO/LARANJA
-  { icon: Swords, label: 'MISSÕES', path: '/missoes', color: '#FFB300', shadowColor: 'rgba(255, 179, 0, 0.6)' },
-  
-  // Comunidade: Social (Azul/Ciano)
-  { icon: Users, label: 'COMUNIDADE', path: '/comunidade', color: '#00E5FF', shadowColor: 'rgba(0, 229, 255, 0.6)' },
-  
-  // Loja: Recompensa -> DOURADO
-  { icon: ShoppingBag, label: 'LOJA', path: '/loja', color: '#FFB300', shadowColor: 'rgba(255, 179, 0, 0.6)' },
-  
-  // Configs: Neutro
+  { icon: Swords, label: 'MISSÕES', path: '/missoes', color: 'rgba(249, 115, 22, 1)', shadowColor: 'rgba(249, 115, 22, 0.6)' },
+  { icon: Users, label: 'COMUNIDADE', path: '/comunidade', color: 'rgba(6, 182, 212, 1)', shadowColor: 'rgba(6, 182, 212, 0.6)' },
+  { icon: ShoppingBag, label: 'LOJA', path: '/loja', color: 'rgba(234, 179, 8, 1)', shadowColor: 'rgba(234, 179, 8, 0.6)' },
   { icon: Settings, label: 'CONFIGURAÇÕES', path: '/configuracoes', color: 'rgba(148, 163, 184, 1)', shadowColor: 'rgba(148, 163, 184, 0.6)' },
 ];
 

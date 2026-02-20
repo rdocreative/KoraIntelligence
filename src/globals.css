@@ -6,22 +6,22 @@
 
 @layer base {
   :root {
+    /* Fundo principal: Um turquesa extremamente escuro (substituindo o cinza 240 5% 4%) */
     --background: 172 60% 2%;
     --foreground: 172 20% 98%;
+    
+    /* Cards: Versão ligeiramente mais clara do fundo turquesa escuro */
     --card: 172 50% 4%; 
     --border: 172 30% 12%; 
     --radius: 1.5rem;
-    --primary: 172 67% 57%;
-    --primary-foreground: 172 60% 4%;
 
-    /* SYSTEM NEON COLORS */
-    --neon-habits: #00FF7F; /* Spring Green */
-    --neon-tasks: #00E5FF;  /* Cyan Neon */
-    --neon-goals: #BF5FFF;  /* Violet Neon */
-    --neon-xp: #FFB300;     /* Golden Orange */
+    /* Destaque principal */
+    --primary: 172 67% 57%; /* #4adbc8 */
+    --primary-foreground: 172 60% 4%;
   }
 
   body {
+    /* Fundo do body: #020808 (Um turquesa quase preto) */
     @apply bg-[#020808] text-[#f0f0f2] antialiased;
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
@@ -30,47 +30,14 @@
 
 @layer components {
   .card-glass {
-    @apply bg-[#061211]/95 border border-white/5 rounded-3xl backdrop-blur-2xl 
+    /* Vidro escuro com matiz turquesa profundo */
+    @apply bg-[#061211]/95 border border-[#4adbc8]/10 rounded-3xl backdrop-blur-2xl 
     shadow-2xl shadow-black/80;
   }
 
-  /* NEON SWEEP EFFECT */
-  .neon-sweep-wrapper {
-    @apply relative overflow-hidden rounded-2xl p-[1px] transition-all duration-300;
-    background: rgba(255, 255, 255, 0.05);
+  .item-glass {
+    /* Itens com matiz turquesa profundo */
+    @apply bg-[#0a1a19]/60 border border-[#4adbc8]/5 rounded-2xl hover:bg-[#0d2221]/90 
+    backdrop-blur-md transition-all duration-300 shadow-xl shadow-black/30;
   }
-
-  .neon-sweep-wrapper::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200%;
-    height: 200%;
-    background: conic-gradient(transparent, var(--sweep-color, #fff), transparent 30%);
-    animation: rotate 4s linear infinite;
-    transform: translate(-50%, -50%);
-    z-index: 0;
-    opacity: 0; 
-    transition: opacity 0.3s;
-  }
-
-  .neon-sweep-wrapper:hover::before {
-    opacity: 1;
-  }
-
-  /* Variações de cor para o sweep */
-  .sweep-habits { --sweep-color: var(--neon-habits); }
-  .sweep-tasks { --sweep-color: var(--neon-tasks); }
-  .sweep-goals { --sweep-color: var(--neon-goals); }
-  .sweep-xp { --sweep-color: var(--neon-xp); }
-
-  .neon-content {
-    @apply relative z-10 bg-[#061211] h-full w-full rounded-2xl border border-white/5;
-  }
-}
-
-@keyframes rotate {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
