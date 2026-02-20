@@ -1,4 +1,3 @@
-cima com cores #050f0e e #0d1716, e stroke mais claro.">
 import { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
