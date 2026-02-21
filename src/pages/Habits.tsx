@@ -375,24 +375,24 @@ const HabitsPage = () => {
       {/* Refined Navigation Tabs */}
       <div className="flex justify-center pt-6 pb-2">
         <div className="bg-[#0f2220]/80 border border-[#2d5550] rounded-full p-1 px-1.5 shadow-xl backdrop-blur-xl flex items-center gap-1.5">
-          <button 
+          <button
             onClick={() => setActiveTab('overview')}
             className={cn(
-              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300",
-              activeTab === 'overview' 
-                ? "bg-gradient-to-r from-[#00e5cc] to-[#00bfa5] text-[#071412] shadow-[0_0_15px_rgba(0,229,204,0.3)]" 
-                : "text-white/60 hover:text-white/90"
+              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300 border",
+              activeTab === 'overview'
+                ? "bg-[linear-gradient(135deg,#00e5cc30_0%,#00e5cc10_100%)] border-[#00e5cc60] text-[#00e5cc]"
+                : "bg-transparent border-[#1e3a36] text-white/60 hover:text-white/90"
             )}
           >
             <LayoutGrid size={13} strokeWidth={2.5} /> Visão Geral
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('charts')}
             className={cn(
-              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300",
-              activeTab === 'charts' 
-                ? "bg-gradient-to-r from-[#00e5cc] to-[#00bfa5] text-[#071412] shadow-[0_0_15px_rgba(0,229,204,0.3)]" 
-                : "text-white/60 hover:text-white/90"
+              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300 border",
+              activeTab === 'charts'
+                ? "bg-[linear-gradient(135deg,#00e5cc30_0%,#00e5cc10_100%)] border-[#00e5cc60] text-[#00e5cc]"
+                : "bg-transparent border-[#1e3a36] text-white/60 hover:text-white/90"
             )}
           >
             <BarChart3 size={13} strokeWidth={2.5} /> Gráficos
@@ -403,15 +403,15 @@ const HabitsPage = () => {
       {/* Header Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-[12px] p-4 md:p-0 mt-6">
         {[
-          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, color: "#00e5cc", grad: "from-[#003832] to-[#071412]", border: "border-[#00e5cc30]", iconBg: "bg-[#00e5cc15]" },
-          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, color: "#ff6b00", grad: "from-[#3d1500] to-[#071412]", border: "border-[#ff6b0030]", iconBg: "bg-[#ff6b0015]" },
-          { label: "HOJE", value: stats.today, icon: CheckCircle2, color: "#00e055", grad: "from-[#00320f] to-[#071412]", border: "border-[#00e05530]", iconBg: "bg-[#00e05515]" },
-          { label: "MÊS", value: stats.rate, icon: BarChart3, color: "#b060ff", grad: "from-[#1a0035] to-[#071412]", border: "border-[#b060ff30]", iconBg: "bg-[#b060ff15]" }
+          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, color: "#00e5cc", grad: "bg-[linear-gradient(135deg,#004a42_0%,#071412_100%)]", border: "border-[#00e5cc40]", iconBg: "bg-[#00e5cc25]" },
+          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, color: "#ff6b00", grad: "bg-gradient-to-br from-[#3d1500] to-[#071412]", border: "border-[#ff6b0030]", iconBg: "bg-[#ff6b0015]" },
+          { label: "HOJE", value: stats.today, icon: CheckCircle2, color: "#00e055", grad: "bg-gradient-to-br from-[#00320f] to-[#071412]", border: "border-[#00e05530]", iconBg: "bg-[#00e05515]" },
+          { label: "MÊS", value: stats.rate, icon: BarChart3, color: "#b060ff", grad: "bg-gradient-to-br from-[#1a0035] to-[#071412]", border: "border-[#b060ff30]", iconBg: "bg-[#b060ff15]" }
         ].map((s, i) => (
-          <div 
+          <div
             key={i}
             className={cn(
-              "py-[16px] px-[18px] rounded-[10px] border flex items-center gap-3 bg-gradient-to-br transition-all duration-300",
+              "py-[16px] px-[18px] rounded-[10px] border flex items-center gap-3 transition-all duration-300",
               s.grad, s.border
             )}
           >
