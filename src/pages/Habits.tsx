@@ -329,12 +329,7 @@ const HabitsPage = () => {
     const todayStr = format(new Date(), 'yyyy-MM-dd');
     const scheduledToday = habits.filter(h => h.active && h.weekDays.includes(getDay(new Date())));
     const completedToday = scheduledToday.filter(h => h.completedDates.includes(todayStr)).length;
-    return { 
-      total: habits.length, 
-      today: `${completedToday}/${scheduledToday.length}`, 
-      streak: `7d`, 
-      rate: `85%` 
-    };
+    return { total: habits.length, today: `${completedToday}/${scheduledToday.length}`, streak: `7d`, rate: `85%` };
   }, [habits]);
 
   const calendarDays = useMemo(() => {
@@ -401,60 +396,64 @@ const HabitsPage = () => {
         </div>
       </div>
 
-      {/* 1. Header Stats Grid - UPDATED TO MATCH IMAGE STYLE */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 md:p-0 mt-4 max-w-[1200px] mx-auto">
+      {/* 1. Header Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 md:p-0 mt-4">
         {[
           { 
-            label: "TOTAL HÁBITOS", 
+            label: "Total de Hábitos", 
             value: stats.total, 
             icon: Target, 
             color: "#00e5cc", 
-            border: "border-[#00e5cc40]",
-            iconBg: "bg-[#00e5cc10]"
+            grad: "from-[#003832] to-[#071412]", 
+            border: "border-[#00e5cc50]",
+            iconBg: "bg-[#00e5cc20]"
           },
           { 
-            label: "SEQUÊNCIA", 
+            label: "Maior Sequência", 
             value: stats.streak, 
             icon: Flame, 
             color: "#ff6b00", 
-            border: "border-[#ff6b0040]",
-            iconBg: "bg-[#ff6b0010]"
+            grad: "from-[#3d1500] to-[#071412]", 
+            border: "border-[#ff6b0060]",
+            iconBg: "bg-[#ff6b0025]"
           },
           { 
-            label: "HOJE", 
+            label: "Completos Hoje", 
             value: stats.today, 
-            icon: Check, 
+            icon: CheckCircle2, 
             color: "#00e055", 
-            border: "border-[#00e05540]",
-            iconBg: "bg-[#00e05510]"
+            grad: "from-[#00320f] to-[#071412]", 
+            border: "border-[#00e05550]",
+            iconBg: "bg-[#00e05520]"
           },
           { 
-            label: "MÊS", 
+            label: "Taxa do Mês", 
             value: stats.rate, 
             icon: BarChart3, 
             color: "#b060ff", 
-            border: "border-[#b060ff40]",
-            iconBg: "bg-[#b060ff10]"
+            grad: "from-[#1a0035] to-[#071412]", 
+            border: "border-[#b060ff50]",
+            iconBg: "bg-[#b060ff20]"
           }
         ].map((s, i) => (
           <div 
             key={i}
             className={cn(
-              "p-4 px-5 rounded-[12px] border bg-[#091a18] flex items-center gap-4 transition-all duration-300",
-              s.border
+              "p-4 px-5 rounded-[14px] border flex items-center justify-between bg-gradient-to-br transition-all duration-300",
+              s.grad, s.border
             )}
           >
             <div 
-              className={cn("w-12 h-12 rounded-xl flex items-center justify-center shrink-0", s.iconBg)}
+              className={cn("w-12 h-12 rounded-full flex items-center justify-center shrink-0", s.iconBg)}
             >
-              <s.icon size={22} style={{ color: s.color }} strokeWidth={2.5} />
+              <s.icon size={32} style={{ color: s.color }} strokeWidth={2} />
             </div>
 
-            <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-[#5a8a85] uppercase tracking-[0.05em] leading-tight">
+            <div className="flex flex-col items-end">
+              <span className="text-[10px] font-semibold text-white/45 uppercase tracking-[0.1em] leading-tight">
                 {s.label}
               </span>
-              <span className="text-[24px] font-black text-white leading-tight mt-0.5">
+              <span className="text-[28px] font-[800] text-white leading-tight mt-1">
                 {s.value}
               </span>
             </div>
