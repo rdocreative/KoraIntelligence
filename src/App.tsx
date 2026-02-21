@@ -47,7 +47,7 @@ const ProtectedRoute = () => {
   return (
     <div className="flex min-h-screen bg-[#071412]">
       <Sidebar />
-      <main className="flex-1 ml-[56px] w-[calc(100%-56px)] flex justify-center">
+      <main className="flex-1 ml-[52px] w-[calc(100%-52px)] flex justify-center">
         <div className="max-w-[1200px] w-full px-6 flex flex-col min-h-screen">
           <TopBar />
           <div className="flex-1 py-6">
