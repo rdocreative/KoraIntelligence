@@ -1,18 +1,17 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { 
   Plus, Check, ChevronLeft, ChevronRight, 
-  LayoutGrid, List as ListIcon, Clock, Flame, 
+  LayoutGrid, Clock, Flame, 
   BarChart3, CheckCircle2, Pencil, Trash2, 
-  ChevronDown, ChevronUp, Play, Pause, GripVertical
+  ChevronDown, ChevronUp, Play, Pause, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { 
   format, 
@@ -25,11 +24,9 @@ import {
   subMonths, 
   getDay,
   startOfWeek,
-  endOfWeek,
-  subDays
+  endOfWeek
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts';
 import {
   DndContext, 
   closestCenter,
@@ -38,7 +35,6 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-  DragStartEvent,
   defaultDropAnimationSideEffects
 } from '@dnd-kit/core';
 import {
@@ -70,14 +66,11 @@ interface Habit {
 interface SortableItemProps {
   habit: Habit;
   isCompleted: boolean;
-  isExpanded: boolean;
-  onExpand: (id: string) => void;
+  onEdit: (habit: Habit, rect: DOMRect) => void;
   onToggle: (id: string) => void;
-  onDelete: (id: string) => void;
-  onSave: (habit: Habit) => void;
 }
 
-const SortableHabitItem = ({ habit, isCompleted, isExpanded, onExpand, onToggle, onDelete, onSave }: SortableItemProps) => {
+const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableItemProps) => {
   const {
     attributes,
     listeners,
@@ -87,7 +80,7 @@ const SortableHabitItem = ({ habit, isCompleted, isExpanded, onExpand, onToggle,
     isDragging
   } = useSortable({ id: habit.id });
 
-  const [editForm, setEditForm] = useState<Habit>(habit);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -95,37 +88,41 @@ const SortableHabitItem = ({ habit, isCompleted, isExpanded, onExpand, onToggle,
     zIndex: isDragging ? 50 : 1,
   };
 
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (cardRef.current) {
+      onEdit(habit, cardRef.current.getBoundingClientRect());
+    }
+  };
+
   return (
     <div 
-      ref={setNodeRef} 
+      ref={(node) => {
+        setNodeRef(node);
+        cardRef.current = node as HTMLDivElement;
+      }}
       style={style}
+      {...attributes}
+      {...listeners}
       className={cn(
-        "group border-b border-[#1a2e2c] last:border-0 transition-all duration-200",
-        isDragging && "scale-[1.02] z-50 shadow-[0_8px_24px_rgba(0,0,0,0.5)] border border-[#00e5cc40] opacity-95 bg-[#0d2420]",
-        !isDragging && "bg-gradient-to-br from-[#050f0e] to-[#0d1f1c]"
+        "group rounded-[12px] border border-[#1a2e2c] p-3 px-4 mb-2 transition-all duration-200 cursor-grab active:cursor-grabbing",
+        isDragging ? "opacity-70 scale-[1.02] border-[#00e5cc40] bg-[#0d2420]" : "bg-gradient-to-br from-[#0a1a18] to-[#050f0e]",
+        isCompleted && !isDragging && "opacity-60"
       )}
     >
-      <div 
-        {...attributes}
-        {...listeners}
-        className={cn(
-          "flex items-center gap-4 p-4 cursor-grab active:cursor-grabbing transition-all",
-          isCompleted && "opacity-60 grayscale-[0.5]"
-        )}
-        onClick={() => onExpand(habit.id)}
-      >
+      <div className="flex items-center gap-4">
         <button 
           onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
           className={cn(
-            "h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all shrink-0",
+            "h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
             isCompleted ? "bg-[#00e5cc] border-[#00e5cc]" : "border-[#4a7a76] hover:border-[#00e5cc]"
           )}
         >
           {isCompleted && <Check size={12} className="text-[#050f0e] stroke-[3px]" />}
         </button>
 
-        <div className="flex-1 min-w-0">
-          <h3 className={cn("text-sm font-semibold truncate transition-colors", isExpanded ? "text-[#00e5cc]" : "text-[#e2f0ef]")}>
+        <div className="flex-1 min-w-0 pointer-events-none">
+          <h3 className="text-sm font-semibold text-[#e2f0ef] truncate">
             {habit.title}
           </h3>
           <div className="flex items-center gap-2 mt-0.5">
@@ -140,98 +137,133 @@ const SortableHabitItem = ({ habit, isCompleted, isExpanded, onExpand, onToggle,
           </div>
         </div>
 
-        <div className="flex items-center gap-2 text-[#4a7a76] group-hover:text-[#00e5cc] transition-colors">
-          <Pencil size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-          {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-        </div>
+        <button 
+          onClick={handleEditClick}
+          className="p-1 text-[#4a7a76] hover:text-[#00e5cc] transition-colors z-10"
+        >
+          <ChevronRight size={18} />
+        </button>
       </div>
+    </div>
+  );
+};
 
-      {/* Inline Edit Panel */}
-      <div className={cn(
-        "overflow-hidden transition-all duration-300 ease-in-out bg-[#050f0e] shadow-[inset_0_4px_10px_rgba(0,0,0,0.5)]",
-        isExpanded ? "max-height-[400px] border-t border-[#1a2e2c] p-4" : "max-h-0"
-      )}>
-        {isExpanded && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-3 gap-3">
-              <div className="col-span-2 space-y-1">
-                <Label className="text-[10px] uppercase text-[#4a7a76] font-bold">Nome</Label>
-                <Input 
-                  value={editForm.title} 
-                  onChange={(e) => setEditForm({...editForm, title: e.target.value})}
-                  className="h-8 bg-[#0a1a18] border-[#1a2e2c] text-xs text-[#e2f0ef] focus-visible:ring-[#00e5cc]" 
-                />
-              </div>
-              <div className="space-y-1">
-                <Label className="text-[10px] uppercase text-[#4a7a76] font-bold">Horário</Label>
-                <Input 
-                  type="time"
-                  value={editForm.time} 
-                  onChange={(e) => setEditForm({...editForm, time: e.target.value})}
-                  className="h-8 bg-[#0a1a18] border-[#1a2e2c] text-xs text-[#e2f0ef] focus-visible:ring-[#00e5cc]" 
-                />
-              </div>
-            </div>
+// --- Floating Edit Popup ---
+interface EditPopupProps {
+  habit: Habit;
+  rect: DOMRect | null;
+  onClose: () => void;
+  onSave: (habit: Habit) => void;
+  onDelete: (id: string) => void;
+}
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <Label className="text-[10px] uppercase text-[#4a7a76] font-bold">Prioridade</Label>
-                <div className="flex gap-1">
-                  {[
-                    { v: 'high', c: 'bg-red-500', l: 'Alta' }, 
-                    { v: 'medium', c: 'bg-yellow-500', l: 'Méd' }, 
-                    { v: 'low', c: 'bg-[#00e577]', l: 'Baixa' }
-                  ].map((p) => (
-                    <button
-                      key={p.v}
-                      onClick={() => setEditForm({...editForm, priority: p.v as Priority})}
-                      className={cn(
-                        "flex-1 h-6 rounded text-[9px] font-bold uppercase transition-all",
-                        editForm.priority === p.v ? `${p.c} text-[#050f0e]` : "bg-[#0a1a18] text-[#4a7a76] hover:bg-[#1a2e2c]"
-                      )}
-                    >
-                      {p.l}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-1 flex flex-col justify-end">
-                <div className="flex items-center justify-between bg-[#0a1a18] p-1.5 rounded border border-[#1a2e2c]">
-                  <span className="text-[10px] uppercase text-[#4a7a76] font-bold ml-1">
-                    {editForm.active ? 'Ativo' : 'Pausado'}
-                  </span>
-                  <button 
-                    onClick={() => setEditForm({...editForm, active: !editForm.active})}
-                    className={cn(
-                      "p-1 rounded transition-colors",
-                      editForm.active ? "text-[#00e5cc] bg-[#00e5cc]/10" : "text-[#4a7a76]"
-                    )}
-                  >
-                    {editForm.active ? <Play size={12} fill="currentColor" /> : <Pause size={12} fill="currentColor" />}
-                  </button>
-                </div>
-              </div>
-            </div>
+const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) => {
+  const [form, setForm] = useState<Habit>(habit);
+  const popupRef = useRef<HTMLDivElement>(null);
 
-            <div className="flex items-center gap-2 pt-1">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => onDelete(habit.id)}
-                className="flex-1 h-8 bg-transparent border-red-500/30 text-red-500 hover:bg-red-500/10 hover:text-red-400 text-[10px] uppercase font-bold"
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [onClose]);
+
+  if (!rect) return null;
+
+  // Calculate position: below the card with offset
+  const top = rect.bottom + window.scrollY + 8;
+  const left = rect.left + window.scrollX;
+
+  return (
+    <div 
+      ref={popupRef}
+      style={{ top, left }}
+      className="fixed z-[1000] min-w-[280px] bg-[#0d1f1c] border border-[#1a3a36] rounded-[12px] p-4 shadow-[0_16_40px_rgba(0,0,0,0.6)] animate-in fade-in slide-in-from-top-2 duration-200"
+    >
+      <div className="space-y-4">
+        <div className="space-y-1">
+          <Label className="text-[10px] uppercase text-[#4a7a76] font-bold">Nome</Label>
+          <Input 
+            value={form.title} 
+            onChange={(e) => setForm({...form, title: e.target.value})}
+            className="h-9 bg-[#050f0e] border-[#1a2e2c] text-xs text-[#e2f0ef] focus-visible:ring-[#00e5cc]" 
+          />
+        </div>
+
+        <div className="space-y-1">
+          <Label className="text-[10px] uppercase text-[#4a7a76] font-bold">Horário</Label>
+          <Input 
+            type="time"
+            value={form.time} 
+            onChange={(e) => setForm({...form, time: e.target.value})}
+            className="h-9 bg-[#050f0e] border-[#1a2e2c] text-xs text-[#e2f0ef] focus-visible:ring-[#00e5cc]" 
+          />
+        </div>
+
+        <div className="space-y-1">
+          <Label className="text-[10px] uppercase text-[#4a7a76] font-bold">Prioridade</Label>
+          <div className="flex gap-1">
+            {[
+              { v: 'high', c: 'bg-red-500', l: 'Alta' }, 
+              { v: 'medium', c: 'bg-yellow-500', l: 'Média' }, 
+              { v: 'low', c: 'bg-[#00e577]', l: 'Baixa' }
+            ].map((p) => (
+              <button
+                key={p.v}
+                onClick={() => setForm({...form, priority: p.v as Priority})}
+                className={cn(
+                  "flex-1 h-7 rounded text-[9px] font-bold uppercase transition-all",
+                  form.priority === p.v ? `${p.c} text-[#050f0e]` : "bg-[#050f0e] text-[#4a7a76] hover:bg-[#1a2e2c]"
+                )}
               >
-                <Trash2 size={12} className="mr-1.5" /> Excluir
-              </Button>
-              <Button 
-                size="sm"
-                onClick={() => onSave(editForm)}
-                className="flex-[2] h-8 bg-[#00e5cc] hover:bg-[#00c9b3] text-[#050f0e] font-extrabold text-[10px] uppercase"
-              >
-                Salvar Alterações
-              </Button>
-            </div>
+                {p.l}
+              </button>
+            ))}
           </div>
-        )}
+        </div>
+
+        <div className="flex items-center justify-between bg-[#050f0e] p-2 rounded border border-[#1a2e2c]">
+          <span className="text-[10px] uppercase text-[#4a7a76] font-bold ml-1">
+            {form.active ? 'Ativo' : 'Pausado'}
+          </span>
+          <button 
+            onClick={() => setForm({...form, active: !form.active})}
+            className={cn(
+              "p-1.5 rounded transition-colors",
+              form.active ? "text-[#00e5cc] bg-[#00e5cc]/10" : "text-[#4a7a76]"
+            )}
+          >
+            {form.active ? <Play size={14} fill="currentColor" /> : <Pause size={14} fill="currentColor" />}
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2 pt-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => { onDelete(habit.id); onClose(); }}
+            className="flex-1 h-9 bg-transparent border-red-500/30 text-red-500 hover:bg-red-500/10 hover:text-red-400 text-[10px] uppercase font-bold"
+          >
+            <Trash2 size={14} className="mr-1.5" /> Excluir
+          </Button>
+          <Button 
+            size="sm"
+            onClick={() => { onSave(form); onClose(); }}
+            className="flex-[2] h-9 bg-[#00e5cc] hover:bg-[#00c9b3] text-[#050f0e] font-extrabold text-[10px] uppercase"
+          >
+            Salvar
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -248,8 +280,10 @@ const HabitsPage = () => {
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Floating Edit State
+  const [editingHabit, setEditingHabit] = useState<{habit: Habit, rect: DOMRect} | null>(null);
 
   // DnD Sensors
   const sensors = useSensors(
@@ -283,13 +317,19 @@ const HabitsPage = () => {
     }));
   };
 
+  const handleSaveHabit = (updated: Habit) => {
+    setHabits(prev => prev.map(h => h.id === updated.id ? updated : h));
+  };
+
+  const handleDeleteHabit = (id: string) => {
+    setHabits(prev => prev.filter(h => h.id !== id));
+  };
+
   // --- Computations ---
   const stats = useMemo(() => {
     const todayStr = format(new Date(), 'yyyy-MM-dd');
     const scheduledToday = habits.filter(h => h.active && h.weekDays.includes(getDay(new Date())));
     const completedToday = scheduledToday.filter(h => h.completedDates.includes(todayStr)).length;
-    
-    // Streak logic (simplified)
     const streak = 7; 
     
     const start = startOfMonth(new Date());
@@ -346,7 +386,7 @@ const HabitsPage = () => {
   }, [habits, selectedDate]);
 
   return (
-    <div className="min-h-screen bg-[#050f0e] pb-32 animate-in fade-in duration-500">
+    <div className="min-h-screen bg-[#050f0e] pb-32 animate-in fade-in duration-500 relative">
       
       {/* 1. Header Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-0">
@@ -376,7 +416,7 @@ const HabitsPage = () => {
         
         {/* 2. Left Column: Calendar Overview */}
         <div className="w-full lg:w-[65%] space-y-6">
-          <div className="bg-gradient-to-br from-[#0d1716] to-[#050f0e] border border-[#1a2e2c] rounded-xl p-6 shadow-2xl">
+          <div className="bg-gradient-to-br from-[#0d1716] to-[#050f0e] border border-[#1a3a36] rounded-xl p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-lg font-bold text-white uppercase tracking-wider">
                 {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
@@ -413,7 +453,7 @@ const HabitsPage = () => {
                       <div 
                         onClick={() => setSelectedDate(day.date)}
                         className={cn(
-                          "min-h-[52px] rounded-lg border flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
+                          "min-h-[52px] aspect-square rounded-[8px] border flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
                           day.isCurrentMonth ? "bg-[#0a1a18] border-[#1a2e2c] text-[#e2f0ef]" : "text-[#2a3f3d] border-transparent",
                           day.isSelected ? "border-[#00e5cc] ring-1 ring-[#00e5cc]/30 shadow-[0_0_15px_rgba(0,229,204,0.2)]" : "",
                           day.isToday && !day.isSelected ? "border-2 border-[#00e5cc] bg-[#00e5cc10]" : "",
@@ -452,7 +492,7 @@ const HabitsPage = () => {
                         )} />
                       </TooltipTrigger>
                       <TooltipContent className="bg-[#0d1716] border-[#1a2e2c] text-white">
-                        {l === 0 ? "Nenhum hábito" : l === 4 ? "Todos os hábitos" : `${l*25}% completado`}
+                        {l === 0 ? "0 hábitos" : l === 4 ? "Todos os hábitos" : `${l*25}% completado`}
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -464,18 +504,14 @@ const HabitsPage = () => {
         </div>
 
         {/* 3. Right Column: Habit List with Drag and Drop */}
-        <div className="w-full lg:w-[35%]">
+        <div className="w-full lg:w-[35%] relative">
           <div 
-            style={{ 
-              boxShadow: "0 0 0 1px rgba(0, 229, 204, 0.25), 0 0 12px rgba(0, 229, 204, 0.1)" 
-            }}
-            className="bg-gradient-to-br from-[#0d1716] via-[#050f0e] to-[#0d1716] border border-transparent rounded-xl overflow-hidden flex flex-col min-h-[500px]"
+            className="bg-gradient-to-br from-[#0d1716] via-[#050f0e] to-[#0d1716] border border-[#1a3a36] rounded-xl overflow-hidden flex flex-col min-h-[500px]"
           >
             <div className="p-5 border-b border-[#1a2e2c] flex items-center justify-between bg-black/20">
               <div>
                 <h2 className="text-[#e2f0ef] font-bold text-[14px] uppercase tracking-widest flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#00e5cc] animate-pulse" />
-                  Hábitos Ativos
+                  HÁBITOS ATIVOS
                 </h2>
                 <p className="text-[10px] text-[#4a7a76] font-bold uppercase mt-1">{format(selectedDate, "eeee, d 'de' MMMM", { locale: ptBR })}</p>
               </div>
@@ -484,7 +520,7 @@ const HabitsPage = () => {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto p-4">
               <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                 <SortableContext items={displayedHabits.map(h => h.id)} strategy={verticalListSortingStrategy}>
                   {displayedHabits.map((habit) => (
@@ -492,14 +528,8 @@ const HabitsPage = () => {
                       key={habit.id}
                       habit={habit}
                       isCompleted={habit.completedDates.includes(format(selectedDate, 'yyyy-MM-dd'))}
-                      isExpanded={expandedId === habit.id}
-                      onExpand={(id) => setExpandedId(expandedId === id ? null : id)}
+                      onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
                       onToggle={toggleHabit}
-                      onDelete={(id) => setHabits(prev => prev.filter(h => h.id !== id))}
-                      onSave={(updated) => {
-                        setHabits(prev => prev.map(h => h.id === updated.id ? updated : h));
-                        setExpandedId(null);
-                      }}
                     />
                   ))}
                 </SortableContext>
@@ -516,7 +546,7 @@ const HabitsPage = () => {
             <div className="p-4 border-t border-[#1a2e2c]">
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
-                  <Button className="w-full bg-[#00e5cc] hover:bg-[#00e5cc] hover:brightness-110 transition-all duration-200 text-[#050f0e] font-black text-[12px] uppercase tracking-[0.15em] h-12 rounded-xl shadow-[0_0_20px_rgba(0,229,204,0.15)]">
+                  <Button className="w-full bg-[#00e5cc] hover:bg-[#00e5cc] hover:brightness-110 transition-all duration-200 text-[#050f0e] font-black text-[12px] uppercase tracking-[0.15em] h-12 rounded-xl">
                     <Plus className="mr-2" size={18} strokeWidth={3} /> NOVO HÁBITO
                   </Button>
                 </DialogTrigger>
@@ -535,6 +565,17 @@ const HabitsPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Floating Edit Popup Overlay */}
+      {editingHabit && (
+        <EditPopup 
+          habit={editingHabit.habit}
+          rect={editingHabit.rect}
+          onClose={() => setEditingHabit(null)}
+          onSave={handleSaveHabit}
+          onDelete={handleDeleteHabit}
+        />
+      )}
 
       {/* 4. Floating Navigation Bar */}
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100]">
