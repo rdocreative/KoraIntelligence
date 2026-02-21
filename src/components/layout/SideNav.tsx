@@ -5,13 +5,13 @@ import { NavLink } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Crown, 
-  ClipboardList,
+  ClipboardList, 
   Target, 
   Bell, 
   Swords, 
   ShoppingBag, 
-  Settings,
-  Brain
+  Settings, 
+  Brain 
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -39,9 +39,9 @@ export const SideNav = () => {
             to={path}
             title={label}
             className={({ isActive }) => cn(
-              "group relative flex items-center justify-center rounded-full transition-all duration-500 ease-in-out",
+              "group relative flex items-center justify-center rounded-full",
               !isSpecial && "w-[44px] h-[44px]",
-              isSpecial && "w-[56px] h-[56px] my-2 hover:scale-110 active:scale-95 shadow-[0_0_25px_rgba(0,229,204,0.3)]",
+              isSpecial && "w-[56px] h-[56px] my-2 shadow-[0_0_25px_rgba(0,229,204,0.3)]",
               isActive && !isSpecial && "bg-[#0a1a18]/90 border border-[#1a2e2c] shadow-[0_0_20px_rgba(0,229,204,0.15)]"
             )}
             style={({ isActive }) => {
@@ -61,17 +61,15 @@ export const SideNav = () => {
               size={isSpecial ? 28 : 22} 
               strokeWidth={isSpecial ? 2.5 : 2} 
               className={cn(
-                "transition-all duration-500 ease-in-out",
-                "group-hover:scale-110",
                 !isSpecial && "group-hover:opacity-100",
                 isSpecial && "drop-shadow-sm"
               )}
             />
             
-            {/* Glow sutil no hover */}
+            {/* Glow sutil no hover sem animação */}
             {!isSpecial && (
               <div 
-                className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-5 transition-opacity duration-500"
+                className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-5"
                 style={{ backgroundColor: THEME_COLOR }}
               />
             )}
