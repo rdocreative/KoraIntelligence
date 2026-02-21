@@ -117,8 +117,8 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[12px] border border-[#2a4a46] p-3 px-4 mb-2 cursor-grab active:cursor-grabbing select-none",
-        isDragging ? "scale-[1.03] border-[#00e5cc60] bg-[#0d1e1c] shadow-2xl ring-2 ring-[#00e5cc20]" : "bg-gradient-to-br from-[#0d1e1c] to-[#071412] transition-all duration-100",
+        "group rounded-[10px] border border-[#1a3530] p-[14px] px-[16px] mb-2 cursor-grab active:cursor-grabbing select-none",
+        isDragging ? "scale-[1.03] border-[#00e5cc60] bg-[#0d1e1c] shadow-2xl ring-2 ring-[#00e5cc20]" : "bg-gradient-to-br from-[#0a1e1c] to-[#050f0e] transition-all duration-100",
         isCompleted && !isDragging && "opacity-60"
       )}
     >
@@ -135,11 +135,11 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
         </button>
 
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-semibold text-[#e8f5f3] truncate">
+          <h3 className="text-[15px] font-semibold text-white truncate">
             {habit.title}
           </h3>
           <div className="flex items-center gap-2 mt-0.5">
-            <div className="flex items-center gap-1 text-[10px] text-[#5a8a85] font-bold uppercase tracking-wider">
+            <div className="flex items-center gap-1 text-[12px] text-[#4a8a85] font-bold uppercase tracking-wider">
               <Clock size={10} className="text-[#00e5cc]" />
               {habit.time}
             </div>
@@ -374,11 +374,11 @@ const HabitsPage = () => {
       
       {/* Tab Navigation at TOP */}
       <div className="flex justify-center pt-6 pb-2">
-        <div className="bg-[#0f2220] border border-[#2d5550] rounded-full p-1 shadow-2xl backdrop-blur-xl flex items-center gap-1">
+        <div className="bg-[#0f2220] border border-[#2d5550] rounded-full p-[8px] px-[6px] shadow-2xl backdrop-blur-xl flex items-center gap-1">
           <button 
             onClick={() => setActiveTab('overview')}
             className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest transition-all duration-300",
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-semibold uppercase tracking-widest transition-all duration-300",
               activeTab === 'overview' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#5a8a85] hover:text-[#e8f5f3]"
             )}
           >
@@ -387,7 +387,7 @@ const HabitsPage = () => {
           <button 
             onClick={() => setActiveTab('charts')}
             className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest transition-all duration-300",
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-semibold uppercase tracking-widest transition-all duration-300",
               activeTab === 'charts' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#5a8a85] hover:text-[#e8f5f3]"
             )}
           >
@@ -396,7 +396,7 @@ const HabitsPage = () => {
         </div>
       </div>
 
-      {/* 1. Header Stats Grid — Reformatted according to image */}
+      {/* Header Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-0 mt-4">
         {[
           { 
@@ -527,18 +527,17 @@ const HabitsPage = () => {
                       <div 
                         onClick={() => setSelectedDate(day.date)}
                         className={cn(
-                          "min-h-[52px] aspect-square rounded-[8px] border flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
-                          day.isCurrentMonth ? "bg-[#0d1e1c] border-[#2a4a46] text-[#e8f5f3]" : "text-[#2a3f3d] border-transparent",
+                          "min-h-[56px] aspect-square rounded-[8px] border flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
+                          day.isCurrentMonth ? "bg-[#0d1f1c] border-[#1a3530] text-white hover:bg-[#122b27]" : "text-[#2a3f3d] border-transparent",
                           day.isSelected ? "border-[#00e5cc] ring-1 ring-[#00e5cc]/30 shadow-[0_0_15px_rgba(0,229,204,0.2)]" : "",
                           day.isToday && !day.isSelected ? "border-2 border-[#00e5cc] bg-[#00e5cc10]" : "",
                           day.level === 1 && "bg-[#064e3b] border-[#064e3b30]",
                           day.level === 2 && "bg-[#059669] border-[#05966930]",
                           day.level === 3 && "bg-[#10b981] border-[#10b98130]",
                           day.level === 4 && "bg-[#00e5cc] text-[#071412]",
-                          "hover:bg-[#0f2220] hover:border-[#00e5cc50]"
                         )}
                       >
-                        <span className="text-[15px] font-semibold">{format(day.date, 'd')}</span>
+                        <span className="text-[16px] font-semibold">{format(day.date, 'd')}</span>
                       </div>
                     </TooltipTrigger>
                     <TooltipContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3]">
@@ -580,7 +579,7 @@ const HabitsPage = () => {
         <div className="w-full lg:w-[35%] relative">
           <div className="bg-gradient-to-br from-[#0f2220] via-[#071412] to-[#0f2220] border border-[#2d5550] rounded-xl overflow-hidden flex flex-col min-h-[500px]">
             <div className="p-5 border-b border-[#2a4a46] flex items-center justify-between bg-black/20">
-              <h2 className="text-[#e8f5f3] font-bold text-[14px] uppercase tracking-widest">HÁBITOS ATIVOS</h2>
+              <h2 className="text-[#00e5cc] font-bold text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
               <div className="bg-[#00e5cc15] text-[#00e5cc] text-[12px] px-3 py-1 rounded-full font-extrabold border border-[#00e5cc20]">
                 {displayedHabits.filter(h => h.completedDates.includes(format(selectedDate, 'yyyy-MM-dd'))).length}/{displayedHabits.length}
               </div>
