@@ -117,7 +117,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...attributes}
       {...listeners}
       className={cn(
-        // List Item Radius: 10px, Padding: 14px 16px, Gap/Margin: ~8px (mb-2)
         "group rounded-[10px] border border-[#1a3530] p-[14px] px-[16px] mb-2 cursor-grab active:cursor-grabbing select-none",
         isDragging ? "scale-[1.03] border-[#00e5cc60] bg-[#0d1e1c] shadow-2xl ring-2 ring-[#00e5cc20]" : "bg-gradient-to-br from-[#0a1e1c] to-[#050f0e] transition-all duration-100",
         isCompleted && !isDragging && "opacity-60"
@@ -136,12 +135,10 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
         </button>
 
         <div className="flex-1 min-w-0">
-          {/* List Item Name: 14px, 600, #e8f5f3 */}
           <h3 className="text-[14px] font-[600] text-[#e8f5f3] truncate leading-tight">
             {habit.title}
           </h3>
           <div className="flex items-center gap-2 mt-1">
-            {/* Secondary Info: 12px, 400, #5a8a85 */}
             <div className="flex items-center gap-1 text-[12px] font-[400] text-[#5a8a85]">
               <Clock size={11} className="text-[#00e5cc]" />
               {habit.time}
@@ -204,12 +201,10 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
     <div 
       ref={popupRef}
       style={{ top, left }}
-      // Medium Card: Radius 10px, Padding 16px 18px (approx p-4 for simplicity or exact)
       className="fixed z-[1000] min-w-[280px] bg-[#0f2220] border border-[#2d5550] rounded-[10px] p-[16px] px-[18px] shadow-[0_16_40px_rgba(0,0,0,0.6)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="space-y-4">
         <div className="space-y-1">
-          {/* Label: 11px, 700, uppercase, rgba(255,255,255,0.45) */}
           <Label className="text-[11px] font-[700] uppercase tracking-[0.1em] text-white/45">Nome</Label>
           <Input 
             value={form.title} 
@@ -377,116 +372,68 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
       
-      {/* Navigation Text: 12px, 700, uppercase, 0.08em */}
+      {/* Refined Navigation Tabs */}
       <div className="flex justify-center pt-6 pb-2">
-        <div className="bg-[#0f2220] border border-[#2d5550] rounded-full p-[8px] px-[6px] shadow-2xl backdrop-blur-xl flex items-center gap-1">
+        <div className="bg-[#0f2220]/80 border border-[#2d5550] rounded-full p-1 px-1.5 shadow-xl backdrop-blur-xl flex items-center gap-1.5">
           <button 
             onClick={() => setActiveTab('overview')}
             className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300",
-              activeTab === 'overview' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#5a8a85] hover:text-[#e8f5f3]"
+              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300",
+              activeTab === 'overview' 
+                ? "bg-gradient-to-r from-[#00e5cc] to-[#00bfa5] text-[#071412] shadow-[0_0_15px_rgba(0,229,204,0.3)]" 
+                : "text-white/60 hover:text-white/90"
             )}
           >
-            <LayoutGrid size={14} /> Visão Geral
+            <LayoutGrid size={13} strokeWidth={2.5} /> Visão Geral
           </button>
           <button 
             onClick={() => setActiveTab('charts')}
             className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300",
-              activeTab === 'charts' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#5a8a85] hover:text-[#e8f5f3]"
+              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300",
+              activeTab === 'charts' 
+                ? "bg-gradient-to-r from-[#00e5cc] to-[#00bfa5] text-[#071412] shadow-[0_0_15px_rgba(0,229,204,0.3)]" 
+                : "text-white/60 hover:text-white/90"
             )}
           >
-            <BarChart3 size={14} /> Gráficos
+            <BarChart3 size={13} strokeWidth={2.5} /> Gráficos
           </button>
         </div>
       </div>
 
       {/* Header Stats Grid */}
-      {/* Gap Cards: 12px */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-[12px] p-4 md:p-0 mt-6">
         {[
-          { 
-            label: "TOTAL HÁBITOS", 
-            value: stats.total, 
-            icon: Target, 
-            color: "#00e5cc", 
-            grad: "from-[#003832] to-[#071412]", 
-            border: "border-[#00e5cc30]",
-            iconBg: "bg-[#00e5cc15]"
-          },
-          { 
-            label: "SEQUÊNCIA", 
-            value: stats.streak, 
-            icon: Flame, 
-            color: "#ff6b00", 
-            grad: "from-[#3d1500] to-[#071412]", 
-            border: "border-[#ff6b0030]",
-            iconBg: "bg-[#ff6b0015]"
-          },
-          { 
-            label: "HOJE", 
-            value: stats.today, 
-            icon: CheckCircle2, 
-            color: "#00e055", 
-            grad: "from-[#00320f] to-[#071412]", 
-            border: "border-[#00e05530]",
-            iconBg: "bg-[#00e05515]"
-          },
-          { 
-            label: "MÊS", 
-            value: stats.rate, 
-            icon: BarChart3, 
-            color: "#b060ff", 
-            grad: "from-[#1a0035] to-[#071412]", 
-            border: "border-[#b060ff30]",
-            iconBg: "bg-[#b060ff15]"
-          }
+          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, color: "#00e5cc", grad: "from-[#003832] to-[#071412]", border: "border-[#00e5cc30]", iconBg: "bg-[#00e5cc15]" },
+          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, color: "#ff6b00", grad: "from-[#3d1500] to-[#071412]", border: "border-[#ff6b0030]", iconBg: "bg-[#ff6b0015]" },
+          { label: "HOJE", value: stats.today, icon: CheckCircle2, color: "#00e055", grad: "from-[#00320f] to-[#071412]", border: "border-[#00e05530]", iconBg: "bg-[#00e05515]" },
+          { label: "MÊS", value: stats.rate, icon: BarChart3, color: "#b060ff", grad: "from-[#1a0035] to-[#071412]", border: "border-[#b060ff30]", iconBg: "bg-[#b060ff15]" }
         ].map((s, i) => (
           <div 
             key={i}
             className={cn(
-              // Medium Card: Radius 10px, Padding 16px 18px
               "py-[16px] px-[18px] rounded-[10px] border flex items-center gap-3 bg-gradient-to-br transition-all duration-300",
               s.grad, s.border
             )}
           >
-            <div 
-              className={cn("w-14 h-14 rounded-[10px] flex items-center justify-center shrink-0", s.iconBg)}
-            >
+            <div className={cn("w-14 h-14 rounded-[10px] flex items-center justify-center shrink-0", s.iconBg)}>
               <s.icon size={24} style={{ color: s.color }} strokeWidth={2.5} />
             </div>
-
             <div className="flex flex-col">
-              {/* Label: 11px, 700, uppercase, tracking 0.1em, white/45 */}
-              <span className="text-[11px] font-[700] text-white/45 uppercase tracking-[0.1em] leading-none mb-2">
-                {s.label}
-              </span>
-              {/* Big Value: 28px, 800, white, line-height 1.1 */}
-              <span className="text-[28px] font-[800] text-white leading-[1.1]">
-                {s.value}
-              </span>
+              <span className="text-[11px] font-[700] text-white/45 uppercase tracking-[0.1em] leading-none mb-2">{s.label}</span>
+              <span className="text-[28px] font-[800] text-white leading-[1.1]">{s.value}</span>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Gap Sections: 20px */}
       <div className="mt-[20px] flex flex-col lg:flex-row gap-[20px] p-4 md:p-0">
         <div className="w-full lg:w-[65%] space-y-6">
-          {/* Big Card: Radius 14px, Padding 20px 24px */}
           <div className="bg-gradient-to-br from-[#0f2220] to-[#071412] border border-[#2d5550] rounded-[14px] py-[20px] px-[24px] shadow-2xl">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2">
-                <button 
-                  onClick={() => setCurrentDate(subMonths(currentDate, 1))} 
-                  className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-                
+                <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"><ChevronLeft size={24} /></button>
                 <Popover>
                   <PopoverTrigger asChild>
-                    {/* Card Title: 14px, 700, #e8f5f3 */}
                     <button className="flex items-center gap-2 text-[14px] font-[700] text-[#e8f5f3] uppercase tracking-[0.02em] hover:text-[#00e5cc] transition-colors group px-2">
                       {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
                       <ChevronDown size={18} className="text-[#5a8a85] group-hover:text-[#00e5cc]" />
@@ -514,17 +461,9 @@ const HabitsPage = () => {
                     </div>
                   </PopoverContent>
                 </Popover>
-
-                <button 
-                  onClick={() => setCurrentDate(addMonths(currentDate, 1))} 
-                  className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"
-                >
-                  <ChevronRight size={24} />
-                </button>
+                <button onClick={() => setCurrentDate(addMonths(currentDate, 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"><ChevronRight size={24} /></button>
               </div>
-
               <div className="flex items-center">
-                {/* Badges/Counters: 11px, 700, padding 3px 10px, radius 999 */}
                 <Button 
                   variant="ghost" 
                   size="sm" 
@@ -537,7 +476,6 @@ const HabitsPage = () => {
             </div>
 
             <div className="grid grid-cols-7 mb-4">
-              {/* Calendar Weekdays: 11px, 700, uppercase, 0.08em, #00e5cc */}
               {['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].map(d => (
                 <div key={d} className="text-center text-[11px] font-[700] text-[#00e5cc] uppercase tracking-[0.08em] py-2 opacity-80">{d}</div>
               ))}
@@ -561,7 +499,6 @@ const HabitsPage = () => {
                           day.level === 4 && "bg-[#00e5cc] text-[#071412]",
                         )}
                       >
-                        {/* Calendar Numbers: 14px, 600, #e8f5f3 */}
                         <span className="text-[14px] font-[600] text-[#e8f5f3]">{format(day.date, 'd')}</span>
                       </div>
                     </TooltipTrigger>
@@ -602,13 +539,9 @@ const HabitsPage = () => {
         </div>
 
         <div className="w-full lg:w-[35%] relative">
-          {/* Big Card: Radius 14px */}
           <div className="bg-gradient-to-br from-[#0f2220] via-[#071412] to-[#0f2220] border border-[#2d5550] rounded-[14px] overflow-hidden flex flex-col min-h-[500px]">
-            {/* Header: Padding 20px 24px */}
             <div className="py-[20px] px-[24px] border-b border-[#2a4a46] flex items-center justify-between bg-black/20">
-              {/* Card Title: 14px, 700, #e8f5f3 */}
               <h2 className="text-[#e8f5f3] font-[700] text-[14px] uppercase tracking-[0.02em]">HÁBITOS ATIVOS</h2>
-              {/* Badge: 11px, 700, px-3 py-1 (close to px-10px py-3px), radius 999 */}
               <div className="bg-[#00e5cc15] text-[#00e5cc] text-[11px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#00e5cc20]">
                 {displayedHabits.filter(h => h.completedDates.includes(format(selectedDate, 'yyyy-MM-dd'))).length}/{displayedHabits.length}
               </div>
@@ -628,7 +561,6 @@ const HabitsPage = () => {
                   ))}
                 </SortableContext>
               </DndContext>
-
               {displayedHabits.length === 0 && (
                 <div className="h-full flex flex-col items-center justify-center p-10 text-center opacity-40">
                   <Clock size={32} className="text-[#5a8a85] mb-3" />
