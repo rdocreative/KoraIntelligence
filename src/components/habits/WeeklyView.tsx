@@ -6,7 +6,8 @@ import {
   startOfWeek, 
   eachDayOfInterval, 
   addDays, 
-  isSameDay
+  isSameDay, 
+  parse
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Sun, CloudSun, Moon, Check } from "lucide-react";
@@ -45,6 +46,17 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
     });
   }, [currentDate]);
 
+  const getHabitsForCell = (day: Date, periodRange: number[]) => {
+    const dayOfWeek = day.getDay();
+    const [start, end] = periodRange;
+    
+    return habits.filter(h => {
+      if (!h.active || !h.weekDays.includes(dayOfWeek)) return false;
+      const hour = parseInt(h.time.split(':')[0]);
+      return hour >= start && hour < end;
+    });
+  };
+
   const priorityGradients = {
     high: "bg-[linear-gradient(135deg,#2a0808,#0a0505)]",
     medium: "bg-[linear-gradient(135deg,#2a1800,#0a0800)]",
@@ -52,7 +64,7 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
   };
 
   return (
-    <div className="w-full bg-[#071412] border border-[#1e3a36] rounded-[14px] overflow-hidden flex flex-col">
+    <div className="w-full bg-[#071412] border border-[#1e3a36] rounded-[14px] overflow-hidden flex flex-col animate-in fade-in duration-300">
       {/* Header */}
       <div className="flex border-b border-[#1e3a36]">
         <div className="w-[80px] shrink-0 border-r border-[#1e3a36] bg-[#0d1e1c]" />
@@ -91,17 +103,9 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
 
             {/* Day Columns */}
             {weekDays.map((day, i) => {
-              const dateStr = format(day, 'yyyy-MM-dd');
-              const dayOfWeek = day.getDay();
-              const [start, end] = period.range;
-              
-              const cellHabits = habits.filter(h => {
-                if (!h.active || !h.weekDays.includes(dayOfWeek)) return false;
-                const hour = parseInt(h.time.split(':')[0]);
-                return hour >= start && hour < end;
-              });
-
+              const cellHabits = getHabitsForCell(day, period.range);
               const isToday = isSameDay(day, new Date());
+              const dateStr = format(day, 'yyyy-MM-dd');
 
               return (
                 <div 
@@ -118,13 +122,13 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                         key={habit.id}
                         onClick={() => onToggleHabit(habit.id, day)}
                         className={cn(
-                          "p-[4px_7px] mb-1.5 rounded-[6px] flex items-center gap-[5px] cursor-pointer",
+                          "p-[4px_7px] mb-1.5 rounded-[6px] flex items-center gap-[5px] cursor-pointer transition-all",
                           priorityGradients[habit.priority],
                           isCompleted ? "opacity-40" : "opacity-100 hover:brightness-125"
                         )}
                       >
                         <div className={cn(
-                          "h-[10px] w-[10px] rounded-full border border-[#5a8a85] shrink-0 flex items-center justify-center",
+                          "h-[10px] w-[10px] rounded-full border border-[#5a8a85] shrink-0 flex items-center justify-center transition-all",
                           isCompleted && "bg-[#00e5cc] border-[#00e5cc]"
                         )}>
                           {isCompleted && <Check size={6} className="text-[#071412] stroke-[4px]" />}
