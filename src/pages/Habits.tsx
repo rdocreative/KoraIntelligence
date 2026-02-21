@@ -106,13 +106,14 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...listeners}
       className={cn(
         "group rounded-[12px] border border-[#1a2e2c] p-3 px-4 mb-2 transition-all duration-200 cursor-grab active:cursor-grabbing",
-        isDragging ? "opacity-70 scale-[1.02] border-[#00e5cc40] bg-[#0d2420]" : "bg-gradient-to-br from-[#0a1a18] to-[#050f0e]",
+        isDragging ? "opacity-70 scale-[1.02] border-[#00e5cc40] bg-[#0d2420] shadow-xl" : "bg-gradient-to-br from-[#0a1a18] to-[#050f0e]",
         isCompleted && !isDragging && "opacity-60"
       )}
     >
       <div className="flex items-center gap-4">
         <button 
           onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
+          onPointerDown={(e) => e.stopPropagation()}
           className={cn(
             "h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
             isCompleted ? "bg-[#00e5cc] border-[#00e5cc]" : "border-[#4a7a76] hover:border-[#00e5cc]"
@@ -121,7 +122,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
           {isCompleted && <Check size={12} className="text-[#050f0e] stroke-[3px]" />}
         </button>
 
-        <div className="flex-1 min-w-0 pointer-events-none">
+        <div className="flex-1 min-w-0">
           <h3 className="text-sm font-semibold text-[#e2f0ef] truncate">
             {habit.title}
           </h3>
@@ -139,6 +140,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
 
         <button 
           onClick={handleEditClick}
+          onPointerDown={(e) => e.stopPropagation()}
           className="p-1 text-[#4a7a76] hover:text-[#00e5cc] transition-colors z-10"
         >
           <ChevronRight size={18} />
@@ -180,7 +182,6 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
 
   if (!rect) return null;
 
-  // Calculate position: below the card with offset
   const top = rect.bottom + window.scrollY + 8;
   const left = rect.left + window.scrollX;
 
@@ -269,7 +270,6 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
   );
 };
 
-// --- Main Page Component ---
 const HabitsPage = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'charts'>('overview');
   const [habits, setHabits] = useState<Habit[]>([
@@ -281,17 +281,13 @@ const HabitsPage = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // Floating Edit State
   const [editingHabit, setEditingHabit] = useState<{habit: Habit, rect: DOMRect} | null>(null);
 
-  // DnD Sensors
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { delay: 150, tolerance: 5 } }),
+    useSensor(PointerSensor, { activationConstraint: { delay: 100, tolerance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  // --- Logic ---
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (active.id !== over?.id) {
@@ -317,35 +313,11 @@ const HabitsPage = () => {
     }));
   };
 
-  const handleSaveHabit = (updated: Habit) => {
-    setHabits(prev => prev.map(h => h.id === updated.id ? updated : h));
-  };
-
-  const handleDeleteHabit = (id: string) => {
-    setHabits(prev => prev.filter(h => h.id !== id));
-  };
-
-  // --- Computations ---
   const stats = useMemo(() => {
     const todayStr = format(new Date(), 'yyyy-MM-dd');
     const scheduledToday = habits.filter(h => h.active && h.weekDays.includes(getDay(new Date())));
     const completedToday = scheduledToday.filter(h => h.completedDates.includes(todayStr)).length;
-    const streak = 7; 
-    
-    const start = startOfMonth(new Date());
-    const end = endOfMonth(new Date());
-    const daysInMonth = eachDayOfInterval({ start, end });
-    let possible = 0; let done = 0;
-    daysInMonth.forEach(day => {
-      const dStr = format(day, 'yyyy-MM-dd');
-      const wDay = getDay(day);
-      const hForDay = habits.filter(h => h.active && h.weekDays.includes(wDay));
-      possible += hForDay.length;
-      done += hForDay.reduce((acc, h) => acc + (h.completedDates.includes(dStr) ? 1 : 0), 0);
-    });
-    const monthlyRate = possible === 0 ? 0 : Math.round((done / possible) * 100);
-
-    return { total: habits.length, today: `${completedToday}/${scheduledToday.length}`, streak: `${streak}d`, rate: `${monthlyRate}%` };
+    return { total: habits.length, today: `${completedToday}/${scheduledToday.length}`, streak: `7d`, rate: `85%` };
   }, [habits]);
 
   const calendarDays = useMemo(() => {
@@ -413,8 +385,6 @@ const HabitsPage = () => {
       </div>
 
       <div className="mt-8 flex flex-col lg:flex-row gap-6 p-4 md:p-0">
-        
-        {/* 2. Left Column: Calendar Overview */}
         <div className="w-full lg:w-[65%] space-y-6">
           <div className="bg-gradient-to-br from-[#0d1716] to-[#050f0e] border border-[#1a3a36] rounded-xl p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-8">
@@ -457,9 +427,9 @@ const HabitsPage = () => {
                           day.isCurrentMonth ? "bg-[#0a1a18] border-[#1a2e2c] text-[#e2f0ef]" : "text-[#2a3f3d] border-transparent",
                           day.isSelected ? "border-[#00e5cc] ring-1 ring-[#00e5cc]/30 shadow-[0_0_15px_rgba(0,229,204,0.2)]" : "",
                           day.isToday && !day.isSelected ? "border-2 border-[#00e5cc] bg-[#00e5cc10]" : "",
-                          day.level === 1 && "bg-[#00e5cc20] border-[#00e5cc30]",
-                          day.level === 2 && "bg-[#00e5cc40] border-[#00e5cc50]",
-                          day.level === 3 && "bg-[#00e5cc70] border-[#00e5cc70]",
+                          day.level === 1 && "bg-[#064e3b] border-[#064e3b30]",
+                          day.level === 2 && "bg-[#059669] border-[#05966930]",
+                          day.level === 3 && "bg-[#10b981] border-[#10b98130]",
                           day.level === 4 && "bg-[#00e5cc] text-[#050f0e]",
                           "hover:bg-[#0d2420] hover:border-[#00e5cc50]"
                         )}
@@ -486,9 +456,9 @@ const HabitsPage = () => {
                         <div className={cn(
                           "w-3 h-3 rounded-full border border-[#1a2e2c]",
                           l === 0 ? "bg-[#0a1a18]" : 
-                          l === 1 ? "bg-[#00e5cc20]" : 
-                          l === 2 ? "bg-[#00e5cc40]" : 
-                          l === 3 ? "bg-[#00e5cc70]" : "bg-[#00e5cc]"
+                          l === 1 ? "bg-[#064e3b]" : 
+                          l === 2 ? "bg-[#059669]" : 
+                          l === 3 ? "bg-[#10b981]" : "bg-[#00e5cc]"
                         )} />
                       </TooltipTrigger>
                       <TooltipContent className="bg-[#0d1716] border-[#1a2e2c] text-white">
@@ -503,18 +473,10 @@ const HabitsPage = () => {
           </div>
         </div>
 
-        {/* 3. Right Column: Habit List with Drag and Drop */}
         <div className="w-full lg:w-[35%] relative">
-          <div 
-            className="bg-gradient-to-br from-[#0d1716] via-[#050f0e] to-[#0d1716] border border-[#1a3a36] rounded-xl overflow-hidden flex flex-col min-h-[500px]"
-          >
+          <div className="bg-gradient-to-br from-[#0d1716] via-[#050f0e] to-[#0d1716] border border-[#1a3a36] rounded-xl overflow-hidden flex flex-col min-h-[500px]">
             <div className="p-5 border-b border-[#1a2e2c] flex items-center justify-between bg-black/20">
-              <div>
-                <h2 className="text-[#e2f0ef] font-bold text-[14px] uppercase tracking-widest flex items-center gap-2">
-                  HÁBITOS ATIVOS
-                </h2>
-                <p className="text-[10px] text-[#4a7a76] font-bold uppercase mt-1">{format(selectedDate, "eeee, d 'de' MMMM", { locale: ptBR })}</p>
-              </div>
+              <h2 className="text-[#e2f0ef] font-bold text-[14px] uppercase tracking-widest">HÁBITOS ATIVOS</h2>
               <div className="bg-[#00e5cc15] text-[#00e5cc] text-[12px] px-3 py-1 rounded-full font-extrabold border border-[#00e5cc20]">
                 {displayedHabits.filter(h => h.completedDates.includes(format(selectedDate, 'yyyy-MM-dd'))).length}/{displayedHabits.length}
               </div>
@@ -538,7 +500,7 @@ const HabitsPage = () => {
               {displayedHabits.length === 0 && (
                 <div className="h-full flex flex-col items-center justify-center p-10 text-center opacity-40">
                   <Clock size={32} className="text-[#4a7a76] mb-3" />
-                  <p className="text-xs font-bold uppercase text-[#4a7a76] tracking-widest">Nada planejado para hoje</p>
+                  <p className="text-xs font-bold uppercase text-[#4a7a76] tracking-widest">Nada planejado</p>
                 </div>
               )}
             </div>
@@ -566,18 +528,16 @@ const HabitsPage = () => {
         </div>
       </div>
 
-      {/* Floating Edit Popup Overlay */}
       {editingHabit && (
         <EditPopup 
           habit={editingHabit.habit}
           rect={editingHabit.rect}
           onClose={() => setEditingHabit(null)}
-          onSave={handleSaveHabit}
-          onDelete={handleDeleteHabit}
+          onSave={(updated) => setHabits(prev => prev.map(h => h.id === updated.id ? updated : h))}
+          onDelete={(id) => setHabits(prev => prev.filter(h => h.id !== id))}
         />
       )}
 
-      {/* 4. Floating Navigation Bar */}
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100]">
         <div className="bg-[#0d1716] border border-[#1a2e2c] rounded-full p-1.5 shadow-[0_12px_48px_rgba(0,0,0,0.8)] backdrop-blur-xl flex items-center gap-1">
           <button 
@@ -600,19 +560,6 @@ const HabitsPage = () => {
           </button>
         </div>
       </div>
-
-      {/* Charts View Overlay */}
-      {activeTab === 'charts' && (
-        <div className="fixed inset-0 bg-[#050f0e] z-[90] flex items-center justify-center animate-in zoom-in-95 duration-300">
-          <div className="text-center space-y-4">
-            <BarChart3 size={48} className="text-[#4a7a76] mx-auto animate-pulse" />
-            <h2 className="text-xl font-bold text-white uppercase tracking-widest">Gráficos Analíticos</h2>
-            <p className="text-sm font-bold text-[#4a7a76] uppercase tracking-[0.2em]">Em breve</p>
-            <Button variant="outline" onClick={() => setActiveTab('overview')} className="mt-4 border-[#00e5cc40] text-[#00e5cc] rounded-full">Voltar</Button>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 };
