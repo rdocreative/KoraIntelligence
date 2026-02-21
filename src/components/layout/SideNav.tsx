@@ -30,17 +30,17 @@ const navItems = [
 export const SideNav = () => {
   return (
     <div className="fixed left-[20px] top-1/2 -translate-y-1/2 z-[100]">
-      <nav className="flex flex-col items-center gap-1.5 border-none">
+      <nav className="flex flex-col items-center gap-2 border-none bg-transparent">
         {navItems.map(({ icon: Icon, path, label, isSpecial, color }) => (
           <NavLink
             key={path}
             to={path}
             title={label}
             className={({ isActive }) => cn(
-              "flex items-center justify-center rounded-full transition-all duration-200",
-              !isSpecial && "w-[40px] h-[40px]",
-              isSpecial && "w-[49px] h-[49px] my-1 hover:scale-105 active:scale-95",
-              isActive && !isSpecial && "border border-[#1a2e2c]"
+              "flex items-center justify-center rounded-full transition-all duration-300",
+              !isSpecial && "w-[42px] h-[42px]",
+              isSpecial && "w-[52px] h-[52px] my-1 hover:scale-105 active:scale-95 shadow-lg",
+              isActive && !isSpecial && "bg-[#0a1a18] border border-[#1a2e2c]"
             )}
             style={({ isActive }) => {
               if (isSpecial) {
@@ -52,32 +52,20 @@ export const SideNav = () => {
               }
               if (isActive) {
                 return {
-                  background: 'linear-gradient(135deg, #0a1a18 0%, #070d0c 100%)',
-                  color: color
+                  color: color,
+                  boxShadow: `0 0 15px ${color}20`
                 };
               }
               return {
                 color: '#5a8a85'
               };
             }}
-            onMouseEnter={(e) => {
-              const target = e.currentTarget as HTMLElement;
-              const isActive = target.classList.contains('active');
-              if (!isSpecial && !isActive) {
-                target.style.background = 'linear-gradient(135deg, #0a1a18 0%, #070d0c 100%)';
-                target.style.color = color;
-              }
-            }}
-            onMouseLeave={(e) => {
-              const target = e.currentTarget as HTMLElement;
-              const isActive = target.classList.contains('active');
-              if (!isSpecial && !isActive) {
-                target.style.background = 'transparent';
-                target.style.color = '#5a8a85';
-              }
-            }}
           >
-            <Icon size={isSpecial ? 25 : 20} strokeWidth={isSpecial ? 2.5 : 2} />
+            <Icon 
+              size={isSpecial ? 26 : 22} 
+              strokeWidth={isSpecial ? 2.5 : 2} 
+              className="transition-transform duration-200 group-hover:scale-110"
+            />
           </NavLink>
         ))}
       </nav>
