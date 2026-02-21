@@ -47,10 +47,10 @@ const ProtectedRoute = () => {
   return (
     <div className="flex min-h-screen bg-[#071412]">
       <Sidebar />
-      <main className="flex-1 ml-[52px] w-[calc(100%-52px)] flex justify-center">
-        <div className="max-w-[1200px] w-full px-6 flex flex-col min-h-screen">
+      <main className="flex-1 ml-[52px] w-[calc(100%-52px)] min-h-screen flex flex-col items-center p-6 md:px-8 md:py-6 overflow-y-auto">
+        <div className="max-w-[1300px] w-full mx-auto flex flex-col gap-6">
           <TopBar />
-          <div className="flex-1 py-6">
+          <div className="flex-1">
             <Outlet />
           </div>
         </div>
