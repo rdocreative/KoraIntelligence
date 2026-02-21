@@ -5,13 +5,14 @@ import {
   Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, Clock, Flame, 
   BarChart3, CheckCircle2, Pencil, Trash2, 
-  ChevronDown, ChevronUp, Play, Pause, X
+  Play, Pause, CalendarDays, Target
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { 
   format, 
@@ -24,7 +25,11 @@ import {
   subMonths, 
   getDay,
   startOfWeek,
-  endOfWeek
+  endOfWeek,
+  setMonth,
+  setYear,
+  getYear,
+  getMonth
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -34,8 +39,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
-  defaultDropAnimationSideEffects
+  DragEndEvent
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -81,7 +85,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
   } = useSortable({ 
     id: habit.id,
     transition: {
-      duration: 150, // Faster transition between slots
+      duration: 150,
       easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
     }
   });
@@ -290,9 +294,6 @@ const HabitsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingHabit, setEditingHabit] = useState<{habit: Habit, rect: DOMRect} | null>(null);
 
-  // SNAPPIER SENSORS: 
-  // - Activation distance: 1px (immediate)
-  // - Delay: 0 (immediate)
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 1 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -370,26 +371,31 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-[#050f0e] pb-32 animate-in fade-in duration-500 relative">
       
-      {/* 1. Header Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-0">
+      {/* 1. Header Stats Grid - UPDATED DESIGN */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 md:p-0 mt-2">
         {[
-          { label: "Hábitos", value: stats.total, icon: CheckCircle2, color: "#00e5cc", grad: "from-[#00463f] to-[#0a1a18]", border: "border-[#00e5cc30]" },
-          { label: "Sequência", value: stats.streak, icon: Flame, color: "#ff6b00", grad: "from-[#4a2000] to-[#0d1110]", border: "border-[#ff6b0030]" },
-          { label: "Hoje", value: stats.today, icon: Check, color: "#00e577", grad: "from-[#004d22] to-[#0a1510]", border: "border-[#00e57730]" },
-          { label: "Mês", value: stats.rate, icon: BarChart3, color: "#a855f7", grad: "from-[#2d0060] to-[#0d0a1a]", border: "border-[#9333ea30]" }
+          { label: "Total de Hábitos", value: stats.total, icon: Target, color: "#00e5cc", grad: "from-[#002e2c] to-[#0a1a18]", border: "border-[#00e5cc20]" },
+          { label: "Maior Sequência", value: stats.streak, icon: Flame, color: "#ff6b00", grad: "from-[#2e1500] to-[#0d1110]", border: "border-[#ff6b0020]" },
+          { label: "Completos Hoje", value: stats.today, icon: CheckCircle2, color: "#4f46e5", grad: "from-[#1a1c4e] to-[#0a0c1a]", border: "border-[#4f46e520]" },
+          { label: "Taxa do Mês", value: stats.rate, icon: BarChart3, color: "#a855f7", grad: "from-[#240a46] to-[#0d0a1a]", border: "border-[#a855f720]" }
         ].map((s, i) => (
           <div 
             key={i}
             className={cn(
-              "p-4 rounded-xl border flex items-center justify-between bg-gradient-to-br h-[100px]",
+              "p-3 rounded-[14px] border flex items-center gap-3.5 bg-gradient-to-br transition-all duration-300 h-[72px]",
               s.grad, s.border
             )}
           >
-            <div className="flex flex-col justify-center">
-              <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-white/50 mb-1">{s.label}</span>
-              <span className="text-[26px] font-extrabold text-white">{s.value}</span>
+            <div 
+              className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+              style={{ backgroundColor: `${s.color}20` }}
+            >
+              <s.icon size={22} style={{ color: s.color }} strokeWidth={2.5} />
             </div>
-            <s.icon size={38} style={{ color: s.color }} strokeWidth={1.5} />
+            <div className="flex flex-col">
+              <span className="text-[10px] font-semibold text-white/50 uppercase tracking-wider leading-tight">{s.label}</span>
+              <span className="text-xl font-black text-white leading-tight">{s.value}</span>
+            </div>
           </div>
         ))}
       </div>
@@ -398,9 +404,36 @@ const HabitsPage = () => {
         <div className="w-full lg:w-[65%] space-y-6">
           <div className="bg-gradient-to-br from-[#0d1716] to-[#050f0e] border border-[#1a3a36] rounded-xl p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-lg font-bold text-white uppercase tracking-wider">
-                {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
-              </h2>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="flex items-center gap-2 text-lg font-bold text-white uppercase tracking-wider hover:text-[#00e5cc] transition-colors group">
+                    {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
+                    <ChevronDown size={18} className="text-[#4a7a76] group-hover:text-[#00e5cc]" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="bg-[#0d1716] border-[#1a2e2c] w-64 p-3 shadow-2xl">
+                  <div className="grid grid-cols-3 gap-1 mb-4">
+                    {Array.from({ length: 12 }).map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCurrentDate(setMonth(currentDate, i))}
+                        className={cn(
+                          "py-2 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all",
+                          getMonth(currentDate) === i ? "bg-[#00e5cc] text-[#050f0e]" : "text-[#4a7a76] hover:bg-[#1a2e2c] hover:text-[#e2f0ef]"
+                        )}
+                      >
+                        {format(new Date(2024, i, 1), 'MMM', { locale: ptBR })}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between pt-2 border-t border-[#1a2e2c]">
+                    <button onClick={() => setCurrentDate(setYear(currentDate, getYear(currentDate) - 1))} className="p-1 text-[#4a7a76] hover:text-[#00e5cc]"><ChevronLeft size={16}/></button>
+                    <span className="text-xs font-black text-white">{getYear(currentDate)}</span>
+                    <button onClick={() => setCurrentDate(setYear(currentDate, getYear(currentDate) + 1))} className="p-1 text-[#4a7a76] hover:text-[#00e5cc]"><ChevronRight size={16}/></button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
               <div className="flex items-center gap-3">
                 <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} className="p-1 text-[#4a7a76] hover:text-[#00e5cc] transition-colors">
                   <ChevronLeft size={24} />
