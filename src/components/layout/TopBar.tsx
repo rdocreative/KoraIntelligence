@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const TopBar = () => {
+export const TopBar = () => {
   const location = useLocation();
 
   // Mapeamento dinâmico de títulos e ícones baseado na rota
@@ -100,7 +100,7 @@ const TopBar = () => {
             {subtitle}
           </span>
 
-          {/* Ações Rápidas (Opcionais, mantendo o estilo limpo) */}
+          {/* Ações Rápidas */}
           <div className="flex items-center gap-3 pl-2 border-l border-[#2d5550]">
             <button className="text-white/40 hover:text-white transition-colors">
               <Search size={18} />
@@ -115,5 +115,3 @@ const TopBar = () => {
     </div>
   );
 };
-
-export default TopBar;
