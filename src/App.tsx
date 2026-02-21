@@ -10,7 +10,7 @@ import { SettingsProvider } from "./hooks/useSettings";
 import { HabitProvider } from "./hooks/useHabitTracker";
 import { MasterplanProvider } from "./hooks/useMasterplan";
 import { AuthProvider, useAuth } from "./components/providers/AuthProvider";
-import { Sidebar } from "./components/layout/Sidebar";
+import { DesktopBottomNav } from "./components/layout/DesktopBottomNav";
 import { TopBar } from "./components/layout/TopBar"; 
 
 // Pages
@@ -46,8 +46,7 @@ const ProtectedRoute = () => {
 
   return (
     <div className="flex min-h-screen bg-[#071412]">
-      <Sidebar />
-      <main className="flex-1 ml-[52px] w-[calc(100%-52px)] flex justify-center">
+      <main className="flex-1 flex justify-center pb-24">
         <div className="max-w-[1200px] w-full px-6 flex flex-col min-h-screen">
           <TopBar />
           <div className="flex-1 py-6">
@@ -55,6 +54,7 @@ const ProtectedRoute = () => {
           </div>
         </div>
       </main>
+      <DesktopBottomNav />
     </div>
   );
 };
