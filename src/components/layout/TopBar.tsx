@@ -4,7 +4,7 @@ import React from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Coins, Zap } from "lucide-react";
 
-export const TopBar = () => {
+const TopBar = () => {
   const { profile } = useAuth() as any;
 
   const stats = {
