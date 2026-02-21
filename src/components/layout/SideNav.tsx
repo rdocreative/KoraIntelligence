@@ -30,54 +30,38 @@ const navItems = [
 export const SideNav = () => {
   return (
     <div className="fixed left-[20px] top-1/2 -translate-y-1/2 z-[100]">
-      <nav className="flex flex-col items-center gap-1.5 border-none">
+      <nav className="flex flex-col items-center gap-2 border-none">
         {navItems.map(({ icon: Icon, path, label, isSpecial, color }) => (
           <NavLink
             key={path}
             to={path}
             title={label}
             className={({ isActive }) => cn(
-              "flex items-center justify-center rounded-full transition-all duration-200",
-              !isSpecial && "w-[40px] h-[40px]",
-              isSpecial && "w-[49px] h-[49px] my-1 hover:scale-105 active:scale-95",
-              isActive && !isSpecial && "border border-[#1a2e2c]"
+              "flex items-center justify-center rounded-full transition-all duration-300 group",
+              !isSpecial && "w-[40px] h-[40px] hover:bg-[#0a1a18]",
+              isSpecial && "w-[48px] h-[48px] my-1 hover:scale-110 active:scale-95",
+              isActive && !isSpecial && "bg-[#0a1a18] border border-[#1a2e2c]"
             )}
             style={({ isActive }) => {
               if (isSpecial) {
                 return {
-                  background: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)',
-                  boxShadow: '0 4px 20px #38bdf840',
+                  background: `linear-gradient(135deg, ${color} 0%, #0284c7 100%)`,
+                  boxShadow: `0 4px 20px ${color}40`,
                   color: '#071412'
                 };
               }
-              if (isActive) {
-                return {
-                  background: 'linear-gradient(135deg, #0a1a18 0%, #070d0c 100%)',
-                  color: color
-                };
-              }
               return {
-                color: '#5a8a85'
+                // Se estiver ativo, usa a cor cheia. Se não, uma versão com 40% de opacidade
+                color: isActive ? color : `${color}66`
               };
             }}
-            onMouseEnter={(e) => {
-              const target = e.currentTarget as HTMLElement;
-              const isActive = target.classList.contains('active');
-              if (!isSpecial && !isActive) {
-                target.style.background = 'linear-gradient(135deg, #0a1a18 0%, #070d0c 100%)';
-                target.style.color = color;
-              }
-            }}
-            onMouseLeave={(e) => {
-              const target = e.currentTarget as HTMLElement;
-              const isActive = target.classList.contains('active');
-              if (!isSpecial && !isActive) {
-                target.style.background = 'transparent';
-                target.style.color = '#5a8a85';
-              }
-            }}
           >
-            <Icon size={isSpecial ? 25 : 20} strokeWidth={isSpecial ? 2.5 : 2} />
+            <Icon 
+              size={isSpecial ? 24 : 20} 
+              strokeWidth={isSpecial ? 2.5 : 2}
+              className="transition-colors duration-300 group-hover:text-[currentColor]"
+              style={{ color: 'inherit' }}
+            />
           </NavLink>
         ))}
       </nav>
