@@ -6,7 +6,7 @@ export const TopBar = () => {
   const userName = session?.user?.email?.split("@")[0] || "Usuário";
 
   return (
-    <header className="w-full flex justify-between items-center bg-transparent">
+    <header className="w-full flex justify-between items-center bg-transparent mb-[24px]">
       <div>
         <h1 className="text-xl font-bold text-[#e8f5f3]">Dashboard</h1>
         <p className="text-sm text-[#3a6a65]">Bem-vindo de volta, {userName}</p>
