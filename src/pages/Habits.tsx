@@ -370,10 +370,34 @@ const HabitsPage = () => {
   }, [habits, selectedDate]);
 
   return (
-    <div className="min-h-screen bg-[#050f0e] pb-32 animate-in fade-in duration-500 relative">
+    <div className="min-h-screen bg-[#050f0e] pb-10 animate-in fade-in duration-500 relative">
       
-      {/* 1. Header Stats Grid - REDESIGNED */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 md:p-0 mt-2">
+      {/* Tab Navigation at TOP */}
+      <div className="flex justify-center pt-6 pb-2">
+        <div className="bg-[#0d1716] border border-[#1a2e2c] rounded-full p-1 shadow-2xl backdrop-blur-xl flex items-center gap-1">
+          <button 
+            onClick={() => setActiveTab('overview')}
+            className={cn(
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest transition-all duration-300",
+              activeTab === 'overview' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#4a7a76] hover:text-[#e2f0ef]"
+            )}
+          >
+            <LayoutGrid size={14} /> Visão Geral
+          </button>
+          <button 
+            onClick={() => setActiveTab('charts')}
+            className={cn(
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest transition-all duration-300",
+              activeTab === 'charts' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#4a7a76] hover:text-[#e2f0ef]"
+            )}
+          >
+            <BarChart3 size={14} /> Gráficos
+          </button>
+        </div>
+      </div>
+
+      {/* 1. Header Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 md:p-0 mt-4">
         {[
           { 
             label: "Total de Hábitos", 
@@ -419,14 +443,12 @@ const HabitsPage = () => {
               s.grad, s.border
             )}
           >
-            {/* Ícone à ESQUERDA - Container circular 48x48 */}
             <div 
               className={cn("w-12 h-12 rounded-full flex items-center justify-center shrink-0", s.iconBg)}
             >
               <s.icon size={32} style={{ color: s.color }} strokeWidth={2} />
             </div>
 
-            {/* Texto à DIREITA */}
             <div className="flex flex-col items-end">
               <span className="text-[10px] font-semibold text-white/45 uppercase tracking-[0.1em] leading-tight">
                 {s.label}
@@ -619,29 +641,6 @@ const HabitsPage = () => {
           onDelete={(id) => setHabits(prev => prev.filter(h => h.id !== id))}
         />
       )}
-
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100]">
-        <div className="bg-[#0d1716] border border-[#1a2e2c] rounded-full p-1.5 shadow-[0_12px_48px_rgba(0,0,0,0.8)] backdrop-blur-xl flex items-center gap-1">
-          <button 
-            onClick={() => setActiveTab('overview')}
-            className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest transition-all duration-300",
-              activeTab === 'overview' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#4a7a76] hover:text-[#e2f0ef]"
-            )}
-          >
-            <LayoutGrid size={14} /> Visão Geral
-          </button>
-          <button 
-            onClick={() => setActiveTab('charts')}
-            className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest transition-all duration-300",
-              activeTab === 'charts' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#4a7a76] hover:text-[#e2f0ef]"
-            )}
-          >
-            <BarChart3 size={14} /> Gráficos
-          </button>
-        </div>
-      </div>
     </div>
   );
 };
