@@ -117,6 +117,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...attributes}
       {...listeners}
       className={cn(
+        // List Item Radius: 10px, Padding: 14px 16px, Gap/Margin: ~8px (mb-2)
         "group rounded-[10px] border border-[#1a3530] p-[14px] px-[16px] mb-2 cursor-grab active:cursor-grabbing select-none",
         isDragging ? "scale-[1.03] border-[#00e5cc60] bg-[#0d1e1c] shadow-2xl ring-2 ring-[#00e5cc20]" : "bg-gradient-to-br from-[#0a1e1c] to-[#050f0e] transition-all duration-100",
         isCompleted && !isDragging && "opacity-60"
@@ -135,12 +136,14 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
         </button>
 
         <div className="flex-1 min-w-0">
-          <h3 className="text-[15px] font-semibold text-white truncate">
+          {/* List Item Name: 14px, 600, #e8f5f3 */}
+          <h3 className="text-[14px] font-[600] text-[#e8f5f3] truncate leading-tight">
             {habit.title}
           </h3>
-          <div className="flex items-center gap-2 mt-0.5">
-            <div className="flex items-center gap-1 text-[12px] text-[#4a8a85] font-bold uppercase tracking-wider">
-              <Clock size={10} className="text-[#00e5cc]" />
+          <div className="flex items-center gap-2 mt-1">
+            {/* Secondary Info: 12px, 400, #5a8a85 */}
+            <div className="flex items-center gap-1 text-[12px] font-[400] text-[#5a8a85]">
+              <Clock size={11} className="text-[#00e5cc]" />
               {habit.time}
             </div>
             <div className={cn(
@@ -201,31 +204,33 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
     <div 
       ref={popupRef}
       style={{ top, left }}
-      className="fixed z-[1000] min-w-[280px] bg-[#0f2220] border border-[#2d5550] rounded-[12px] p-4 shadow-[0_16_40px_rgba(0,0,0,0.6)] animate-in fade-in slide-in-from-top-2 duration-200"
+      // Medium Card: Radius 10px, Padding 16px 18px (approx p-4 for simplicity or exact)
+      className="fixed z-[1000] min-w-[280px] bg-[#0f2220] border border-[#2d5550] rounded-[10px] p-[16px] px-[18px] shadow-[0_16_40px_rgba(0,0,0,0.6)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="space-y-4">
         <div className="space-y-1">
-          <Label className="text-[10px] uppercase text-[#5a8a85] font-bold">Nome</Label>
+          {/* Label: 11px, 700, uppercase, rgba(255,255,255,0.45) */}
+          <Label className="text-[11px] font-[700] uppercase tracking-[0.1em] text-white/45">Nome</Label>
           <Input 
             value={form.title} 
             onChange={(e) => setForm({...form, title: e.target.value})}
-            className="h-9 bg-[#071412] border-[#2a4a46] text-xs text-[#e8f5f3] focus-visible:ring-[#00e5cc]" 
+            className="h-9 bg-[#071412] border-[#2a4a46] text-[14px] font-[600] text-[#e8f5f3] focus-visible:ring-[#00e5cc]" 
           />
         </div>
 
         <div className="space-y-1">
-          <Label className="text-[10px] uppercase text-[#5a8a85] font-bold">Horário</Label>
+          <Label className="text-[11px] font-[700] uppercase tracking-[0.1em] text-white/45">Horário</Label>
           <Input 
             type="time"
             value={form.time} 
             onChange={(e) => setForm({...form, time: e.target.value})}
-            className="h-9 bg-[#071412] border-[#2a4a46] text-xs text-[#e8f5f3] focus-visible:ring-[#00e5cc]" 
+            className="h-9 bg-[#071412] border-[#2a4a46] text-[14px] font-[600] text-[#e8f5f3] focus-visible:ring-[#00e5cc]" 
           />
         </div>
 
         <div className="space-y-1">
-          <Label className="text-[10px] uppercase text-[#5a8a85] font-bold">Prioridade</Label>
-          <div className="flex gap-1">
+          <Label className="text-[11px] font-[700] uppercase tracking-[0.1em] text-white/45">Prioridade</Label>
+          <div className="flex gap-2">
             {[
               { v: 'high', c: 'bg-red-500', l: 'Alta' }, 
               { v: 'medium', c: 'bg-yellow-500', l: 'Média' }, 
@@ -235,7 +240,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
                 key={p.v}
                 onClick={() => setForm({...form, priority: p.v as Priority})}
                 className={cn(
-                  "flex-1 h-7 rounded text-[9px] font-bold uppercase transition-all",
+                  "flex-1 h-8 rounded-[10px] text-[11px] font-[700] uppercase tracking-wider transition-all",
                   form.priority === p.v ? `${p.c} text-[#071412]` : "bg-[#071412] text-[#5a8a85] hover:bg-[#1e3a36]"
                 )}
               >
@@ -245,14 +250,14 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
           </div>
         </div>
 
-        <div className="flex items-center justify-between bg-[#071412] p-2 rounded border border-[#1e3a36]">
-          <span className="text-[10px] uppercase text-[#5a8a85] font-bold ml-1">
+        <div className="flex items-center justify-between bg-[#071412] p-2.5 rounded-[10px] border border-[#1e3a36]">
+          <span className="text-[11px] font-[700] uppercase tracking-[0.1em] text-white/45 ml-1">
             {form.active ? 'Ativo' : 'Pausado'}
           </span>
           <button 
             onClick={() => setForm({...form, active: !form.active})}
             className={cn(
-              "p-1.5 rounded transition-colors",
+              "p-1.5 rounded-[8px] transition-colors",
               form.active ? "text-[#00e5cc] bg-[#00e5cc]/10" : "text-[#5a8a85]"
             )}
           >
@@ -260,19 +265,19 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
           </button>
         </div>
 
-        <div className="flex items-center gap-2 pt-2">
+        <div className="flex items-center gap-3 pt-2">
           <Button 
             variant="outline" 
             size="sm"
             onClick={() => { onDelete(habit.id); onClose(); }}
-            className="flex-1 h-9 bg-transparent border-red-500/30 text-red-500 hover:bg-red-500/10 hover:text-red-400 text-[10px] uppercase font-bold"
+            className="flex-1 h-9 bg-transparent border-red-500/30 text-red-500 hover:bg-red-500/10 hover:text-red-400 text-[11px] font-[700] uppercase tracking-wider rounded-[10px]"
           >
             <Trash2 size={14} className="mr-1.5" /> Excluir
           </Button>
           <Button 
             size="sm"
             onClick={() => { onSave(form); onClose(); }}
-            className="flex-[2] h-9 bg-[#00e5cc] hover:bg-[#00c9b3] text-[#071412] font-extrabold text-[10px] uppercase"
+            className="flex-[2] h-9 bg-[#00e5cc] hover:bg-[#00c9b3] text-[#071412] font-[800] text-[11px] uppercase tracking-wider rounded-[10px]"
           >
             Salvar
           </Button>
@@ -372,13 +377,13 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
       
-      {/* Tab Navigation at TOP */}
+      {/* Navigation Text: 12px, 700, uppercase, 0.08em */}
       <div className="flex justify-center pt-6 pb-2">
         <div className="bg-[#0f2220] border border-[#2d5550] rounded-full p-[8px] px-[6px] shadow-2xl backdrop-blur-xl flex items-center gap-1">
           <button 
             onClick={() => setActiveTab('overview')}
             className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-semibold uppercase tracking-widest transition-all duration-300",
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300",
               activeTab === 'overview' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#5a8a85] hover:text-[#e8f5f3]"
             )}
           >
@@ -387,7 +392,7 @@ const HabitsPage = () => {
           <button 
             onClick={() => setActiveTab('charts')}
             className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-semibold uppercase tracking-widest transition-all duration-300",
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300",
               activeTab === 'charts' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#5a8a85] hover:text-[#e8f5f3]"
             )}
           >
@@ -397,7 +402,8 @@ const HabitsPage = () => {
       </div>
 
       {/* Header Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-0 mt-4">
+      {/* Gap Cards: 12px */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-[12px] p-4 md:p-0 mt-6">
         {[
           { 
             label: "TOTAL HÁBITOS", 
@@ -439,21 +445,24 @@ const HabitsPage = () => {
           <div 
             key={i}
             className={cn(
-              "p-3.5 rounded-[16px] border flex items-center gap-3 bg-gradient-to-br transition-all duration-300",
+              // Medium Card: Radius 10px, Padding 16px 18px
+              "py-[16px] px-[18px] rounded-[10px] border flex items-center gap-3 bg-gradient-to-br transition-all duration-300",
               s.grad, s.border
             )}
           >
             <div 
-              className={cn("w-14 h-14 rounded-xl flex items-center justify-center shrink-0", s.iconBg)}
+              className={cn("w-14 h-14 rounded-[10px] flex items-center justify-center shrink-0", s.iconBg)}
             >
               <s.icon size={24} style={{ color: s.color }} strokeWidth={2.5} />
             </div>
 
             <div className="flex flex-col">
-              <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest leading-none mb-1">
+              {/* Label: 11px, 700, uppercase, tracking 0.1em, white/45 */}
+              <span className="text-[11px] font-[700] text-white/45 uppercase tracking-[0.1em] leading-none mb-2">
                 {s.label}
               </span>
-              <span className="text-[24px] font-black text-white leading-none">
+              {/* Big Value: 28px, 800, white, line-height 1.1 */}
+              <span className="text-[28px] font-[800] text-white leading-[1.1]">
                 {s.value}
               </span>
             </div>
@@ -461,9 +470,11 @@ const HabitsPage = () => {
         ))}
       </div>
 
-      <div className="mt-8 flex flex-col lg:flex-row gap-6 p-4 md:p-0">
+      {/* Gap Sections: 20px */}
+      <div className="mt-[20px] flex flex-col lg:flex-row gap-[20px] p-4 md:p-0">
         <div className="w-full lg:w-[65%] space-y-6">
-          <div className="bg-gradient-to-br from-[#0f2220] to-[#071412] border border-[#2d5550] rounded-xl p-6 shadow-2xl">
+          {/* Big Card: Radius 14px, Padding 20px 24px */}
+          <div className="bg-gradient-to-br from-[#0f2220] to-[#071412] border border-[#2d5550] rounded-[14px] py-[20px] px-[24px] shadow-2xl">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2">
                 <button 
@@ -475,19 +486,20 @@ const HabitsPage = () => {
                 
                 <Popover>
                   <PopoverTrigger asChild>
-                    <button className="flex items-center gap-2 text-lg font-bold text-white uppercase tracking-wider hover:text-[#00e5cc] transition-colors group px-2">
+                    {/* Card Title: 14px, 700, #e8f5f3 */}
+                    <button className="flex items-center gap-2 text-[14px] font-[700] text-[#e8f5f3] uppercase tracking-[0.02em] hover:text-[#00e5cc] transition-colors group px-2">
                       {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
                       <ChevronDown size={18} className="text-[#5a8a85] group-hover:text-[#00e5cc]" />
                     </button>
                   </PopoverTrigger>
-                  <PopoverContent className="bg-[#0f2220] border-[#2d5550] w-64 p-3 shadow-2xl">
+                  <PopoverContent className="bg-[#0f2220] border-[#2d5550] w-64 p-3 shadow-2xl rounded-[14px]">
                     <div className="grid grid-cols-3 gap-1 mb-4">
                       {Array.from({ length: 12 }).map((_, i) => (
                         <button
                           key={i}
                           onClick={() => setCurrentDate(setMonth(currentDate, i))}
                           className={cn(
-                            "py-2 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all",
+                            "py-2 rounded-md text-[11px] font-[700] uppercase tracking-wider transition-all",
                             getMonth(currentDate) === i ? "bg-[#00e5cc] text-[#071412]" : "text-[#5a8a85] hover:bg-[#1e3a36] hover:text-[#e8f5f3]"
                           )}
                         >
@@ -497,7 +509,7 @@ const HabitsPage = () => {
                     </div>
                     <div className="flex items-center justify-between pt-2 border-t border-[#1e3a36]">
                       <button onClick={() => setCurrentDate(setYear(currentDate, getYear(currentDate) - 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc]"><ChevronLeft size={16}/></button>
-                      <span className="text-xs font-black text-white">{getYear(currentDate)}</span>
+                      <span className="text-[12px] font-black text-white">{getYear(currentDate)}</span>
                       <button onClick={() => setCurrentDate(setYear(currentDate, getYear(currentDate) + 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc]"><ChevronRight size={16}/></button>
                     </div>
                   </PopoverContent>
@@ -512,11 +524,12 @@ const HabitsPage = () => {
               </div>
 
               <div className="flex items-center">
+                {/* Badges/Counters: 11px, 700, padding 3px 10px, radius 999 */}
                 <Button 
                   variant="ghost" 
                   size="sm" 
                   onClick={() => { setCurrentDate(new Date()); setSelectedDate(new Date()); }}
-                  className="text-[11px] font-bold text-[#00e5cc] bg-[#00e5cc10] border border-[#00e5cc30] uppercase rounded-full h-8 px-4"
+                  className="text-[11px] font-[700] text-[#00e5cc] bg-[#00e5cc10] border border-[#00e5cc30] uppercase rounded-[999px] h-auto px-[10px] py-[3px]"
                 >
                   Hoje
                 </Button>
@@ -524,8 +537,9 @@ const HabitsPage = () => {
             </div>
 
             <div className="grid grid-cols-7 mb-4">
+              {/* Calendar Weekdays: 11px, 700, uppercase, 0.08em, #00e5cc */}
               {['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].map(d => (
-                <div key={d} className="text-center text-xs font-bold text-[#00e5cc] uppercase tracking-wider py-2 opacity-80">{d}</div>
+                <div key={d} className="text-center text-[11px] font-[700] text-[#00e5cc] uppercase tracking-[0.08em] py-2 opacity-80">{d}</div>
               ))}
             </div>
 
@@ -547,10 +561,11 @@ const HabitsPage = () => {
                           day.level === 4 && "bg-[#00e5cc] text-[#071412]",
                         )}
                       >
-                        <span className="text-[16px] font-semibold">{format(day.date, 'd')}</span>
+                        {/* Calendar Numbers: 14px, 600, #e8f5f3 */}
+                        <span className="text-[14px] font-[600] text-[#e8f5f3]">{format(day.date, 'd')}</span>
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3]">
+                    <TooltipContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3] rounded-[10px]">
                       <p className="text-xs font-bold">{format(day.date, 'dd/MM')}</p>
                       <p className="text-[10px] text-[#5a8a85] font-bold uppercase">{day.done} de {day.total} feitos</p>
                     </TooltipContent>
@@ -559,7 +574,7 @@ const HabitsPage = () => {
               </TooltipProvider>
             </div>
 
-            <div className="mt-8 flex items-center justify-center gap-4 text-[11px] font-bold text-[#5a8a85] uppercase tracking-widest">
+            <div className="mt-8 flex items-center justify-center gap-4 text-[11px] font-[700] text-[#5a8a85] uppercase tracking-widest">
               <span>MENOS</span>
               <div className="flex gap-2">
                 {[0, 1, 2, 3, 4].map(l => (
@@ -587,10 +602,14 @@ const HabitsPage = () => {
         </div>
 
         <div className="w-full lg:w-[35%] relative">
-          <div className="bg-gradient-to-br from-[#0f2220] via-[#071412] to-[#0f2220] border border-[#2d5550] rounded-xl overflow-hidden flex flex-col min-h-[500px]">
-            <div className="p-5 border-b border-[#2a4a46] flex items-center justify-between bg-black/20">
-              <h2 className="text-[#00e5cc] font-bold text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
-              <div className="bg-[#00e5cc15] text-[#00e5cc] text-[12px] px-3 py-1 rounded-full font-extrabold border border-[#00e5cc20]">
+          {/* Big Card: Radius 14px */}
+          <div className="bg-gradient-to-br from-[#0f2220] via-[#071412] to-[#0f2220] border border-[#2d5550] rounded-[14px] overflow-hidden flex flex-col min-h-[500px]">
+            {/* Header: Padding 20px 24px */}
+            <div className="py-[20px] px-[24px] border-b border-[#2a4a46] flex items-center justify-between bg-black/20">
+              {/* Card Title: 14px, 700, #e8f5f3 */}
+              <h2 className="text-[#e8f5f3] font-[700] text-[14px] uppercase tracking-[0.02em]">HÁBITOS ATIVOS</h2>
+              {/* Badge: 11px, 700, px-3 py-1 (close to px-10px py-3px), radius 999 */}
+              <div className="bg-[#00e5cc15] text-[#00e5cc] text-[11px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#00e5cc20]">
                 {displayedHabits.filter(h => h.completedDates.includes(format(selectedDate, 'yyyy-MM-dd'))).length}/{displayedHabits.length}
               </div>
             </div>
@@ -613,7 +632,7 @@ const HabitsPage = () => {
               {displayedHabits.length === 0 && (
                 <div className="h-full flex flex-col items-center justify-center p-10 text-center opacity-40">
                   <Clock size={32} className="text-[#5a8a85] mb-3" />
-                  <p className="text-xs font-bold uppercase text-[#5a8a85] tracking-widest">Nada planejado</p>
+                  <p className="text-[11px] font-[700] uppercase text-[#5a8a85] tracking-[0.1em]">Nada planejado</p>
                 </div>
               )}
             </div>
@@ -621,15 +640,15 @@ const HabitsPage = () => {
             <div className="p-4 border-t border-[#2a4a46]">
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
-                  <Button className="w-full bg-[#00e5cc] hover:bg-[#00e5cc] hover:brightness-110 transition-all duration-200 text-[#071412] font-black text-[12px] uppercase tracking-[0.15em] h-12 rounded-xl">
+                  <Button className="w-full bg-[#00e5cc] hover:bg-[#00e5cc] hover:brightness-110 transition-all duration-200 text-[#071412] font-[800] text-[11px] uppercase tracking-[0.1em] h-12 rounded-[14px]">
                     <Plus className="mr-2" size={18} strokeWidth={3} /> NOVO HÁBITO
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3]">
+                <DialogContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3] rounded-[14px]">
                   <DialogHeader><DialogTitle className="uppercase tracking-widest text-sm text-[#00e5cc]">Criar Hábito</DialogTitle></DialogHeader>
                   <div className="grid gap-4 py-4">
                     <div className="grid gap-2">
-                      <Label className="text-[10px] uppercase font-bold text-[#5a8a85]">Título</Label>
+                      <Label className="text-[11px] uppercase font-[700] tracking-[0.1em] text-white/45">Título</Label>
                       <Input placeholder="Beber água..." className="bg-[#071412] border-[#2a4a46] text-[#e8f5f3]" />
                     </div>
                   </div>

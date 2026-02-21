@@ -79,7 +79,8 @@ export const FloatingNavbar = () => {
               {({ isActive }) => (
                 <>
                   <div className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-[#050f0e] border border-[#2a4441] rounded-xl opacity-0 scale-90 translate-y-2 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none shadow-xl z-[60]">
-                    <span className="text-[10px] font-bold tracking-widest text-white whitespace-nowrap uppercase">
+                    {/* Navigation Text: 12px, 700, uppercase, 0.08em */}
+                    <span className="text-[12px] font-[700] tracking-[0.08em] text-white whitespace-nowrap uppercase">
                       {item.label}
                     </span>
                     <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#050f0e] border-r border-b border-[#2a4441] rotate-45"></div>

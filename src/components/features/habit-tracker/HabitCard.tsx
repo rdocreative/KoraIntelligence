@@ -20,7 +20,8 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
   return (
     <div 
       className={cn(
-        "group relative flex flex-col gap-3 p-5 rounded-3xl border transition-all duration-300 backdrop-blur-xl overflow-hidden shadow-md shadow-black/20",
+        // List Item Padding: 14px 16px, Radius: 10px, Margin-bottom if list: ~8px
+        "group relative flex flex-col gap-3 p-[14px] px-[16px] rounded-[10px] border transition-all duration-300 backdrop-blur-xl overflow-hidden shadow-md shadow-black/20",
         "bg-gradient-to-br from-red-950/15 to-red-600/15 border-white/10 hover:border-red-600/40",
         habit.completed && "opacity-60"
       )}
@@ -37,7 +38,7 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
         </div>
 
         <div className={cn(
-          "h-12 w-12 rounded-xl flex items-center justify-center border transition-all duration-300",
+          "h-12 w-12 rounded-[10px] flex items-center justify-center border transition-all duration-300",
           habit.completed 
             ? "bg-green-600/10 border-green-500/30" 
             : "bg-black/60 border-white/10 group-hover:border-red-600/50 group-hover:bg-red-600/10"
@@ -51,17 +52,19 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className={cn("font-bold text-base tracking-tight truncate", habit.completed ? "text-white/20 line-through" : "text-white")}>
+            {/* List Item Name: 14px, 600, #e8f5f3 */}
+            <h3 className={cn("font-[600] text-[14px] text-[#e8f5f3] tracking-tight truncate", habit.completed ? "text-white/20 line-through" : "")}>
               {habit.title}
             </h3>
             {!isForToday && (
-              <span className="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-white/5 text-white/30 border border-white/5 uppercase">
+              <span className="text-[11px] font-[700] px-[10px] py-[3px] rounded-[999px] bg-white/5 text-white/30 border border-white/5 uppercase">
                 OFF
               </span>
             )}
           </div>
           
-          <div className="flex items-center gap-3 text-[10px] font-bold text-white/30 uppercase tracking-widest">
+          {/* Secondary Info / Days: 12px, 400, #5a8a85 (adjusted to fit visual) */}
+          <div className="flex items-center gap-3 text-[11px] font-[700] uppercase tracking-widest">
             <div className="flex gap-1.5">
               {DAY_NAMES.map((day, i) => (
                 <span 
@@ -84,8 +87,9 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
             size="sm"
             onClick={() => onComplete(habit.id)}
             disabled={habit.completed || !isForToday}
+            // Badge/Button: 11px, 700, uppercase
             className={cn(
-              "h-10 px-5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-md shadow-black/30",
+              "h-9 px-5 rounded-[10px] text-[11px] font-[700] uppercase tracking-widest transition-all shadow-md shadow-black/30",
               habit.completed 
                 ? "bg-green-600/10 text-green-500 border border-green-500/20" 
                 : isForToday 

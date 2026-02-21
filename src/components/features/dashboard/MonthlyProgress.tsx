@@ -25,7 +25,6 @@ export const MonthlyProgress = ({
       label: "Hábitos", 
       count: `${habitsCount} ativos`,
       icon: CheckCircle2, 
-      // Tom mais fechado/azulado
       color: "text-[#2dd4bf]", 
       bgColor: "bg-[#2dd4bf]", 
       borderColor: "border-[#2dd4bf]/20",
@@ -36,7 +35,6 @@ export const MonthlyProgress = ({
       label: "Tarefas", 
       count: `${tasksCount} pendentes`,
       icon: ListTodo, 
-      // Tom principal (Turquesa)
       color: "text-[#4adbc8]", 
       bgColor: "bg-[#4adbc8]", 
       borderColor: "border-[#4adbc8]/20",
@@ -47,7 +45,6 @@ export const MonthlyProgress = ({
       label: "Metas", 
       count: `${goalsCount} ativas`,
       icon: Target, 
-      // Tom mais claro/brilhante
       color: "text-[#99f6e4]", 
       bgColor: "bg-[#99f6e4]", 
       borderColor: "border-[#99f6e4]/20",
@@ -58,7 +55,6 @@ export const MonthlyProgress = ({
       label: "XP Total", 
       count: null,
       icon: Zap, 
-      // Mantendo Amber para destaque de "Energia/XP", mas suavizado
       color: "text-amber-300", 
       bgColor: "bg-amber-300", 
       borderColor: "border-amber-400/20",
@@ -68,21 +64,27 @@ export const MonthlyProgress = ({
   ];
 
   return (
-    <Card className="card-glass overflow-hidden shadow-2xl shadow-black/60 border-white/10">
-      <CardHeader className="pb-4 border-b border-white/5 bg-gradient-to-r from-white/[0.03] to-transparent">
+    // Big Card Radius: 14px
+    <Card className="card-glass overflow-hidden shadow-2xl shadow-black/60 border-white/10 rounded-[14px]">
+      {/* Big Card Padding Header: 20px 24px */}
+      <CardHeader className="py-[20px] px-[24px] border-b border-white/5 bg-gradient-to-r from-white/[0.03] to-transparent">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
+          {/* Title: 14px, 700, #e8f5f3 */}
+          <CardTitle className="text-[14px] font-[700] text-[#e8f5f3] flex items-center gap-2 uppercase tracking-[0.02em]">
             <span className="w-2 h-2 rounded-full bg-[#4adbc8] shadow-[0_0_8px_rgba(74,219,200,0.8)]"></span>
             Status Mensal
           </CardTitle>
-          <span className="text-[10px] font-black text-black bg-[#4adbc8] px-3 py-1 rounded-full">
+          {/* Badge: 11px, 700, padding 3px 10px, radius 999 */}
+          <span className="text-[11px] font-[700] text-black bg-[#4adbc8] px-[10px] py-[3px] rounded-[999px]">
             {Math.round(progressPercentage)}%
           </span>
         </div>
       </CardHeader>
-      <CardContent className="space-y-8 pt-8 bg-gradient-to-r from-transparent to-white/[0.02]">
+      {/* Big Card Padding Content: 20px 24px */}
+      <CardContent className="space-y-8 pt-8 px-[24px] pb-[20px] bg-gradient-to-r from-transparent to-white/[0.02]">
         <div className="space-y-2">
-          <div className="flex justify-between text-[10px] text-white/60 font-black uppercase tracking-widest">
+          {/* Label: 11px, 700, uppercase, rgba(255,255,255,0.45) */}
+          <div className="flex justify-between text-[11px] text-white/45 font-[700] uppercase tracking-[0.1em]">
              <span>Progresso de Nível</span>
              <span className="font-rajdhani text-sm text-[#4adbc8]">{totalPoints} / {MONTHLY_XP_TARGET} XP</span>
           </div>
@@ -94,12 +96,14 @@ export const MonthlyProgress = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {/* Gap Cards: 12px */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-[12px]">
           {stats.map((stat, i) => (
             <div 
               key={i} 
               className={cn(
-                "group flex flex-col justify-center p-3.5 h-[105px] rounded-2xl border transition-all duration-300 relative overflow-hidden shadow-md shadow-black/20",
+                // Medium Card: Radius 10px, Padding 16px 18px
+                "group flex flex-col justify-center py-[16px] px-[18px] h-[105px] rounded-[10px] border transition-all duration-300 relative overflow-hidden shadow-md shadow-black/20",
                 "bg-gradient-to-br hover:opacity-100 opacity-90",
                 stat.bgGradient,
                 stat.borderColor
@@ -111,7 +115,8 @@ export const MonthlyProgress = ({
                      <div className="p-1.5 rounded-lg bg-black/40 border border-white/5 shrink-0">
                         <stat.icon className={cn("h-3.5 w-3.5", stat.color)} />
                      </div>
-                     <span className="text-[13px] font-black uppercase tracking-widest text-white truncate">
+                     {/* Label: 11px, 700, uppercase */}
+                     <span className="text-[11px] font-[700] uppercase tracking-[0.1em] text-white/80 truncate">
                        {stat.label}
                      </span>
                   </div>
@@ -130,7 +135,7 @@ export const MonthlyProgress = ({
                 </div>
                 
                 {stat.count && (
-                  <p className="text-[11px] font-bold text-white/80 uppercase tracking-tight truncate">
+                  <p className="text-[11px] font-[700] text-white/80 uppercase tracking-tight truncate">
                     {stat.count}
                   </p>
                 )}

@@ -79,13 +79,15 @@ export const TopBar = () => {
               size={18} 
               style={{ color: color, filter: `drop-shadow(0 0 4px ${color}44)` }}
             />
-            <h1 className="text-[0.95rem] font-bold text-[#f0f0f0] tracking-tight leading-none whitespace-nowrap">
+            {/* Title: 14px, 700, #e8f5f3 */}
+            <h1 className="text-[14px] font-[700] text-[#e8f5f3] tracking-tight leading-none whitespace-nowrap uppercase">
               {title}
             </h1>
           </div>
 
           <div className="w-px h-[14px] bg-[#2a4441] mx-1" />
-          <span className="text-[0.68rem] text-[#888] font-medium tracking-wide leading-none whitespace-nowrap">
+          {/* Subtitle: 12px, 400, #5a8a85 */}
+          <span className="text-[12px] font-[400] text-[#5a8a85] tracking-wide leading-none whitespace-nowrap">
             {subtitle}
           </span>
         </div>
@@ -94,12 +96,14 @@ export const TopBar = () => {
         <div className="flex items-center gap-2.5 md:gap-3 flex-shrink-0">
           <button className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none`}>
             <Coins size={15} className="text-[#fb923c] fill-[#fb923c22] md:w-[19px] md:h-[19px]" style={{ filter: 'drop-shadow(0 0 4px #fb923c44)' }} />
-            <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#fb923c] tracking-tight">{userStats.coins}</span>
+            {/* Value: 14px, 600 */}
+            <span className="text-[14px] font-[600] text-[#fb923c] tracking-tight">{userStats.coins}</span>
           </button>
 
           <button onClick={() => setActiveModal('profile')} className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#4adbc844] active:scale-95 outline-none`}>
             <Zap size={15} className="text-[#4adbc8] fill-[#4adbc822] md:w-[19px] md:h-[19px]" style={{ filter: 'drop-shadow(0 0 4px #4adbc844)' }} />
-            <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#4adbc8] tracking-tight">{userStats.xp}</span>
+            {/* Value: 14px, 600 */}
+            <span className="text-[14px] font-[600] text-[#4adbc8] tracking-tight">{userStats.xp}</span>
           </button>
 
           <button onClick={() => setActiveModal('achievements')} className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none`}>
