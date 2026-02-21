@@ -3,11 +3,11 @@ import {
   Home, 
   CheckSquare, 
   Target, 
-  FolderOpen,
-  Brain,
-  Bell,
-  Settings,
-  User
+  Folder, 
+  Bell, 
+  Settings, 
+  User,
+  Brain
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -21,11 +21,11 @@ const leftNavItems = [
   { icon: Home, path: "/", label: "Início" },
   { icon: CheckSquare, path: "/tarefas", label: "Tarefas" },
   { icon: Target, path: "/habitos", label: "Hábitos" },
-  { icon: FolderOpen, path: "/masterplan", label: "Projetos" },
+  { icon: Folder, path: "/masterplan", label: "Projetos" },
 ];
 
 const rightNavItems = [
-  { icon: Bell, path: "/lembretes", label: "Atualizações" },
+  { icon: Bell, path: "/lembretes", label: "Notificações" },
   { icon: Settings, path: "/configuracoes", label: "Configurações" },
   { icon: User, path: "/perfil", label: "Perfil" },
 ];
@@ -42,11 +42,11 @@ export const DesktopBottomNav = () => {
                 <NavLink
                   to={path}
                   className={({ isActive }) => cn(
-                    "flex items-center justify-center w-[38px] h-[38px] rounded-full text-[#5a8a85] transition-none outline-none",
+                    "flex items-center justify-center w-[38px] h-[38px] rounded-full text-[#5a8a85] transition-none outline-none text-[17px]",
                     isActive && "bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/40"
                   )}
                 >
-                  <Icon size={18} />
+                  <Icon size={19} />
                 </NavLink>
               </TooltipTrigger>
               <TooltipContent 
@@ -64,13 +64,13 @@ export const DesktopBottomNav = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <button 
-              className="w-[52px] h-[52px] rounded-full flex items-center justify-center text-[#071412] shadow-[0_4px_20px_rgba(56,189,248,0.25)] transition-transform duration-200 hover:scale-[1.08] hover:shadow-[0_6px_28px_rgba(56,189,248,0.4)] outline-none border-none cursor-pointer"
+              className="w-[52px] h-[52px] rounded-full flex items-center justify-center text-[#071412] shadow-[0_4px_20px_rgba(56,189,248,0.25)] transition-transform duration-200 hover:scale-[1.08] hover:shadow-[0_6px_28px_rgba(56,189,248,0.4)] outline-none"
               style={{
                 background: "linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)"
               }}
               onClick={() => console.log("Abrir Assistente IA")}
             >
-              <Brain size={22} strokeWidth={2.5} />
+              <Brain size={24} strokeWidth={2.5} />
             </button>
           </TooltipTrigger>
           <TooltipContent 
@@ -90,11 +90,11 @@ export const DesktopBottomNav = () => {
                 <NavLink
                   to={path}
                   className={({ isActive }) => cn(
-                    "flex items-center justify-center w-[38px] h-[38px] rounded-full text-[#5a8a85] transition-none outline-none",
+                    "flex items-center justify-center w-[38px] h-[38px] rounded-full text-[#5a8a85] transition-none outline-none text-[17px]",
                     isActive && "bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/40"
                   )}
                 >
-                  <Icon size={18} />
+                  <Icon size={19} />
                 </NavLink>
               </TooltipTrigger>
               <TooltipContent 
