@@ -78,14 +78,21 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     transform,
     transition,
     isDragging
-  } = useSortable({ id: habit.id });
+  } = useSortable({ 
+    id: habit.id,
+    transition: {
+      duration: 150, // Faster transition between slots
+      easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+    }
+  });
 
   const cardRef = useRef<HTMLDivElement>(null);
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
     zIndex: isDragging ? 50 : 1,
+    opacity: isDragging ? 0.6 : undefined,
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
@@ -105,8 +112,8 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[12px] border border-[#1a2e2c] p-3 px-4 mb-2 transition-all duration-200 cursor-grab active:cursor-grabbing",
-        isDragging ? "opacity-70 scale-[1.02] border-[#00e5cc40] bg-[#0d2420] shadow-xl" : "bg-gradient-to-br from-[#0a1a18] to-[#050f0e]",
+        "group rounded-[12px] border border-[#1a2e2c] p-3 px-4 mb-2 cursor-grab active:cursor-grabbing select-none",
+        isDragging ? "scale-[1.03] border-[#00e5cc60] bg-[#0d2420] shadow-2xl ring-2 ring-[#00e5cc20]" : "bg-gradient-to-br from-[#0a1a18] to-[#050f0e] transition-all duration-100",
         isCompleted && !isDragging && "opacity-60"
       )}
     >
@@ -283,8 +290,11 @@ const HabitsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingHabit, setEditingHabit] = useState<{habit: Habit, rect: DOMRect} | null>(null);
 
+  // SNAPPIER SENSORS: 
+  // - Activation distance: 1px (immediate)
+  // - Delay: 0 (immediate)
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { delay: 100, tolerance: 5 } }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 1 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
