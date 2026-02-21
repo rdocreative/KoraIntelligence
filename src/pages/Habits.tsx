@@ -117,7 +117,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[12px] border border-[#1e3a36] p-3 px-4 mb-2 cursor-grab active:cursor-grabbing select-none",
+        "group rounded-[12px] border border-[#2a4a46] p-3 px-4 mb-2 cursor-grab active:cursor-grabbing select-none",
         isDragging ? "scale-[1.03] border-[#00e5cc60] bg-[#0d1e1c] shadow-2xl ring-2 ring-[#00e5cc20]" : "bg-gradient-to-br from-[#0d1e1c] to-[#071412] transition-all duration-100",
         isCompleted && !isDragging && "opacity-60"
       )}
@@ -201,7 +201,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
     <div 
       ref={popupRef}
       style={{ top, left }}
-      className="fixed z-[1000] min-w-[280px] bg-[#0f2220] border border-[#1e3a36] rounded-[12px] p-4 shadow-[0_16_40px_rgba(0,0,0,0.6)] animate-in fade-in slide-in-from-top-2 duration-200"
+      className="fixed z-[1000] min-w-[280px] bg-[#0f2220] border border-[#2d5550] rounded-[12px] p-4 shadow-[0_16_40px_rgba(0,0,0,0.6)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="space-y-4">
         <div className="space-y-1">
@@ -209,7 +209,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
           <Input 
             value={form.title} 
             onChange={(e) => setForm({...form, title: e.target.value})}
-            className="h-9 bg-[#071412] border-[#1e3a36] text-xs text-[#e8f5f3] focus-visible:ring-[#00e5cc]" 
+            className="h-9 bg-[#071412] border-[#2a4a46] text-xs text-[#e8f5f3] focus-visible:ring-[#00e5cc]" 
           />
         </div>
 
@@ -219,7 +219,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
             type="time"
             value={form.time} 
             onChange={(e) => setForm({...form, time: e.target.value})}
-            className="h-9 bg-[#071412] border-[#1e3a36] text-xs text-[#e8f5f3] focus-visible:ring-[#00e5cc]" 
+            className="h-9 bg-[#071412] border-[#2a4a46] text-xs text-[#e8f5f3] focus-visible:ring-[#00e5cc]" 
           />
         </div>
 
@@ -355,7 +355,7 @@ const HabitsPage = () => {
 
       return {
         date: day,
-        isCurrentMonth: isSameMonth(day, currentDate),
+        isCurrentMonth: iSameMonth(day, currentDate),
         isToday: isSameDay(day, new Date()),
         isSelected: isSameDay(day, selectedDate),
         done,
@@ -374,7 +374,7 @@ const HabitsPage = () => {
       
       {/* Tab Navigation at TOP */}
       <div className="flex justify-center pt-6 pb-2">
-        <div className="bg-[#0f2220] border border-[#1e3a36] rounded-full p-1 shadow-2xl backdrop-blur-xl flex items-center gap-1">
+        <div className="bg-[#0f2220] border border-[#2d5550] rounded-full p-1 shadow-2xl backdrop-blur-xl flex items-center gap-1">
           <button 
             onClick={() => setActiveTab('overview')}
             className={cn(
@@ -463,7 +463,7 @@ const HabitsPage = () => {
 
       <div className="mt-8 flex flex-col lg:flex-row gap-6 p-4 md:p-0">
         <div className="w-full lg:w-[65%] space-y-6">
-          <div className="bg-gradient-to-br from-[#0f2220] to-[#071412] border border-[#1e3a36] rounded-xl p-6 shadow-2xl">
+          <div className="bg-gradient-to-br from-[#0f2220] to-[#071412] border border-[#2d5550] rounded-xl p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-8">
               <Popover>
                 <PopoverTrigger asChild>
@@ -472,7 +472,7 @@ const HabitsPage = () => {
                     <ChevronDown size={18} className="text-[#5a8a85] group-hover:text-[#00e5cc]" />
                   </button>
                 </PopoverTrigger>
-                <PopoverContent className="bg-[#0f2220] border-[#1e3a36] w-64 p-3 shadow-2xl">
+                <PopoverContent className="bg-[#0f2220] border-[#2d5550] w-64 p-3 shadow-2xl">
                   <div className="grid grid-cols-3 gap-1 mb-4">
                     {Array.from({ length: 12 }).map((_, i) => (
                       <button
@@ -528,7 +528,7 @@ const HabitsPage = () => {
                         onClick={() => setSelectedDate(day.date)}
                         className={cn(
                           "min-h-[52px] aspect-square rounded-[8px] border flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
-                          day.isCurrentMonth ? "bg-[#0d1e1c] border-[#1e3a36] text-[#e8f5f3]" : "text-[#2a3f3d] border-transparent",
+                          day.isCurrentMonth ? "bg-[#0d1e1c] border-[#2a4a46] text-[#e8f5f3]" : "text-[#2a3f3d] border-transparent",
                           day.isSelected ? "border-[#00e5cc] ring-1 ring-[#00e5cc]/30 shadow-[0_0_15px_rgba(0,229,204,0.2)]" : "",
                           day.isToday && !day.isSelected ? "border-2 border-[#00e5cc] bg-[#00e5cc10]" : "",
                           day.level === 1 && "bg-[#064e3b] border-[#064e3b30]",
@@ -541,7 +541,7 @@ const HabitsPage = () => {
                         <span className="text-[15px] font-semibold">{format(day.date, 'd')}</span>
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent className="bg-[#0f2220] border-[#1e3a36] text-[#e8f5f3]">
+                    <TooltipContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3]">
                       <p className="text-xs font-bold">{format(day.date, 'dd/MM')}</p>
                       <p className="text-[10px] text-[#5a8a85] font-bold uppercase">{day.done} de {day.total} feitos</p>
                     </TooltipContent>
@@ -558,14 +558,14 @@ const HabitsPage = () => {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <div className={cn(
-                          "w-3 h-3 rounded-full border border-[#1e3a36]",
+                          "w-3 h-3 rounded-full border border-[#2a4a46]",
                           l === 0 ? "bg-[#0d1e1c]" : 
                           l === 1 ? "bg-[#064e3b]" : 
                           l === 2 ? "bg-[#059669]" : 
                           l === 3 ? "bg-[#10b981]" : "bg-[#00e5cc]"
                         )} />
                       </TooltipTrigger>
-                      <TooltipContent className="bg-[#0f2220] border-[#1e3a36] text-white">
+                      <TooltipContent className="bg-[#0f2220] border-[#2d5550] text-white">
                         {l === 0 ? "0 hábitos" : l === 4 ? "Todos os hábitos" : `${l*25}% completado`}
                       </TooltipContent>
                     </Tooltip>
@@ -578,8 +578,8 @@ const HabitsPage = () => {
         </div>
 
         <div className="w-full lg:w-[35%] relative">
-          <div className="bg-gradient-to-br from-[#0f2220] via-[#071412] to-[#0f2220] border border-[#1e3a36] rounded-xl overflow-hidden flex flex-col min-h-[500px]">
-            <div className="p-5 border-b border-[#1e3a36] flex items-center justify-between bg-black/20">
+          <div className="bg-gradient-to-br from-[#0f2220] via-[#071412] to-[#0f2220] border border-[#2d5550] rounded-xl overflow-hidden flex flex-col min-h-[500px]">
+            <div className="p-5 border-b border-[#2a4a46] flex items-center justify-between bg-black/20">
               <h2 className="text-[#e8f5f3] font-bold text-[14px] uppercase tracking-widest">HÁBITOS ATIVOS</h2>
               <div className="bg-[#00e5cc15] text-[#00e5cc] text-[12px] px-3 py-1 rounded-full font-extrabold border border-[#00e5cc20]">
                 {displayedHabits.filter(h => h.completedDates.includes(format(selectedDate, 'yyyy-MM-dd'))).length}/{displayedHabits.length}
@@ -609,19 +609,19 @@ const HabitsPage = () => {
               )}
             </div>
 
-            <div className="p-4 border-t border-[#1e3a36]">
+            <div className="p-4 border-t border-[#2a4a46]">
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
                   <Button className="w-full bg-[#00e5cc] hover:bg-[#00e5cc] hover:brightness-110 transition-all duration-200 text-[#071412] font-black text-[12px] uppercase tracking-[0.15em] h-12 rounded-xl">
                     <Plus className="mr-2" size={18} strokeWidth={3} /> NOVO HÁBITO
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-[#0f2220] border-[#1e3a36] text-[#e8f5f3]">
+                <DialogContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3]">
                   <DialogHeader><DialogTitle className="uppercase tracking-widest text-sm text-[#00e5cc]">Criar Hábito</DialogTitle></DialogHeader>
                   <div className="grid gap-4 py-4">
                     <div className="grid gap-2">
                       <Label className="text-[10px] uppercase font-bold text-[#5a8a85]">Título</Label>
-                      <Input placeholder="Beber água..." className="bg-[#071412] border-[#1e3a36] text-[#e8f5f3]" />
+                      <Input placeholder="Beber água..." className="bg-[#071412] border-[#2a4a46] text-[#e8f5f3]" />
                     </div>
                   </div>
                   <DialogFooter><Button className="bg-[#00e5cc] text-[#071412] font-bold">CRIAR</Button></DialogFooter>
