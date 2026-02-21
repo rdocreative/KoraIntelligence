@@ -6,7 +6,7 @@ import {
   LayoutGrid, Clock, Flame, 
   BarChart3, CheckCircle2, Pencil, Trash2, 
   Play, Pause, CalendarDays, Target,
-  ChevronDown
+  ChevronDown, List
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +30,9 @@ import {
   setMonth,
   setYear,
   getYear,
-  getMonth
+  getMonth,
+  addWeeks,
+  subWeeks
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -50,6 +52,7 @@ import {
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import WeeklyView from "@/components/habits/WeeklyView";
 
 // --- Types ---
 type Priority = 'high' | 'medium' | 'low';
@@ -107,7 +110,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     }
   };
 
-  // Monochromatic gradients based on priority (Updated with 10% less intensity and lighter bottom)
   const priorityStyles = {
     high: "bg-[linear-gradient(180deg,#350c0c_0%,#120606_100%)] border-[#ef444425]",
     medium: "bg-[linear-gradient(180deg,#351f00_0%,#120a00_100%)] border-[#f59e0b25]",
@@ -298,10 +300,12 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
 
 const HabitsPage = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'charts'>('overview');
+  const [viewMode, setViewMode] = useState<'monthly' | 'list' | 'weekly'>('monthly');
   const [habits, setHabits] = useState<Habit[]>([
     { id: '1', title: 'Beber 3L de água', emoji: '💧', frequency: 'daily', priority: 'high', weekDays: [0,1,2,3,4,5,6], time: '08:00', completedDates: [], active: true },
     { id: '2', title: 'Ler 10 páginas', emoji: '📚', frequency: 'daily', priority: 'medium', weekDays: [0,1,2,3,4,5,6], time: '21:00', completedDates: [], active: true },
     { id: '3', title: 'Academia', emoji: '💪', frequency: 'weekly', priority: 'high', weekDays: [1,3,5], time: '18:00', completedDates: [], active: true },
+    { id: '4', title: 'Meditar', emoji: '🧘', frequency: 'daily', priority: 'low', weekDays: [0,1,2,3,4,5,6], time: '07:30', completedDates: [], active: true },
   ]);
 
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -325,8 +329,8 @@ const HabitsPage = () => {
     }
   };
 
-  const toggleHabit = (id: string) => {
-    const dStr = format(selectedDate, 'yyyy-MM-dd');
+  const toggleHabit = (id: string, date: Date = selectedDate) => {
+    const dStr = format(date, 'yyyy-MM-dd');
     setHabits(prev => prev.map(h => {
       if (h.id === id) {
         const completed = h.completedDates.includes(dStr);
@@ -447,15 +451,26 @@ const HabitsPage = () => {
       </div>
 
       <div className="mt-[20px] flex flex-col lg:flex-row gap-[20px] p-4 md:p-0">
-        <div className="w-full lg:w-[65%] space-y-6">
+        <div className={cn("w-full transition-all duration-500", viewMode === 'weekly' ? 'lg:w-full' : 'lg:w-[65%]')}>
           <div className="bg-gradient-to-br from-[#0f2220] to-[#071412] border border-[#2d5550] rounded-[14px] py-[20px] px-[24px] shadow-2xl">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
               <div className="flex items-center gap-2">
-                <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"><ChevronLeft size={24} /></button>
+                <button 
+                  onClick={() => {
+                    if (viewMode === 'weekly') setCurrentDate(subWeeks(currentDate, 1));
+                    else setCurrentDate(subMonths(currentDate, 1));
+                  }} 
+                  className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"
+                >
+                  <ChevronLeft size={24} />
+                </button>
                 <Popover>
                   <PopoverTrigger asChild>
                     <button className="flex items-center gap-2 text-[14px] font-[700] text-[#e8f5f3] uppercase tracking-[0.02em] hover:text-[#00e5cc] transition-colors group px-2">
-                      {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
+                      {viewMode === 'weekly' 
+                        ? `Semana de ${format(startOfWeek(currentDate), 'dd/MM')}`
+                        : format(currentDate, 'MMMM yyyy', { locale: ptBR })
+                      }
                       <ChevronDown size={18} className="text-[#5a8a85] group-hover:text-[#00e5cc]" />
                     </button>
                   </PopoverTrigger>
@@ -481,8 +496,38 @@ const HabitsPage = () => {
                     </div>
                   </PopoverContent>
                 </Popover>
-                <button onClick={() => setCurrentDate(addMonths(currentDate, 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"><ChevronRight size={24} /></button>
+                <button 
+                  onClick={() => {
+                    if (viewMode === 'weekly') setCurrentDate(addWeeks(currentDate, 1));
+                    else setCurrentDate(addMonths(currentDate, 1));
+                  }} 
+                  className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"
+                >
+                  <ChevronRight size={24} />
+                </button>
               </div>
+
+              <div className="flex items-center bg-[#0d1e1c] border border-[#2a4a46] p-1 rounded-full">
+                {[
+                  { id: 'monthly', icon: LayoutGrid, label: 'Grade mensal' },
+                  { id: 'list', icon: List, label: 'Lista' },
+                  { id: 'weekly', icon: CalendarDays, label: 'Semana' }
+                ].map(mode => (
+                  <button
+                    key={mode.id}
+                    onClick={() => setViewMode(mode.id as any)}
+                    className={cn(
+                      "flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-[700] uppercase tracking-wider transition-all",
+                      viewMode === mode.id 
+                        ? "bg-[#00e5cc] text-[#071412]" 
+                        : "text-[#5a8a85] hover:text-[#e8f5f3]"
+                    )}
+                  >
+                    <mode.icon size={13} /> {mode.label}
+                  </button>
+                ))}
+              </div>
+
               <div className="flex items-center">
                 <Button 
                   variant="ghost" 
@@ -495,144 +540,177 @@ const HabitsPage = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-7 mb-4">
-              {['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].map(d => (
-                <div key={d} className="text-center text-[11px] font-[700] text-[#00e5cc] uppercase tracking-[0.08em] py-2 opacity-80">{d}</div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-7 gap-3">
-              <TooltipProvider>
-                {calendarDays.map((day, i) => (
-                  <Tooltip key={i}>
-                    <TooltipTrigger asChild>
-                      <div 
-                        onClick={() => setSelectedDate(day.date)}
-                        className={cn(
-                          "min-h-[56px] aspect-square rounded-[8px] border flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
-                          day.isCurrentMonth ? "bg-[#0d1f1c] border-[#1a3530] text-white hover:bg-[#122b27]" : "text-[#2a3f3d] border-transparent",
-                          day.isSelected ? "border-[#00e5cc] ring-1 ring-[#00e5cc]/30 shadow-[0_0_15px_rgba(0,229,204,0.2)]" : "",
-                          day.isToday && !day.isSelected ? "border-2 border-[#00e5cc] bg-[#00e5cc10]" : "",
-                          day.level === 1 && "bg-[#064e3b] border-[#064e3b30]",
-                          day.level === 2 && "bg-[#059669] border-[#05966930]",
-                          day.level === 3 && "bg-[#10b981] border-[#10b98130]",
-                          day.level === 4 && "bg-[#00e5cc] text-[#071412]",
-                        )}
-                      >
-                        <span className="text-[14px] font-[600] text-[#e8f5f3]">{format(day.date, 'd')}</span>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3] rounded-[10px]">
-                      <p className="text-xs font-bold">{format(day.date, 'dd/MM')}</p>
-                      <p className="text-[10px] text-[#5a8a85] font-bold uppercase">{day.done} de {day.total} feitos</p>
-                    </TooltipContent>
-                  </Tooltip>
-                ))}
-              </TooltipProvider>
-            </div>
-
-            <div className="mt-8 flex items-center justify-center gap-4 text-[11px] font-[700] text-[#5a8a85] uppercase tracking-widest">
-              <span>MENOS</span>
-              <div className="flex gap-2">
-                {[0, 1, 2, 3, 4].map(l => (
-                  <TooltipProvider key={l}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className={cn(
-                          "w-3 h-3 rounded-full border border-[#2a4a46]",
-                          l === 0 ? "bg-[#0d1e1c]" : 
-                          l === 1 ? "bg-[#064e3b]" : 
-                          l === 2 ? "bg-[#059669]" : 
-                          l === 3 ? "bg-[#10b981]" : "bg-[#00e5cc]"
-                        )} />
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-[#0f2220] border-[#2d5550] text-white">
-                        {l === 0 ? "0 hábitos" : l === 4 ? "Todos os hábitos" : `${l*25}% completado`}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                ))}
-              </div>
-              <span>MAIS</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="w-full lg:w-[35%] relative">
-          <div className="bg-gradient-to-br from-[#0f2220] via-[#071412] to-[#0f2220] border border-[#2d5550] rounded-[14px] overflow-hidden flex flex-col min-h-[500px]">
-            <div className="py-[20px] px-[24px] border-b border-[#2a4a46] flex items-center justify-between bg-black/20">
-              <h2 className="text-[#e8f5f3] font-[700] text-[14px] uppercase tracking-[0.02em]">HÁBITOS ATIVOS</h2>
-              <div className="bg-[#00e5cc15] text-[#00e5cc] text-[11px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#00e5cc20]">
-                {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-4">
-              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
-                  {displayedHabitsData.pending.map((habit) => (
-                    <SortableHabitItem 
-                      key={habit.id}
-                      habit={habit}
-                      isCompleted={false}
-                      onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
-                      onToggle={toggleHabit}
-                    />
+            {viewMode === 'monthly' && (
+              <>
+                <div className="grid grid-cols-7 mb-4">
+                  {['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].map(d => (
+                    <div key={d} className="text-center text-[11px] font-[700] text-[#00e5cc] uppercase tracking-[0.08em] py-2 opacity-80">{d}</div>
                   ))}
-                  
-                  {displayedHabitsData.completed.length > 0 && (
-                    <>
-                      <div className="mt-8 mb-4 pt-4 border-t border-[#1e3a36]">
-                        <span className="text-[10px] font-[700] text-[#5a8a85] uppercase tracking-[0.08em]">
-                          CONCLUÍDOS HOJE
-                        </span>
-                      </div>
-                      {displayedHabitsData.completed.map((habit) => (
-                        <SortableHabitItem 
-                          key={habit.id}
-                          habit={habit}
-                          isCompleted={true}
-                          onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
-                          onToggle={toggleHabit}
-                        />
-                      ))}
-                    </>
-                  )}
-                </SortableContext>
-              </DndContext>
-              
-              {displayedHabitsData.all.length === 0 && (
-                <div className="h-full flex flex-col items-center justify-center p-10 text-center opacity-40">
-                  <Clock size={32} className="text-[#5a8a85] mb-3" />
-                  <p className="text-[11px] font-[700] uppercase text-[#5a8a85] tracking-[0.1em]">Nada planejado</p>
                 </div>
-              )}
-            </div>
 
-            <div className="p-4 border-t border-[#2a4a46]">
-              <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                <DialogTrigger asChild>
-                  <Button className="w-full bg-[#00e5cc] hover:bg-[#00e5cc] hover:brightness-110 transition-all duration-200 text-[#071412] font-[800] text-[11px] uppercase tracking-[0.1em] h-12 rounded-[14px]">
-                    <Plus className="mr-2" size={18} strokeWidth={3} /> NOVO HÁBITO
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3] rounded-[14px]">
-                  <DialogHeader><DialogTitle className="uppercase tracking-widest text-sm text-[#00e5cc]">Criar Hábito</DialogTitle></DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid gap-2">
-                      <Label className="text-[11px] uppercase font-[700] tracking-[0.1em] text-white/45">Título</Label>
-                      <Input placeholder="Beber água..." className="bg-[#071412] border-[#2a4a46] text-[#e8f5f3]" />
-                    </div>
+                <div className="grid grid-cols-7 gap-3">
+                  <TooltipProvider>
+                    {calendarDays.map((day, i) => (
+                      <Tooltip key={i}>
+                        <TooltipTrigger asChild>
+                          <div 
+                            onClick={() => setSelectedDate(day.date)}
+                            className={cn(
+                              "min-h-[56px] aspect-square rounded-[8px] border flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
+                              day.isCurrentMonth ? "bg-[#0d1f1c] border-[#1a3530] text-white hover:bg-[#122b27]" : "text-[#2a3f3d] border-transparent",
+                              day.isSelected ? "border-[#00e5cc] ring-1 ring-[#00e5cc]/30 shadow-[0_0_15px_rgba(0,229,204,0.2)]" : "",
+                              day.isToday && !day.isSelected ? "border-2 border-[#00e5cc] bg-[#00e5cc10]" : "",
+                              day.level === 1 && "bg-[#064e3b] border-[#064e3b30]",
+                              day.level === 2 && "bg-[#059669] border-[#05966930]",
+                              day.level === 3 && "bg-[#10b981] border-[#10b98130]",
+                              day.level === 4 && "bg-[#00e5cc] text-[#071412]",
+                            )}
+                          >
+                            <span className="text-[14px] font-[600] text-[#e8f5f3]">{format(day.date, 'd')}</span>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3] rounded-[10px]">
+                          <p className="text-xs font-bold">{format(day.date, 'dd/MM')}</p>
+                          <p className="text-[10px] text-[#5a8a85] font-bold uppercase">{day.done} de {day.total} feitos</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    ))}
+                  </TooltipProvider>
+                </div>
+
+                <div className="mt-8 flex items-center justify-center gap-4 text-[11px] font-[700] text-[#5a8a85] uppercase tracking-widest">
+                  <span>MENOS</span>
+                  <div className="flex gap-2">
+                    {[0, 1, 2, 3, 4].map(l => (
+                      <TooltipProvider key={l}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className={cn(
+                              "w-3 h-3 rounded-full border border-[#2a4a46]",
+                              l === 0 ? "bg-[#0d1e1c]" : 
+                              l === 1 ? "bg-[#064e3b]" : 
+                              l === 2 ? "bg-[#059669]" : 
+                              l === 3 ? "bg-[#10b981]" : "bg-[#00e5cc]"
+                            )} />
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-[#0f2220] border-[#2d5550] text-white">
+                            {l === 0 ? "0 hábitos" : l === 4 ? "Todos os hábitos" : `${l*25}% completado`}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
                   </div>
-                  <DialogFooter><Button className="bg-[#00e5cc] text-[#071412] font-bold">CRIAR</Button></DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </div>
+                  <span>MAIS</span>
+                </div>
+              </>
+            )}
+
+            {viewMode === 'weekly' && (
+              <WeeklyView 
+                currentDate={currentDate} 
+                habits={habits} 
+                onToggleHabit={toggleHabit} 
+              />
+            )}
+
+            {viewMode === 'list' && (
+              <div className="space-y-4 py-4 min-h-[400px]">
+                {habits.map(habit => (
+                  <div key={habit.id} className="p-4 bg-[#0d1e1c] border border-[#1e3a36] rounded-[10px] flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="text-xl">{habit.emoji}</div>
+                      <div>
+                        <div className="text-[14px] font-bold text-[#e8f5f3]">{habit.title}</div>
+                        <div className="text-[11px] text-[#5a8a85] uppercase font-bold tracking-wider">{habit.time} • {habit.priority}</div>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="sm" onClick={() => setEditingHabit({ habit, rect: new DOMRect() })} className="text-[#5a8a85] hover:text-[#00e5cc]">
+                      <Pencil size={14} />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
+
+        {viewMode !== 'weekly' && (
+          <div className="w-full lg:w-[35%] relative">
+            <div className="bg-gradient-to-br from-[#0f2220] via-[#071412] to-[#0f2220] border border-[#2d5550] rounded-[14px] overflow-hidden flex flex-col min-h-[500px]">
+              <div className="py-[20px] px-[24px] border-b border-[#2a4a46] flex items-center justify-between bg-black/20">
+                <h2 className="text-[#e8f5f3] font-[700] text-[14px] uppercase tracking-[0.02em]">HÁBITOS ATIVOS</h2>
+                <div className="bg-[#00e5cc15] text-[#00e5cc] text-[11px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#00e5cc20]">
+                  {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
+                </div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4">
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                  <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
+                    {displayedHabitsData.pending.map((habit) => (
+                      <SortableHabitItem 
+                        key={habit.id}
+                        habit={habit}
+                        isCompleted={false}
+                        onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
+                        onToggle={(id) => toggleHabit(id)}
+                      />
+                    ))}
+                    
+                    {displayedHabitsData.completed.length > 0 && (
+                      <>
+                        <div className="mt-8 mb-4 pt-4 border-t border-[#1e3a36]">
+                          <span className="text-[10px] font-[700] text-[#5a8a85] uppercase tracking-[0.08em]">
+                            CONCLUÍDOS HOJE
+                          </span>
+                        </div>
+                        {displayedHabitsData.completed.map((habit) => (
+                          <SortableHabitItem 
+                            key={habit.id}
+                            habit={habit}
+                            isCompleted={true}
+                            onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
+                            onToggle={(id) => toggleHabit(id)}
+                          />
+                        ))}
+                      </>
+                    )}
+                  </SortableContext>
+                </DndContext>
+                
+                {displayedHabitsData.all.length === 0 && (
+                  <div className="h-full flex flex-col items-center justify-center p-10 text-center opacity-40">
+                    <Clock size={32} className="text-[#5a8a85] mb-3" />
+                    <p className="text-[11px] font-[700] uppercase text-[#5a8a85] tracking-[0.1em]">Nada planejado</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-4 border-t border-[#2a4a46]">
+                <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="w-full bg-[#00e5cc] hover:bg-[#00e5cc] hover:brightness-110 transition-all duration-200 text-[#071412] font-[800] text-[11px] uppercase tracking-[0.1em] h-12 rounded-[14px]">
+                      <Plus className="mr-2" size={18} strokeWidth={3} /> NOVO HÁBITO
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3] rounded-[14px]">
+                    <DialogHeader><DialogTitle className="uppercase tracking-widest text-sm text-[#00e5cc]">Criar Hábito</DialogTitle></DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid gap-2">
+                        <Label className="text-[11px] uppercase font-[700] tracking-[0.1em] text-white/45">Título</Label>
+                        <Input placeholder="Beber água..." className="bg-[#071412] border-[#2a4a46] text-[#e8f5f3]" />
+                      </div>
+                    </div>
+                    <DialogFooter><Button className="bg-[#00e5cc] text-[#071412] font-bold">CRIAR</Button></DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {editingHabit && (
+      {editingHabit && editingHabit.rect && (
         <EditPopup 
           habit={editingHabit.habit}
           rect={editingHabit.rect}
