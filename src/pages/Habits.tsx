@@ -89,7 +89,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       duration: 400,
       easing: 'ease-in-out',
     },
-    disabled: isCompleted // Disable dragging for completed items to keep them at the bottom
+    disabled: isCompleted 
   });
 
   const cardRef = useRef<HTMLDivElement>(null);
@@ -107,11 +107,11 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     }
   };
 
-  // Dynamic styles based on priority (Updated to 180deg and subtle intensity)
+  // Monochromatic gradients based on priority (180deg)
   const priorityStyles = {
-    high: "bg-[linear-gradient(180deg,#2a0808_0%,#0d1e1c_60%)] border-[#ef444425]",
-    medium: "bg-[linear-gradient(180deg,#2a1a00_0%,#0d1e1c_60%)] border-[#f59e0b25]",
-    low: "bg-[linear-gradient(180deg,#002a12_0%,#0d1e1c_60%)] border-[#10b98125]"
+    high: "bg-[linear-gradient(180deg,#2a0808_0%,#0a0505_100%)] border-[#ef444425]",
+    medium: "bg-[linear-gradient(180deg,#2a1800_0%,#0a0800_100%)] border-[#f59e0b25]",
+    low: "bg-[linear-gradient(180deg,#002a12_0%,#000a05_100%)] border-[#10b98125]"
   };
 
   return (
@@ -128,7 +128,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
         isDragging 
           ? "scale-[1.03] border-[#00e5cc60] bg-[#0d1e1c] shadow-2xl ring-2 ring-[#00e5cc20]" 
           : priorityStyles[habit.priority],
-        isCompleted && !isDragging && "opacity-[0.45] pointer-events-none"
+        isCompleted && !isDragging && "opacity-[0.45]"
       )}
     >
       <div className="flex items-center gap-4">
@@ -379,7 +379,7 @@ const HabitsPage = () => {
     });
   }, [currentDate, selectedDate, habits]);
 
-  // Updated logic to sort: pending first, then completed
+  // Logic to separate pending and completed habits for the current selected date
   const displayedHabitsData = useMemo(() => {
     const dateStr = format(selectedDate, 'yyyy-MM-dd');
     const filtered = habits.filter(h => h.weekDays.includes(getDay(selectedDate)));
