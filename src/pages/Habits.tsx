@@ -372,30 +372,68 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-[#050f0e] pb-32 animate-in fade-in duration-500 relative">
       
-      {/* 1. Header Stats Grid */}
+      {/* 1. Header Stats Grid - REDESIGNED */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 md:p-0 mt-2">
         {[
-          { label: "Total de Hábitos", value: stats.total, icon: Target, color: "#00e5cc", grad: "from-[#002e2c] to-[#0a1a18]", border: "border-[#00e5cc20]" },
-          { label: "Maior Sequência", value: stats.streak, icon: Flame, color: "#ff6b00", grad: "from-[#2e1500] to-[#0d1110]", border: "border-[#ff6b0020]" },
-          { label: "Completos Hoje", value: stats.today, icon: CheckCircle2, color: "#4f46e5", grad: "from-[#1a1c4e] to-[#0a0c1a]", border: "border-[#4f46e520]" },
-          { label: "Taxa do Mês", value: stats.rate, icon: BarChart3, color: "#a855f7", grad: "from-[#240a46] to-[#0d0a1a]", border: "border-[#a855f720]" }
+          { 
+            label: "Total de Hábitos", 
+            value: stats.total, 
+            icon: Target, 
+            color: "#00e5cc", 
+            grad: "from-[#003832] to-[#050f0e]", 
+            border: "border-[#00e5cc50]",
+            iconBg: "bg-[#00e5cc20]"
+          },
+          { 
+            label: "Maior Sequência", 
+            value: stats.streak, 
+            icon: Flame, 
+            color: "#ff6b00", 
+            grad: "from-[#3d1500] to-[#050f0e]", 
+            border: "border-[#ff6b0060]",
+            iconBg: "bg-[#ff6b0025]"
+          },
+          { 
+            label: "Completos Hoje", 
+            value: stats.today, 
+            icon: CheckCircle2, 
+            color: "#00e055", 
+            grad: "from-[#00320f] to-[#050f0e]", 
+            border: "border-[#00e05550]",
+            iconBg: "bg-[#00e05520]"
+          },
+          { 
+            label: "Taxa do Mês", 
+            value: stats.rate, 
+            icon: BarChart3, 
+            color: "#b060ff", 
+            grad: "from-[#1a0035] to-[#050f0e]", 
+            border: "border-[#b060ff50]",
+            iconBg: "bg-[#b060ff20]"
+          }
         ].map((s, i) => (
           <div 
             key={i}
             className={cn(
-              "p-3 rounded-[14px] border flex items-center gap-3.5 bg-gradient-to-br transition-all duration-300 h-[72px]",
+              "p-4 px-5 rounded-[14px] border flex items-center justify-between bg-gradient-to-br transition-all duration-300",
               s.grad, s.border
             )}
           >
+            {/* Ícone à ESQUERDA - Container circular 48x48 */}
             <div 
-              className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-              style={{ backgroundColor: `${s.color}20` }}
+              className={cn("w-12 h-12 rounded-full flex items-center justify-center shrink-0", s.iconBg)}
             >
-              <s.icon size={22} style={{ color: s.color }} strokeWidth={2.5} />
+              <s.icon size={32} style={{ color: s.color }} strokeWidth={2} />
             </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] font-semibold text-white/50 uppercase tracking-wider leading-tight">{s.label}</span>
-              <span className="text-xl font-black text-white leading-tight">{s.value}</span>
+
+            {/* Texto à DIREITA */}
+            <div className="flex flex-col items-end">
+              <span className="text-[10px] font-semibold text-white/45 uppercase tracking-[0.1em] leading-tight">
+                {s.label}
+              </span>
+              <span className="text-[28px] font-[800] text-white leading-tight mt-1">
+                {s.value}
+              </span>
             </div>
           </div>
         ))}
