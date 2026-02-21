@@ -465,40 +465,53 @@ const HabitsPage = () => {
         <div className="w-full lg:w-[65%] space-y-6">
           <div className="bg-gradient-to-br from-[#0f2220] to-[#071412] border border-[#2d5550] rounded-xl p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-8">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <button className="flex items-center gap-2 text-lg font-bold text-white uppercase tracking-wider hover:text-[#00e5cc] transition-colors group">
-                    {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
-                    <ChevronDown size={18} className="text-[#5a8a85] group-hover:text-[#00e5cc]" />
-                  </button>
-                </PopoverTrigger>
-                <PopoverContent className="bg-[#0f2220] border-[#2d5550] w-64 p-3 shadow-2xl">
-                  <div className="grid grid-cols-3 gap-1 mb-4">
-                    {Array.from({ length: 12 }).map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setCurrentDate(setMonth(currentDate, i))}
-                        className={cn(
-                          "py-2 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all",
-                          getMonth(currentDate) === i ? "bg-[#00e5cc] text-[#071412]" : "text-[#5a8a85] hover:bg-[#1e3a36] hover:text-[#e8f5f3]"
-                        )}
-                      >
-                        {format(new Date(2024, i, 1), 'MMM', { locale: ptBR })}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex items-center justify-between pt-2 border-t border-[#1e3a36]">
-                    <button onClick={() => setCurrentDate(setYear(currentDate, getYear(currentDate) - 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc]"><ChevronLeft size={16}/></button>
-                    <span className="text-xs font-black text-white">{getYear(currentDate)}</span>
-                    <button onClick={() => setCurrentDate(setYear(currentDate, getYear(currentDate) + 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc]"><ChevronRight size={16}/></button>
-                  </div>
-                </PopoverContent>
-              </Popover>
-
-              <div className="flex items-center gap-3">
-                <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors">
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setCurrentDate(subMonths(currentDate, 1))} 
+                  className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"
+                >
                   <ChevronLeft size={24} />
                 </button>
+                
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="flex items-center gap-2 text-lg font-bold text-white uppercase tracking-wider hover:text-[#00e5cc] transition-colors group px-2">
+                      {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
+                      <ChevronDown size={18} className="text-[#5a8a85] group-hover:text-[#00e5cc]" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="bg-[#0f2220] border-[#2d5550] w-64 p-3 shadow-2xl">
+                    <div className="grid grid-cols-3 gap-1 mb-4">
+                      {Array.from({ length: 12 }).map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setCurrentDate(setMonth(currentDate, i))}
+                          className={cn(
+                            "py-2 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all",
+                            getMonth(currentDate) === i ? "bg-[#00e5cc] text-[#071412]" : "text-[#5a8a85] hover:bg-[#1e3a36] hover:text-[#e8f5f3]"
+                          )}
+                        >
+                          {format(new Date(2024, i, 1), 'MMM', { locale: ptBR })}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="flex items-center justify-between pt-2 border-t border-[#1e3a36]">
+                      <button onClick={() => setCurrentDate(setYear(currentDate, getYear(currentDate) - 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc]"><ChevronLeft size={16}/></button>
+                      <span className="text-xs font-black text-white">{getYear(currentDate)}</span>
+                      <button onClick={() => setCurrentDate(setYear(currentDate, getYear(currentDate) + 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc]"><ChevronRight size={16}/></button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+
+                <button 
+                  onClick={() => setCurrentDate(addMonths(currentDate, 1))} 
+                  className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"
+                >
+                  <ChevronRight size={24} />
+                </button>
+              </div>
+
+              <div className="flex items-center">
                 <Button 
                   variant="ghost" 
                   size="sm" 
@@ -507,9 +520,6 @@ const HabitsPage = () => {
                 >
                   Hoje
                 </Button>
-                <button onClick={() => setCurrentDate(addMonths(currentDate, 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors">
-                  <ChevronRight size={24} />
-                </button>
               </div>
             </div>
 
