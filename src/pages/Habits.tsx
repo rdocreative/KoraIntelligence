@@ -107,6 +107,13 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     }
   };
 
+  // Dynamic styles based on priority
+  const priorityStyles = {
+    high: "bg-[linear-gradient(135deg,#3d0a0a_0%,#0d1e1c_100%)] border-[#ef444430]",
+    medium: "bg-[linear-gradient(135deg,#3d2a00_0%,#0d1e1c_100%)] border-[#f59e0b30]",
+    low: "bg-[linear-gradient(135deg,#003d1a_0%,#0d1e1c_100%)] border-[#10b98130]"
+  };
+
   return (
     <div 
       ref={(node) => {
@@ -117,8 +124,10 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[10px] border border-[#1a3530] p-[14px] px-[16px] mb-2 cursor-grab active:cursor-grabbing select-none",
-        isDragging ? "scale-[1.03] border-[#00e5cc60] bg-[#0d1e1c] shadow-2xl ring-2 ring-[#00e5cc20]" : "bg-gradient-to-br from-[#0a1e1c] to-[#050f0e] transition-all duration-100",
+        "group rounded-[10px] border p-[14px] px-[16px] mb-2 cursor-grab active:cursor-grabbing select-none transition-all duration-300",
+        isDragging 
+          ? "scale-[1.03] border-[#00e5cc60] bg-[#0d1e1c] shadow-2xl ring-2 ring-[#00e5cc20]" 
+          : priorityStyles[habit.priority],
         isCompleted && !isDragging && "opacity-60"
       )}
     >
