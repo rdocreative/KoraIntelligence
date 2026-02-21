@@ -58,7 +58,7 @@ export const SideNav = () => {
             }}
           >
             <Icon 
-              size={isSpecial ? 28 : 22} 
+              size={isSpecial ? 25 : 20} 
               strokeWidth={isSpecial ? 2.5 : 2} 
               className={cn(
                 !isSpecial && "group-hover:opacity-100",
