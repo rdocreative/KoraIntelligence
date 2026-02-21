@@ -8,7 +8,7 @@ import {
   Swords, 
   ShoppingBag, 
   Settings,
-  Plus
+  Brain
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -50,7 +50,7 @@ export const SideNav = () => {
       <button 
         className="w-[58px] h-[58px] rounded-full bg-[#38bdf8] text-[#071412] flex items-center justify-center shadow-[0_6px_20px_rgba(56,189,248,0.3)] transition-none"
       >
-        <Plus size={32} strokeWidth={3} />
+        <Brain size={32} strokeWidth={2.5} />
       </button>
 
       {/* Pill Inferior */}
