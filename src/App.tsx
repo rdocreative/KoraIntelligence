@@ -10,13 +10,13 @@ import { SettingsProvider } from "./hooks/useSettings";
 import { HabitProvider } from "./hooks/useHabitTracker";
 import { MasterplanProvider } from "./hooks/useMasterplan";
 import { AuthProvider, useAuth } from "./components/providers/AuthProvider";
-import { FloatingNavbar } from "./components/layout/FloatingNavbar";
+import { Sidebar } from "./components/layout/Sidebar";
 import { TopBar } from "./components/layout/TopBar"; 
 
 // Pages
 import Index from "./pages/Index";
 import MasterplanPage from "./pages/Masterplan";
-import Settings from "./pages/Settings";
+import SettingsPage from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import HabitsPage from "./pages/Habits";
 import GoalsPage from "./pages/Goals";
@@ -37,7 +37,7 @@ const ProtectedRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-    return <div className="h-screen w-full flex items-center justify-center bg-transparent"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
+    return <div className="h-screen w-full flex items-center justify-center bg-[#071412]"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (!session) {
@@ -45,15 +45,13 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="relative z-10 flex flex-col min-h-screen">
-      <TopBar />
-      <main className="flex-1 p-6 pb-32 max-w-5xl mx-auto w-full">
-        <Outlet />
-      </main>
-      <div className="fixed bottom-0 left-0 right-0 p-6 z-50 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto">
-          <FloatingNavbar />
-        </div>
+    <div className="flex min-h-screen bg-[#071412]">
+      <Sidebar />
+      <div className="flex-1 ml-[52px] flex flex-col min-h-screen">
+        <TopBar />
+        <main className="flex-1 p-6 max-w-5xl mx-auto w-full">
+          <Outlet />
+        </main>
       </div>
     </div>
   );
@@ -64,7 +62,7 @@ const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-transparent"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
+     return <div className="h-screen w-full flex items-center justify-center bg-[#071412]"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (session) {
@@ -90,7 +88,7 @@ const App = () => (
                 <Toaster />
                 <Sonner theme="dark" />
                 <BrowserRouter>
-                  <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden bg-transparent">
+                  <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden bg-[#071412]">
                     <Routes>
                       {/* Rotas Públicas */}
                       <Route element={<PublicRoute />}>
@@ -112,7 +110,7 @@ const App = () => (
                         <Route path="/financa" element={<StorePage />} />
                         <Route path="/loja" element={<StorePage />} />
                         <Route path="/inventario" element={<StorePage />} />
-                        <Route path="/configuracoes" element={<Settings />} />
+                        <Route path="/configuracoes" element={<SettingsPage />} />
                       </Route>
 
                       <Route path="*" element={<NotFound />} />
