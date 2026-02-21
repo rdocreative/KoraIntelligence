@@ -37,7 +37,7 @@ const ProtectedRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-    return <div className="h-screen w-full flex items-center justify-center bg-[#020808]"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
+    return <div className="h-screen w-full flex items-center justify-center bg-transparent"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (!session) {
@@ -50,7 +50,11 @@ const ProtectedRoute = () => {
       <main className="flex-1 p-6 pb-32 max-w-5xl mx-auto w-full">
         <Outlet />
       </main>
-      <FloatingNavbar />
+      <div className="fixed bottom-0 left-0 right-0 p-6 z-50 flex justify-center pointer-events-none">
+        <div className="pointer-events-auto">
+          <FloatingNavbar />
+        </div>
+      </div>
     </div>
   );
 };
@@ -60,7 +64,7 @@ const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-[#020808]"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
+     return <div className="h-screen w-full flex items-center justify-center bg-transparent"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (session) {
@@ -86,17 +90,7 @@ const App = () => (
                 <Toaster />
                 <Sonner theme="dark" />
                 <BrowserRouter>
-                  <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
-                    
-                    {/* Background Layers */}
-                    <div className="fixed inset-0 pointer-events-none bg-[#040d0c] -z-30" />
-                    
-                    {/* Top Center Theme Glow */}
-                    <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-45%,rgba(74,219,200,0.18)_0%,transparent_60%)] -z-20" />
-                    
-                    {/* Gradiente de profundidade */}
-                    <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,10,10,0.4)_0%,transparent_15%)] -z-10" />
-
+                  <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden bg-transparent">
                     <Routes>
                       {/* Rotas Públicas */}
                       <Route element={<PublicRoute />}>
