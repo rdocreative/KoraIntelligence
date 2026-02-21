@@ -59,9 +59,9 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
         {weekDays.map((day, i) => {
           const isToday = isSameDay(day, new Date());
           return (
-            <div key={i} className="flex-1 p-3 text-center border-r border-[#1e3a36] last:border-r-0">
+            <div key={i} className="flex-1 min-w-0 p-3 text-center border-r border-[#1e3a36] last:border-r-0">
               <div className={cn(
-                "text-[11px] font-[700] uppercase tracking-wider mb-1",
+                "text-[11px] font-[700] uppercase tracking-wider mb-1 truncate",
                 isToday ? "text-[#38bdf8]" : "text-[#5a8a85]"
               )}>
                 {format(day, 'eee', { locale: ptBR })}
@@ -107,7 +107,7 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                 <div 
                   key={i} 
                   className={cn(
-                    "flex-1 p-[6px] border-r border-[#1e3a36] last:border-r-0 overflow-hidden",
+                    "flex-1 min-w-0 p-[6px] border-r border-[#1e3a36] last:border-r-0 overflow-hidden",
                     isToday ? "bg-[#0f2824]/40" : "bg-[linear-gradient(135deg,#0a1e1c_0%,#071412_100%)]"
                   )}
                 >
@@ -135,7 +135,7 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                         )}>
                           {habit.title.length > 12 ? habit.title.slice(0, 11) + '...' : habit.title}
                         </span>
-                        <span className="text-[9px] font-[700] text-[#5a8a85] shrink-0">
+                        <span className="text-[9px] font-[700] text-[#5a8a85] shrink-0 hidden sm:inline">
                           {habit.time}
                         </span>
                       </div>
@@ -158,8 +158,8 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
           const completed = scheduled.filter(h => h.completedDates.includes(dateStr)).length;
           
           return (
-            <div key={i} className="flex-1 py-1.5 text-center border-r border-[#1e3a36] last:border-r-0">
-              <span className="text-[10px] font-[700] text-[#5a8a85] uppercase">
+            <div key={i} className="flex-1 min-w-0 py-1.5 text-center border-r border-[#1e3a36] last:border-r-0">
+              <span className="text-[10px] font-[700] text-[#5a8a85] uppercase truncate block px-1">
                 {completed}/{scheduled.length} feitos
               </span>
             </div>

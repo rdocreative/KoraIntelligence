@@ -355,9 +355,9 @@ const HabitsPage = () => {
         ))}
       </div>
 
-      <div className="mt-[20px] grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-[20px] p-4 md:p-0">
+      <div className="mt-[20px] grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] gap-[20px] p-4 md:p-0">
         {/* Left Card: Calendar or Weekly Grid */}
-        <div className="bg-gradient-to-br from-[#0f2220] to-[#071412] border border-[#2d5550] rounded-[14px] py-[20px] px-[24px] shadow-2xl">
+        <div className="bg-gradient-to-br from-[#0f2220] to-[#071412] border border-[#2d5550] rounded-[14px] py-[20px] px-[24px] shadow-2xl overflow-hidden">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-2">
               <button 
