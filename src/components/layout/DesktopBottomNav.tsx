@@ -35,20 +35,18 @@ export const DesktopBottomNav = () => {
     <div className="fixed bottom-[24px] left-1/2 -translate-x-1/2 z-[100] flex items-center gap-[8px]">
       <TooltipProvider delayDuration={0}>
         {/* PILL ESQUERDA (Navegação Principal) */}
-        <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-2 py-1.5 flex gap-1 backdrop-blur-[16px] items-center h-[52px]">
+        <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-2 py-1.5 flex gap-1 backdrop-blur-[16px]">
           {leftNavItems.map(({ icon: Icon, path, label }) => (
             <Tooltip key={path}>
               <TooltipTrigger asChild>
                 <NavLink
                   to={path}
                   className={({ isActive }) => cn(
-                    "flex items-center justify-center w-[38px] h-[38px] rounded-full text-[#5a8a85] transition-all outline-none",
-                    isActive 
-                      ? "bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/40 shadow-[0_0_10px_rgba(56,189,248,0.15)]" 
-                      : "hover:text-[#e8f5f3] hover:bg-[#2a4a46]/50 border border-transparent"
+                    "flex items-center justify-center w-[38px] h-[38px] rounded-full text-[#5a8a85] transition-none outline-none",
+                    isActive && "bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/40"
                   )}
                 >
-                  <Icon size={18} strokeWidth={2} />
+                  <Icon size={18} />
                 </NavLink>
               </TooltipTrigger>
               <TooltipContent 
@@ -66,7 +64,7 @@ export const DesktopBottomNav = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <button 
-              className="w-[52px] h-[52px] rounded-full flex items-center justify-center text-[#071412] shadow-[0_4px_20px_rgba(56,189,248,0.25)] transition-transform duration-200 hover:scale-[1.08] hover:shadow-[0_6px_28px_rgba(56,189,248,0.4)] outline-none border-none cursor-pointer shrink-0"
+              className="w-[52px] h-[52px] rounded-full flex items-center justify-center text-[#071412] shadow-[0_4px_20px_rgba(56,189,248,0.25)] transition-transform duration-200 hover:scale-[1.08] hover:shadow-[0_6px_28px_rgba(56,189,248,0.4)] outline-none border-none cursor-pointer"
               style={{
                 background: "linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)"
               }}
@@ -85,20 +83,18 @@ export const DesktopBottomNav = () => {
         </Tooltip>
 
         {/* PILL DIREITA (Utilitários) */}
-        <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-2 py-1.5 flex gap-1 backdrop-blur-[16px] items-center h-[52px]">
+        <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-2 py-1.5 flex gap-1 backdrop-blur-[16px]">
           {rightNavItems.map(({ icon: Icon, path, label }) => (
             <Tooltip key={path}>
               <TooltipTrigger asChild>
                 <NavLink
                   to={path}
                   className={({ isActive }) => cn(
-                    "flex items-center justify-center w-[38px] h-[38px] rounded-full text-[#5a8a85] transition-all outline-none",
-                    isActive 
-                      ? "bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/40 shadow-[0_0_10px_rgba(56,189,248,0.15)]" 
-                      : "hover:text-[#e8f5f3] hover:bg-[#2a4a46]/50 border border-transparent"
+                    "flex items-center justify-center w-[38px] h-[38px] rounded-full text-[#5a8a85] transition-none outline-none",
+                    isActive && "bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/40"
                   )}
                 >
-                  <Icon size={18} strokeWidth={2} />
+                  <Icon size={18} />
                 </NavLink>
               </TooltipTrigger>
               <TooltipContent 
