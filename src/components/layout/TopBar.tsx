@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth"; // Assumindo o uso de um hook de autenticação
 import { Coins, Zap } from "lucide-react";
 
 const TopBar = () => {
-  const { profile } = useAuth() as any;
+  const { profile } = useAuth() as any; // Cast temporário para evitar erros de interface
 
   const stats = {
     xp: profile?.xp_total || 0,
