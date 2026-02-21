@@ -6,7 +6,6 @@ import {
   Target, 
   Bell, 
   Swords, 
-  Users, 
   ShoppingBag, 
   Settings,
   Plus
@@ -29,44 +28,44 @@ const rightItems = [
 
 export const BottomNav = () => {
   return (
-    <div className="fixed bottom-[20px] left-1/2 -translate-x-1/2 z-[100] flex items-center gap-2">
+    <div className="fixed bottom-[24px] left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3">
       {/* Pill Esquerda */}
-      <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-2 py-1.5 flex gap-1">
+      <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-3 py-2 flex gap-1.5">
         {leftItems.map(({ icon: Icon, path, label }) => (
           <NavLink
             key={path}
             to={path}
             title={label}
             className={({ isActive }) => cn(
-              "flex items-center justify-center w-[34px] h-[34px] rounded-full text-[#5a8a85] transition-none",
+              "flex items-center justify-center w-[44px] h-[44px] rounded-full text-[#5a8a85] transition-none",
               isActive && "bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/25"
             )}
           >
-            <Icon size={18} />
+            <Icon size={24} />
           </NavLink>
         ))}
       </nav>
 
       {/* FAB Central */}
       <button 
-        className="w-[44px] h-[44px] rounded-full bg-[#38bdf8] text-[#071412] flex items-center justify-center shadow-[0_4px_16px_rgba(56,189,248,0.3)] transition-none"
+        className="w-[58px] h-[58px] rounded-full bg-[#38bdf8] text-[#071412] flex items-center justify-center shadow-[0_6px_20px_rgba(56,189,248,0.3)] transition-none"
       >
-        <Plus size={24} strokeWidth={3} />
+        <Plus size={32} strokeWidth={3} />
       </button>
 
       {/* Pill Direita */}
-      <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-2 py-1.5 flex gap-1">
+      <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-3 py-2 flex gap-1.5">
         {rightItems.map(({ icon: Icon, path, label }) => (
           <NavLink
             key={path}
             to={path}
             title={label}
             className={({ isActive }) => cn(
-              "flex items-center justify-center w-[34px] h-[34px] rounded-full text-[#5a8a85] transition-none",
+              "flex items-center justify-center w-[44px] h-[44px] rounded-full text-[#5a8a85] transition-none",
               isActive && "bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/25"
             )}
           >
-            <Icon size={18} />
+            <Icon size={24} />
           </NavLink>
         ))}
       </nav>
