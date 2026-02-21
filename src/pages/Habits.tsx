@@ -5,7 +5,8 @@ import {
   Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, Clock, Flame, 
   BarChart3, CheckCircle2, Pencil, Trash2, 
-  Play, Pause, CalendarDays, Target
+  Play, Pause, CalendarDays, Target,
+  ChevronDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -371,7 +372,7 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-[#050f0e] pb-32 animate-in fade-in duration-500 relative">
       
-      {/* 1. Header Stats Grid - UPDATED DESIGN */}
+      {/* 1. Header Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 p-4 md:p-0 mt-2">
         {[
           { label: "Total de Hábitos", value: stats.total, icon: Target, color: "#00e5cc", grad: "from-[#002e2c] to-[#0a1a18]", border: "border-[#00e5cc20]" },
