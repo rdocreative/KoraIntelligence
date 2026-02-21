@@ -22,7 +22,7 @@ interface Habit {
 // Helper para data de hoje
 const getTodayString = () => new Date().toISOString().split('T')[0];
 
-const TasksPage = () => {
+const HabitsPage = () => {
   // Estado
   const [habits, setHabits] = useState<Habit[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -92,8 +92,6 @@ const TasksPage = () => {
   if (activeTab === 'Hoje') {
     displayedHabits = scheduledForToday;
   } else if (activeTab === 'Semana') {
-    // Para simplificar, 'Semana' mostra todos também, ou poderia ser uma view de calendário
-    // Aqui vou mostrar todos os ativos, similar a 'Todas' por enquanto, ou filtrar diferente se necessário
     displayedHabits = habits; 
   } else {
     displayedHabits = habits;
@@ -293,4 +291,5 @@ const TasksPage = () => {
     </div>
   );
 };
-export default TasksPage;
+
+export default HabitsPage;

@@ -33,7 +33,8 @@ interface PageConfig {
 
 const pageConfigs: Record<string, PageConfig> = {
   '/': { title: 'Início', subtitle: 'Visão total do seu progresso', color: '#4adbc8', icon: Home },
-  '/tarefas': { title: 'Tarefas', subtitle: 'Gerenciamento do seu dia', color: '#38bdf8', icon: ClipboardList },
+  '/habitos': { title: 'Hábitos', subtitle: 'Seus hábitos de hoje', color: '#38bdf8', icon: ClipboardList },
+  '/tarefas': { title: 'Hábitos', subtitle: 'Seus hábitos de hoje', color: '#38bdf8', icon: ClipboardList },
   '/metas': { title: 'Metas', subtitle: 'Foco nos grandes objetivos', color: '#34d399', icon: Target },
   '/missoes': { title: 'Missões', subtitle: 'Desafios e conquistas épicas', color: '#f0b429', icon: Zap },
   '/lembretes': { title: 'Lembretes', subtitle: 'Alertas e compromissos', color: '#ec4899', icon: Bell },
@@ -62,7 +63,6 @@ export const TopBar = () => {
   };
 
   const commonShadow = "shadow-[0_8px_32px_rgba(0,0,0,0.4)]";
-  // Esquerda: rgb(5, 15, 14) -> Direita: rgb(13, 23, 22)
   const commonBg = "bg-gradient-to-r from-[rgb(5,15,14)] to-[rgb(13,23,22)]";
   const commonBorder = "border-[#2a4441]";
 
@@ -92,62 +92,28 @@ export const TopBar = () => {
 
         {/* GRUPO DE STATS */}
         <div className="flex items-center gap-2.5 md:gap-3 flex-shrink-0">
-          
-          <button 
-            className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none`}
-          >
-            <Coins 
-              size={15} 
-              className="text-[#fb923c] fill-[#fb923c22] md:w-[19px] md:h-[19px]" 
-              style={{ filter: 'drop-shadow(0 0 4px #fb923c44)' }}
-            />
-            <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#fb923c] tracking-tight">
-              {userStats.coins}
-            </span>
+          <button className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none`}>
+            <Coins size={15} className="text-[#fb923c] fill-[#fb923c22] md:w-[19px] md:h-[19px]" style={{ filter: 'drop-shadow(0 0 4px #fb923c44)' }} />
+            <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#fb923c] tracking-tight">{userStats.coins}</span>
           </button>
 
-          <button 
-            onClick={() => setActiveModal('profile')}
-            className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#4adbc844] active:scale-95 outline-none`}
-          >
-            <Zap 
-              size={15} 
-              className="text-[#4adbc8] fill-[#4adbc822] md:w-[19px] md:h-[19px]" 
-              style={{ filter: 'drop-shadow(0 0 4px #4adbc844)' }}
-            />
-            <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#4adbc8] tracking-tight">
-              {userStats.xp}
-            </span>
+          <button onClick={() => setActiveModal('profile')} className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#4adbc844] active:scale-95 outline-none`}>
+            <Zap size={15} className="text-[#4adbc8] fill-[#4adbc822] md:w-[19px] md:h-[19px]" style={{ filter: 'drop-shadow(0 0 4px #4adbc844)' }} />
+            <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#4adbc8] tracking-tight">{userStats.xp}</span>
           </button>
 
-          <button 
-            onClick={() => setActiveModal('achievements')}
-            className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none`}
-          >
-            <Trophy 
-              size={17} 
-              className="text-[#a855f7] md:w-[21px] md:h-[21px]"
-              style={{ filter: 'drop-shadow(0 0 4px #a855f744)' }}
-            />
+          <button onClick={() => setActiveModal('achievements')} className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#a855f744] active:scale-95 outline-none`}>
+            <Trophy size={17} className="text-[#a855f7] md:w-[21px] md:h-[21px]" style={{ filter: 'drop-shadow(0 0 4px #a855f744)' }} />
           </button>
 
-          <button 
-            onClick={() => setActiveModal('profile')}
-            className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none`}
-          >
-            <UserCircle 
-              size={22} 
-              className="text-[#38bdf8] md:w-[26px] md:h-[26px]"
-              style={{ filter: 'drop-shadow(0 0 4px #38bdf844)' }}
-            />
+          <button onClick={() => setActiveModal('profile')} className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none`}>
+            <UserCircle size={22} className="text-[#38bdf8] md:w-[26px] md:h-[26px]" style={{ filter: 'drop-shadow(0 0 4px #38bdf844)' }} />
           </button>
         </div>
       </div>
 
-      {/* Modais de Informação */}
       <Dialog open={activeModal !== null} onOpenChange={() => setActiveModal(null)}>
         <DialogContent className={`${commonBg} border ${commonBorder} text-[#f0f0f0] w-[90vw] sm:max-w-[400px] rounded-[32px] p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] outline-none mx-auto`}>
-          
           {activeModal === 'achievements' && (
             <div className="p-8 flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-[22px] bg-gradient-to-br from-[#a855f722] to-transparent border border-[#a855f733] flex items-center justify-center mb-4">
@@ -193,7 +159,6 @@ export const TopBar = () => {
               </div>
             </div>
           )}
-
         </DialogContent>
       </Dialog>
     </header>

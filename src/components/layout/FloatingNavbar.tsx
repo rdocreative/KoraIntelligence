@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 const navItems = [
   { icon: LayoutDashboard, label: 'INÍCIO', path: '/', color: '#4adbc8', shadowColor: 'rgba(74, 219, 200, 0.6)' },
   { icon: Crown, label: 'MASTERPLAN', path: '/masterplan', color: 'rgba(168, 85, 247, 1)', shadowColor: 'rgba(168, 85, 247, 0.6)' },
-  { icon: ClipboardList, label: 'TAREFAS', path: '/tarefas', color: 'rgba(59, 130, 246, 1)', shadowColor: 'rgba(59, 130, 246, 0.6)' },
+  { icon: ClipboardList, label: 'HÁBITOS', path: '/habitos', color: 'rgba(59, 130, 246, 1)', shadowColor: 'rgba(59, 130, 246, 0.6)' },
   { icon: Target, label: 'METAS', path: '/metas', color: 'rgba(34, 197, 94, 1)', shadowColor: 'rgba(34, 197, 94, 0.6)' },
   { icon: Bell, label: 'LEMBRETES', path: '/lembretes', color: 'rgba(236, 72, 153, 1)', shadowColor: 'rgba(236, 72, 153, 0.6)' },
   { icon: Swords, label: 'MISSÕES', path: '/missoes', color: 'rgba(249, 115, 22, 1)', shadowColor: 'rgba(249, 115, 22, 0.6)' },

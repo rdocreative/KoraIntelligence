@@ -18,7 +18,7 @@ import Index from "./pages/Index";
 import MasterplanPage from "./pages/Masterplan";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
-import TasksPage from "./pages/Tasks";
+import HabitsPage from "./pages/Habits";
 import GoalsPage from "./pages/Goals";
 import MissionsPage from "./pages/Missions";
 import CommunityPage from "./pages/Community";
@@ -55,7 +55,7 @@ const ProtectedRoute = () => {
   );
 };
 
-// Componente para rotas públicas (Login/Cadastro) - Redireciona se já estiver logado
+// Componente para rotas públicas (Login/Cadastro)
 const PublicRoute = () => {
   const { session, loading } = useAuth();
 
@@ -88,29 +88,29 @@ const App = () => (
                 <BrowserRouter>
                   <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden">
                     
-                    {/* Background Layers - Substituído #141415 pelo turquesa profundo #040d0c */}
+                    {/* Background Layers */}
                     <div className="fixed inset-0 pointer-events-none bg-[#040d0c] -z-30" />
                     
-                    {/* Top Center Theme Glow (Turquesa #4adbc8) */}
+                    {/* Top Center Theme Glow */}
                     <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_50%_-45%,rgba(74,219,200,0.18)_0%,transparent_60%)] -z-20" />
                     
-                    {/* Gradiente de profundidade ajustado para tons azulados/pretos */}
+                    {/* Gradiente de profundidade */}
                     <div className="fixed inset-0 pointer-events-none bg-[linear-gradient(0deg,rgba(0,10,10,0.4)_0%,transparent_15%)] -z-10" />
 
                     <Routes>
-                      {/* Rotas Públicas (Auth) */}
+                      {/* Rotas Públicas */}
                       <Route element={<PublicRoute />}>
                         <Route path="/login" element={<Login />} />
                         <Route path="/cadastro" element={<SignUp />} />
                         <Route path="/recuperar-senha" element={<ForgotPassword />} />
                       </Route>
 
-                      {/* Rotas Protegidas (App) */}
+                      {/* Rotas Protegidas */}
                       <Route element={<ProtectedRoute />}>
                         <Route path="/" element={<Index />} />
                         <Route path="/masterplan" element={<MasterplanPage />} />
-                        <Route path="/habitos" element={<MasterplanPage />} />
-                        <Route path="/tarefas" element={<TasksPage />} />
+                        <Route path="/habitos" element={<HabitsPage />} />
+                        <Route path="/tarefas" element={<HabitsPage />} />
                         <Route path="/metas" element={<GoalsPage />} />
                         <Route path="/lembretes" element={<RemindersPage />} />
                         <Route path="/missoes" element={<MissionsPage />} />
