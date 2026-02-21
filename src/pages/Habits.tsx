@@ -6,8 +6,7 @@ import {
   LayoutGrid, Clock, Flame, 
   BarChart3, CheckCircle2, Pencil, Trash2, 
   Play, Pause, CalendarDays, Target,
-  ChevronDown,
-  ClipboardList
+  ChevronDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -373,43 +372,26 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
       
-      {/* Page Header (Pill Style from Image) */}
-      <div className="flex justify-center pt-8 pb-4">
-        <div className="bg-[#0f2220] border border-[#2d5550] rounded-full px-6 py-2.5 shadow-2xl backdrop-blur-xl flex items-center gap-4">
-          <ClipboardList size={22} className="text-white" />
-          
-          <h1 className="text-white font-bold text-xl tracking-tight">
-            Hábitos
-          </h1>
-
-          <div className="w-px h-5 bg-[#2d5550]" />
-
-          <span className="text-[#5a8a85] text-sm font-medium tracking-wide">
-            Seus hábitos de hoje
-          </span>
-        </div>
-      </div>
-
-      {/* Tab Navigation Below Header */}
-      <div className="flex justify-center pb-2 opacity-80">
-        <div className="flex items-center gap-6">
+      {/* Tab Navigation at TOP */}
+      <div className="flex justify-center pt-6 pb-2">
+        <div className="bg-[#0f2220] border border-[#2d5550] rounded-full p-[8px] px-[6px] shadow-2xl backdrop-blur-xl flex items-center gap-1">
           <button 
             onClick={() => setActiveTab('overview')}
             className={cn(
-              "text-[12px] font-bold uppercase tracking-[0.2em] transition-all",
-              activeTab === 'overview' ? "text-[#00e5cc]" : "text-[#5a8a85] hover:text-white"
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-semibold uppercase tracking-widest transition-all duration-300",
+              activeTab === 'overview' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#5a8a85] hover:text-[#e8f5f3]"
             )}
           >
-            Visão Geral
+            <LayoutGrid size={14} /> Visão Geral
           </button>
           <button 
             onClick={() => setActiveTab('charts')}
             className={cn(
-              "text-[12px] font-bold uppercase tracking-[0.2em] transition-all",
-              activeTab === 'charts' ? "text-[#00e5cc]" : "text-[#5a8a85] hover:text-white"
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-semibold uppercase tracking-widest transition-all duration-300",
+              activeTab === 'charts' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#5a8a85] hover:text-[#e8f5f3]"
             )}
           >
-            Gráficos
+            <BarChart3 size={14} /> Gráficos
           </button>
         </div>
       </div>
