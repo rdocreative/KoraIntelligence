@@ -372,89 +372,122 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
       
-      {/* Header Section: Tabs and Stats */}
-      <div className="space-y-6 pt-2">
-        {/* Navigation Tabs - More compact and centered */}
-        <div className="flex justify-center">
-          <div className="bg-[#0f2220]/80 border border-[#2d5550]/50 rounded-full p-1.5 backdrop-blur-md flex items-center gap-1">
-            <button 
-              onClick={() => setActiveTab('overview')}
-              className={cn(
-                "flex items-center gap-2 px-6 py-2 rounded-full text-[12px] font-bold uppercase tracking-wider transition-all duration-300",
-                activeTab === 'overview' ? "bg-[#00e5cc] text-[#071412]" : "text-white/60 hover:text-white"
-              )}
-            >
-              <LayoutGrid size={14} strokeWidth={2.5} /> Visão Geral
-            </button>
-            <button 
-              onClick={() => setActiveTab('charts')}
-              className={cn(
-                "flex items-center gap-2 px-6 py-2 rounded-full text-[12px] font-bold uppercase tracking-wider transition-all duration-300",
-                activeTab === 'charts' ? "bg-[#00e5cc] text-[#071412]" : "text-white/60 hover:text-white"
-              )}
-            >
-              <BarChart3 size={14} strokeWidth={2.5} /> Gráficos
-            </button>
-          </div>
-        </div>
-
-        {/* Stats Grid - Compact and Consistent with White Text */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            { label: "ATIVOS", value: stats.total, icon: Target, color: "#00e5cc", iconBg: "bg-[#00e5cc15]" },
-            { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, color: "#ff6b00", iconBg: "bg-[#ff6b0015]" },
-            { label: "COMPLETOS", value: stats.today, icon: CheckCircle2, color: "#00e055", iconBg: "bg-[#00e05515]" },
-            { label: "MENSAL", value: stats.rate, icon: BarChart3, color: "#b060ff", iconBg: "bg-[#b060ff15]" }
-          ].map((s, i) => (
-            <div 
-              key={i}
-              className="bg-[#0f2220]/60 border border-[#2d5550]/40 p-3 rounded-2xl flex items-center gap-3 backdrop-blur-sm"
-            >
-              <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center shrink-0", s.iconBg)}>
-                <s.icon size={18} style={{ color: s.color }} strokeWidth={2.5} />
-              </div>
-              <div className="flex flex-col min-w-0">
-                <span className="text-[9px] font-black text-white/40 uppercase tracking-widest leading-none mb-1">
-                  {s.label}
-                </span>
-                <span className="text-xl font-black text-white leading-none truncate">
-                  {s.value}
-                </span>
-              </div>
-            </div>
-          ))}
+      {/* Tab Navigation at TOP */}
+      <div className="flex justify-center pt-6 pb-2">
+        <div className="bg-[#0f2220] border border-[#2d5550] rounded-full p-[8px] px-[6px] shadow-2xl backdrop-blur-xl flex items-center gap-1">
+          <button 
+            onClick={() => setActiveTab('overview')}
+            className={cn(
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-semibold uppercase tracking-widest transition-all duration-300",
+              activeTab === 'overview' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#5a8a85] hover:text-[#e8f5f3]"
+            )}
+          >
+            <LayoutGrid size={14} /> Visão Geral
+          </button>
+          <button 
+            onClick={() => setActiveTab('charts')}
+            className={cn(
+              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[13px] font-semibold uppercase tracking-widest transition-all duration-300",
+              activeTab === 'charts' ? "bg-[#00e5cc15] border border-[#00e5cc40] text-[#00e5cc]" : "text-[#5a8a85] hover:text-[#e8f5f3]"
+            )}
+          >
+            <BarChart3 size={14} /> Gráficos
+          </button>
         </div>
       </div>
 
-      <div className="mt-8 flex flex-col lg:flex-row gap-6">
+      {/* Header Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-0 mt-4">
+        {[
+          { 
+            label: "TOTAL HÁBITOS", 
+            value: stats.total, 
+            icon: Target, 
+            color: "#00e5cc", 
+            grad: "from-[#003832] to-[#071412]", 
+            border: "border-[#00e5cc30]",
+            iconBg: "bg-[#00e5cc15]"
+          },
+          { 
+            label: "SEQUÊNCIA", 
+            value: stats.streak, 
+            icon: Flame, 
+            color: "#ff6b00", 
+            grad: "from-[#3d1500] to-[#071412]", 
+            border: "border-[#ff6b0030]",
+            iconBg: "bg-[#ff6b0015]"
+          },
+          { 
+            label: "HOJE", 
+            value: stats.today, 
+            icon: CheckCircle2, 
+            color: "#00e055", 
+            grad: "from-[#00320f] to-[#071412]", 
+            border: "border-[#00e05530]",
+            iconBg: "bg-[#00e05515]"
+          },
+          { 
+            label: "MÊS", 
+            value: stats.rate, 
+            icon: BarChart3, 
+            color: "#b060ff", 
+            grad: "from-[#1a0035] to-[#071412]", 
+            border: "border-[#b060ff30]",
+            iconBg: "bg-[#b060ff15]"
+          }
+        ].map((s, i) => (
+          <div 
+            key={i}
+            className={cn(
+              "p-3.5 rounded-[16px] border flex items-center gap-3 bg-gradient-to-br transition-all duration-300",
+              s.grad, s.border
+            )}
+          >
+            <div 
+              className={cn("w-14 h-14 rounded-xl flex items-center justify-center shrink-0", s.iconBg)}
+            >
+              <s.icon size={24} style={{ color: s.color }} strokeWidth={2.5} />
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest leading-none mb-1">
+                {s.label}
+              </span>
+              <span className="text-[24px] font-black text-white leading-none">
+                {s.value}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8 flex flex-col lg:flex-row gap-6 p-4 md:p-0">
         <div className="w-full lg:w-[65%] space-y-6">
-          <div className="bg-gradient-to-br from-[#0f2220] to-[#071412] border border-[#2d5550] rounded-2xl p-6 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#00e5cc]/5 blur-3xl rounded-full -mr-10 -mt-10" />
-            
-            <div className="flex items-center justify-between mb-8 relative z-10">
+          <div className="bg-gradient-to-br from-[#0f2220] to-[#071412] border border-[#2d5550] rounded-xl p-6 shadow-2xl">
+            <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => setCurrentDate(subMonths(currentDate, 1))} 
-                  className="p-1.5 text-white/40 hover:text-[#00e5cc] transition-colors bg-[#071412]/50 rounded-lg"
+                  className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"
                 >
-                  <ChevronLeft size={20} />
+                  <ChevronLeft size={24} />
                 </button>
                 
                 <Popover>
                   <PopoverTrigger asChild>
-                    <button className="flex items-center gap-2 text-md font-black text-white uppercase tracking-wider hover:text-[#00e5cc] transition-colors group px-4 py-1.5 bg-[#071412]/30 rounded-full border border-[#2d5550]/30">
+                    <button className="flex items-center gap-2 text-lg font-bold text-white uppercase tracking-wider hover:text-[#00e5cc] transition-colors group px-2">
                       {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
-                      <ChevronDown size={16} className="text-white/30 group-hover:text-[#00e5cc]" />
+                      <ChevronDown size={18} className="text-[#5a8a85] group-hover:text-[#00e5cc]" />
                     </button>
                   </PopoverTrigger>
-                  <PopoverContent className="bg-[#0f2220] border-[#2d5550] w-64 p-3 shadow-2xl rounded-2xl">
+                  <PopoverContent className="bg-[#0f2220] border-[#2d5550] w-64 p-3 shadow-2xl">
                     <div className="grid grid-cols-3 gap-1 mb-4">
                       {Array.from({ length: 12 }).map((_, i) => (
                         <button
                           key={i}
                           onClick={() => setCurrentDate(setMonth(currentDate, i))}
                           className={cn(
-                            "py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all",
+                            "py-2 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all",
                             getMonth(currentDate) === i ? "bg-[#00e5cc] text-[#071412]" : "text-[#5a8a85] hover:bg-[#1e3a36] hover:text-[#e8f5f3]"
                           )}
                         >
@@ -472,9 +505,9 @@ const HabitsPage = () => {
 
                 <button 
                   onClick={() => setCurrentDate(addMonths(currentDate, 1))} 
-                  className="p-1.5 text-white/40 hover:text-[#00e5cc] transition-colors bg-[#071412]/50 rounded-lg"
+                  className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"
                 >
-                  <ChevronRight size={20} />
+                  <ChevronRight size={24} />
                 </button>
               </div>
 
@@ -483,7 +516,7 @@ const HabitsPage = () => {
                   variant="ghost" 
                   size="sm" 
                   onClick={() => { setCurrentDate(new Date()); setSelectedDate(new Date()); }}
-                  className="text-[11px] font-black text-[#00e5cc] bg-[#00e5cc10] border border-[#00e5cc20] hover:bg-[#00e5cc20] uppercase rounded-full h-9 px-5 transition-all"
+                  className="text-[11px] font-bold text-[#00e5cc] bg-[#00e5cc10] border border-[#00e5cc30] uppercase rounded-full h-8 px-4"
                 >
                   Hoje
                 </Button>
@@ -492,7 +525,7 @@ const HabitsPage = () => {
 
             <div className="grid grid-cols-7 mb-4">
               {['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].map(d => (
-                <div key={d} className="text-center text-[10px] font-black text-[#00e5cc] uppercase tracking-[0.2em] py-2 opacity-60">{d}</div>
+                <div key={d} className="text-center text-xs font-bold text-[#00e5cc] uppercase tracking-wider py-2 opacity-80">{d}</div>
               ))}
             </div>
 
@@ -504,20 +537,20 @@ const HabitsPage = () => {
                       <div 
                         onClick={() => setSelectedDate(day.date)}
                         className={cn(
-                          "min-h-[50px] aspect-square rounded-xl border flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
-                          day.isCurrentMonth ? "bg-[#0d1f1c]/50 border-[#1a3530] text-white hover:bg-[#122b27]" : "text-[#2a3f3d] border-transparent opacity-20",
-                          day.isSelected ? "border-[#00e5cc] bg-[#00e5cc10] ring-1 ring-[#00e5cc]/30 shadow-[0_0_15px_rgba(0,229,204,0.15)]" : "",
-                          day.isToday && !day.isSelected ? "border-2 border-[#00e5cc]/40 bg-[#00e5cc05]" : "",
-                          day.level === 1 && "bg-[#064e3b]/40 border-[#064e3b30]",
-                          day.level === 2 && "bg-[#059669]/60 border-[#05966930]",
-                          day.level === 3 && "bg-[#10b981]/80 border-[#10b98130]",
-                          day.level === 4 && "bg-[#00e5cc] text-[#071412] font-black",
+                          "min-h-[56px] aspect-square rounded-[8px] border flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
+                          day.isCurrentMonth ? "bg-[#0d1f1c] border-[#1a3530] text-white hover:bg-[#122b27]" : "text-[#2a3f3d] border-transparent",
+                          day.isSelected ? "border-[#00e5cc] ring-1 ring-[#00e5cc]/30 shadow-[0_0_15px_rgba(0,229,204,0.2)]" : "",
+                          day.isToday && !day.isSelected ? "border-2 border-[#00e5cc] bg-[#00e5cc10]" : "",
+                          day.level === 1 && "bg-[#064e3b] border-[#064e3b30]",
+                          day.level === 2 && "bg-[#059669] border-[#05966930]",
+                          day.level === 3 && "bg-[#10b981] border-[#10b98130]",
+                          day.level === 4 && "bg-[#00e5cc] text-[#071412]",
                         )}
                       >
-                        <span className="text-[15px] font-bold">{format(day.date, 'd')}</span>
+                        <span className="text-[16px] font-semibold">{format(day.date, 'd')}</span>
                       </div>
                     </TooltipTrigger>
-                    <TooltipContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3] rounded-xl shadow-2xl">
+                    <TooltipContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3]">
                       <p className="text-xs font-bold">{format(day.date, 'dd/MM')}</p>
                       <p className="text-[10px] text-[#5a8a85] font-bold uppercase">{day.done} de {day.total} feitos</p>
                     </TooltipContent>
@@ -526,17 +559,26 @@ const HabitsPage = () => {
               </TooltipProvider>
             </div>
 
-            <div className="mt-8 flex items-center justify-center gap-4 text-[10px] font-black text-white/30 uppercase tracking-[0.3em]">
+            <div className="mt-8 flex items-center justify-center gap-4 text-[11px] font-bold text-[#5a8a85] uppercase tracking-widest">
               <span>MENOS</span>
-              <div className="flex gap-1.5">
+              <div className="flex gap-2">
                 {[0, 1, 2, 3, 4].map(l => (
-                  <div key={l} className={cn(
-                    "w-2.5 h-2.5 rounded-full border border-[#2a4a46]/30",
-                    l === 0 ? "bg-[#0d1e1c]" : 
-                    l === 1 ? "bg-[#064e3b]" : 
-                    l === 2 ? "bg-[#059669]" : 
-                    l === 3 ? "bg-[#10b981]" : "bg-[#00e5cc]"
-                  )} />
+                  <TooltipProvider key={l}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className={cn(
+                          "w-3 h-3 rounded-full border border-[#2a4a46]",
+                          l === 0 ? "bg-[#0d1e1c]" : 
+                          l === 1 ? "bg-[#064e3b]" : 
+                          l === 2 ? "bg-[#059669]" : 
+                          l === 3 ? "bg-[#10b981]" : "bg-[#00e5cc]"
+                        )} />
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-[#0f2220] border-[#2d5550] text-white">
+                        {l === 0 ? "0 hábitos" : l === 4 ? "Todos os hábitos" : `${l*25}% completado`}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 ))}
               </div>
               <span>MAIS</span>
@@ -545,15 +587,15 @@ const HabitsPage = () => {
         </div>
 
         <div className="w-full lg:w-[35%] relative">
-          <div className="bg-gradient-to-br from-[#0f2220] via-[#071412] to-[#0f2220] border border-[#2d5550] rounded-2xl overflow-hidden flex flex-col min-h-[500px] shadow-2xl">
-            <div className="p-5 border-b border-[#2a4a46]/50 flex items-center justify-between bg-[#071412]/40 backdrop-blur-sm">
-              <h2 className="text-white font-black text-[11px] uppercase tracking-[0.2em]">LISTA DE HÁBITOS</h2>
-              <div className="bg-[#00e5cc15] text-[#00e5cc] text-[10px] px-3 py-1 rounded-full font-black border border-[#00e5cc20]">
+          <div className="bg-gradient-to-br from-[#0f2220] via-[#071412] to-[#0f2220] border border-[#2d5550] rounded-xl overflow-hidden flex flex-col min-h-[500px]">
+            <div className="p-5 border-b border-[#2a4a46] flex items-center justify-between bg-black/20">
+              <h2 className="text-[#00e5cc] font-bold text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
+              <div className="bg-[#00e5cc15] text-[#00e5cc] text-[12px] px-3 py-1 rounded-full font-extrabold border border-[#00e5cc20]">
                 {displayedHabits.filter(h => h.completedDates.includes(format(selectedDate, 'yyyy-MM-dd'))).length}/{displayedHabits.length}
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-4">
               <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                 <SortableContext items={displayedHabits.map(h => h.id)} strategy={verticalListSortingStrategy}>
                   {displayedHabits.map((habit) => (
@@ -569,29 +611,29 @@ const HabitsPage = () => {
               </DndContext>
 
               {displayedHabits.length === 0 && (
-                <div className="h-full flex flex-col items-center justify-center py-20 text-center opacity-30">
-                  <Clock size={40} className="text-white mb-4" />
-                  <p className="text-[10px] font-black uppercase text-white tracking-[0.2em]">Nada para este dia</p>
+                <div className="h-full flex flex-col items-center justify-center p-10 text-center opacity-40">
+                  <Clock size={32} className="text-[#5a8a85] mb-3" />
+                  <p className="text-xs font-bold uppercase text-[#5a8a85] tracking-widest">Nada planejado</p>
                 </div>
               )}
             </div>
 
-            <div className="p-4 bg-[#071412]/30">
+            <div className="p-4 border-t border-[#2a4a46]">
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
-                  <Button className="w-full bg-[#00e5cc] hover:bg-[#00e5cc] hover:brightness-110 transition-all duration-300 text-[#071412] font-black text-[11px] uppercase tracking-[0.2em] h-12 rounded-xl shadow-lg shadow-[#00e5cc]/10">
-                    <Plus className="mr-2" size={18} strokeWidth={3} /> ADICIONAR HÁBITO
+                  <Button className="w-full bg-[#00e5cc] hover:bg-[#00e5cc] hover:brightness-110 transition-all duration-200 text-[#071412] font-black text-[12px] uppercase tracking-[0.15em] h-12 rounded-xl">
+                    <Plus className="mr-2" size={18} strokeWidth={3} /> NOVO HÁBITO
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3] rounded-3xl">
-                  <DialogHeader><DialogTitle className="uppercase tracking-[0.2em] text-xs font-black text-[#00e5cc]">Novo Hábito</DialogTitle></DialogHeader>
+                <DialogContent className="bg-[#0f2220] border-[#2d5550] text-[#e8f5f3]">
+                  <DialogHeader><DialogTitle className="uppercase tracking-widest text-sm text-[#00e5cc]">Criar Hábito</DialogTitle></DialogHeader>
                   <div className="grid gap-4 py-4">
                     <div className="grid gap-2">
-                      <Label className="text-[10px] uppercase font-black text-white/40 tracking-wider">Nome do Hábito</Label>
-                      <Input placeholder="Ex: Meditação matinal" className="bg-[#071412] border-[#2a4a46] text-[#e8f5f3] rounded-xl focus:border-[#00e5cc] transition-all" />
+                      <Label className="text-[10px] uppercase font-bold text-[#5a8a85]">Título</Label>
+                      <Input placeholder="Beber água..." className="bg-[#071412] border-[#2a4a46] text-[#e8f5f3]" />
                     </div>
                   </div>
-                  <DialogFooter><Button className="w-full bg-[#00e5cc] text-[#071412] font-black rounded-xl">CRIAR HÁBITO</Button></DialogFooter>
+                  <DialogFooter><Button className="bg-[#00e5cc] text-[#071412] font-bold">CRIAR</Button></DialogFooter>
                 </DialogContent>
               </Dialog>
             </div>
