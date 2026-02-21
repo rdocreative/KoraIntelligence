@@ -370,7 +370,7 @@ const HabitsPage = () => {
   }, [habits, selectedDate]);
 
   return (
-    <div className="min-h-screen bg-[#071412] pb-10 animate-in fade-in duration-500 relative">
+    <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
       
       {/* Tab Navigation at TOP */}
       <div className="flex justify-center pt-6 pb-2">
