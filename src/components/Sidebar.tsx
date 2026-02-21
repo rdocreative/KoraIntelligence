@@ -23,31 +23,28 @@ const Sidebar = () => {
 
   return (
     <aside 
-      className="w-64 h-screen flex flex-col border-none"
+      className="w-[230px] h-screen flex flex-col border-none"
       style={{
         background: 'linear-gradient(135deg, #0d1716 0%, #080f0e 60%, #050f0e 100%)'
       }}
     >
       <div className="p-6">
-        <h1 className="text-xl font-bold text-white flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center">
-            <BrainCircuit className="text-white" size={20} />
+        <h1 className="text-lg font-bold text-white flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-blue-500 flex items-center justify-center">
+            <BrainCircuit className="text-white" size={18} />
           </div>
           Dyad AI
         </h1>
       </div>
 
-      <nav className="flex-1 px-4 space-y-2 py-4">
+      <nav className="flex-1 px-3 space-y-1.5 py-4">
         {navItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
             className={({ isActive }) => `
-              flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group
-              ${isActive 
-                ? 'text-white border border-[#1a2e2c]' 
-                : 'text-gray-400 hover:text-white'
-              }
+              flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group
+              ${isActive ? 'text-white' : 'text-gray-400 hover:text-white'}
             `}
             style={({ isActive }) => ({
               background: isActive 
@@ -65,19 +62,19 @@ const Sidebar = () => {
               }
             }}
           >
-            <item.icon size={20} />
-            <span className="font-medium">{item.label}</span>
+            <item.icon size={18} />
+            <span className="font-medium text-sm">{item.label}</span>
           </NavLink>
         ))}
       </nav>
 
       <div className="p-4 mt-auto">
         <div className="bg-[#0a1a18] rounded-2xl p-4 border border-[#1a2e2c]">
-          <p className="text-xs text-gray-400 mb-2">Pro Plan</p>
-          <div className="h-2 w-full bg-[#1a2e2c] rounded-full overflow-hidden">
+          <p className="text-[10px] text-gray-400 mb-2 font-medium uppercase tracking-wider">Pro Plan</p>
+          <div className="h-1.5 w-full bg-[#1a2e2c] rounded-full overflow-hidden">
             <div className="h-full bg-blue-500 w-3/4" />
           </div>
-          <p className="text-[10px] text-gray-500 mt-2">75% of storage used</p>
+          <p className="text-[10px] text-gray-500 mt-2">75% usage</p>
         </div>
       </div>
     </aside>
