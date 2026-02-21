@@ -1,3 +1,6 @@
+"use client";
+
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { 
   LayoutDashboard, 
@@ -17,7 +20,7 @@ const navItems = [
   { icon: Crown, path: "/masterplan", label: "Masterplan" },
   { icon: ClipboardList, path: "/habitos", label: "Hábitos" },
   { icon: Target, path: "/metas", label: "Metas" },
-  { icon: Brain, path: "/brain", label: "Sistema", isSpecial: true }, // Item de destaque
+  { icon: Brain, path: "/brain", label: "Sistema", isSpecial: true },
   { icon: Bell, path: "/lembretes", label: "Lembretes" },
   { icon: Swords, path: "/missoes", label: "Missões" },
   { icon: ShoppingBag, path: "/loja", label: "Loja" },
@@ -26,8 +29,13 @@ const navItems = [
 
 export const SideNav = () => {
   return (
-    <div className="fixed left-[24px] top-1/2 -translate-y-1/2 z-[100]">
-      <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-2 py-4 flex flex-col items-center gap-2 shadow-2xl backdrop-blur-sm">
+    <div className="fixed left-[20px] top-1/2 -translate-y-1/2 z-[100]">
+      <nav 
+        className="rounded-full px-1.5 py-3.5 flex flex-col items-center gap-1.5 shadow-2xl backdrop-blur-sm border-none"
+        style={{
+          background: 'linear-gradient(135deg, #0d1716 0%, #080f0e 60%, #050f0e 100%)'
+        }}
+      >
         {navItems.map(({ icon: Icon, path, label, isSpecial }) => (
           <NavLink
             key={path}
@@ -35,15 +43,46 @@ export const SideNav = () => {
             title={label}
             className={({ isActive }) => cn(
               "flex items-center justify-center rounded-full transition-all duration-200",
-              // Estilo padrão
-              !isSpecial && "w-[44px] h-[44px] text-[#5a8a85] hover:text-[#38bdf8] hover:bg-[#38bdf8]/5",
-              !isSpecial && isActive && "bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/20",
-              // Estilo do item especial (Cérebro)
-              isSpecial && "w-[54px] h-[54px] bg-[#38bdf8] text-[#071412] my-1 shadow-[0_0_15px_rgba(56,189,248,0.3)] hover:scale-105 active:scale-95",
-              isSpecial && isActive && "ring-2 ring-offset-2 ring-offset-[#071412] ring-[#38bdf8]"
+              // Tamanhos reduzidos em 10% (44px -> 40px, 54px -> 49px)
+              !isSpecial && "w-[40px] h-[40px] text-[#5a8a85]",
+              isSpecial && "w-[49px] h-[49px] my-1 hover:scale-105 active:scale-95",
+              isActive && !isSpecial && "border border-[#1a2e2c]"
             )}
+            style={({ isActive }) => {
+              if (isSpecial) {
+                return {
+                  background: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)',
+                  boxShadow: '0 4px 20px #38bdf840',
+                  color: '#071412'
+                };
+              }
+              if (isActive) {
+                return {
+                  background: 'linear-gradient(135deg, #0a1a18 0%, #070d0c 100%)',
+                  color: '#38bdf8'
+                };
+              }
+              return {};
+            }}
+            onMouseEnter={(e) => {
+              const target = e.currentTarget as HTMLElement;
+              const isActive = target.classList.contains('active');
+              if (!isSpecial && !isActive) {
+                target.style.background = 'linear-gradient(135deg, #0a1a18 0%, #070d0c 100%)';
+                target.style.color = '#38bdf8';
+              }
+            }}
+            onMouseLeave={(e) => {
+              const target = e.currentTarget as HTMLElement;
+              const isActive = target.classList.contains('active');
+              if (!isSpecial && !isActive) {
+                target.style.background = 'transparent';
+                target.style.color = '#5a8a85';
+              }
+            }}
           >
-            <Icon size={isSpecial ? 28 : 22} strokeWidth={isSpecial ? 2.5 : 2} />
+            {/* Ícones reduzidos (22 -> 20, 28 -> 25) */}
+            <Icon size={isSpecial ? 25 : 20} strokeWidth={isSpecial ? 2.5 : 2} />
           </NavLink>
         ))}
       </nav>
