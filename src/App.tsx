@@ -1,131 +1,48 @@
 "use client";
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { ThemeProvider } from "./components/providers/ThemeProvider";
-import { SettingsProvider } from "./hooks/useSettings"; 
-import { HabitProvider } from "./hooks/useHabitTracker";
-import { MasterplanProvider } from "./hooks/useMasterplan";
-import { AuthProvider, useAuth } from "./components/providers/AuthProvider";
-import { FloatingNavbar } from "./components/layout/FloatingNavbar";
-import { TopBar } from "./components/layout/TopBar"; 
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Sidebar } from './components/layout/Sidebar';
+import Index from './pages/Index';
+import HabitsPage from './pages/Habits';
+import { Toaster } from 'react-hot-toast';
 
-// Pages
-import Index from "./pages/Index";
-import MasterplanPage from "./pages/Masterplan";
-import Settings from "./pages/Settings";
-import NotFound from "./pages/NotFound";
-import HabitsPage from "./pages/Habits";
-import GoalsPage from "./pages/Goals";
-import MissionsPage from "./pages/Missions";
-import CommunityPage from "./pages/Community";
-import StorePage from "./pages/Store";
-import RemindersPage from "./pages/Reminders";
-
-// Auth Pages
-import Login from "./pages/auth/Login";
-import SignUp from "./pages/auth/SignUp";
-import ForgotPassword from "./pages/auth/ForgotPassword";
-
-const queryClient = new QueryClient();
-
-// Componente para proteger rotas privadas
-const ProtectedRoute = () => {
-  const { session, loading } = useAuth();
-
-  if (loading) {
-    return <div className="h-screen w-full flex items-center justify-center bg-transparent"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
-  }
-
-  if (!session) {
-    return <Navigate to="/login" replace />;
-  }
-
+function App() {
   return (
-    <div className="relative z-10 flex flex-col min-h-screen">
-      <TopBar />
-      <main className="flex-1 p-6 pb-32 max-w-5xl mx-auto w-full">
-        <Outlet />
-      </main>
-      <div className="fixed bottom-0 left-0 right-0 p-6 z-50 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto">
-          <FloatingNavbar />
-        </div>
+    <Router>
+      <div className="flex min-h-screen bg-[#071412] text-white selection:bg-[#00e5cc]/30">
+        <Sidebar />
+        
+        {/* Main Content Area */}
+        <main className="flex-1 ml-20 transition-none overflow-x-hidden">
+          <div className="container mx-auto max-w-7xl p-6 lg:p-10 transition-none">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/habitos" element={<HabitsPage />} />
+              {/* Other routes can be added here */}
+            </Routes>
+          </div>
+        </main>
+
+        <Toaster 
+          position="bottom-right"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#0f2220',
+              color: '#e8f5f3',
+              border: '1px solid #2d5550',
+              borderRadius: '10px',
+              fontSize: '12px',
+              fontWeight: '600',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            },
+          }}
+        />
       </div>
-    </div>
+    </Router>
   );
-};
-
-// Componente para rotas públicas (Login/Cadastro)
-const PublicRoute = () => {
-  const { session, loading } = useAuth();
-
-  if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-transparent"><div className="w-8 h-8 border-4 border-[#4adbc8] border-t-transparent rounded-full animate-spin"></div></div>;
-  }
-
-  if (session) {
-    return <Navigate to="/" replace />;
-  }
-
-  return <Outlet />;
-};
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider 
-      attribute="class" 
-      defaultTheme="dark" 
-      enableSystem={false}
-      storageKey="app-theme"
-    >
-      <AuthProvider>
-        <SettingsProvider>
-          <HabitProvider>
-            <MasterplanProvider>
-              <TooltipProvider>
-                <Toaster />
-                <Sonner theme="dark" />
-                <BrowserRouter>
-                  <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden bg-transparent">
-                    <Routes>
-                      {/* Rotas Públicas */}
-                      <Route element={<PublicRoute />}>
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/cadastro" element={<SignUp />} />
-                        <Route path="/recuperar-senha" element={<ForgotPassword />} />
-                      </Route>
-
-                      {/* Rotas Protegidas */}
-                      <Route element={<ProtectedRoute />}>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/masterplan" element={<MasterplanPage />} />
-                        <Route path="/habitos" element={<HabitsPage />} />
-                        <Route path="/tarefas" element={<HabitsPage />} />
-                        <Route path="/metas" element={<GoalsPage />} />
-                        <Route path="/lembretes" element={<RemindersPage />} />
-                        <Route path="/missoes" element={<MissionsPage />} />
-                        <Route path="/comunidade" element={<CommunityPage />} />
-                        <Route path="/financa" element={<StorePage />} />
-                        <Route path="/loja" element={<StorePage />} />
-                        <Route path="/inventario" element={<StorePage />} />
-                        <Route path="/configuracoes" element={<Settings />} />
-                      </Route>
-
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </div>
-                </BrowserRouter>
-              </TooltipProvider>
-            </MasterplanProvider>
-          </HabitProvider>
-        </SettingsProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+}
 
 export default App;
