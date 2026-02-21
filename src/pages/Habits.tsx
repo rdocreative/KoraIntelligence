@@ -118,7 +118,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...listeners}
       className={cn(
         "group rounded-[10px] border border-[#1a3530] p-[14px] px-[16px] mb-2 cursor-grab active:cursor-grabbing select-none",
-        isDragging ? "scale-[1.03] border-[#00e5cc60] bg-[#0d1e1c] shadow-2xl ring-2 ring-[#00e5cc20]" : "bg-gradient-to-br from-[#0a1e1c] to-[#050f0e]",
+        isDragging ? "scale-[1.03] border-[#00e5cc60] bg-[#0d1e1c] shadow-2xl ring-2 ring-[#00e5cc20]" : "bg-gradient-to-br from-[#0a1e1c] to-[#050f0e] transition-all duration-100",
         isCompleted && !isDragging && "opacity-60"
       )}
     >
@@ -127,7 +127,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
           onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
           onPointerDown={(e) => e.stopPropagation()}
           className={cn(
-            "h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0 z-10",
+            "h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
             isCompleted ? "bg-[#00e5cc] border-[#00e5cc]" : "border-[#5a8a85] hover:border-[#00e5cc]"
           )}
         >
@@ -153,7 +153,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
         <button 
           onClick={handleEditClick}
           onPointerDown={(e) => e.stopPropagation()}
-          className="p-1 text-[#5a8a85] hover:text-[#00e5cc] z-10"
+          className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors z-10"
         >
           <ChevronRight size={18} />
         </button>
@@ -201,7 +201,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
     <div 
       ref={popupRef}
       style={{ top, left }}
-      className="fixed z-[1000] min-w-[280px] bg-[#0f2220] border border-[#2d5550] rounded-[10px] p-[16px] px-[18px] shadow-[0_16_40px_rgba(0,0,0,0.6)]"
+      className="fixed z-[1000] min-w-[280px] bg-[#0f2220] border border-[#2d5550] rounded-[10px] p-[16px] px-[18px] shadow-[0_16_40px_rgba(0,0,0,0.6)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="space-y-4">
         <div className="space-y-1">
@@ -235,7 +235,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
                 key={p.v}
                 onClick={() => setForm({...form, priority: p.v as Priority})}
                 className={cn(
-                  "flex-1 h-8 rounded-[10px] text-[11px] font-[700] uppercase tracking-wider",
+                  "flex-1 h-8 rounded-[10px] text-[11px] font-[700] uppercase tracking-wider transition-all",
                   form.priority === p.v ? `${p.c} text-[#071412]` : "bg-[#071412] text-[#5a8a85] hover:bg-[#1e3a36]"
                 )}
               >
@@ -252,7 +252,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
           <button 
             onClick={() => setForm({...form, active: !form.active})}
             className={cn(
-              "p-1.5 rounded-[8px]",
+              "p-1.5 rounded-[8px] transition-colors",
               form.active ? "text-[#00e5cc] bg-[#00e5cc]/10" : "text-[#5a8a85]"
             )}
           >
@@ -370,18 +370,18 @@ const HabitsPage = () => {
   }, [habits, selectedDate]);
 
   return (
-    <div className="min-h-screen bg-transparent pb-10 relative">
+    <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
       
-      {/* Refined Navigation Tabs - No Glow, No Animation, White Text */}
+      {/* Refined Navigation Tabs */}
       <div className="flex justify-center pt-6 pb-2">
         <div className="bg-[#0f2220]/80 border border-[#2d5550] rounded-full p-1 px-1.5 shadow-xl backdrop-blur-xl flex items-center gap-1.5">
           <button 
             onClick={() => setActiveTab('overview')}
             className={cn(
-              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] text-white",
+              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300",
               activeTab === 'overview' 
-                ? "bg-gradient-to-r from-[#00e5cc] to-[#00bfa5] text-white" 
-                : "text-white/40 hover:text-white/70"
+                ? "bg-gradient-to-r from-[#00e5cc] to-[#00bfa5] text-[#071412] shadow-[0_0_15px_rgba(0,229,204,0.3)]" 
+                : "text-white/60 hover:text-white/90"
             )}
           >
             <LayoutGrid size={13} strokeWidth={2.5} /> Visão Geral
@@ -389,10 +389,10 @@ const HabitsPage = () => {
           <button 
             onClick={() => setActiveTab('charts')}
             className={cn(
-              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] text-white",
+              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300",
               activeTab === 'charts' 
-                ? "bg-gradient-to-r from-[#00e5cc] to-[#00bfa5] text-white" 
-                : "text-white/40 hover:text-white/70"
+                ? "bg-gradient-to-r from-[#00e5cc] to-[#00bfa5] text-[#071412] shadow-[0_0_15px_rgba(0,229,204,0.3)]" 
+                : "text-white/60 hover:text-white/90"
             )}
           >
             <BarChart3 size={13} strokeWidth={2.5} /> Gráficos
@@ -411,7 +411,7 @@ const HabitsPage = () => {
           <div 
             key={i}
             className={cn(
-              "py-[16px] px-[18px] rounded-[10px] border flex items-center gap-3 bg-gradient-to-br",
+              "py-[16px] px-[18px] rounded-[10px] border flex items-center gap-3 bg-gradient-to-br transition-all duration-300",
               s.grad, s.border
             )}
           >
@@ -431,10 +431,10 @@ const HabitsPage = () => {
           <div className="bg-gradient-to-br from-[#0f2220] to-[#071412] border border-[#2d5550] rounded-[14px] py-[20px] px-[24px] shadow-2xl">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-2">
-                <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc]"><ChevronLeft size={24} /></button>
+                <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"><ChevronLeft size={24} /></button>
                 <Popover>
                   <PopoverTrigger asChild>
-                    <button className="flex items-center gap-2 text-[14px] font-[700] text-[#e8f5f3] uppercase tracking-[0.02em] hover:text-[#00e5cc] group px-2">
+                    <button className="flex items-center gap-2 text-[14px] font-[700] text-[#e8f5f3] uppercase tracking-[0.02em] hover:text-[#00e5cc] transition-colors group px-2">
                       {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
                       <ChevronDown size={18} className="text-[#5a8a85] group-hover:text-[#00e5cc]" />
                     </button>
@@ -446,7 +446,7 @@ const HabitsPage = () => {
                           key={i}
                           onClick={() => setCurrentDate(setMonth(currentDate, i))}
                           className={cn(
-                            "py-2 rounded-md text-[11px] font-[700] uppercase tracking-wider",
+                            "py-2 rounded-md text-[11px] font-[700] uppercase tracking-wider transition-all",
                             getMonth(currentDate) === i ? "bg-[#00e5cc] text-[#071412]" : "text-[#5a8a85] hover:bg-[#1e3a36] hover:text-[#e8f5f3]"
                           )}
                         >
@@ -461,7 +461,7 @@ const HabitsPage = () => {
                     </div>
                   </PopoverContent>
                 </Popover>
-                <button onClick={() => setCurrentDate(addMonths(currentDate, 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc]"><ChevronRight size={24} /></button>
+                <button onClick={() => setCurrentDate(addMonths(currentDate, 1))} className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors"><ChevronRight size={24} /></button>
               </div>
               <div className="flex items-center">
                 <Button 
@@ -489,7 +489,7 @@ const HabitsPage = () => {
                       <div 
                         onClick={() => setSelectedDate(day.date)}
                         className={cn(
-                          "min-h-[56px] aspect-square rounded-[8px] border flex flex-col items-center justify-center cursor-pointer",
+                          "min-h-[56px] aspect-square rounded-[8px] border flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
                           day.isCurrentMonth ? "bg-[#0d1f1c] border-[#1a3530] text-white hover:bg-[#122b27]" : "text-[#2a3f3d] border-transparent",
                           day.isSelected ? "border-[#00e5cc] ring-1 ring-[#00e5cc]/30 shadow-[0_0_15px_rgba(0,229,204,0.2)]" : "",
                           day.isToday && !day.isSelected ? "border-2 border-[#00e5cc] bg-[#00e5cc10]" : "",
@@ -572,7 +572,7 @@ const HabitsPage = () => {
             <div className="p-4 border-t border-[#2a4a46]">
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
-                  <Button className="w-full bg-[#00e5cc] hover:bg-[#00e5cc] hover:brightness-110 text-[#071412] font-[800] text-[11px] uppercase tracking-[0.1em] h-12 rounded-[14px]">
+                  <Button className="w-full bg-[#00e5cc] hover:bg-[#00e5cc] hover:brightness-110 transition-all duration-200 text-[#071412] font-[800] text-[11px] uppercase tracking-[0.1em] h-12 rounded-[14px]">
                     <Plus className="mr-2" size={18} strokeWidth={3} /> NOVO HÁBITO
                   </Button>
                 </DialogTrigger>
