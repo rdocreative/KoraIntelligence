@@ -6,7 +6,8 @@ import {
   LayoutGrid, Clock, Flame, 
   BarChart3, CheckCircle2, Pencil, Trash2, 
   Play, Pause, CalendarDays, Target,
-  ChevronDown
+  ChevronDown,
+  ClipboardList
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -403,7 +404,7 @@ const HabitsPage = () => {
       {/* Header Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-[12px] p-4 md:p-0 mt-6">
         {[
-          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, color: "#00e5cc", grad: "from-[#003832] to-[#071412]", border: "border-[#00e5cc30]", iconBg: "bg-[#00e5cc15]" },
+          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, color: "#00e5cc", grad: "from-[#003832] to-[#071412]", border: "border-[#00e5cc30]", iconBg: "bg-[#00e5cc15]", isAccent: true },
           { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, color: "#ff6b00", grad: "from-[#3d1500] to-[#071412]", border: "border-[#ff6b0030]", iconBg: "bg-[#ff6b0015]" },
           { label: "HOJE", value: stats.today, icon: CheckCircle2, color: "#00e055", grad: "from-[#00320f] to-[#071412]", border: "border-[#00e05530]", iconBg: "bg-[#00e05515]" },
           { label: "MÊS", value: stats.rate, icon: BarChart3, color: "#b060ff", grad: "from-[#1a0035] to-[#071412]", border: "border-[#b060ff30]", iconBg: "bg-[#b060ff15]" }
@@ -419,8 +420,18 @@ const HabitsPage = () => {
               <s.icon size={24} style={{ color: s.color }} strokeWidth={2.5} />
             </div>
             <div className="flex flex-col">
-              <span className="text-[11px] font-[700] text-white/45 uppercase tracking-[0.1em] leading-none mb-2">{s.label}</span>
-              <span className="text-[28px] font-[800] text-white leading-[1.1]">{s.value}</span>
+              <span className={cn(
+                "text-[11px] font-[700] uppercase tracking-[0.1em] leading-none mb-2",
+                s.isAccent ? "text-[#00e5cc]" : "text-white/45"
+              )}>
+                {s.label}
+              </span>
+              <span className={cn(
+                "text-[28px] font-[800] leading-[1.1]",
+                s.isAccent ? "text-[#00e5cc]" : "text-white"
+              )}>
+                {s.value}
+              </span>
             </div>
           </div>
         ))}
@@ -541,7 +552,10 @@ const HabitsPage = () => {
         <div className="w-full lg:w-[35%] relative">
           <div className="bg-gradient-to-br from-[#0f2220] via-[#071412] to-[#0f2220] border border-[#2d5550] rounded-[14px] overflow-hidden flex flex-col min-h-[500px]">
             <div className="py-[20px] px-[24px] border-b border-[#2a4a46] flex items-center justify-between bg-black/20">
-              <h2 className="text-[#e8f5f3] font-[700] text-[14px] uppercase tracking-[0.02em]">HÁBITOS ATIVOS</h2>
+              <div className="flex items-center gap-2">
+                <ClipboardList size={18} className="text-[#00e5cc]" />
+                <h2 className="text-[#00e5cc] font-[700] text-[14px] uppercase tracking-[0.02em]">HÁBITOS ATIVOS</h2>
+              </div>
               <div className="bg-[#00e5cc15] text-[#00e5cc] text-[11px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#00e5cc20]">
                 {displayedHabits.filter(h => h.completedDates.includes(format(selectedDate, 'yyyy-MM-dd'))).length}/{displayedHabits.length}
               </div>
