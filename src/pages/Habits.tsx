@@ -355,7 +355,7 @@ const HabitsPage = () => {
 
       return {
         date: day,
-        isCurrentMonth: iSameMonth(day, currentDate),
+        isCurrentMonth: isSameMonth(day, currentDate),
         isToday: isSameDay(day, new Date()),
         isSelected: isSameDay(day, selectedDate),
         done,
