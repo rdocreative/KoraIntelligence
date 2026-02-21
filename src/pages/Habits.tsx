@@ -1,9 +1,10 @@
 import { useState, useMemo } from "react";
 import { 
-  Plus, Check, GripVertical, ChevronLeft, ChevronRight, 
+  Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, List as ListIcon, Clock, Flame, 
   BarChart3, CheckCircle2, Calendar as CalendarIcon, 
-  MoreHorizontal, ArrowRight, X
+  ArrowRight, X, Pencil, Trash2, ChevronDown, ChevronUp,
+  Play, Pause
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,24 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
-import {
-  DndContext, 
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-  useSortable
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { 
   format, 
   startOfMonth, 
@@ -46,13 +31,9 @@ import {
 import { ptBR } from 'date-fns/locale';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from 'recharts';
 
-// --- Styles constants from Design System ---
+// --- Constants ---
 const PRIMARY_GRADIENT = "linear-gradient(135deg, #0d1716 0%, #080f0e 60%, #050f0e 100%)";
-const INTERNAL_GRADIENT = "linear-gradient(135deg, #0a1a18 0%, #070d0c 100%)";
-const BORDER_COLOR = "#1a2e2c";
-const ACCENT_COLOR = "#00e5cc";
-const TEXT_MAIN = "#e2f0ef";
-const TEXT_SECONDARY = "#4a7a76";
+const INVERTED_GRADIENT = "linear-gradient(135deg, #050f0e 0%, #0a1a18 50%, #0d1716 100%)";
 
 // --- Types ---
 type Frequency = 'daily' | 'weekly';
@@ -67,148 +48,38 @@ interface Habit {
   weekDays: number[];
   time: string;
   completedDates: string[];
+  active: boolean;
 }
 
 // --- Helpers ---
 const generateId = () => Math.random().toString(36).substr(2, 9);
 const formatDateKey = (date: Date) => format(date, 'yyyy-MM-dd');
 
-// --- Sortable Item Component ---
-const SortableHabitRow = ({ 
-  habit, 
-  toggleHabit, 
-  isCompleted,
-  date,
-  isDragEnabled
-}: { 
-  habit: Habit; 
-  toggleHabit: (id: string) => void; 
-  isCompleted: boolean;
-  date: Date;
-  isDragEnabled: boolean;
-}) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging
-  } = useSortable({ id: habit.id, disabled: !isDragEnabled });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    zIndex: isDragging ? 10 : 1,
-    opacity: isDragging ? 0.5 : 1,
-    background: INTERNAL_GRADIENT,
-    borderColor: BORDER_COLOR,
-    boxShadow: "0 4px 12px rgba(0,0,0,0.2)"
-  };
-
-  const priorityColors = {
-    high: "#ef4444",
-    medium: "#fbbf24",
-    low: "#34d399",
-  };
-
-  const currentMonthStr = format(date, 'yyyy-MM');
-  const completionsThisMonth = habit.completedDates.filter(d => d.startsWith(currentMonthStr)).length;
-  const totalDaysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-
-  return (
-    <div 
-      ref={setNodeRef}
-      style={style}
-      className={cn(
-        "group flex items-center gap-3 p-[14px] rounded-[8px] border transition-all mb-2",
-        isCompleted && "opacity-60"
-      )}
-    >
-        {isDragEnabled && (
-             <div 
-                {...attributes} 
-                {...listeners}
-                className="cursor-grab active:cursor-grabbing text-[#4a7a76] hover:text-[#00e5cc]"
-             >
-                <GripVertical size={16} />
-             </div>
-        )}
-
-        <button 
-            onClick={() => toggleHabit(habit.id)}
-            className={cn(
-                "h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all shrink-0",
-                isCompleted 
-                    ? "bg-[#00e5cc] border-[#00e5cc]" 
-                    : "border-[#4a7a76] hover:border-[#00e5cc]"
-            )}
-        >
-            {isCompleted && <Check size={12} className="text-[#050f0e] stroke-[3px]" />}
-        </button>
-
-        <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-0.5">
-                <span className="font-medium text-[#e2f0ef] truncate text-sm">{habit.title}</span>
-                <div 
-                    className="h-1.5 w-1.5 rounded-full" 
-                    style={{ backgroundColor: priorityColors[habit.priority] }} 
-                />
-            </div>
-            <div className="flex items-center gap-3 text-[11px] text-[#4a7a76] uppercase tracking-wider font-medium">
-                {habit.time && (
-                    <div className="flex items-center gap-1">
-                        <Clock size={10} className="text-[#00e5cc]" />
-                        <span>{habit.time}</span>
-                    </div>
-                )}
-                <span className="truncate">MÊS: {completionsThisMonth}/{totalDaysInMonth}</span>
-            </div>
-        </div>
-
-        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button className="p-1.5 hover:bg-white/5 rounded-lg text-[#4a7a76] hover:text-[#00e5cc]">
-                <ArrowRight size={14} />
-            </button>
-        </div>
-    </div>
-  );
-};
-
 const HabitsPage = () => {
+  // --- State ---
   const [habits, setHabits] = useState<Habit[]>([
-    { id: '1', title: 'Beber 3L de água', emoji: '💧', frequency: 'daily', priority: 'high', weekDays: [0,1,2,3,4,5,6], time: '08:00', completedDates: [] },
-    { id: '2', title: 'Ler 10 páginas', emoji: '📚', frequency: 'daily', priority: 'medium', weekDays: [0,1,2,3,4,5,6], time: '21:00', completedDates: [] },
-    { id: '3', title: 'Academia', emoji: '💪', frequency: 'weekly', priority: 'high', weekDays: [1,3,5], time: '18:00', completedDates: [] },
+    { id: '1', title: 'Beber 3L de água', emoji: '💧', frequency: 'daily', priority: 'high', weekDays: [0,1,2,3,4,5,6], time: '08:00', completedDates: [], active: true },
+    { id: '2', title: 'Ler 10 páginas', emoji: '📚', frequency: 'daily', priority: 'medium', weekDays: [0,1,2,3,4,5,6], time: '21:00', completedDates: [], active: true },
+    { id: '3', title: 'Academia', emoji: '💪', frequency: 'weekly', priority: 'high', weekDays: [1,3,5], time: '18:00', completedDates: [], active: true },
   ]);
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [sortBy, setSortBy] = useState<'manual' | 'priority' | 'time' | 'name'>('manual');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  const [form, setForm] = useState({
+  // Inline Editing State
+  const [expandedHabitId, setExpandedHabitId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState<Habit | null>(null);
+
+  // Creation Form State
+  const [createForm, setCreateForm] = useState({
     title: "", emoji: "✨", frequency: 'daily' as Frequency, priority: 'medium' as Priority, weekDays: [0,1,2,3,4,5,6], time: "09:00"
   });
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
+  // --- Logic ---
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (active.id !== over?.id) {
-      setHabits((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over?.id);
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  };
-
-  const toggleHabit = (id: string, dateOverride?: Date) => {
+  const toggleHabitCompletion = (id: string, dateOverride?: Date) => {
     const targetDateStr = formatDateKey(dateOverride || selectedDate);
     setHabits(habits.map(h => {
       if (h.id === id) {
@@ -225,25 +96,50 @@ const HabitsPage = () => {
   };
 
   const handleCreateHabit = () => {
-    if (!form.title.trim()) return;
+    if (!createForm.title.trim()) return;
     const newHabit: Habit = {
       id: generateId(),
-      title: form.title,
-      emoji: form.emoji,
-      frequency: form.frequency,
-      priority: form.priority,
-      weekDays: form.frequency === 'daily' ? [0,1,2,3,4,5,6] : form.weekDays,
-      time: form.time,
-      completedDates: []
+      title: createForm.title,
+      emoji: createForm.emoji,
+      frequency: createForm.frequency,
+      priority: createForm.priority,
+      weekDays: createForm.frequency === 'daily' ? [0,1,2,3,4,5,6] : createForm.weekDays,
+      time: createForm.time,
+      completedDates: [],
+      active: true
     };
     setHabits([...habits, newHabit]);
     setIsModalOpen(false);
-    setForm({ title: "", emoji: "✨", frequency: 'daily', priority: 'medium', weekDays: [0,1,2,3,4,5,6], time: "09:00" });
+    setCreateForm({ title: "", emoji: "✨", frequency: 'daily', priority: 'medium', weekDays: [0,1,2,3,4,5,6], time: "09:00" });
   };
 
+  const handleEditClick = (habit: Habit) => {
+    if (expandedHabitId === habit.id) {
+      setExpandedHabitId(null);
+      setEditForm(null);
+    } else {
+      setExpandedHabitId(habit.id);
+      setEditForm({ ...habit });
+    }
+  };
+
+  const handleSaveEdit = () => {
+    if (!editForm) return;
+    setHabits(habits.map(h => h.id === editForm.id ? editForm : h));
+    setExpandedHabitId(null);
+    setEditForm(null);
+  };
+
+  const handleDeleteHabit = (id: string) => {
+    setHabits(habits.filter(h => h.id !== id));
+    setExpandedHabitId(null);
+    setEditForm(null);
+  };
+
+  // --- Computations ---
   const stats = useMemo(() => {
     const todayStr = formatDateKey(new Date());
-    const scheduledToday = habits.filter(h => h.weekDays.includes(getDay(new Date())));
+    const scheduledToday = habits.filter(h => h.active && h.weekDays.includes(getDay(new Date())));
     const completedToday = scheduledToday.filter(h => h.completedDates.includes(todayStr)).length;
     
     const start = startOfMonth(new Date());
@@ -254,7 +150,7 @@ const HabitsPage = () => {
     daysInMonth.forEach(day => {
         const dStr = formatDateKey(day);
         const dayOfWeek = getDay(day);
-        const habitsForDay = habits.filter(h => h.weekDays.includes(dayOfWeek));
+        const habitsForDay = habits.filter(h => h.active && h.weekDays.includes(dayOfWeek));
         totalPossible += habitsForDay.length;
         totalDone += habitsForDay.reduce((acc, h) => acc + (h.completedDates.includes(dStr) ? 1 : 0), 0);
     });
@@ -273,7 +169,7 @@ const HabitsPage = () => {
     return days.map(day => {
         const dateStr = formatDateKey(day);
         const dayOfWeek = getDay(day);
-        const habitsForDay = habits.filter(h => h.weekDays.includes(dayOfWeek));
+        const habitsForDay = habits.filter(h => h.active && h.weekDays.includes(dayOfWeek));
         const total = habitsForDay.length;
         const completed = habitsForDay.filter(h => h.completedDates.includes(dateStr)).length;
         const percentage = total === 0 ? 0 : completed / total;
@@ -300,17 +196,8 @@ const HabitsPage = () => {
 
   const displayedHabits = useMemo(() => {
     const dayOfWeek = getDay(selectedDate);
-    let list = habits.filter(h => h.weekDays.includes(dayOfWeek));
-    if (sortBy === 'priority') {
-      const order = { high: 1, medium: 2, low: 3 };
-      list.sort((a, b) => order[a.priority] - order[b.priority]);
-    } else if (sortBy === 'time') {
-      list.sort((a, b) => a.time.localeCompare(b.time));
-    } else if (sortBy === 'name') {
-      list.sort((a, b) => a.title.localeCompare(b.title));
-    }
-    return list;
-  }, [habits, selectedDate, sortBy]);
+    return habits.filter(h => h.active && h.weekDays.includes(dayOfWeek));
+  }, [habits, selectedDate]);
 
   const chartData = useMemo(() => {
     const data = [];
@@ -323,7 +210,7 @@ const HabitsPage = () => {
         mDays.forEach(day => {
             const dStr = formatDateKey(day);
             const wDay = getDay(day);
-            const hForDay = habits.filter(h => h.weekDays.includes(wDay));
+            const hForDay = habits.filter(h => h.active && h.weekDays.includes(wDay));
             mPossible += hForDay.length;
             mDone += hForDay.reduce((acc, h) => acc + (h.completedDates.includes(dStr) ? 1 : 0), 0);
         });
@@ -338,43 +225,87 @@ const HabitsPage = () => {
   const avgRate = Math.round(chartData.reduce((acc, curr) => acc + curr.rate, 0) / chartData.length);
 
   return (
-    <div className="animate-in fade-in duration-700 space-y-6 pb-20 p-2 md:p-0 min-h-screen bg-[#050f0e]">
+    <div className="animate-in fade-in duration-700 space-y-8 pb-20 p-2 md:p-0 min-h-screen bg-[#050f0e]">
       
-      {/* 1. Header Stats */}
+      {/* 1. New Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-            { label: "Hábitos", value: stats.totalHabits, icon: CheckCircle2, color: "#00e5cc" },
-            { label: "Sequência", value: `${stats.streak}d`, icon: Flame, color: "#fbbf24" },
-            { label: "Hoje", value: `${stats.completedToday}/${stats.totalToday}`, icon: Check, color: "#00e5cc" },
-            { label: "Mês", value: `${stats.monthlyRate}%`, icon: BarChart3, color: "#a78bfa" },
-        ].map((stat, i) => (
-            <div 
-                key={i} 
-                style={{ background: PRIMARY_GRADIENT, borderColor: BORDER_COLOR, boxShadow: "0 4px 24px rgba(0,0,0,0.4)" }}
-                className="p-5 rounded-[12px] border flex flex-col justify-between h-28"
-            >
-                <div className="flex justify-between items-start">
-                    <span className="text-[#4a7a76] text-[11px] font-bold uppercase tracking-widest">{stat.label}</span>
-                    <div 
-                        className="w-9 h-9 rounded-[8px] flex items-center justify-center"
-                        style={{ backgroundColor: `${stat.color}33` }}
-                    >
-                        <stat.icon size={18} style={{ color: stat.color }} />
-                    </div>
+        {/* Habits Card - Cyan */}
+        <div 
+            style={{ 
+                background: "linear-gradient(135deg, #003d38 0%, #0d1716 100%)", 
+                borderColor: "rgba(0, 229, 204, 0.4)" 
+            }}
+            className="p-5 rounded-[12px] border flex flex-col justify-between h-32 relative overflow-hidden group"
+        >
+            <div className="flex justify-between items-start z-10">
+                <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#00e5cc]/60">Hábitos</span>
+                <div className="w-8 h-8 rounded-[8px] flex items-center justify-center bg-[#00e5cc]/15">
+                    <CheckCircle2 size={16} className="text-[#00e5cc]" />
                 </div>
-                <span className="text-[22px] font-bold text-[#e2f0ef]">{stat.value}</span>
             </div>
-        ))}
+            <span className="text-[28px] font-extrabold text-[#00e5cc] z-10">{stats.totalHabits}</span>
+        </div>
+
+        {/* Streak Card - Orange */}
+        <div 
+            style={{ 
+                background: "linear-gradient(135deg, #3d1f00 0%, #0d1716 100%)", 
+                borderColor: "rgba(249, 115, 0, 0.4)" 
+            }}
+            className="p-5 rounded-[12px] border flex flex-col justify-between h-32 relative overflow-hidden group"
+        >
+            <div className="flex justify-between items-start z-10">
+                <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#f97300]/60">Sequência</span>
+                <div className="w-8 h-8 rounded-[8px] flex items-center justify-center bg-[#f97300]/15">
+                    <Flame size={16} className="text-[#f97300]" />
+                </div>
+            </div>
+            <span className="text-[28px] font-extrabold text-[#f97300] z-10">{stats.streak}d</span>
+        </div>
+
+        {/* Today Card - Green */}
+        <div 
+            style={{ 
+                background: "linear-gradient(135deg, #003d1a 0%, #0d1716 100%)", 
+                borderColor: "rgba(0, 229, 119, 0.4)" 
+            }}
+            className="p-5 rounded-[12px] border flex flex-col justify-between h-32 relative overflow-hidden group"
+        >
+            <div className="flex justify-between items-start z-10">
+                <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#00e577]/60">Hoje</span>
+                <div className="w-8 h-8 rounded-[8px] flex items-center justify-center bg-[#00e577]/15">
+                    <Check size={16} className="text-[#00e577]" />
+                </div>
+            </div>
+            <span className="text-[28px] font-extrabold text-[#00e577] z-10">{stats.completedToday}/{stats.totalToday}</span>
+        </div>
+
+        {/* Month Card - Purple */}
+        <div 
+            style={{ 
+                background: "linear-gradient(135deg, #1e003d 0%, #0d1716 100%)", 
+                borderColor: "rgba(168, 85, 247, 0.4)" 
+            }}
+            className="p-5 rounded-[12px] border flex flex-col justify-between h-32 relative overflow-hidden group"
+        >
+            <div className="flex justify-between items-start z-10">
+                <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#a855f7]/60">Mês</span>
+                <div className="w-8 h-8 rounded-[8px] flex items-center justify-center bg-[#a855f7]/15">
+                    <BarChart3 size={16} className="text-[#a855f7]" />
+                </div>
+            </div>
+            <span className="text-[28px] font-extrabold text-[#a855f7] z-10">{stats.monthlyRate}%</span>
+        </div>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
         
         {/* Left Panel: Calendar */}
         <div 
-            style={{ background: PRIMARY_GRADIENT, borderColor: BORDER_COLOR, boxShadow: "0 4px 24px rgba(0,0,0,0.4)" }}
-            className="w-full lg:w-[65%] border rounded-[12px] p-5 flex flex-col"
+            style={{ background: PRIMARY_GRADIENT, borderColor: "#1a2e2c" }}
+            className="w-full lg:w-[65%] border rounded-[12px] p-6 flex flex-col shadow-2xl"
         >
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-2 bg-[#0a1a18] p-1 rounded-lg border border-[#1a2e2c]">
                     <button 
                         onClick={() => setViewMode('grid')}
@@ -390,12 +321,12 @@ const HabitsPage = () => {
                     </button>
                 </div>
                 
-                <div className="flex items-center gap-4">
-                    <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} className="text-[#4a7a76] hover:text-[#00e5cc]"><ChevronLeft size={20} /></button>
-                    <span className="text-sm font-semibold text-[#e2f0ef] uppercase tracking-wider w-32 text-center">
+                <div className="flex items-center gap-6">
+                    <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} className="text-[#4a7a76] hover:text-[#00e5cc] hover:scale-110 transition-all"><ChevronLeft size={22} /></button>
+                    <span className="text-base font-bold text-[#e2f0ef] uppercase tracking-wider w-40 text-center">
                         {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
                     </span>
-                    <button onClick={() => setCurrentDate(addMonths(currentDate, 1))} className="text-[#4a7a76] hover:text-[#00e5cc]"><ChevronRight size={20} /></button>
+                    <button onClick={() => setCurrentDate(addMonths(currentDate, 1))} className="text-[#4a7a76] hover:text-[#00e5cc] hover:scale-110 transition-all"><ChevronRight size={22} /></button>
                 </div>
 
                 <Button 
@@ -408,13 +339,13 @@ const HabitsPage = () => {
                 </Button>
             </div>
 
-            <div className="grid grid-cols-7 mb-2">
+            <div className="grid grid-cols-7 mb-4">
                 {['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].map(day => (
-                    <div key={day} className="text-center text-[10px] font-bold text-[#4a7a76] py-2">{day}</div>
+                    <div key={day} className="text-center text-[10px] font-bold text-[#4a7a76] py-2 opacity-70">{day}</div>
                 ))}
             </div>
             
-            <div className="grid grid-cols-7 gap-2">
+            <div className="grid grid-cols-7 gap-3">
                 <TooltipProvider>
                 {calendarDays.map((day, i) => (
                     <Tooltip key={i}>
@@ -422,11 +353,11 @@ const HabitsPage = () => {
                             <div 
                                 onClick={() => { setSelectedDate(day.date); if (!day.isCurrentMonth) setCurrentDate(day.date); }}
                                 className={cn(
-                                    "aspect-square rounded-[8px] border flex items-center justify-center cursor-pointer transition-all hover:scale-105",
+                                    "aspect-square rounded-[8px] border flex items-center justify-center cursor-pointer transition-all hover:scale-105 duration-300",
                                     day.isCurrentMonth ? "opacity-100" : "opacity-20",
-                                    day.isSelected ? "border-[#00e5cc] ring-1 ring-[#00e5cc]" : "border-transparent",
+                                    day.isSelected ? "border-[#00e5cc] ring-2 ring-[#00e5cc]/20 shadow-[0_0_15px_rgba(0,229,204,0.3)]" : "border-transparent",
                                     day.colorClass,
-                                    day.total === 0 && day.isCurrentMonth && "bg-[#0a1a18]"
+                                    day.total === 0 && day.isCurrentMonth && "bg-[#0a1a18] hover:bg-[#1a2e2c]"
                                 )}
                             >
                                 <span className={cn("text-xs font-bold", day.isToday && !day.isSelected ? "text-[#00e5cc]" : "text-[#e2f0ef]")}>
@@ -443,7 +374,7 @@ const HabitsPage = () => {
                 </TooltipProvider>
             </div>
 
-            <div className="flex items-center justify-center gap-3 mt-6 text-[10px] font-bold text-[#4a7a76] uppercase tracking-widest">
+            <div className="flex items-center justify-center gap-3 mt-8 text-[10px] font-bold text-[#4a7a76] uppercase tracking-widest">
                 <span>MENOS</span>
                 <div className="flex gap-1.5">
                     {[20, 40, 70, 100].map(op => (
@@ -457,44 +388,187 @@ const HabitsPage = () => {
         {/* Right Panel: List */}
         <div className="w-full lg:w-[35%] flex flex-col gap-4">
             <div 
-                style={{ background: PRIMARY_GRADIENT, borderColor: BORDER_COLOR }}
-                className="border rounded-[12px] p-5 flex items-center justify-between"
+                style={{ background: INVERTED_GRADIENT, borderColor: "#1a2e2c" }}
+                className="border rounded-[12px] flex flex-col max-h-[600px] overflow-hidden shadow-xl"
             >
-                <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#00e5cc]" />
-                    <h2 className="text-[#e2f0ef] font-bold text-[13px] uppercase tracking-wider">HÁBITOS ATIVOS</h2>
-                </div>
-                <div className="bg-[#00e5cc20] text-[#00e5cc] text-[12px] px-2.5 py-0.5 rounded-full font-bold">
-                    {displayedHabits.filter(h => h.completedDates.includes(formatDateKey(selectedDate))).length}/{displayedHabits.length}
-                </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto max-h-[400px]">
-                {displayedHabits.length === 0 ? (
-                    <div style={{ background: INTERNAL_GRADIENT }} className="p-10 border border-dashed border-[#1a2e2c] rounded-[12px] text-center">
-                        <p className="text-[#4a7a76] text-xs font-bold uppercase tracking-widest">Nada hoje</p>
+                <div className="p-5 border-b border-[#1a2e2c] flex items-center justify-between bg-[#050f0e]/50">
+                    <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#00e5cc]" />
+                        <h2 className="text-[#e2f0ef] font-bold text-[13px] uppercase tracking-wider">HÁBITOS ATIVOS</h2>
                     </div>
-                ) : (
-                    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                        <SortableContext items={displayedHabits.map(h => h.id)} strategy={verticalListSortingStrategy}>
-                            {displayedHabits.map((habit) => (
-                                <SortableHabitRow 
-                                    key={habit.id}
-                                    habit={habit}
-                                    date={selectedDate}
-                                    isCompleted={habit.completedDates.includes(formatDateKey(selectedDate))}
-                                    toggleHabit={(id) => toggleHabit(id, selectedDate)}
-                                    isDragEnabled={sortBy === 'manual'}
-                                />
-                            ))}
-                        </SortableContext>
-                    </DndContext>
-                )}
+                    <div className="bg-[#00e5cc20] text-[#00e5cc] text-[12px] px-2.5 py-0.5 rounded-full font-bold">
+                        {displayedHabits.filter(h => h.completedDates.includes(formatDateKey(selectedDate))).length}/{displayedHabits.length}
+                    </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto">
+                    {displayedHabits.length === 0 ? (
+                        <div className="p-10 flex flex-col items-center justify-center text-center opacity-50">
+                            <Clock className="mb-2 text-[#4a7a76]" />
+                            <p className="text-[#4a7a76] text-xs font-bold uppercase tracking-widest">Nada agendado</p>
+                        </div>
+                    ) : (
+                        <div>
+                            {displayedHabits.map((habit) => {
+                                const isCompleted = habit.completedDates.includes(formatDateKey(selectedDate));
+                                const isExpanded = expandedHabitId === habit.id;
+                                
+                                return (
+                                    <div key={habit.id} className="border-b border-[#1a2e2c] last:border-0">
+                                        {/* Habit Row */}
+                                        <div className={cn(
+                                            "group flex items-center gap-3 p-4 transition-all hover:bg-[#0a1a18] cursor-pointer",
+                                            isCompleted && "opacity-60 bg-[#050f0e]"
+                                        )}>
+                                            {/* Check Circle (Left interaction) */}
+                                            <button 
+                                                onClick={(e) => { e.stopPropagation(); toggleHabitCompletion(habit.id); }}
+                                                className={cn(
+                                                    "h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
+                                                    isCompleted 
+                                                        ? "bg-[#00e5cc] border-[#00e5cc]" 
+                                                        : "border-[#4a7a76] hover:border-[#00e5cc]"
+                                                )}
+                                            >
+                                                {isCompleted && <Check size={12} className="text-[#050f0e] stroke-[3px]" />}
+                                            </button>
+
+                                            {/* Main Content (Click to Expand) */}
+                                            <div 
+                                                className="flex-1 flex items-center justify-between"
+                                                onClick={() => handleEditClick(habit)}
+                                            >
+                                                <div className="flex-1 min-w-0 pr-2">
+                                                    <div className="flex items-center gap-2 mb-0.5">
+                                                        <span className={cn("font-medium text-[#e2f0ef] truncate text-sm transition-colors", isExpanded && "text-[#00e5cc]")}>
+                                                            {habit.title}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 text-[11px] text-[#4a7a76]">
+                                                        {habit.time && (
+                                                            <div className="flex items-center gap-1">
+                                                                <Clock size={10} className="text-[#00e5cc]" />
+                                                                <span>{habit.time}</span>
+                                                            </div>
+                                                        )}
+                                                        <div className={cn(
+                                                            "w-1.5 h-1.5 rounded-full ml-1",
+                                                            habit.priority === 'high' ? "bg-red-500" : habit.priority === 'medium' ? "bg-yellow-500" : "bg-emerald-500"
+                                                        )} />
+                                                    </div>
+                                                </div>
+
+                                                {/* Right Actions */}
+                                                <div className="flex items-center text-[#4a7a76] gap-1 group-hover:text-[#00e5cc] transition-colors">
+                                                    <Pencil size={14} className="opacity-0 group-hover:opacity-100 transition-opacity mr-1" />
+                                                    {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Inline Edit Panel */}
+                                        <div className={cn(
+                                            "overflow-hidden transition-all duration-300 ease-in-out bg-[#050f0e] shadow-[inset_0_4px_10px_rgba(0,0,0,0.5)]",
+                                            isExpanded ? "max-h-[300px] border-t border-[#1a2e2c]" : "max-h-0"
+                                        )}>
+                                            {isExpanded && editForm && (
+                                                <div className="p-4 space-y-4">
+                                                    {/* Name & Time */}
+                                                    <div className="grid grid-cols-3 gap-3">
+                                                        <div className="col-span-2 space-y-1">
+                                                            <Label className="text-[10px] uppercase text-[#4a7a76]">Nome</Label>
+                                                            <Input 
+                                                                value={editForm.title} 
+                                                                onChange={(e) => setEditForm({...editForm, title: e.target.value})}
+                                                                className="h-8 bg-[#0a1a18] border-[#1a2e2c] text-xs text-[#e2f0ef] focus-visible:ring-[#00e5cc]" 
+                                                            />
+                                                        </div>
+                                                        <div className="space-y-1">
+                                                            <Label className="text-[10px] uppercase text-[#4a7a76]">Horário</Label>
+                                                            <Input 
+                                                                type="time"
+                                                                value={editForm.time} 
+                                                                onChange={(e) => setEditForm({...editForm, time: e.target.value})}
+                                                                className="h-8 bg-[#0a1a18] border-[#1a2e2c] text-xs text-[#e2f0ef] focus-visible:ring-[#00e5cc]" 
+                                                            />
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Priority & Active */}
+                                                    <div className="grid grid-cols-2 gap-4">
+                                                        <div className="space-y-1">
+                                                            <Label className="text-[10px] uppercase text-[#4a7a76]">Prioridade</Label>
+                                                            <div className="flex gap-1">
+                                                                {[
+                                                                    { v: 'high', c: 'bg-red-500', l: 'Alta' }, 
+                                                                    { v: 'medium', c: 'bg-yellow-500', l: 'Méd' }, 
+                                                                    { v: 'low', c: 'bg-emerald-500', l: 'Baix' }
+                                                                ].map((p) => (
+                                                                    <button
+                                                                        key={p.v}
+                                                                        onClick={() => setEditForm({...editForm, priority: p.v as Priority})}
+                                                                        className={cn(
+                                                                            "flex-1 h-6 rounded text-[9px] font-bold uppercase transition-all border border-transparent",
+                                                                            editForm.priority === p.v 
+                                                                                ? `${p.c} text-[#050f0e] border-white/20` 
+                                                                                : "bg-[#0a1a18] text-[#4a7a76] hover:bg-[#1a2e2c]"
+                                                                        )}
+                                                                    >
+                                                                        {p.l}
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                        <div className="space-y-1 flex flex-col justify-end">
+                                                            <div className="flex items-center justify-between bg-[#0a1a18] p-1.5 rounded border border-[#1a2e2c]">
+                                                                <span className="text-[10px] uppercase text-[#4a7a76] font-bold ml-1">
+                                                                    {editForm.active ? 'Ativo' : 'Pausado'}
+                                                                </span>
+                                                                <button 
+                                                                    onClick={() => setEditForm({...editForm, active: !editForm.active})}
+                                                                    className={cn(
+                                                                        "p-1 rounded transition-colors",
+                                                                        editForm.active ? "text-[#00e5cc] bg-[#00e5cc]/10" : "text-[#4a7a76]"
+                                                                    )}
+                                                                >
+                                                                    {editForm.active ? <Play size={12} fill="currentColor" /> : <Pause size={12} fill="currentColor" />}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Actions */}
+                                                    <div className="flex items-center gap-2 pt-1">
+                                                        <Button 
+                                                            variant="outline" 
+                                                            size="sm"
+                                                            onClick={() => handleDeleteHabit(habit.id)}
+                                                            className="flex-1 h-8 bg-transparent border-red-500/30 text-red-500 hover:bg-red-500/10 hover:text-red-400 text-[10px] uppercase tracking-wider"
+                                                        >
+                                                            <Trash2 size={12} className="mr-1.5" /> Excluir
+                                                        </Button>
+                                                        <Button 
+                                                            size="sm"
+                                                            onClick={handleSaveEdit}
+                                                            className="flex-[2] h-8 bg-[#00e5cc] hover:bg-[#00c9b3] text-[#050f0e] font-bold text-[10px] uppercase tracking-wider"
+                                                        >
+                                                            Salvar Alterações
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
             </div>
 
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
-                    <Button className="w-full bg-[#00e5cc] hover:bg-[#00c9b3] text-[#050f0e] font-bold text-[13px] uppercase tracking-widest h-12 rounded-[12px]">
+                    <Button className="w-full bg-[#00e5cc] hover:bg-[#00e5cc] hover:brightness-110 transition-all duration-200 text-[#050f0e] font-bold text-[13px] uppercase tracking-widest h-12 rounded-[12px] shadow-[0_0_20px_rgba(0,229,204,0.2)]">
                         <Plus className="mr-2" size={18} strokeWidth={3} /> NOVO HÁBITO
                     </Button>
                 </DialogTrigger>
@@ -503,7 +577,24 @@ const HabitsPage = () => {
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
                             <Label className="text-[#4a7a76] text-[10px] uppercase font-bold">Nome</Label>
-                            <Input value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="bg-[#050f0e] border-[#1a2e2c] text-[#e2f0ef]" />
+                            <Input value={createForm.title} onChange={e => setCreateForm({...createForm, title: e.target.value})} className="bg-[#050f0e] border-[#1a2e2c] text-[#e2f0ef]" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="grid gap-2">
+                                <Label className="text-[#4a7a76] text-[10px] uppercase font-bold">Horário</Label>
+                                <Input type="time" value={createForm.time} onChange={e => setCreateForm({...createForm, time: e.target.value})} className="bg-[#050f0e] border-[#1a2e2c] text-[#e2f0ef]" />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label className="text-[#4a7a76] text-[10px] uppercase font-bold">Prioridade</Label>
+                                <Select onValueChange={(v: any) => setCreateForm({...createForm, priority: v})} defaultValue={createForm.priority}>
+                                    <SelectTrigger className="bg-[#050f0e] border-[#1a2e2c] text-[#e2f0ef]"><SelectValue /></SelectTrigger>
+                                    <SelectContent className="bg-[#0a1a18] border-[#1a2e2c] text-[#e2f0ef]">
+                                        <SelectItem value="high">Alta</SelectItem>
+                                        <SelectItem value="medium">Média</SelectItem>
+                                        <SelectItem value="low">Baixa</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
                     </div>
                     <DialogFooter><Button onClick={handleCreateHabit} className="bg-[#00e5cc] text-[#050f0e] font-bold">CRIAR</Button></DialogFooter>
@@ -514,8 +605,8 @@ const HabitsPage = () => {
 
       {/* History Chart */}
       <div 
-        style={{ background: PRIMARY_GRADIENT, borderColor: BORDER_COLOR, boxShadow: "0 4px 24px rgba(0,0,0,0.4)" }}
-        className="border rounded-[12px] p-6"
+        style={{ background: PRIMARY_GRADIENT, borderColor: "#1a2e2c" }}
+        className="border rounded-[12px] p-6 shadow-xl"
       >
         <div className="flex items-center justify-between mb-8">
             <h3 className="text-[#e2f0ef] font-bold text-[13px] uppercase tracking-widest">DESEMPENHO MENSAL</h3>
@@ -532,7 +623,7 @@ const HabitsPage = () => {
                     <YAxis stroke="#4a7a76" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `${v}%`} />
                     <RechartsTooltip cursor={{ fill: 'rgba(0, 229, 204, 0.05)' }} contentStyle={{ backgroundColor: '#0d1716', borderColor: '#1a2e2c', borderRadius: '8px' }} />
                     <Bar dataKey="rate" radius={[4, 4, 0, 0]} maxBarSize={40}>
-                        {chartData.map((_, i) => <Cell key={`cell-${i}`} fill={ACCENT_COLOR} />)}
+                        {chartData.map((_, i) => <Cell key={`cell-${i}`} fill="#00e5cc" />)}
                     </Bar>
                 </BarChart>
             </ResponsiveContainer>
