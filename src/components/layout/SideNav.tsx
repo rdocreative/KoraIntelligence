@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { icon: LayoutDashboard, path: "/", label: "Início", color: "#38bdf8" },
   { icon: Crown, path: "/masterplan", label: "Masterplan", color: "#fbbf24" },
-  { icon: ClipboardList, path: "/habitos", label: "Hábitos", color: "#4ade80" },
+  { icon: ClipboardList, path: "/habitos", label: "Hábitos", color: "#00e5cc" },
   { icon: Target, path: "/metas", label: "Metas", color: "#f87171" },
   { icon: Brain, path: "/brain", label: "Sistema", isSpecial: true, color: "#38bdf8" },
   { icon: Bell, path: "/lembretes", label: "Lembretes", color: "#c084fc" },
