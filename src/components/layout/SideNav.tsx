@@ -12,26 +12,26 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const leftItems = [
+const topItems = [
   { icon: LayoutDashboard, path: "/", label: "Início" },
   { icon: Crown, path: "/masterplan", label: "Masterplan" },
   { icon: ClipboardList, path: "/habitos", label: "Hábitos" },
   { icon: Target, path: "/metas", label: "Metas" },
 ];
 
-const rightItems = [
+const bottomItems = [
   { icon: Bell, path: "/lembretes", label: "Lembretes" },
   { icon: Swords, path: "/missoes", label: "Missões" },
   { icon: ShoppingBag, path: "/loja", label: "Loja" },
   { icon: Settings, path: "/configuracoes", label: "Configurações" },
 ];
 
-export const BottomNav = () => {
+export const SideNav = () => {
   return (
-    <div className="fixed bottom-[24px] left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3">
-      {/* Pill Esquerda */}
-      <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-3 py-2 flex gap-1.5">
-        {leftItems.map(({ icon: Icon, path, label }) => (
+    <div className="fixed left-[24px] top-1/2 -translate-y-1/2 z-[100] flex flex-col items-center gap-3">
+      {/* Pill Superior */}
+      <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-2 py-3 flex flex-col gap-1.5">
+        {topItems.map(({ icon: Icon, path, label }) => (
           <NavLink
             key={path}
             to={path}
@@ -53,9 +53,9 @@ export const BottomNav = () => {
         <Plus size={32} strokeWidth={3} />
       </button>
 
-      {/* Pill Direita */}
-      <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-3 py-2 flex gap-1.5">
-        {rightItems.map(({ icon: Icon, path, label }) => (
+      {/* Pill Inferior */}
+      <nav className="bg-[#071412]/95 border border-[#2a4a46] rounded-full px-2 py-3 flex flex-col gap-1.5">
+        {bottomItems.map(({ icon: Icon, path, label }) => (
           <NavLink
             key={path}
             to={path}
