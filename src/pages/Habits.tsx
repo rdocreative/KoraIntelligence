@@ -107,11 +107,11 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     }
   };
 
-  // Monochromatic gradients based on priority (180deg)
+  // Monochromatic gradients based on priority (Updated with 10% less intensity and lighter bottom)
   const priorityStyles = {
-    high: "bg-[linear-gradient(180deg,#2a0808_0%,#0a0505_100%)] border-[#ef444425]",
-    medium: "bg-[linear-gradient(180deg,#2a1800_0%,#0a0800_100%)] border-[#f59e0b25]",
-    low: "bg-[linear-gradient(180deg,#002a12_0%,#000a05_100%)] border-[#10b98125]"
+    high: "bg-[linear-gradient(180deg,#350c0c_0%,#120606_100%)] border-[#ef444425]",
+    medium: "bg-[linear-gradient(180deg,#351f00_0%,#120a00_100%)] border-[#f59e0b25]",
+    low: "bg-[linear-gradient(180deg,#003518_0%,#001206_100%)] border-[#10b98125]"
   };
 
   return (
@@ -379,7 +379,6 @@ const HabitsPage = () => {
     });
   }, [currentDate, selectedDate, habits]);
 
-  // Logic to separate pending and completed habits for the current selected date
   const displayedHabitsData = useMemo(() => {
     const dateStr = format(selectedDate, 'yyyy-MM-dd');
     const filtered = habits.filter(h => h.weekDays.includes(getDay(selectedDate)));
@@ -393,7 +392,7 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
       
-      {/* Refined Navigation Tabs */}
+      {/* Navigation Tabs */}
       <div className="flex justify-center pt-6 pb-2">
         <div className="bg-[#0f2220]/80 border border-[#2d5550] rounded-full p-1 px-1.5 shadow-xl backdrop-blur-xl flex items-center gap-1.5">
           <button
