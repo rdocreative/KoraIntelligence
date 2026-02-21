@@ -86,9 +86,10 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
   } = useSortable({ 
     id: habit.id,
     transition: {
-      duration: 150,
-      easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-    }
+      duration: 400,
+      easing: 'ease-in-out',
+    },
+    disabled: isCompleted // Disable dragging for completed items to keep them at the bottom
   });
 
   const cardRef = useRef<HTMLDivElement>(null);
@@ -97,7 +98,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     transform: CSS.Translate.toString(transform),
     transition,
     zIndex: isDragging ? 50 : 1,
-    opacity: isDragging ? 0.6 : undefined,
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
@@ -107,11 +107,11 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     }
   };
 
-  // Dynamic styles based on priority
+  // Dynamic styles based on priority (Updated to 180deg and subtle intensity)
   const priorityStyles = {
-    high: "bg-[linear-gradient(135deg,#3d0a0a_0%,#0d1e1c_100%)] border-[#ef444430]",
-    medium: "bg-[linear-gradient(135deg,#3d2a00_0%,#0d1e1c_100%)] border-[#f59e0b30]",
-    low: "bg-[linear-gradient(135deg,#003d1a_0%,#0d1e1c_100%)] border-[#10b98130]"
+    high: "bg-[linear-gradient(180deg,#2a0808_0%,#0d1e1c_60%)] border-[#ef444425]",
+    medium: "bg-[linear-gradient(180deg,#2a1a00_0%,#0d1e1c_60%)] border-[#f59e0b25]",
+    low: "bg-[linear-gradient(180deg,#002a12_0%,#0d1e1c_60%)] border-[#10b98125]"
   };
 
   return (
@@ -124,11 +124,11 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[10px] border p-[14px] px-[16px] mb-2 cursor-grab active:cursor-grabbing select-none transition-all duration-300",
+        "group rounded-[10px] border p-[14px] px-[16px] mb-2 cursor-grab active:cursor-grabbing select-none transition-all duration-400 ease-in-out",
         isDragging 
           ? "scale-[1.03] border-[#00e5cc60] bg-[#0d1e1c] shadow-2xl ring-2 ring-[#00e5cc20]" 
           : priorityStyles[habit.priority],
-        isCompleted && !isDragging && "opacity-60"
+        isCompleted && !isDragging && "opacity-[0.45] pointer-events-none"
       )}
     >
       <div className="flex items-center gap-4">
@@ -144,7 +144,10 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
         </button>
 
         <div className="flex-1 min-w-0">
-          <h3 className="text-[14px] font-[600] text-[#e8f5f3] truncate leading-tight">
+          <h3 className={cn(
+            "text-[14px] font-[600] text-[#e8f5f3] truncate leading-tight transition-all duration-400",
+            isCompleted && "line-through opacity-70"
+          )}>
             {habit.title}
           </h3>
           <div className="flex items-center gap-2 mt-1">
@@ -159,13 +162,15 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
           </div>
         </div>
 
-        <button 
-          onClick={handleEditClick}
-          onPointerDown={(e) => e.stopPropagation()}
-          className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors z-10"
-        >
-          <ChevronRight size={18} />
-        </button>
+        {!isCompleted && (
+          <button 
+            onClick={handleEditClick}
+            onPointerDown={(e) => e.stopPropagation()}
+            className="p-1 text-[#5a8a85] hover:text-[#00e5cc] transition-colors z-10"
+          >
+            <ChevronRight size={18} />
+          </button>
+        )}
       </div>
     </div>
   );
@@ -374,8 +379,15 @@ const HabitsPage = () => {
     });
   }, [currentDate, selectedDate, habits]);
 
-  const displayedHabits = useMemo(() => {
-    return habits.filter(h => h.weekDays.includes(getDay(selectedDate)));
+  // Updated logic to sort: pending first, then completed
+  const displayedHabitsData = useMemo(() => {
+    const dateStr = format(selectedDate, 'yyyy-MM-dd');
+    const filtered = habits.filter(h => h.weekDays.includes(getDay(selectedDate)));
+    
+    const pending = filtered.filter(h => !h.completedDates.includes(dateStr));
+    const completed = filtered.filter(h => h.completedDates.includes(dateStr));
+    
+    return { pending, completed, all: [...pending, ...completed] };
   }, [habits, selectedDate]);
 
   return (
@@ -552,25 +564,45 @@ const HabitsPage = () => {
             <div className="py-[20px] px-[24px] border-b border-[#2a4a46] flex items-center justify-between bg-black/20">
               <h2 className="text-[#e8f5f3] font-[700] text-[14px] uppercase tracking-[0.02em]">HÁBITOS ATIVOS</h2>
               <div className="bg-[#00e5cc15] text-[#00e5cc] text-[11px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#00e5cc20]">
-                {displayedHabits.filter(h => h.completedDates.includes(format(selectedDate, 'yyyy-MM-dd'))).length}/{displayedHabits.length}
+                {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
               </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4">
               <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={displayedHabits.map(h => h.id)} strategy={verticalListSortingStrategy}>
-                  {displayedHabits.map((habit) => (
+                <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
+                  {displayedHabitsData.pending.map((habit) => (
                     <SortableHabitItem 
                       key={habit.id}
                       habit={habit}
-                      isCompleted={habit.completedDates.includes(format(selectedDate, 'yyyy-MM-dd'))}
+                      isCompleted={false}
                       onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
                       onToggle={toggleHabit}
                     />
                   ))}
+                  
+                  {displayedHabitsData.completed.length > 0 && (
+                    <>
+                      <div className="mt-8 mb-4 pt-4 border-t border-[#1e3a36]">
+                        <span className="text-[10px] font-[700] text-[#5a8a85] uppercase tracking-[0.08em]">
+                          CONCLUÍDOS HOJE
+                        </span>
+                      </div>
+                      {displayedHabitsData.completed.map((habit) => (
+                        <SortableHabitItem 
+                          key={habit.id}
+                          habit={habit}
+                          isCompleted={true}
+                          onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
+                          onToggle={toggleHabit}
+                        />
+                      ))}
+                    </>
+                  )}
                 </SortableContext>
               </DndContext>
-              {displayedHabits.length === 0 && (
+              
+              {displayedHabitsData.all.length === 0 && (
                 <div className="h-full flex flex-col items-center justify-center p-10 text-center opacity-40">
                   <Clock size={32} className="text-[#5a8a85] mb-3" />
                   <p className="text-[11px] font-[700] uppercase text-[#5a8a85] tracking-[0.1em]">Nada planejado</p>
