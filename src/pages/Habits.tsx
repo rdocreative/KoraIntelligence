@@ -106,9 +106,9 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
   };
 
   const priorityStyles = {
-    high: "bg-[linear-gradient(90deg,rgba(120,0,0,0.85),rgba(255,75,75,0.90))] border-[#ff4b4b] shadow-[0_4px_0_0_#cc0000]",
-    medium: "bg-[linear-gradient(90deg,rgba(140,60,0,0.85),rgba(255,150,0,0.90))] border-[#ff9600] shadow-[0_4px_0_0_#e58700]",
-    low: "bg-[linear-gradient(90deg,rgba(30,80,0,0.85),rgba(88,204,2,0.90))] border-[#58cc02] shadow-[0_4px_0_0_#46a302]"
+    high: "bg-[linear-gradient(90deg,rgba(120,0,0,0.85),rgba(255,75,75,0.65))] border-[#ff4b4b] shadow-[0_4px_0_0_#cc0000]",
+    medium: "bg-[linear-gradient(90deg,rgba(140,60,0,0.85),rgba(255,150,0,0.65))] border-[#ff9600] shadow-[0_4px_0_0_#e58700]",
+    low: "bg-[linear-gradient(90deg,rgba(30,80,0,0.85),rgba(88,204,2,0.65))] border-[#58cc02] shadow-[0_4px_0_0_#46a302]"
   };
 
   const iconColors = {
@@ -156,7 +156,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
 
         <div className="flex-1 min-w-0">
           <h3 className={cn(
-            "text-[14px] font-[800] text-white truncate leading-tight transition-all duration-400",
+            "text-[14px] font-[800] text-[#ffffff] truncate leading-tight transition-all duration-400",
             isCompleted && "line-through opacity-70"
           )}>
             {habit.title}
@@ -399,7 +399,7 @@ const HabitsPage = () => {
   }, [habits, selectedDate]);
 
   return (
-    <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
+    <div className="min-h-screen bg-[#111b21] pb-10 animate-in fade-in duration-500 relative">
       
       <div className="flex justify-center pt-4 pb-2">
         <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1.5 overflow-visible">
@@ -534,11 +534,12 @@ const HabitsPage = () => {
                             onClick={() => setSelectedDate(day.date)}
                             className={cn(
                               "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
-                              day.isCurrentMonth ? "bg-[#2a3f4a] border-[#374151] text-[#e5e7eb] hover:brightness-110" : "text-[#37464f] border-transparent bg-transparent",
+                              day.isCurrentMonth ? "bg-[#2a3f4a] border-[#374151] text-[#e5e7eb] hover:brightness-110 border-[1px] border-solid" : "text-[#37464f] border-transparent bg-transparent",
                               day.isSelected ? "border-[#22d3ee] ring-1 ring-[#22d3ee]" : "",
                               day.isToday && !day.isSelected ? "border-[#22d3ee] text-[#22d3ee]" : "",
                               day.level === 4 && "bg-[#22d3ee] text-[#111b21]",
                             )}
+                            style={{ border: day.isCurrentMonth ? '1px solid #374151' : undefined }}
                           >
                             <span className="text-[13px] font-[600]">{format(day.date, 'd')}</span>
                             {day.level > 0 && day.level < 4 && (
