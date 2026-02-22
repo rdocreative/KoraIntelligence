@@ -127,7 +127,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[16px] border-2 p-[14px] px-[16px] mb-2.5 cursor-grab active:cursor-grabbing select-none transition-all duration-150 ease-out hover:scale-[1.02] habit-card",
+        "group rounded-[16px] border-2 p-[14px] px-[16px] mb-2 cursor-grab active:cursor-grabbing select-none transition-all duration-150 ease-out hover:scale-[1.02] habit-card",
         isDragging 
           ? "scale-[1.03] bg-[#202f36] border-[#22d3ee] shadow-2xl" 
           : priorityStyles[habit.priority],
@@ -420,7 +420,7 @@ const HabitsPage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-[12px] p-4 md:p-0 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-[10px] p-4 md:p-0 mt-6">
         {[
           { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, bg: "#1cb0f6", shadow: "#1899d6" },
           { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, bg: "#ff9600", shadow: "#e58700" },
@@ -433,7 +433,7 @@ const HabitsPage = () => {
               "py-[12px] px-[20px] rounded-[16px] flex items-center gap-3 transition-all duration-300 stat-card",
               "text-white border-none"
             )}
-            style={{ backgroundColor: s.bg, boxShadow: `0 4px 0 0 ${s.shadow}` }}
+            style={{ backgroundColor: s.bg, boxShadow: `0 4px 0_0 ${s.shadow}` }}
           >
             <div className={cn("w-14 h-14 rounded-[12px] flex items-center justify-center shrink-0 bg-black/20")}>
               <s.icon size={24} className="text-white" strokeWidth={2.5} />
@@ -446,7 +446,7 @@ const HabitsPage = () => {
         ))}
       </div>
 
-      <div className="mt-[20px] flex flex-col lg:flex-row gap-[20px] p-4 md:p-0">
+      <div className="mt-[20px] flex flex-col lg:flex-row gap-[18px] p-4 md:p-0">
         <div className={cn("w-full transition-all duration-500", viewMode === 'weekly' ? 'lg:w-full' : 'lg:w-[65%]')}>
           <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] py-[20px] px-[24px] shadow-[0_4px_0_0_#0b1116]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -517,7 +517,7 @@ const HabitsPage = () => {
                   ))}
                 </div>
 
-                <div className="grid grid-cols-7 gap-3">
+                <div className="grid grid-cols-7 gap-2.5">
                   <TooltipProvider>
                     {calendarDays.map((day, i) => (
                       <Tooltip key={i}>
