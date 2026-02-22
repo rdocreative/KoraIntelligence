@@ -598,7 +598,8 @@ const HabitsPage = () => {
                 </div>
               </div>
 
-              <div className="flex-1 overflow-visible">
+              {/* Lista de Hábitos com flex-grow: 1 para ocupar o espaço disponível */}
+              <div className="flex-grow overflow-visible">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                   <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
                     {displayedHabitsData.pending.map((habit) => (
@@ -640,7 +641,8 @@ const HabitsPage = () => {
                 )}
               </div>
 
-              <div className="mt-4 pt-4 border-t-2 border-[#374151]">
+              {/* Rodapé com margin-top: auto para fixar o botão na parte inferior */}
+              <div className="mt-auto pt-4 border-t-2 border-[#374151]">
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                   <DialogTrigger asChild>
                     <Button className="w-full bg-[#22d3ee] hover:bg-[#22d3ee] active:translate-y-[1px] active:shadow-none transition-all duration-200 text-[#111b21] font-[800] text-[12px] uppercase tracking-[0.1em] h-12 rounded-[16px] shadow-[0_4px_0_0_#06b6d4]">
