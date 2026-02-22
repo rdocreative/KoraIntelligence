@@ -45,17 +45,15 @@ export const SideNav = () => {
               isSpecial && "mt-2 mb-2 bg-[#202f36] border-2 border-[#ce82ff] shadow-3d-purple hover:translate-y-[2px] hover:shadow-none active:translate-y-[4px]"
             )}
           >
-            {({ isActive }) => (
-              <Icon 
-                size={isSpecial ? 28 : 24} 
-                strokeWidth={isSpecial ? 2.5 : 2.5} 
-                className={cn(
-                  "transition-colors",
-                  isActive ? "text-[#22d3ee]" : "text-[#9ca3af] group-hover:text-[#e5e7eb]",
-                  isSpecial && "text-[#ce82ff]"
-                )}
-              />
-            )}
+            <Icon 
+              size={isSpecial ? 28 : 24} 
+              strokeWidth={isSpecial ? 2.5 : 2.5} 
+              className={cn(
+                "transition-colors",
+                isActive ? "text-[#22d3ee]" : "text-[#9ca3af] group-hover:text-[#e5e7eb]",
+                isSpecial && "text-[#ce82ff]"
+              )}
+            />
           </NavLink>
         ))}
       </nav>
