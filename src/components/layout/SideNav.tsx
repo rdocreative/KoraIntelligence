@@ -15,8 +15,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const THEME_COLOR = "#00e5cc";
-
 const navItems = [
   { icon: LayoutDashboard, path: "/", label: "Início" },
   { icon: Crown, path: "/masterplan", label: "Masterplan" },
@@ -32,45 +30,34 @@ const navItems = [
 export const SideNav = () => {
   return (
     <div className="fixed left-[20px] top-1/2 -translate-y-1/2 z-[100]">
-      <nav className="flex flex-col items-center gap-3 border-none bg-transparent">
+      <nav className="flex flex-col items-center gap-3 border-none bg-[#131f24] p-3 rounded-[32px] border-2 border-[#374151] shadow-[0_4px_0_0_#0b1116]">
         {navItems.map(({ icon: Icon, path, label, isSpecial }) => (
           <NavLink
             key={path}
             to={path}
             title={label}
             className={({ isActive }) => cn(
-              "group relative flex items-center justify-center rounded-full",
+              "group relative flex items-center justify-center rounded-full transition-all duration-200",
               !isSpecial && "w-[44px] h-[44px]",
-              isSpecial && "w-[56px] h-[56px] my-2 shadow-[0_0_25px_rgba(0,229,204,0.3)]",
-              isActive && !isSpecial && "bg-[#0a1a18]/90 border border-[#1a2e2c] shadow-[0_0_20px_rgba(0,229,204,0.15)]"
+              isSpecial && "w-[56px] h-[56px] my-2",
+              // Active State: Blue background, solid blue shadow
+              isActive && !isSpecial && "bg-[#1cb0f6] shadow-[0_4px_0_0_#1899d6]",
+              // Inactive State: Transparent
+              !isActive && !isSpecial && "bg-transparent hover:bg-[#202f36]",
+              
+              // Special Item Active
+              isActive && isSpecial && "bg-[#1cb0f6] shadow-[0_4px_0_0_#1899d6]",
+              !isActive && isSpecial && "bg-[#202f36] border-2 border-[#374151]"
             )}
-            style={({ isActive }) => {
-              if (isSpecial) {
-                return {
-                  background: `linear-gradient(135deg, ${THEME_COLOR} 0%, #00b3a0 100%)`,
-                  color: '#071412'
-                };
-              }
-              return {
-                color: THEME_COLOR,
-                opacity: isActive ? 1 : 0.6
-              };
-            }}
           >
-            <Icon 
-              size={isSpecial ? 25 : 20} 
-              strokeWidth={isSpecial ? 2.5 : 2} 
-              className={cn(
-                !isSpecial && "group-hover:opacity-100",
-                isSpecial && "drop-shadow-sm"
-              )}
-            />
-            
-            {/* Glow sutil no hover sem animação */}
-            {!isSpecial && (
-              <div 
-                className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-5"
-                style={{ backgroundColor: THEME_COLOR }}
+            {({ isActive }) => (
+              <Icon 
+                size={isSpecial ? 25 : 20} 
+                strokeWidth={isSpecial ? 2.5 : 2} 
+                className={cn(
+                  "transition-colors",
+                  isActive ? "text-white" : "text-[#9ca3af] group-hover:text-white"
+                )}
               />
             )}
           </NavLink>
