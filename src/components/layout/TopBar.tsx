@@ -68,7 +68,7 @@ export const TopBar = () => {
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none">
-      <div className="flex items-center justify-center sm:justify-between w-full max-w-6xl pointer-events-auto py-4 px-6 overflow-visible">
+      <div className="flex items-center justify-center sm:justify-between w-full max-w-7xl pointer-events-auto py-4 px-6 overflow-visible">
         
         {/* LADO ESQUERDO: Main Page Capsule */}
         <div 
