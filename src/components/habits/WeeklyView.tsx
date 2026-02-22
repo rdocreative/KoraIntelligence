@@ -35,6 +35,7 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
     return Array.from({ length: 7 }, (_, i) => addDays(start, i));
   }, [currentDate]);
 
+  // Períodos fixos que sempre aparecerão
   const periods = [
     { label: 'Manhã', range: [5, 12], icon: Sunrise },
     { label: 'Tarde', range: [12, 18], icon: Sun },
@@ -66,20 +67,11 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
     }
   };
 
-  const activePeriods = periods.filter(period => {
-    return habits.some(h => {
-      if (!h.active) return false;
-      const hour = parseInt(h.time.split(':')[0]);
-      const inPeriod = hour >= period.range[0] && hour < period.range[1];
-      return inPeriod && weekDays.some(day => h.weekDays.includes(getDay(day)));
-    });
-  });
-
   return (
-    <div className="w-full overflow-x-auto rounded-[24px] overflow-hidden">
-      <div className="min-w-[900px]">
-        {/* Grade Principal */}
-        <div className="grid grid-cols-[60px_repeat(7,1fr)]">
+    <div className="w-full rounded-[20px] overflow-hidden border-2 border-[#374151] bg-[#1a262e]">
+      <div className="w-full">
+        {/* Grade Principal - Configurada para nunca scrollar horizontalmente */}
+        <div className="grid grid-cols-[50px_repeat(7,1fr)] w-full">
           
           {/* Canto Vazio Superior Esquerdo */}
           <div className="bg-[#161f26] border-b-2 border-r border-[#374151]" />
@@ -89,17 +81,17 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
             const isToday = isSameDay(day, new Date());
             return (
               <div key={day.toString()} className={cn(
-                "text-center py-4 border-b-2 border-[#374151]",
+                "text-center py-2.5 border-b-2 border-[#374151] flex flex-col justify-center min-w-0",
                 idx !== 6 && "border-r border-[#2a3f4a]"
               )}>
                 <div className={cn(
-                  "text-[10px] font-[800] uppercase tracking-[0.08em] mb-0.5",
+                  "text-[9px] font-[800] uppercase tracking-[0.05em] truncate px-1",
                   isToday ? "text-[#22d3ee]" : "text-[#9ca3af]"
                 )}>
-                  {format(day, 'EEEE', { locale: ptBR }).split('-')[0]}
+                  {format(day, 'EEE', { locale: ptBR }).replace('.', '')}
                 </div>
                 <div className={cn(
-                  "text-[18px] font-[800]",
+                  "text-[14px] font-[800] leading-none mt-0.5",
                   isToday ? "text-[#22d3ee]" : "text-[#e5e7eb]"
                 )}>
                   {format(day, 'd')}
@@ -108,21 +100,21 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
             );
           })}
 
-          {/* Linhas de Período */}
-          {activePeriods.map((period, pIdx) => (
+          {/* Linhas de Período - Mapeando sobre todos os períodos fixos */}
+          {periods.map((period, pIdx) => (
             <React.Fragment key={period.label}>
               {/* Coluna Lateral de Período */}
               <div className={cn(
-                "flex flex-col items-center justify-center gap-1.5 bg-[#161f26] border-r border-[#374151] py-6",
+                "flex flex-col items-center justify-center gap-1 bg-[#161f26] border-r border-[#374151] py-4",
                 pIdx !== 0 && "border-t border-[#374151]"
               )}>
-                <period.icon size={18} className="text-[#9ca3af]" />
-                <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.1em]">
+                <period.icon size={15} className="text-[#9ca3af]/40" />
+                <span className="text-[7px] font-[900] text-[#9ca3af]/40 uppercase tracking-[0.02em]">
                   {period.label}
                 </span>
               </div>
 
-              {/* Conteúdo dos Hábitos para este período */}
+              {/* Conteúdo dos Hábitos */}
               {weekDays.map((day, dIdx) => {
                 const dStr = format(day, 'yyyy-MM-dd');
                 const habitsInPeriod = habits.filter(h => {
@@ -135,13 +127,13 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                   <div 
                     key={day.toString() + period.label} 
                     className={cn(
-                      "p-1.5 min-h-[80px]",
+                      "p-1 min-h-[60px] flex flex-col gap-1 justify-center min-w-0",
                       dIdx !== 6 && "border-r border-[#2a3f4a]",
                       pIdx !== 0 && "border-t border-[#374151]"
                     )}
                   >
-                    <div className="flex flex-col gap-1.5">
-                      {habitsInPeriod.map(habit => {
+                    {habitsInPeriod.length > 0 ? (
+                      habitsInPeriod.map(habit => {
                         const isDone = habit.completedDates.includes(dStr);
                         const styles = getHabitStyles(habit.priority);
                         
@@ -150,35 +142,39 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                             key={habit.id}
                             onClick={() => onToggleHabit(habit.id, day)}
                             className={cn(
-                              "w-full text-left p-[5px] px-2 rounded-[8px] border transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-center",
+                              "w-full text-left p-1 rounded-[6px] border transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-center overflow-hidden",
                               styles.bg,
                               styles.border,
                               isDone && "opacity-50 grayscale"
                             )}
                           >
-                            <div className="flex items-center gap-1.5 w-full">
+                            <div className="flex items-center gap-1 w-full">
                               <div className={cn(
-                                "h-[14px] w-[14px] rounded-full border-2 flex items-center justify-center shrink-0",
+                                "h-[10px] w-[10px] rounded-full border flex items-center justify-center shrink-0",
                                 isDone ? "bg-[#22d3ee] border-[#22d3ee]" : styles.checkbox
                               )}>
-                                {isDone && <Check size={8} className="text-[#111b21] stroke-[4px]" />}
+                                {isDone && <Check size={6} className="text-[#111b21] stroke-[4px]" />}
                               </div>
                               <span className={cn(
-                                "text-[12px] font-[700] text-[#e5e7eb] truncate",
-                                isDone && "line-through"
+                                "text-[9px] font-[700] text-[#e5e7eb] truncate leading-none",
+                                isDone && "line-through opacity-70"
                               )}>
                                 {habit.title}
                               </span>
                             </div>
-                            <div className="flex items-center gap-1 ml-[20px] mt-[0.5px]">
-                              <span className="text-[10px] font-[600] text-[#d1d5db]">
-                                {habit.time}
-                              </span>
-                            </div>
+                            <span className="text-[8px] font-[600] text-[#d1d5db]/80 ml-[11px] mt-0.5 leading-none">
+                              {habit.time}
+                            </span>
                           </button>
                         );
-                      })}
-                    </div>
+                      })
+                    ) : (
+                      <div className="flex-1 flex items-center justify-center p-0.5 opacity-30 select-none">
+                        <span className="text-[6.5px] font-[700] text-[#374151] uppercase text-center leading-[1.1]">
+                          Nenhum<br/>hábito
+                        </span>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -194,11 +190,11 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
             
             return (
               <div key={day.toString()} className={cn(
-                "text-center py-3 border-t-2 border-[#374151]",
+                "text-center py-2 border-t-2 border-[#374151] flex flex-col justify-center min-w-0",
                 idx !== 6 && "border-r border-[#2a3f4a]"
               )}>
-                <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.08em] block">
-                  {done}/{habitsForDay.length} FEITOS
+                <span className="text-[8px] font-[900] text-[#9ca3af] uppercase tracking-[0.05em] block leading-none">
+                  {done}/{habitsForDay.length}
                 </span>
               </div>
             );
