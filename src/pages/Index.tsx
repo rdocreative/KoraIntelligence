@@ -4,7 +4,7 @@ import React from 'react';
 import { useHabitTracker } from '@/hooks/useHabitTracker';
 import { useProfile } from '@/hooks/useProfile';
 import { MonthlyChart } from '@/components/features/dashboard/MonthlyChart';
-import { CheckCircle2, ListTodo, Target, Zap, Trophy, ArrowRight, Flame } from 'lucide-react';
+import { CheckCircle2, ListTodo, Target, Zap, Trophy, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Index = () => {
