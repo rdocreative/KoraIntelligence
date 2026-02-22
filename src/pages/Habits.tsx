@@ -106,9 +106,9 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
   };
 
   const priorityStyles = {
-    high: "bg-[linear-gradient(90deg,rgba(255,75,75,0.65),rgba(180,20,20,0.55))] border-[rgba(255,75,75,0.6)] shadow-[0_4px_0_0_#cc0000]",
-    medium: "bg-[linear-gradient(90deg,rgba(255,150,0,0.65),rgba(180,90,0,0.55))] border-[rgba(255,150,0,0.6)] shadow-[0_4px_0_0_#e58700]",
-    low: "bg-[linear-gradient(90deg,rgba(88,204,2,0.65),rgba(40,100,0,0.55))] border-[rgba(88,204,2,0.6)] shadow-[0_4px_0_0_#46a302]"
+    high: "bg-[linear-gradient(90deg,#ff4b4b,rgba(180,20,20,0.8))] border-[#ff4b4b] shadow-[0_4px_0_0_#cc0000]",
+    medium: "bg-[linear-gradient(90deg,#ff9600,rgba(180,90,0,0.8))] border-[#ff9600] shadow-[0_4px_0_0_#e58700]",
+    low: "bg-[linear-gradient(90deg,#58cc02,rgba(40,100,0,0.8))] border-[#58cc02] shadow-[0_4px_0_0_#46a302]"
   };
 
   const checkboxBorderStyles = {
