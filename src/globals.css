@@ -88,4 +88,15 @@
     transform: translateY(1px);
     box-shadow: none;
   }
+
+  /* Custom vertical padding for specific cards */
+  .stat-card {
+    padding-top: 22px !important;
+    padding-bottom: 22px !important;
+  }
+
+  .habit-card {
+    padding-top: 18px !important;
+    padding-bottom: 18px !important;
+  }
 }
