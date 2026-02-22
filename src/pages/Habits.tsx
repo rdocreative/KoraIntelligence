@@ -106,9 +106,9 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
   };
 
   const priorityStyles = {
-    high: "bg-[linear-gradient(135deg,rgba(255,75,75,0.40),rgba(255,75,75,0.18))] border-[#ff4b4b8c] shadow-[0_4px_0_0_#cc0000]",
-    medium: "bg-[linear-gradient(135deg,rgba(255,150,0,0.40),rgba(255,150,0,0.18))] border-[#ff96008c] shadow-[0_4px_0_0_#e58700]",
-    low: "bg-[linear-gradient(135deg,rgba(88,204,2,0.40),rgba(88,204,2,0.18))] border-[#58cc028c] shadow-[0_4px_0_0_#46a302]"
+    high: "bg-[linear-gradient(135deg,rgba(255,75,75,0.45),rgba(180,20,20,0.25))] border-[rgba(255,75,75,0.55)] shadow-[0_4px_0_0_#cc0000]",
+    medium: "bg-[linear-gradient(135deg,rgba(255,150,0,0.45),rgba(180,90,0,0.25))] border-[rgba(255,150,0,0.55)] shadow-[0_4px_0_0_#e58700]",
+    low: "bg-[linear-gradient(135deg,rgba(88,204,2,0.45),rgba(40,100,0,0.25))] border-[rgba(88,204,2,0.55)] shadow-[0_4px_0_0_#46a302]"
   };
 
   const checkboxBorderStyles = {
@@ -154,8 +154,8 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
             {habit.title}
           </h3>
           <div className="flex items-center gap-1.5 mt-[3px]">
-            <Clock size={12} className="text-[#9ca3af]" />
-            <span className="text-[12px] font-[500] text-[#9ca3af]">
+            <Clock size={12} className="text-[#d1d5db]" />
+            <span className="text-[12px] font-[500] text-[#d1d5db]">
               {habit.time}
             </span>
           </div>
@@ -165,7 +165,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
           <button 
             onClick={handleEditClick}
             onPointerDown={(e) => e.stopPropagation()}
-            className="p-1 text-[#9ca3af] hover:text-[#22d3ee] transition-colors z-10 ml-auto"
+            className="p-1 text-[#d1d5db] hover:text-[#22d3ee] transition-colors z-10 ml-auto"
           >
             <ChevronRight size={18} />
           </button>
@@ -590,7 +590,7 @@ const HabitsPage = () => {
 
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[35%] relative">
-            <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] overflow-hidden flex flex-col min-h-[500px] shadow-[0_4px_0_0_#0b1116] p-5">
+            <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] flex flex-col min-h-[500px] shadow-[0_4px_0_0_#0b1116] p-5 overflow-visible">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-[#e5e7eb] font-[800] text-[14px] uppercase tracking-[0.05em]">HÁBITOS ATIVOS</h2>
                 <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[11px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#22d3ee]/20">
@@ -598,7 +598,7 @@ const HabitsPage = () => {
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-visible">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                   <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
                     {displayedHabitsData.pending.map((habit) => (
