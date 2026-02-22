@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&family=Rajdhani:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;800&family=Rajdhani:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,47 +6,84 @@
 
 @layer base {
   :root {
-    /* Fundo principal atualizado para o gradiente solicitado */
-    --background: 171 46% 5%;
-    --foreground: 171 10% 98%;
+    --background: 200 13% 9%; /* #111b21 */
+    --foreground: 210 20% 98%;
     
-    /* Cards: #0f2220 */
-    --card: 173 38% 10%; 
-    /* Borda Primária: #2d5550 */
-    --border: 175 31% 25%; 
-    --radius: 1.5rem;
+    --card: 200 25% 17%; /* #202f36 */
+    --card-foreground: 210 20% 98%;
+    
+    --popover: 200 25% 17%;
+    --popover-foreground: 210 20% 98%;
+    
+    --primary: 186 84% 53%; /* #22d3ee */
+    --primary-foreground: 200 25% 17%;
+    
+    --secondary: 200 25% 17%;
+    --secondary-foreground: 210 20% 98%;
+    
+    --muted: 202 18% 26%; /* #37464f */
+    --muted-foreground: 215 16% 65%;
+    
+    --accent: 186 84% 53%;
+    --accent-foreground: 200 25% 17%;
+    
+    --destructive: 0 100% 65%;
+    --destructive-foreground: 210 20% 98%;
 
-    /* Destaque principal: #00e5cc */
-    --primary: 173 100% 45%;
-    --primary-foreground: 173 60% 4%;
+    --border: 202 18% 26%;
+    --input: 202 18% 26%;
+    --ring: 186 84% 53%;
+    
+    --radius: 1rem;
   }
 
   body {
-    background: radial-gradient(
-      ellipse at 50% 0%, 
-      #0f2220 0%, 
-      #071412 70%
-    );
-    background-attachment: fixed;
-    @apply text-[#e8f5f3] antialiased;
+    @apply bg-duo-bg text-[#e5e7eb] antialiased;
     font-family: 'Exo 2', sans-serif;
-    font-weight: 600;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-extrabold tracking-tight;
   }
 }
 
 @layer components {
-  /* Filtro de saturação global para cards conforme solicitado */
-  .card-glass, [class*="card"], [class*="Card"] {
-    filter: saturate(0.9);
+  /* Design System Panels */
+  .panel {
+    @apply bg-duo-panel border-2 border-duo-gray rounded-3xl shadow-3d-panel;
+  }
+  
+  .panel-hover {
+    @apply transition-transform duration-200 hover:-translate-y-0.5;
   }
 
-  .card-glass {
-    @apply bg-[#0f2220]/95 border border-[#2d5550] rounded-3xl backdrop-blur-2xl 
-    shadow-2xl shadow-black/80;
+  /* Buttons */
+  .btn-primary {
+    @apply bg-duo-primary text-duo-bg font-extrabold uppercase tracking-wider rounded-2xl shadow-3d-cyan
+    hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-none transition-all duration-100;
+  }
+  
+  .btn-secondary {
+    @apply bg-duo-gray text-white font-bold uppercase tracking-wider rounded-2xl shadow-3d-panel
+    hover:-translate-y-0.5 active:translate-y-[2px] active:shadow-none transition-all duration-100 border-2 border-transparent;
   }
 
-  .item-glass {
-    @apply bg-[#0d1e1c]/60 border border-[#2a4a46] rounded-2xl hover:bg-[#0f2220]/90 
-    backdrop-blur-md transition-all duration-300 shadow-xl shadow-black/30;
+  /* List Items */
+  .list-item-card {
+    @apply rounded-2xl border-2 transition-all duration-200 hover:scale-[1.01] cursor-pointer;
+  }
+  
+  /* Stat Cards */
+  .stat-card-blue {
+    @apply bg-card-blue text-white rounded-2xl shadow-3d-blue hover:-translate-y-0.5 transition-transform;
+  }
+  .stat-card-orange {
+    @apply bg-card-orange text-white rounded-2xl shadow-3d-orange hover:-translate-y-0.5 transition-transform;
+  }
+  .stat-card-green {
+    @apply bg-card-green text-white rounded-2xl shadow-3d-green hover:-translate-y-0.5 transition-transform;
+  }
+  .stat-card-purple {
+    @apply bg-card-purple text-white rounded-2xl shadow-3d-purple hover:-translate-y-0.5 transition-transform;
   }
 }

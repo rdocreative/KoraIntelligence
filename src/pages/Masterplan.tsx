@@ -30,7 +30,6 @@ const MasterplanPage = () => {
     const dayOfYear = Math.floor(diff / oneDay);
     const yearProgress = (dayOfYear / 365) * 100;
 
-    // Helper para estatísticas das áreas
     const calculateAreaStats = (items: TaskItem[]) => {
         const total = items.length;
         const completed = items.filter(i => i.completed).length;
@@ -64,16 +63,16 @@ const MasterplanPage = () => {
 
     if (data.annual.progress === 0) {
         yearStatus = "Ponto de Partida";
-        statusColor = "text-neutral-400";
-        statusMessage = "Sua jornada começa agora. Defina o ritmo.";
+        statusColor = "text-gray-400";
+        statusMessage = "Sua jornada começa agora.";
     } else if (data.annual.progress < yearProgress - 10) {
         yearStatus = "Atenção Necessária";
-        statusColor = "text-[#E8251A]";
-        statusMessage = "Acelere o ritmo para alcançar a meta.";
+        statusColor = "text-card-red";
+        statusMessage = "Acelere o ritmo.";
     } else if (data.annual.progress > yearProgress + 5) {
         yearStatus = "Excelente";
-        statusColor = "text-emerald-500";
-        statusMessage = "Você está superando as expectativas.";
+        statusColor = "text-card-green";
+        statusMessage = "Superando expectativas.";
     }
 
     return {
@@ -104,21 +103,35 @@ const MasterplanPage = () => {
 
   return (
     <div className="min-h-screen text-white pb-32">
-      <div className="relative z-10 max-w-7xl mx-auto space-y-6">
+      <div className="relative z-10 space-y-8 animate-in fade-in duration-500">
         
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-8">
           
-          {/* Navigation Tabs */}
-          <div className="sticky top-4 z-30 flex justify-center mb-4">
-            <TabsList className="grid grid-cols-3 bg-[#0A0A0A]/80 backdrop-blur-xl p-1.5 border border-white/10 rounded-2xl h-14 shadow-2xl w-full max-w-sm ring-1 ring-white/5">
-              <TabsTrigger value="overview" className="rounded-xl font-bold data-[state=active]:bg-white data-[state=active]:text-black text-[10px] uppercase tracking-wider transition-all duration-300">Visão</TabsTrigger>
-              <TabsTrigger value="execution" className="rounded-xl font-bold data-[state=active]:bg-[#E8251A] data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Execução</TabsTrigger>
-              <TabsTrigger value="annual" className="rounded-xl font-bold data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Ano</TabsTrigger>
+          {/* Custom Tabs Navigation */}
+          <div className="flex justify-center">
+            <TabsList className="bg-duo-panel border-2 border-duo-gray p-1.5 rounded-2xl h-16 shadow-3d-panel w-full max-w-md grid grid-cols-3 gap-2">
+              <TabsTrigger 
+                value="overview" 
+                className="rounded-xl font-extrabold uppercase tracking-widest text-[11px] data-[state=active]:bg-duo-primary data-[state=active]:text-duo-bg data-[state=active]:shadow-sm transition-all h-full"
+              >
+                Visão
+              </TabsTrigger>
+              <TabsTrigger 
+                value="execution" 
+                className="rounded-xl font-extrabold uppercase tracking-widest text-[11px] data-[state=active]:bg-card-orange data-[state=active]:text-white data-[state=active]:shadow-sm transition-all h-full"
+              >
+                Execução
+              </TabsTrigger>
+              <TabsTrigger 
+                value="annual" 
+                className="rounded-xl font-extrabold uppercase tracking-widest text-[11px] data-[state=active]:bg-card-purple data-[state=active]:text-white data-[state=active]:shadow-sm transition-all h-full"
+              >
+                Ano
+              </TabsTrigger>
             </TabsList>
           </div>
 
           <div className="pt-0">
-            {/* --- 1. VISÃO GERAL (DASHBOARD) --- */}
             <TabsContent value="overview">
               <OverviewTab 
                   activeWeeks={activeWeeks}
@@ -131,16 +144,13 @@ const MasterplanPage = () => {
               />
             </TabsContent>
 
-            {/* --- 2. EXECUÇÃO (MÊS + SEMANA) --- */}
             <TabsContent value="execution">
               <ExecutionTab 
-                  // Monthly Props
                   currentMonth={currentMonth}
                   currentMonthIndex={currentMonthIndex}
                   addMonthGoal={addMonthGoal}
                   toggleMonthGoal={toggleMonthGoal}
                   updateMonth={updateMonth}
-                  // Weekly Props
                   weeks={data.weeks}
                   addWeek={addWeek}
                   deleteWeek={deleteWeek}
@@ -150,7 +160,6 @@ const MasterplanPage = () => {
               />
             </TabsContent>
 
-            {/* --- 3. ANNUAL (DASHBOARD ANALÍTICO) --- */}
             <TabsContent value="annual">
                 <AnnualTab 
                   data={data}
