@@ -1,23 +1,22 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo } from 'react';
 import { 
   format, 
   startOfWeek, 
-  eachDayOfInterval, 
   addDays, 
   isSameDay, 
+  getDay,
   parse
-} from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { Sun, CloudSun, Moon, Check } from "lucide-react";
+} from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { cn } from "@/lib/utils";
+import { Check, Clock } from "lucide-react";
 
 interface Habit {
   id: string;
   title: string;
   emoji: string;
-  frequency: 'daily' | 'weekly';
   priority: 'high' | 'medium' | 'low';
   weekDays: number[];
   time: string;
@@ -31,144 +30,155 @@ interface WeeklyViewProps {
   onToggleHabit: (id: string, date: Date) => void;
 }
 
-const periods = [
-  { id: 'morning', label: 'Manhã', icon: Sun, range: [6, 12] },
-  { id: 'afternoon', label: 'Tarde', icon: CloudSun, range: [12, 18] },
-  { id: 'night', label: 'Noite', icon: Moon, range: [18, 24] },
-];
-
 const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => {
   const weekDays = useMemo(() => {
     const start = startOfWeek(currentDate, { weekStartsOn: 0 });
-    return eachDayOfInterval({
-      start,
-      end: addDays(start, 6),
-    });
+    return Array.from({ length: 7 }, (_, i) => addDays(start, i));
   }, [currentDate]);
 
-  const getHabitsForCell = (day: Date, periodRange: number[]) => {
-    const dayOfWeek = day.getDay();
-    const [start, end] = periodRange;
-    
-    return habits.filter(h => {
-      if (!h.active || !h.weekDays.includes(dayOfWeek)) return false;
-      const hour = parseInt(h.time.split(':')[0]);
-      return hour >= start && hour < end;
-    });
-  };
+  const periods = [
+    { label: 'Manhã', range: [5, 12] },
+    { label: 'Tarde', range: [12, 18] },
+    { label: 'Noite', range: [18, 24] },
+    { label: 'Madrugada', range: [0, 5] }
+  ];
 
-  const priorityGradients = {
-    high: "bg-[linear-gradient(135deg,#2a0808,#0a0505)]",
-    medium: "bg-[linear-gradient(135deg,#2a1800,#0a0800)]",
-    low: "bg-[linear-gradient(135deg,#002a12,#000a05)]"
+  const getHabitStyles = (priority: string) => {
+    switch (priority) {
+      case 'high':
+        return {
+          bg: "bg-[linear-gradient(135deg,rgba(255,75,75,0.40),rgba(180,20,20,0.20))]",
+          border: "border-[rgba(255,75,75,0.50)]",
+          checkbox: "border-[#ff4b4b]"
+        };
+      case 'medium':
+        return {
+          bg: "bg-[linear-gradient(135deg,rgba(255,150,0,0.40),rgba(180,90,0,0.20))]",
+          border: "border-[rgba(255,150,0,0.50)]",
+          checkbox: "border-[#ff9600]"
+        };
+      case 'low':
+      default:
+        return {
+          bg: "bg-[linear-gradient(135deg,rgba(88,204,2,0.40),rgba(40,100,0,0.20))]",
+          border: "border-[rgba(88,204,2,0.50)]",
+          checkbox: "border-[#58cc02]"
+        };
+    }
   };
 
   return (
-    <div className="w-full bg-[#071412] border border-[#1e3a36] rounded-[14px] overflow-hidden flex flex-col animate-in fade-in duration-300">
-      {/* Header */}
-      <div className="flex border-b border-[#1e3a36]">
-        <div className="w-[80px] shrink-0 border-r border-[#1e3a36] bg-[#0d1e1c]" />
-        {weekDays.map((day, i) => {
-          const isToday = isSameDay(day, new Date());
-          return (
-            <div key={i} className="flex-1 p-3 text-center border-r border-[#1e3a36] last:border-r-0">
-              <div className={cn(
-                "text-[11px] font-[700] uppercase tracking-wider mb-1",
-                isToday ? "text-[#38bdf8]" : "text-[#5a8a85]"
-              )}>
-                {format(day, 'eee', { locale: ptBR })}
-              </div>
-              <div className={cn(
-                "text-[18px] font-[800]",
-                isToday ? "text-[#38bdf8]" : "text-[#e8f5f3]"
-              )}>
-                {format(day, 'd')}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Grid Content */}
-      <div className="flex-1">
-        {periods.map((period) => (
-          <div key={period.id} className="flex min-h-[120px] border-b border-[#1e3a36] last:border-b-0">
-            {/* Period Label Column */}
-            <div className="w-[80px] shrink-0 border-r border-[#1e3a36] flex flex-col items-center justify-center gap-1 bg-[#0d1e1c]">
-              <period.icon size={16} className="text-[#5a8a85]" />
-              <span className="text-[10px] font-[700] text-[#5a8a85] uppercase tracking-tighter">
-                {period.label}
-              </span>
-            </div>
-
-            {/* Day Columns */}
-            {weekDays.map((day, i) => {
-              const cellHabits = getHabitsForCell(day, period.range);
-              const isToday = isSameDay(day, new Date());
-              const dateStr = format(day, 'yyyy-MM-dd');
-
-              return (
-                <div 
-                  key={i} 
-                  className={cn(
-                    "flex-1 p-[6px] border-r border-[#1e3a36] last:border-r-0 overflow-hidden",
-                    isToday ? "bg-[#0f2824]/40" : "bg-[linear-gradient(135deg,#0a1e1c_0%,#071412_100%)]"
-                  )}
-                >
-                  {cellHabits.map(habit => {
-                    const isCompleted = habit.completedDates.includes(dateStr);
-                    return (
-                      <div 
-                        key={habit.id}
-                        onClick={() => onToggleHabit(habit.id, day)}
-                        className={cn(
-                          "p-[4px_7px] mb-1.5 rounded-[6px] flex items-center gap-[5px] cursor-pointer transition-all",
-                          priorityGradients[habit.priority],
-                          isCompleted ? "opacity-40" : "opacity-100 hover:brightness-125"
-                        )}
-                      >
-                        <div className={cn(
-                          "h-[10px] w-[10px] rounded-full border border-[#5a8a85] shrink-0 flex items-center justify-center transition-all",
-                          isCompleted && "bg-[#00e5cc] border-[#00e5cc]"
-                        )}>
-                          {isCompleted && <Check size={6} className="text-[#071412] stroke-[4px]" />}
-                        </div>
-                        <span className={cn(
-                          "text-[11px] font-[600] text-[#e8f5f3] truncate flex-1",
-                          isCompleted && "line-through"
-                        )}>
-                          {habit.title.length > 12 ? habit.title.slice(0, 11) + '...' : habit.title}
-                        </span>
-                        <span className="text-[9px] font-[700] text-[#5a8a85] shrink-0">
-                          {habit.time}
-                        </span>
-                      </div>
-                    );
-                  })}
+    <div className="w-full overflow-x-auto">
+      <div className="min-w-[800px]">
+        <div className="grid grid-cols-7 gap-3 mb-6">
+          {weekDays.map((day) => {
+            const isToday = isSameDay(day, new Date());
+            return (
+              <div key={day.toString()} className="text-center">
+                <div className={cn(
+                  "text-[11px] font-[800] uppercase tracking-[0.05em] mb-1",
+                  isToday ? "text-[#22d3ee]" : "text-[#9ca3af]"
+                )}>
+                  {format(day, 'EEEE', { locale: ptBR }).split('-')[0]}
                 </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
+                <div className={cn(
+                  "text-[18px] font-[800]",
+                  isToday ? "text-[#22d3ee]" : "text-[#e5e7eb]"
+                )}>
+                  {format(day, 'd')}
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
-      {/* Footer */}
-      <div className="flex bg-[#0d1e1c]">
-        <div className="w-[80px] shrink-0 border-r border-[#1e3a36]" />
-        {weekDays.map((day, i) => {
-          const dateStr = format(day, 'yyyy-MM-dd');
-          const dayOfWeek = day.getDay();
-          const scheduled = habits.filter(h => h.active && h.weekDays.includes(dayOfWeek));
-          const completed = scheduled.filter(h => h.completedDates.includes(dateStr)).length;
-          
-          return (
-            <div key={i} className="flex-1 py-1.5 text-center border-r border-[#1e3a36] last:border-r-0">
-              <span className="text-[10px] font-[700] text-[#5a8a85] uppercase">
-                {completed}/{scheduled.length} feitos
-              </span>
+        <div className="space-y-6">
+          {periods.map((period) => (
+            <div key={period.label} className="space-y-2">
+              <h4 className="text-[11px] font-[700] text-[#9ca3af] uppercase tracking-[0.05em] px-1">
+                {period.label}
+              </h4>
+              <div className="grid grid-cols-7 gap-3">
+                {weekDays.map((day) => {
+                  const dStr = format(day, 'yyyy-MM-dd');
+                  const habitsInPeriod = habits.filter(h => {
+                    if (!h.active || !h.weekDays.includes(getDay(day))) return false;
+                    const hour = parseInt(h.time.split(':')[0]);
+                    return hour >= period.range[0] && hour < period.range[1];
+                  });
+
+                  return (
+                    <div 
+                      key={day.toString() + period.label} 
+                      className="bg-[#2a3f4a] border border-[#374151] rounded-[12px] p-2 min-h-[100px] flex flex-col gap-2"
+                    >
+                      {habitsInPeriod.map(habit => {
+                        const isDone = habit.completedDates.includes(dStr);
+                        const styles = getHabitStyles(habit.priority);
+                        
+                        return (
+                          <button
+                            key={habit.id}
+                            onClick={() => onToggleHabit(habit.id, day)}
+                            className={cn(
+                              "w-full text-left p-1.5 rounded-[8px] border transition-all hover:scale-[1.02] active:scale-[0.98]",
+                              styles.bg,
+                              styles.border,
+                              isDone && "opacity-50 grayscale"
+                            )}
+                          >
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className={cn(
+                                "h-3.5 w-3.5 rounded-full border-2 flex items-center justify-center shrink-0",
+                                isDone ? "bg-[#22d3ee] border-[#22d3ee]" : styles.checkbox
+                              )}>
+                                {isDone && <Check size={8} className="text-[#111b21] stroke-[4px]" />}
+                              </div>
+                              <span className={cn(
+                                "text-[11px] font-[700] text-[#e5e7eb] truncate",
+                                isDone && "line-through"
+                              )}>
+                                {habit.title}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Clock size={10} className="text-[#d1d5db]" />
+                              <span className="text-[10px] font-[500] text-[#d1d5db]">
+                                {habit.time}
+                              </span>
+                            </div>
+                          </button>
+                        );
+                      })}
+
+                      {habitsInPeriod.length === 0 && (
+                        <div className="flex-1 flex items-center justify-center">
+                          <div className="w-1 h-1 rounded-full bg-[#374151]" />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          );
-        })}
+          ))}
+        </div>
+
+        <div className="grid grid-cols-7 gap-3 mt-6">
+          {weekDays.map((day) => {
+            const dStr = format(day, 'yyyy-MM-dd');
+            const habitsForDay = habits.filter(h => h.active && h.weekDays.includes(getDay(day)));
+            const done = habitsForDay.filter(h => h.completedDates.includes(dStr)).length;
+            
+            return (
+              <div key={day.toString()} className="text-center pt-3 border-t border-[#374151]">
+                <span className="text-[11px] font-[700] text-[#9ca3af] uppercase tracking-[0.05em]">
+                  {done}/{habitsForDay.length} FEITOS
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
