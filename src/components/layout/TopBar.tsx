@@ -40,7 +40,7 @@ const pageConfigs: Record<string, PageConfig> = {
   '/lembretes': { title: 'Lembretes', subtitle: 'Alertas e compromissos', color: '#ec4899', icon: Bell },
   '/comunidade': { title: 'Comunidade', subtitle: 'Conexão e troca de ideias', color: '#a78bfa', icon: Users },
   '/loja': { title: 'Loja', subtitle: 'Resgate suas recompensas', color: '#fb923c', icon: ShoppingBag },
-  '/configuracoes': { title: 'Ajustes', subtitle: 'Personalize sua experiência', color: '#94a3b8', icon: Settings },
+  '/configuracoes': { title: 'Ajustes', subtitle: 'Personalize sua experiênca', color: '#94a3b8', icon: Settings },
   '/masterplan': { title: 'Master Plan', subtitle: 'Sua visão estratégica futura', color: '#a855f7', icon: Eye }
 };
 
@@ -68,7 +68,7 @@ export const TopBar = () => {
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none">
-      <div className="flex items-center justify-center sm:justify-between w-full max-w-7xl pointer-events-auto py-4 px-6 overflow-visible">
+      <div className="flex items-center justify-center sm:justify-between w-full max-w-[92%] pointer-events-auto py-4 px-6 overflow-visible">
         
         {/* LADO ESQUERDO: Main Page Capsule */}
         <div 
