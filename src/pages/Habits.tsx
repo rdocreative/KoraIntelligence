@@ -106,9 +106,9 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
   };
 
   const priorityStyles = {
-    high: "bg-[linear-gradient(90deg,#ff4b4b,rgba(180,20,20,0.8))] border-[#ff4b4b] shadow-[0_4px_0_0_#cc0000]",
-    medium: "bg-[linear-gradient(90deg,#ff9600,rgba(180,90,0,0.8))] border-[#ff9600] shadow-[0_4px_0_0_#e58700]",
-    low: "bg-[linear-gradient(90deg,#58cc02,rgba(40,100,0,0.8))] border-[#58cc02] shadow-[0_4px_0_0_#46a302]"
+    high: "bg-[linear-gradient(90deg,rgba(120,0,0,0.85),rgba(255,75,75,0.90))] border-[#ff4b4b] shadow-[0_4px_0_0_#cc0000]",
+    medium: "bg-[linear-gradient(90deg,rgba(140,60,0,0.85),rgba(255,150,0,0.90))] border-[#ff9600] shadow-[0_4px_0_0_#e58700]",
+    low: "bg-[linear-gradient(90deg,rgba(30,80,0,0.85),rgba(88,204,2,0.90))] border-[#58cc02] shadow-[0_4px_0_0_#46a302]"
   };
 
   const iconColors = {
@@ -142,7 +142,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
             "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
             isCompleted 
               ? "bg-white border-white" 
-              : "border-white/60 bg-black/10 hover:border-white hover:bg-black/20"
+              : "border-white/70 bg-black/10 hover:border-white hover:bg-black/20"
           )}
         >
           {isCompleted && (
@@ -156,14 +156,14 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
 
         <div className="flex-1 min-w-0">
           <h3 className={cn(
-            "text-[14px] font-[700] text-[#e5e7eb] truncate leading-tight transition-all duration-400",
+            "text-[14px] font-[800] text-white truncate leading-tight transition-all duration-400",
             isCompleted && "line-through opacity-70"
           )}>
             {habit.title}
           </h3>
           <div className="flex items-center gap-1 mt-[2px]">
-            <Clock size={11} className="text-[#d1d5db]" />
-            <span className="text-[11px] font-[500] text-[#d1d5db]">
+            <Clock size={11} className="text-white/85" />
+            <span className="text-[11px] font-[500] text-white/85">
               {habit.time}
             </span>
           </div>
@@ -173,7 +173,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
           <button 
             onClick={handleEditClick}
             onPointerDown={(e) => e.stopPropagation()}
-            className="p-1 text-[#d1d5db] hover:text-[#22d3ee] transition-colors z-10 ml-auto"
+            className="p-1 text-white/85 hover:text-white transition-colors z-10 ml-auto"
           >
             <ChevronRight size={16} />
           </button>
