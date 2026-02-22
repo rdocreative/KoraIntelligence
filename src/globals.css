@@ -76,16 +76,6 @@
     border-radius: 24px;
   }
 
-  /* Global scale for all cards */
-  [class*="stat-card"],
-  [class*="habit-card"],
-  [class*="task-card"],
-  [class*="goal-card"],
-  [class*="mission-card"] {
-    transform: scale(0.88);
-    transform-origin: top left;
-  }
-
   /* Global Button Primary */
   .btn-primary {
     background-color: var(--primary);

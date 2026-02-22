@@ -641,7 +641,7 @@ const HabitsPage = () => {
                 )}
               </div>
 
-              {/* mt-auto para manter no rodapé */}
+              {/* Botão com mt-auto garantindo que fique no rodapé do flex container */}
               <div className="mt-auto pt-4 border-t-2 border-[#374151]">
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                   <DialogTrigger asChild>
