@@ -394,7 +394,7 @@ const HabitsPage = () => {
     <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
       
       <div className="flex justify-center pt-6 pb-2">
-        <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1.5">
+        <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1.5 overflow-visible">
           <button
             onClick={() => setActiveTab('overview')}
             className={cn(
@@ -477,7 +477,7 @@ const HabitsPage = () => {
                 </button>
               </div>
 
-              <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1">
+              <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1 overflow-visible">
                 {[
                   { id: 'monthly', icon: LayoutGrid, label: 'Mês' },
                   { id: 'weekly', icon: CalendarDays, label: 'Sem' }
