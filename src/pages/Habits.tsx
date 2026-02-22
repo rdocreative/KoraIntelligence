@@ -6,14 +6,13 @@ import {
   LayoutGrid, Clock, Flame, 
   BarChart3, CheckCircle2, Pencil, Trash2, 
   Play, Pause, CalendarDays, Target,
-  ChevronDown, List
+  List
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { 
   format, 
@@ -27,10 +26,6 @@ import {
   getDay,
   startOfWeek,
   endOfWeek,
-  setMonth,
-  setYear,
-  getYear,
-  getMonth,
   addWeeks,
   subWeeks
 } from 'date-fns';
@@ -100,7 +95,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
-    zIndex: isDragging ? 50 : 1,
+    zIndex: iDragging ? 50 : 1,
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
@@ -110,7 +105,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     }
   };
 
-  // Melhoria conforme solicitado: Gradientes mais fortes e sombras 3D
   const priorityStyles = {
     high: "bg-[linear-gradient(135deg,rgba(255,75,75,0.40),rgba(255,75,75,0.18))] border-[#ff4b4b8c] shadow-[0_4px_0_0_#cc0000]",
     medium: "bg-[linear-gradient(135deg,rgba(255,150,0,0.40),rgba(255,150,0,0.18))] border-[#ff96008c] shadow-[0_4px_0_0_#e58700]",
@@ -303,7 +297,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
 
 const HabitsPage = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'charts'>('overview');
-  const [viewMode, setViewMode] = useState<'monthly' | 'list' | 'weekly'>('monthly');
+  const [viewMode, setViewMode] = useState<'monthly' | 'weekly'>('monthly');
   const [habits, setHabits] = useState<Habit[]>([
     { id: '1', title: 'Beber 3L de água', emoji: '💧', frequency: 'daily', priority: 'high', weekDays: [0,1,2,3,4,5,6], time: '08:00', completedDates: [], active: true },
     { id: '2', title: 'Ler 10 páginas', emoji: '📚', frequency: 'daily', priority: 'medium', weekDays: [0,1,2,3,4,5,6], time: '21:00', completedDates: [], active: true },
@@ -399,7 +393,6 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
       
-      {/* Navigation Tabs (Overview/Charts) - Design System Update */}
       <div className="flex justify-center pt-6 pb-2">
         <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1.5">
           <button
@@ -427,7 +420,6 @@ const HabitsPage = () => {
         </div>
       </div>
 
-      {/* Header Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-[12px] p-4 md:p-0 mt-6">
         {[
           { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, bg: "#1cb0f6", shadow: "#1899d6" },
@@ -456,7 +448,6 @@ const HabitsPage = () => {
 
       <div className="mt-[20px] flex flex-col lg:flex-row gap-[20px] p-4 md:p-0">
         <div className={cn("w-full transition-all duration-500", viewMode === 'weekly' ? 'lg:w-full' : 'lg:w-[65%]')}>
-          {/* Calendar Panel */}
           <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] py-[20px] px-[24px] shadow-[0_4px_0_0_#0b1116]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
               <div className="flex items-center gap-2">
@@ -469,38 +460,12 @@ const HabitsPage = () => {
                 >
                   <ChevronLeft size={24} />
                 </button>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button className="flex items-center gap-2 text-[14px] font-[700] text-[#e5e7eb] uppercase tracking-[0.02em] hover:text-[#22d3ee] transition-colors group px-2">
-                      {viewMode === 'weekly' 
-                        ? `Semana de ${format(startOfWeek(currentDate), 'dd/MM')}`
-                        : format(currentDate, 'MMMM yyyy', { locale: ptBR })
-                      }
-                      <ChevronDown size={18} className="text-[#9ca3af] group-hover:text-[#22d3ee]" />
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="bg-[#202f36] border-2 border-[#374151] w-64 p-3 shadow-xl rounded-[16px]">
-                    <div className="grid grid-cols-3 gap-1 mb-4">
-                      {Array.from({ length: 12 }).map((_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setCurrentDate(setMonth(currentDate, i))}
-                          className={cn(
-                            "py-2 rounded-md text-[11px] font-[700] uppercase tracking-wider transition-all",
-                            getMonth(currentDate) === i ? "bg-[#22d3ee] text-[#111b21]" : "text-[#9ca3af] hover:bg-[#374151] hover:text-[#e5e7eb]"
-                          )}
-                        >
-                          {format(new Date(2024, i, 1), 'MMM', { locale: ptBR })}
-                        </button>
-                      ))}
-                    </div>
-                    <div className="flex items-center justify-between pt-2 border-t border-[#374151]">
-                      <button onClick={() => setCurrentDate(setYear(currentDate, getYear(currentDate) - 1))} className="p-1 text-[#9ca3af] hover:text-[#22d3ee]"><ChevronLeft size={16}/></button>
-                      <span className="text-[12px] font-black text-white">{getYear(currentDate)}</span>
-                      <button onClick={() => setCurrentDate(setYear(currentDate, getYear(currentDate) + 1))} className="p-1 text-[#9ca3af] hover:text-[#22d3ee]"><ChevronRight size={16}/></button>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <div className="flex items-center gap-2 text-[14px] font-[700] text-[#e5e7eb] uppercase tracking-[0.02em] px-2">
+                  {viewMode === 'weekly' 
+                    ? `Semana de ${format(startOfWeek(currentDate), 'dd/MM')}`
+                    : format(currentDate, 'MMMM yyyy', { locale: ptBR })
+                  }
+                </div>
                 <button 
                   onClick={() => {
                     if (viewMode === 'weekly') setCurrentDate(addWeeks(currentDate, 1));
@@ -512,11 +477,9 @@ const HabitsPage = () => {
                 </button>
               </div>
 
-              {/* Calendar Pills - Design System Update */}
               <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1">
                 {[
                   { id: 'monthly', icon: LayoutGrid, label: 'Mês' },
-                  { id: 'list', icon: List, label: 'Lista' },
                   { id: 'weekly', icon: CalendarDays, label: 'Sem' }
                 ].map(mode => (
                   <button
@@ -622,31 +585,11 @@ const HabitsPage = () => {
                 onToggleHabit={toggleHabit} 
               />
             )}
-
-            {viewMode === 'list' && (
-              <div className="space-y-4 py-4 min-h-[400px]">
-                {habits.map(habit => (
-                  <div key={habit.id} className="p-4 bg-[#202f36] border-2 border-[#374151] rounded-[16px] flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="text-xl">{habit.emoji}</div>
-                      <div>
-                        <div className="text-[15px] font-[700] text-[#e5e7eb]">{habit.title}</div>
-                        <div className="text-[12px] text-[#9ca3af] font-[500] mt-1">{habit.time}</div>
-                      </div>
-                    </div>
-                    <Button variant="ghost" size="sm" onClick={() => setEditingHabit({ habit, rect: new DOMRect() })} className="text-[#9ca3af] hover:text-[#22d3ee]">
-                      <Pencil size={14} />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[35%] relative">
-            {/* Panel Hábitos Ativos - Design System Update */}
             <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] overflow-hidden flex flex-col min-h-[500px] shadow-[0_4px_0_0_#0b1116] p-5">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-[#e5e7eb] font-[800] text-[14px] uppercase tracking-[0.05em]">HÁBITOS ATIVOS</h2>
