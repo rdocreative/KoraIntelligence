@@ -6,8 +6,8 @@
 
 @layer base {
   html {
-    /* Diminuindo a escala global em 5% (16px * 0.95 = 15.2px) */
-    font-size: 95%;
+    /* Diminuindo a escala global para 90% (16px * 0.9 = 14.4px) */
+    font-size: 90%;
   }
 
   :root {
