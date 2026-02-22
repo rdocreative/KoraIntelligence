@@ -58,7 +58,7 @@ export const TopBar = () => {
     titles: 0, 
     level: profile?.nivel || 1,
     xp: profile?.xp_total || 0,
-    coins: profile?.moedas || 0,
+    coins: profile?.moedas || 0, // Using 'moedas' from profile if available, otherwise 0
     nextLevelXp: (profile?.nivel || 1) * 1000 
   };
 
