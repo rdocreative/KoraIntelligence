@@ -1,137 +1,122 @@
-import { useState, useEffect } from "react";
+"use client";
+
+import React from "react";
 import { useSettings } from "@/hooks/useSettings";
-import { useHabitTracker } from "@/hooks/useHabitTracker";
 import { useAuth } from "@/components/providers/AuthProvider";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { 
-  User, 
-  Trash2, 
-  ShieldAlert,
-  Save,
-  LogOut
-} from "lucide-react";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { User, Bell, Shield, Palette, LogOut, Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Settings = () => {
   const { settings, updateSettings } = useSettings();
-  const { resetAllData } = useHabitTracker();
   const { signOut, user } = useAuth();
-  const navigate = useNavigate();
-  
-  const [localName, setLocalName] = useState(settings.userName);
-  const [hasChanges, setHasChanges] = useState(false);
 
-  // Sincronizar nome com Supabase se disponível
-  useEffect(() => {
-    if (user?.user_metadata?.name && settings.userName === "Marcos Eduardo") {
-       // Se o nome for o padrão e tivermos um nome no Auth, usa o do Auth
-       setLocalName(user.user_metadata.name);
-       updateSettings({ userName: user.user_metadata.name });
+  const sections = [
+    { 
+      title: "Perfil", 
+      icon: User, 
+      color: "blue",
+      items: [
+        { label: "Nome de Usuário", value: settings.userName, type: "input" },
+        { label: "Email", value: user?.email, type: "text" },
+      ]
+    },
+    { 
+      title: "Preferências", 
+      icon: Palette, 
+      color: "purple",
+      items: [
+        { label: "Efeitos de Brilho", value: settings.glowEffects, type: "switch" },
+        { label: "Versículo Diário", value: settings.showDailyVerse, type: "switch" },
+      ]
+    },
+    { 
+      title: "Notificações", 
+      icon: Bell, 
+      color: "orange",
+      items: [
+        { label: "Alertas Push", value: settings.notificationsEnabled, type: "switch" },
+      ]
     }
-  }, [user]);
-
-  useEffect(() => {
-    setLocalName(settings.userName);
-  }, [settings.userName]);
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalName(e.target.value);
-    setHasChanges(e.target.value !== settings.userName);
-  };
-
-  const handleSave = () => {
-    updateSettings({ userName: localName });
-    setHasChanges(false);
-    toast.success("Configurações salvas!", { description: "Suas preferências foram atualizadas." });
-  };
-
-  const handleReset = () => {
-    if (confirm("ATENÇÃO: Isso apagará TODOS os seus hábitos, histórico de XP e progresso permanentemente. Deseja continuar?")) {
-      resetAllData();
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      navigate("/login");
-      toast.success("Você saiu da conta.");
-    } catch (error) {
-      toast.error("Erro ao sair da conta.");
-    }
-  };
+  ];
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      
-      {/* Header Actions */}
-      <div className="flex justify-between items-center">
-         <h2 className="text-2xl font-bold text-white">Configurações</h2>
-         <div className="flex gap-2">
-            <Button 
-                onClick={handleSave} 
-                disabled={!hasChanges} 
-                size="sm" 
-                className={`font-rajdhani font-bold px-6 shadow-lg transition-all ${hasChanges ? "bg-[#4adbc8] hover:bg-[#3bc7b6] text-black" : "bg-neutral-800 text-neutral-500 opacity-50"}`}
-            >
-                <Save className="w-3.5 h-3.5 mr-2" /> Salvar
-            </Button>
-            <Button 
-                onClick={handleLogout}
-                size="sm"
-                variant="outline"
-                className="border-neutral-700 text-neutral-300 hover:text-white hover:bg-white/5"
-            >
-                <LogOut className="w-3.5 h-3.5 mr-2" /> Sair
-            </Button>
-         </div>
+    <div className="max-w-4xl mx-auto space-y-8 pb-20">
+      <div className="flex items-center justify-between mb-12">
+        <h2 className="text-3xl font-black text-white uppercase tracking-tight">Ajustes do Sistema</h2>
+        <button 
+          onClick={() => signOut()}
+          className="flex items-center gap-2 px-6 py-3 bg-card-red/10 border-2 border-card-red shadow-red text-card-red rounded-2xl font-black uppercase tracking-widest text-xs hover:-translate-y-0.5 transition-all"
+        >
+          <LogOut size={16} /> Sair
+        </button>
       </div>
 
-      <div className="grid gap-6">
-        <Card className="glass-card border-none bg-[#121212]">
-          <CardHeader className="border-b border-white/5 pb-4">
-            <div className="flex items-center gap-2">
-              <User className="w-5 h-5 text-[#4adbc8]" />
-              <CardTitle className="text-lg font-bold text-white">Perfil</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label className="text-xs font-black uppercase text-neutral-400">Email (Conta)</Label>
-                <Input value={user?.email || ""} disabled className="bg-[#0a0a0a] border-white/10 opacity-60" />
+      <div className="grid gap-8">
+        {sections.map((section, idx) => (
+          <div key={idx} className="duo-panel overflow-hidden">
+            <div className={cn(
+              "p-6 border-b-2 border-border flex items-center gap-4 bg-sidebar/30"
+            )}>
+              <div className={cn(
+                "w-12 h-12 rounded-2xl flex items-center justify-center shadow-panel border-2",
+                `bg-card-${section.color}/20 border-card-${section.color}/40 text-card-${section.color}`
+              )}>
+                <section.icon size={24} strokeWidth={2.5} />
               </div>
-              <div className="space-y-2">
-                <Label className="text-xs font-black uppercase text-neutral-400">Nome de Exibição</Label>
-                <Input value={localName} onChange={handleNameChange} className="bg-[#0a0a0a] border-white/10" />
-              </div>
+              <h3 className="text-lg font-black text-white uppercase tracking-widest">{section.title}</h3>
             </div>
-          </CardContent>
-        </Card>
+            
+            <div className="p-6 space-y-6">
+              {section.items.map((item, i) => (
+                <div key={i} className="flex items-center justify-between group">
+                  <div>
+                    <div className="text-sm font-black text-white uppercase tracking-tight mb-1">{item.label}</div>
+                    <div className="text-xs text-text-muted font-bold">{item.type === 'switch' ? 'Ativar ou desativar esta opção' : item.value}</div>
+                  </div>
+                  
+                  {item.type === 'switch' && (
+                    <button 
+                      className={cn(
+                        "w-14 h-8 rounded-full border-2 transition-all p-1 flex items-center",
+                        item.value ? "bg-card-green border-card-green shadow-green" : "bg-sidebar border-duo-gray"
+                      )}
+                    >
+                      <div className={cn(
+                        "w-5 h-5 rounded-full bg-white transition-all shadow-md",
+                        item.value ? "translate-x-6" : "translate-x-0"
+                      )} />
+                    </button>
+                  )}
 
-        <Card className="glass-card border border-red-900/20 bg-red-950/5">
-          <CardHeader className="pb-4">
-            <div className="flex items-center gap-2 text-red-600">
-              <ShieldAlert className="w-5 h-5" />
-              <CardTitle className="text-lg font-bold">Zona de Perigo</CardTitle>
+                  {item.type === 'input' && (
+                    <button className="px-4 py-2 bg-sidebar border-2 border-duo-gray text-primary text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-panel transition-all">
+                      Alterar
+                    </button>
+                  )}
+                </div>
+              ))}
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between p-4 bg-[#0a0a0a]/50 rounded-2xl border border-red-900/10">
+          </div>
+        ))}
+
+        {/* Danger Zone */}
+        <div className="duo-panel border-card-red/30 bg-card-red/5 p-8">
+           <div className="flex items-center gap-4 mb-6">
+              <Shield className="text-card-red" size={32} />
               <div>
-                <p className="text-sm font-bold text-white">Resetar Dados Locais</p>
-                <p className="text-xs text-neutral-500">Apaga hábitos, XP e histórico salvos neste navegador.</p>
+                 <h3 className="text-lg font-black text-card-red uppercase tracking-widest">Zona Crítica</h3>
+                 <p className="text-xs text-text-muted font-bold">Ações irreversíveis para sua conta</p>
               </div>
-              <Button variant="destructive" size="sm" onClick={handleReset} className="bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white border border-red-600/20">
-                <Trash2 className="w-4 h-4 mr-2" /> Resetar
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+           </div>
+           <div className="flex flex-col sm:flex-row gap-4">
+              <button className="flex-1 flex items-center justify-center gap-3 py-4 bg-sidebar border-2 border-duo-gray text-text-muted font-black uppercase tracking-widest text-xs rounded-2xl hover:bg-card-red hover:text-white hover:border-card-red transition-all group">
+                <Trash2 size={18} /> Resetar Dados do Mês
+              </button>
+              <button className="flex-1 flex items-center justify-center gap-3 py-4 bg-sidebar border-2 border-duo-gray text-text-muted font-black uppercase tracking-widest text-xs rounded-2xl hover:bg-card-red hover:text-white hover:border-card-red transition-all">
+                <Shield size={18} /> Excluir Conta Permanentemente
+              </button>
+           </div>
+        </div>
       </div>
     </div>
   );
