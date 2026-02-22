@@ -89,7 +89,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
   } = useSortable({ 
     id: habit.id,
     transition: {
-      duration: 150, // Updated for snappier feel
+      duration: 150, 
       easing: 'ease-in-out',
     },
     disabled: isCompleted 
@@ -110,14 +110,14 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     }
   };
 
-  // Correction #3: Apply strict Duolingo-style properties
+  // Correction #4: Standardized Habit Card styles (gradient + soft border + shadow)
   const priorityStyles = {
-    high: "bg-[linear-gradient(135deg,rgba(255,75,75,0.35),rgba(255,75,75,0.15))] border-[#ff4b4b99] shadow-[0_4px_0_0_#cc0000]",
-    medium: "bg-[linear-gradient(135deg,rgba(255,150,0,0.35),rgba(255,150,0,0.15))] border-[#ff960099] shadow-[0_4px_0_0_#e58700]",
-    low: "bg-[linear-gradient(135deg,rgba(88,204,2,0.35),rgba(88,204,2,0.15))] border-[#58cc0299] shadow-[0_4px_0_0_#46a302]"
+    high: "bg-[linear-gradient(135deg,rgba(255,75,75,0.35),rgba(255,75,75,0.15))] border-[#ff4b4b80] shadow-[0_4px_0_0_#cc0000]",
+    medium: "bg-[linear-gradient(135deg,rgba(255,150,0,0.35),rgba(255,150,0,0.15))] border-[#ff960080] shadow-[0_4px_0_0_#e58700]",
+    low: "bg-[linear-gradient(135deg,rgba(88,204,2,0.35),rgba(88,204,2,0.15))] border-[#58cc0280] shadow-[0_4px_0_0_#46a302]"
   };
 
-  // Correction #3: Checkbox styles per priority
+  // Correction #4: Checkbox styles standardized per priority
   const checkboxBorderStyles = {
     high: "border-[#ff4b4b]",
     medium: "border-[#ff9600]",
@@ -400,13 +400,13 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
       
-      {/* Navigation Tabs (Overview/Charts) */}
+      {/* Navigation Tabs (Overview/Charts) - Correction #3: Fixed overlapping/gap */}
       <div className="flex justify-center pt-6 pb-2">
-        <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 px-1.5 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1.5">
+        <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 px-1.5 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1.5 flex-nowrap overflow-visible">
           <button
             onClick={() => setActiveTab('overview')}
             className={cn(
-              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300 border-2",
+              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300 border-2 shrink-0",
               activeTab === 'overview'
                 ? "bg-[#22d3ee] border-[#22d3ee] text-[#111b21] shadow-[0_4px_0_0_#06b6d4]"
                 : "bg-transparent border-transparent text-[#9ca3af] hover:bg-[#111b21] hover:text-white"
@@ -417,7 +417,7 @@ const HabitsPage = () => {
           <button
             onClick={() => setActiveTab('charts')}
             className={cn(
-              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300 border-2",
+              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300 border-2 shrink-0",
               activeTab === 'charts'
                 ? "bg-[#22d3ee] border-[#22d3ee] text-[#111b21] shadow-[0_4px_0_0_#06b6d4]"
                 : "bg-transparent border-transparent text-[#9ca3af] hover:bg-[#111b21] hover:text-white"
@@ -439,7 +439,6 @@ const HabitsPage = () => {
           <div
             key={i}
             className={cn(
-              // Correction #2: Reduced padding/height
               "py-[12px] px-[20px] rounded-[16px] flex items-center gap-3 transition-all duration-300",
               "text-white border-none"
             )}
@@ -514,7 +513,8 @@ const HabitsPage = () => {
                 </button>
               </div>
 
-              <div className="flex items-center gap-1 bg-[#131f24] border-2 border-[#374151] p-1 rounded-full">
+              {/* Correction #2: Calendar Pills overflow/cutoff fix */}
+              <div className="flex items-center gap-1 bg-[#131f24] border-2 border-[#374151] p-1 rounded-full overflow-visible whitespace-nowrap flex-nowrap shrink-0">
                 {[
                   { id: 'monthly', icon: LayoutGrid, label: 'Mês' },
                   { id: 'list', icon: List, label: 'Lista' },
@@ -524,7 +524,7 @@ const HabitsPage = () => {
                     key={mode.id}
                     onClick={() => setViewMode(mode.id as any)}
                     className={cn(
-                      "flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-[700] uppercase tracking-wider transition-all border-2 border-transparent",
+                      "flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-[700] uppercase tracking-wider transition-all border-2 border-transparent shrink-0",
                       viewMode === mode.id 
                         ? "bg-[#22d3ee] border-[#22d3ee] text-[#111b21] shadow-[0_4px_0_0_#06b6d4]" 
                         : "text-[#9ca3af] hover:text-[#e5e7eb]"
@@ -656,7 +656,6 @@ const HabitsPage = () => {
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[35%] relative">
             {/* Habits List Panel */}
-            {/* Correction #7: Panel Styles */}
             <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] overflow-hidden flex flex-col min-h-[500px] shadow-[0_4px_0_0_#0b1116]">
               <div className="py-[20px] px-[24px] border-b-2 border-[#374151] flex items-center justify-between bg-[#111b21]/30">
                 <h2 className="text-[#e5e7eb] font-[700] text-[14px] uppercase tracking-[0.02em]">HÁBITOS ATIVOS</h2>
@@ -710,7 +709,7 @@ const HabitsPage = () => {
               <div className="p-4 border-t-2 border-[#374151]">
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                   <DialogTrigger asChild>
-                    {/* Correction #6: Button 3D Shadow */}
+                    {/* Correction #6: Button 3D Shadow with translation */}
                     <Button className="w-full bg-[#22d3ee] hover:bg-[#22d3ee] active:translate-y-[1px] active:shadow-none transition-all duration-200 text-[#111b21] font-[800] text-[11px] uppercase tracking-[0.1em] h-12 rounded-[16px] shadow-[0_4px_0_0_#06b6d4]">
                       <Plus className="mr-2" size={18} strokeWidth={3} /> NOVO HÁBITO
                     </Button>

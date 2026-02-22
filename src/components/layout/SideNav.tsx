@@ -29,15 +29,15 @@ const navItems = [
 
 export const SideNav = () => {
   return (
-    <div className="fixed left-[20px] top-1/2 -translate-y-1/2 z-[100]">
-      <nav className="flex flex-col items-center gap-3 border-none bg-[#131f24] p-2 rounded-[32px] border-2 border-[#374151] shadow-[0_4px_0_0_#0b1116]">
+    <div className="fixed left-[20px] top-1/2 -translate-y-1/2 z-[100] flex opacity-100 visible">
+      <nav className="flex flex-col items-center gap-3 border-none bg-[#131f24] p-2 rounded-[32px] border-2 border-[#374151] shadow-[0_4px_0_0_#0b1116] w-[60px]">
         {navItems.map(({ icon: Icon, path, label, isSpecial }) => (
           <NavLink
             key={path}
             to={path}
             title={label}
             className={({ isActive }) => cn(
-              "group relative flex items-center justify-center rounded-full transition-all duration-200",
+              "group relative flex items-center justify-center rounded-full transition-all duration-200 shrink-0",
               !isSpecial && "w-[44px] h-[44px]",
               isSpecial && "w-[56px] h-[56px] my-2",
               // Active State: Blue background, solid blue shadow
