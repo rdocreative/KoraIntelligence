@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,38 +14,33 @@
   body {
     background-color: #111b21;
     color: #e5e7eb;
+    font-family: 'Nunito', sans-serif;
     @apply antialiased;
   }
 }
 
 @layer components {
   .duo-panel {
-    @apply bg-panel border-2 border-duo-gray rounded-3xl shadow-panel transition-all;
+    @apply bg-panel border-2 border-border rounded-3xl shadow-panel transition-all;
   }
 
   .duo-button-primary {
-    @apply bg-primary text-background font-black uppercase tracking-widest rounded-2xl shadow-cyan 
-    hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_#06b6d4]
-    active:translate-y-1 active:shadow-none transition-all px-6 py-3 flex items-center justify-center gap-2;
+    @apply bg-primary text-white font-black uppercase tracking-wider rounded-2xl shadow-cyan 
+    active:translate-y-[1px] active:shadow-none transition-all px-6 py-3 flex items-center justify-center gap-2;
   }
 
-  .duo-card-3d {
-    @apply transition-all duration-200 hover:-translate-y-1;
+  .duo-card-hover {
+    @apply transition-all hover:-translate-y-1;
   }
 
-  .shadow-blue { box-shadow: 0 4px 0 0 #1899d6; }
-  .shadow-orange { box-shadow: 0 4px 0 0 #e58700; }
-  .shadow-green { box-shadow: 0 4px 0 0 #46a302; }
-  .shadow-purple { box-shadow: 0 4px 0 0 #a855f7; }
-  .shadow-red { box-shadow: 0 4px 0 0 #cc0000; }
-  .shadow-cyan { box-shadow: 0 4px 0 0 #06b6d4; }
-  .shadow-panel { box-shadow: 0 4px 0 0 #0b1116; }
-
-  .hover-shadow-blue:hover { box-shadow: 0 6px 0 0 #1899d6; }
-  .hover-shadow-orange:hover { box-shadow: 0 6px 0 0 #e58700; }
-  .hover-shadow-green:hover { box-shadow: 0 6px 0 0 #46a302; }
-  .hover-shadow-purple:hover { box-shadow: 0 6px 0 0 #a855f7; }
-  .hover-shadow-red:hover { box-shadow: 0 6px 0 0 #cc0000; }
+  /* Specific shadow helpers if needed beyond tailwind config */
+  .shadow-3d-blue { box-shadow: 0 4px 0 0 #1899d6; }
+  .shadow-3d-orange { box-shadow: 0 4px 0 0 #e58700; }
+  .shadow-3d-green { box-shadow: 0 4px 0 0 #46a302; }
+  .shadow-3d-purple { box-shadow: 0 4px 0 0 #a855f7; }
+  .shadow-3d-red { box-shadow: 0 4px 0 0 #cc0000; }
+  .shadow-3d-cyan { box-shadow: 0 4px 0 0 #06b6d4; }
+  .shadow-3d-panel { box-shadow: 0 4px 0 0 #0b1116; }
 }
 
 /* Material Icons support */
