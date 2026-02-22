@@ -5,6 +5,11 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    /* Diminuindo a escala global em 5% (16px * 0.95 = 15.2px) */
+    font-size: 95%;
+  }
+
   :root {
     /* Theme Palette */
     --background: #111b21;
