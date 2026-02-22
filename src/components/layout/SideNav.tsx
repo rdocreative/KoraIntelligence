@@ -41,15 +41,15 @@ export const SideNav = () => {
               !isSpecial && "w-[44px] h-[44px]",
               isSpecial && "w-[56px] h-[56px] my-2",
               
-              // Active State
+              // Active State (Normal items)
               isActive && !isSpecial && "bg-[#1cb0f6] shadow-[0_4px_0_0_#1899d6]",
               
-              // Inactive State
-              !isActive && !isSpecial && "bg-transparent hover:bg-[#202f36]",
+              // Inactive State (Normal items)
+              !isActive && !isSpecial && "bg-transparent hover:bg-[#2a3f4a]",
               
-              // Special Item States
-              isActive && isSpecial && "bg-[#1cb0f6] shadow-[0_4px_0_0_#1899d6]",
-              !isActive && isSpecial && "bg-[#202f36] border-2 border-[#374151]"
+              // Special Item States (Brain) - Always highlighted with app color
+              isSpecial && "bg-[#1cb0f6] shadow-[0_4px_0_0_#1899d6]",
+              !isActive && isSpecial && "brightness-90 hover:brightness-100"
             )}
           >
             {({ isActive }) => (
@@ -58,7 +58,7 @@ export const SideNav = () => {
                 strokeWidth={isSpecial ? 2.5 : 2} 
                 className={cn(
                   "transition-colors",
-                  isActive ? "text-white" : "text-[#9ca3af] group-hover:text-white"
+                  (isActive || isSpecial) ? "text-white" : "text-[#9ca3af] group-hover:text-white"
                 )}
               />
             )}
