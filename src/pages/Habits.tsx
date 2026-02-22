@@ -111,10 +111,10 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     low: "bg-[linear-gradient(90deg,#58cc02,rgba(40,100,0,0.8))] border-[#58cc02] shadow-[0_4px_0_0_#46a302]"
   };
 
-  const checkboxBorderStyles = {
-    high: "border-[#ff4b4b]",
-    medium: "border-[#ff9600]",
-    low: "border-[#58cc02]"
+  const checkboxStyles = {
+    high: isCompleted ? "bg-[#ff4b4b] border-[#ff4b4b]" : "border-[#ff4b4b]",
+    medium: isCompleted ? "bg-[#ff9600] border-[#ff9600]" : "border-[#ff9600]",
+    low: isCompleted ? "bg-[#58cc02] border-[#58cc02]" : "border-[#58cc02]"
   };
 
   return (
@@ -140,10 +140,10 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
           onPointerDown={(e) => e.stopPropagation()}
           className={cn(
             "h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10 bg-transparent",
-            isCompleted ? "bg-[#22d3ee] border-[#22d3ee]" : checkboxBorderStyles[habit.priority]
+            checkboxStyles[habit.priority]
           )}
         >
-          {isCompleted && <Check size={12} className="text-[#111b21] stroke-[4px]" />}
+          {isCompleted && <Check size={12} className="text-white stroke-[4px]" />}
         </button>
 
         <div className="flex-1 min-w-0">
