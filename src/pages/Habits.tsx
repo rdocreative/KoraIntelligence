@@ -393,7 +393,7 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
       
-      <div className="flex justify-center pt-6 pb-10">
+      <div className="flex justify-center pt-6 pb-2">
         <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1.5">
           <button
             onClick={() => setActiveTab('overview')}
