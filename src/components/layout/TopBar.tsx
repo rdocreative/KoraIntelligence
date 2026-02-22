@@ -62,63 +62,59 @@ export const TopBar = () => {
     nextLevelXp: (profile?.nivel || 1) * 1000 
   };
 
-  const commonShadow = "shadow-[0_8px_32px_rgba(0,0,0,0.4)]";
-  const commonBg = "bg-gradient-to-r from-[rgb(5,15,14)] to-[rgb(13,23,22)]";
-  const commonBorder = "border-[#2a4441]";
+  const commonShadow = "shadow-[0_4px_0_0_#0b1116]";
+  const commonBg = "bg-[#202f36]";
+  const commonBorder = "border-[#374151]";
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none">
-      <div className="flex items-center justify-center sm:justify-between w-full max-w-5xl pointer-events-auto py-8 px-6 -my-8 overflow-visible">
+      <div className="flex items-center justify-center sm:justify-between w-full max-w-5xl pointer-events-auto py-4 px-6 overflow-visible">
         
         {/* LADO ESQUERDO: Main Page Capsule */}
         <div 
-          className={`hidden sm:flex items-center gap-3 px-5 py-3 rounded-full ${commonBg} border ${commonBorder} ${commonShadow} transition-all duration-300 flex-shrink-0`}
+          className={`hidden sm:flex items-center gap-3 px-5 py-3 rounded-full ${commonBg} border-2 ${commonBorder} ${commonShadow} transition-all duration-300 flex-shrink-0`}
         >
           <div className="flex items-center gap-2.5">
             <Icon 
               size={18} 
               style={{ color: color, filter: `drop-shadow(0 0 4px ${color}44)` }}
             />
-            {/* Title: 14px, 700, #e8f5f3 */}
-            <h1 className="text-[14px] font-[700] text-[#e8f5f3] tracking-tight leading-none whitespace-nowrap uppercase">
+            <h1 className="text-[14px] font-[800] text-[#e8f5f3] tracking-tight leading-none whitespace-nowrap uppercase">
               {title}
             </h1>
           </div>
 
-          <div className="w-px h-[14px] bg-[#2a4441] mx-1" />
+          <div className="w-px h-[14px] bg-[#374151] mx-1" />
           
-          {/* Subtitle: 12px, 400, #5a8a85 */}
-          {/* Correction #4: Whitespace nowrap and overflow visible */}
-          <span className="text-[12px] font-[400] text-[#5a8a85] tracking-wide leading-none whitespace-nowrap overflow-visible">
+          <span className="text-[12px] font-[500] text-[#9ca3af] tracking-wide leading-none whitespace-nowrap overflow-visible">
             {subtitle}
           </span>
         </div>
 
         {/* GRUPO DE STATS */}
-        <div className="flex items-center gap-2.5 md:gap-3 flex-shrink-0">
-          <button className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#fb923c44] active:scale-95 outline-none`}>
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <button className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border-2 ${commonBorder} ${commonShadow} group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none`}>
             <Coins size={15} className="text-[#fb923c] fill-[#fb923c22] md:w-[19px] md:h-[19px]" style={{ filter: 'drop-shadow(0 0 4px #fb923c44)' }} />
-            <span className="text-[14px] font-[600] text-[#fb923c] tracking-tight">{userStats.coins}</span>
+            <span className="text-[14px] font-[700] text-[#fb923c] tracking-tight">{userStats.coins}</span>
           </button>
 
-          <button onClick={() => setActiveModal('profile')} className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#4adbc844] active:scale-95 outline-none`}>
+          <button onClick={() => setActiveModal('profile')} className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border-2 ${commonBorder} ${commonShadow} group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none`}>
             <Zap size={15} className="text-[#4adbc8] fill-[#4adbc822] md:w-[19px] md:h-[19px]" style={{ filter: 'drop-shadow(0 0 4px #4adbc844)' }} />
-            <span className="text-[14px] font-[600] text-[#4adbc8] tracking-tight">{userStats.xp}</span>
+            <span className="text-[14px] font-[700] text-[#4adbc8] tracking-tight">{userStats.xp}</span>
           </button>
 
-          {/* Correction #5: Trophy Icon Color to #f5a623 */}
-          <button onClick={() => setActiveModal('achievements')} className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#f5a62344] active:scale-95 outline-none`}>
+          <button onClick={() => setActiveModal('achievements')} className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border-2 ${commonBorder} ${commonShadow} group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none`}>
             <Trophy size={17} className="text-[#f5a623] md:w-[21px] md:h-[21px]" style={{ filter: 'drop-shadow(0 0 4px #f5a62344)' }} />
           </button>
 
-          <button onClick={() => setActiveModal('profile')} className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border ${commonBorder} ${commonShadow} group transition-all duration-300 hover:border-[#38bdf844] active:scale-95 outline-none`}>
+          <button onClick={() => setActiveModal('profile')} className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border-2 ${commonBorder} ${commonShadow} group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none`}>
             <UserCircle size={22} className="text-[#38bdf8] md:w-[26px] md:h-[26px]" style={{ filter: 'drop-shadow(0 0 4px #38bdf844)' }} />
           </button>
         </div>
       </div>
 
       <Dialog open={activeModal !== null} onOpenChange={() => setActiveModal(null)}>
-        <DialogContent className={`${commonBg} border ${commonBorder} text-[#f0f0f0] w-[90vw] sm:max-w-[400px] rounded-[32px] p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] outline-none mx-auto`}>
+        <DialogContent className={`${commonBg} border-2 ${commonBorder} text-[#f0f0f0] w-[90vw] sm:max-w-[400px] rounded-[32px] p-0 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] outline-none mx-auto`}>
           {activeModal === 'achievements' && (
             <div className="p-8 flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-[22px] bg-gradient-to-br from-[#f5a62322] to-transparent border border-[#f5a62333] flex items-center justify-center mb-4">
@@ -128,7 +124,7 @@ export const TopBar = () => {
               <p className="text-sm text-[#888] mb-6">Você desbloqueou {userStats.titles} títulos épicos.</p>
               <div className="grid grid-cols-2 gap-3 w-full">
                 {['Mestre do Foco', 'Persistente', 'Explorador', 'Visionário'].map((title) => (
-                  <div key={title} className={`p-4 rounded-2xl ${commonBg} border ${commonBorder} flex flex-col items-center gap-2 group hover:border-[#f5a62344] transition-colors`}>
+                  <div key={title} className={`p-4 rounded-2xl ${commonBg} border-2 ${commonBorder} flex flex-col items-center gap-2 group hover:border-[#f5a62344] transition-colors`}>
                     <Award size={20} className="text-[#f5a623]" />
                     <span className="text-[0.7rem] font-medium text-[#ccc]">{title}</span>
                   </div>
@@ -150,7 +146,7 @@ export const TopBar = () => {
               <h2 className="text-xl font-bold mb-1">{userStats.name}</h2>
               <p className="text-sm text-[#888] mb-6">Membro da Comunidade</p>
               
-              <div className={`w-full ${commonBg} rounded-2xl p-5 border ${commonBorder}`}>
+              <div className={`w-full ${commonBg} rounded-2xl p-5 border-2 ${commonBorder}`}>
                 <div className="flex justify-between text-[0.7rem] mb-2.5 text-[#888] font-medium">
                   <span>Progresso de XP</span>
                   <span>{userStats.xp} / {userStats.nextLevelXp}</span>

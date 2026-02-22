@@ -110,14 +110,13 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     }
   };
 
-  // Correction #4: Standardized Habit Card styles (gradient + soft border + shadow)
+  // Melhoria conforme solicitado: Gradientes mais fortes e sombras 3D
   const priorityStyles = {
-    high: "bg-[linear-gradient(135deg,rgba(255,75,75,0.35),rgba(255,75,75,0.15))] border-[#ff4b4b80] shadow-[0_4px_0_0_#cc0000]",
-    medium: "bg-[linear-gradient(135deg,rgba(255,150,0,0.35),rgba(255,150,0,0.15))] border-[#ff960080] shadow-[0_4px_0_0_#e58700]",
-    low: "bg-[linear-gradient(135deg,rgba(88,204,2,0.35),rgba(88,204,2,0.15))] border-[#58cc0280] shadow-[0_4px_0_0_#46a302]"
+    high: "bg-[linear-gradient(135deg,rgba(255,75,75,0.40),rgba(255,75,75,0.18))] border-[#ff4b4b8c] shadow-[0_4px_0_0_#cc0000]",
+    medium: "bg-[linear-gradient(135deg,rgba(255,150,0,0.40),rgba(255,150,0,0.18))] border-[#ff96008c] shadow-[0_4px_0_0_#e58700]",
+    low: "bg-[linear-gradient(135deg,rgba(88,204,2,0.40),rgba(88,204,2,0.18))] border-[#58cc028c] shadow-[0_4px_0_0_#46a302]"
   };
 
-  // Correction #4: Checkbox styles standardized per priority
   const checkboxBorderStyles = {
     high: "border-[#ff4b4b]",
     medium: "border-[#ff9600]",
@@ -134,14 +133,14 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[16px] border-2 p-[14px] px-[16px] mb-2 cursor-grab active:cursor-grabbing select-none transition-transform duration-150 ease-out hover:scale-[1.02]",
+        "group rounded-[16px] border-2 p-[14px] px-[16px] mb-2.5 cursor-grab active:cursor-grabbing select-none transition-all duration-150 ease-out hover:scale-[1.02]",
         isDragging 
           ? "scale-[1.03] bg-[#202f36] border-[#22d3ee] shadow-2xl" 
           : priorityStyles[habit.priority],
         isCompleted && !isDragging && "opacity-[0.45] grayscale"
       )}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-[14px]">
         <button 
           onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
           onPointerDown={(e) => e.stopPropagation()}
@@ -155,16 +154,16 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
 
         <div className="flex-1 min-w-0">
           <h3 className={cn(
-            "text-[14px] font-[600] text-[#e5e7eb] truncate leading-tight transition-all duration-400",
+            "text-[15px] font-[700] text-[#e5e7eb] truncate leading-tight transition-all duration-400",
             isCompleted && "line-through opacity-70"
           )}>
             {habit.title}
           </h3>
-          <div className="flex items-center gap-2 mt-1">
-            <div className="flex items-center gap-1 text-[12px] font-[400] text-[#9ca3af]">
-              <Clock size={11} className="text-[#9ca3af]" />
+          <div className="flex items-center gap-1.5 mt-[3px]">
+            <Clock size={12} className="text-[#9ca3af]" />
+            <span className="text-[12px] font-[500] text-[#9ca3af]">
               {habit.time}
-            </div>
+            </span>
           </div>
         </div>
 
@@ -172,7 +171,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
           <button 
             onClick={handleEditClick}
             onPointerDown={(e) => e.stopPropagation()}
-            className="p-1 text-[#9ca3af] hover:text-[#22d3ee] transition-colors z-10"
+            className="p-1 text-[#9ca3af] hover:text-[#22d3ee] transition-colors z-10 ml-auto"
           >
             <ChevronRight size={18} />
           </button>
@@ -400,30 +399,30 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-transparent pb-10 animate-in fade-in duration-500 relative">
       
-      {/* Navigation Tabs (Overview/Charts) - Correction #3: Fixed overlapping/gap */}
+      {/* Navigation Tabs (Overview/Charts) - Design System Update */}
       <div className="flex justify-center pt-6 pb-2">
-        <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 px-1.5 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1.5 flex-nowrap overflow-visible">
+        <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1.5">
           <button
             onClick={() => setActiveTab('overview')}
             className={cn(
-              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300 border-2 shrink-0",
+              "flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0",
               activeTab === 'overview'
-                ? "bg-[#22d3ee] border-[#22d3ee] text-[#111b21] shadow-[0_4px_0_0_#06b6d4]"
-                : "bg-transparent border-transparent text-[#9ca3af] hover:bg-[#111b21] hover:text-white"
+                ? "bg-[#22d3ee] text-[#111b21] shadow-[0_4px_0_0_#06b6d4]"
+                : "bg-transparent text-[#9ca3af] hover:text-white"
             )}
           >
-            <LayoutGrid size={13} strokeWidth={2.5} /> Visão Geral
+            <LayoutGrid size={14} strokeWidth={3} /> Visão Geral
           </button>
           <button
             onClick={() => setActiveTab('charts')}
             className={cn(
-              "flex items-center gap-2 px-4 py-1.5 rounded-full text-[12px] font-[700] uppercase tracking-[0.08em] transition-all duration-300 border-2 shrink-0",
+              "flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0",
               activeTab === 'charts'
-                ? "bg-[#22d3ee] border-[#22d3ee] text-[#111b21] shadow-[0_4px_0_0_#06b6d4]"
-                : "bg-transparent border-transparent text-[#9ca3af] hover:bg-[#111b21] hover:text-white"
+                ? "bg-[#22d3ee] text-[#111b21] shadow-[0_4px_0_0_#06b6d4]"
+                : "bg-transparent text-[#9ca3af] hover:text-white"
             )}
           >
-            <BarChart3 size={13} strokeWidth={2.5} /> Gráficos
+            <BarChart3 size={14} strokeWidth={3} /> Gráficos
           </button>
         </div>
       </div>
@@ -457,7 +456,7 @@ const HabitsPage = () => {
 
       <div className="mt-[20px] flex flex-col lg:flex-row gap-[20px] p-4 md:p-0">
         <div className={cn("w-full transition-all duration-500", viewMode === 'weekly' ? 'lg:w-full' : 'lg:w-[65%]')}>
-          {/* Calendar/Chart Panel */}
+          {/* Calendar Panel */}
           <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] py-[20px] px-[24px] shadow-[0_4px_0_0_#0b1116]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
               <div className="flex items-center gap-2">
@@ -513,8 +512,8 @@ const HabitsPage = () => {
                 </button>
               </div>
 
-              {/* Correction #2: Calendar Pills overflow/cutoff fix */}
-              <div className="flex items-center gap-1 bg-[#131f24] border-2 border-[#374151] p-1 rounded-full overflow-visible whitespace-nowrap flex-nowrap shrink-0">
+              {/* Calendar Pills - Design System Update */}
+              <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1">
                 {[
                   { id: 'monthly', icon: LayoutGrid, label: 'Mês' },
                   { id: 'list', icon: List, label: 'Lista' },
@@ -524,13 +523,13 @@ const HabitsPage = () => {
                     key={mode.id}
                     onClick={() => setViewMode(mode.id as any)}
                     className={cn(
-                      "flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-[700] uppercase tracking-wider transition-all border-2 border-transparent shrink-0",
+                      "flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-[800] uppercase tracking-wider transition-all border-none shrink-0 whitespace-nowrap",
                       viewMode === mode.id 
-                        ? "bg-[#22d3ee] border-[#22d3ee] text-[#111b21] shadow-[0_4px_0_0_#06b6d4]" 
-                        : "text-[#9ca3af] hover:text-[#e5e7eb]"
+                        ? "bg-[#22d3ee] text-[#111b21] shadow-[0_4px_0_0_#06b6d4]" 
+                        : "bg-transparent text-[#9ca3af] hover:text-white"
                     )}
                   >
-                    <mode.icon size={13} /> {mode.label}
+                    <mode.icon size={13} strokeWidth={3} /> {mode.label}
                   </button>
                 ))}
               </div>
@@ -564,17 +563,9 @@ const HabitsPage = () => {
                             onClick={() => setSelectedDate(day.date)}
                             className={cn(
                               "min-h-[56px] aspect-square rounded-[12px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
-                              // Mapping calendar cells to new colors
                               day.isCurrentMonth ? "bg-[#2a3f4a] border-[#374151] text-[#e5e7eb] hover:brightness-110" : "text-[#37464f] border-transparent bg-transparent",
-                              
                               day.isSelected ? "border-[#22d3ee] ring-1 ring-[#22d3ee]" : "",
-                              
                               day.isToday && !day.isSelected ? "border-[#22d3ee] text-[#22d3ee]" : "",
-                              
-                              // Heatmap logic - can adjust colors if needed
-                              day.level === 1 && "bg-[#2a3f4a]",
-                              day.level === 2 && "bg-[#2a3f4a]",
-                              day.level === 3 && "bg-[#2a3f4a]",
                               day.level === 4 && "bg-[#22d3ee] text-[#111b21]",
                             )}
                           >
@@ -639,8 +630,8 @@ const HabitsPage = () => {
                     <div className="flex items-center gap-3">
                       <div className="text-xl">{habit.emoji}</div>
                       <div>
-                        <div className="text-[14px] font-bold text-[#e5e7eb]">{habit.title}</div>
-                        <div className="text-[11px] text-[#9ca3af] uppercase font-bold tracking-wider">{habit.time} • {habit.priority}</div>
+                        <div className="text-[15px] font-[700] text-[#e5e7eb]">{habit.title}</div>
+                        <div className="text-[12px] text-[#9ca3af] font-[500] mt-1">{habit.time}</div>
                       </div>
                     </div>
                     <Button variant="ghost" size="sm" onClick={() => setEditingHabit({ habit, rect: new DOMRect() })} className="text-[#9ca3af] hover:text-[#22d3ee]">
@@ -655,16 +646,16 @@ const HabitsPage = () => {
 
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[35%] relative">
-            {/* Habits List Panel */}
-            <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] overflow-hidden flex flex-col min-h-[500px] shadow-[0_4px_0_0_#0b1116]">
-              <div className="py-[20px] px-[24px] border-b-2 border-[#374151] flex items-center justify-between bg-[#111b21]/30">
-                <h2 className="text-[#e5e7eb] font-[700] text-[14px] uppercase tracking-[0.02em]">HÁBITOS ATIVOS</h2>
+            {/* Panel Hábitos Ativos - Design System Update */}
+            <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] overflow-hidden flex flex-col min-h-[500px] shadow-[0_4px_0_0_#0b1116] p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-[#e5e7eb] font-[800] text-[14px] uppercase tracking-[0.05em]">HÁBITOS ATIVOS</h2>
                 <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[11px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#22d3ee]/20">
                   {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-4">
+              <div className="flex-1 overflow-y-auto">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                   <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
                     {displayedHabitsData.pending.map((habit) => (
@@ -680,7 +671,7 @@ const HabitsPage = () => {
                     {displayedHabitsData.completed.length > 0 && (
                       <>
                         <div className="mt-8 mb-4 pt-4 border-t-2 border-[#374151]">
-                          <span className="text-[10px] font-[700] text-[#9ca3af] uppercase tracking-[0.08em]">
+                          <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.08em]">
                             CONCLUÍDOS HOJE
                           </span>
                         </div>
@@ -706,11 +697,10 @@ const HabitsPage = () => {
                 )}
               </div>
 
-              <div className="p-4 border-t-2 border-[#374151]">
+              <div className="mt-4 pt-4 border-t-2 border-[#374151]">
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                   <DialogTrigger asChild>
-                    {/* Correction #6: Button 3D Shadow with translation */}
-                    <Button className="w-full bg-[#22d3ee] hover:bg-[#22d3ee] active:translate-y-[1px] active:shadow-none transition-all duration-200 text-[#111b21] font-[800] text-[11px] uppercase tracking-[0.1em] h-12 rounded-[16px] shadow-[0_4px_0_0_#06b6d4]">
+                    <Button className="w-full bg-[#22d3ee] hover:bg-[#22d3ee] active:translate-y-[1px] active:shadow-none transition-all duration-200 text-[#111b21] font-[800] text-[12px] uppercase tracking-[0.1em] h-12 rounded-[16px] shadow-[0_4px_0_0_#06b6d4]">
                       <Plus className="mr-2" size={18} strokeWidth={3} /> NOVO HÁBITO
                     </Button>
                   </DialogTrigger>
