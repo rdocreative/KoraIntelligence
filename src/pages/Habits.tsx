@@ -525,7 +525,7 @@ const HabitsPage = () => {
                           <div 
                             onClick={() => setSelectedDate(day.date)}
                             className={cn(
-                              "min-h-[56px] aspect-square rounded-[12px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
+                              "min-h-[50px] aspect-square rounded-[12px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
                               day.isCurrentMonth ? "bg-[#2a3f4a] border-[#374151] text-[#e5e7eb] hover:brightness-110" : "text-[#37464f] border-transparent bg-transparent",
                               day.isSelected ? "border-[#22d3ee] ring-1 ring-[#22d3ee]" : "",
                               day.isToday && !day.isSelected ? "border-[#22d3ee] text-[#22d3ee]" : "",
