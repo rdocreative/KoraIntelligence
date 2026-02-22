@@ -19,7 +19,6 @@ export default {
     },
     extend: {
       fontFamily: {
-        // Agora a fonte padrão 'sans' é Exo 2
         sans: ["'Exo 2'", "sans-serif"],
         rajdhani: ["Rajdhani", "sans-serif"],
       },
@@ -27,68 +26,77 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "#111b21", // New Background
+        foreground: "#e5e7eb", // New Text
+        
+        // New Design Tokens
+        panel: "#202f36",
+        sidebar: "#131f24",
+        
+        // Cards & Accents
+        "card-blue": "#1cb0f6",
+        "card-blue-shadow": "#1899d6",
+        "card-orange": "#ff9600",
+        "card-orange-shadow": "#e58700",
+        "card-green": "#58cc02",
+        "card-green-shadow": "#46a302",
+        "card-purple": "#ce82ff",
+        "card-purple-shadow": "#a855f7",
+        "card-red": "#ff4b4b",
+        "card-red-shadow": "#cc0000",
+        
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#22d3ee", // Cyan Primary
+          dark: "#06b6d4",
+          foreground: "#111b21",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "#37464f", // Duo Gray
+          foreground: "#e5e7eb",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "#9ca3af",
+          foreground: "#111b21",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "#202f36",
+          foreground: "#e5e7eb",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "#202f36",
+          foreground: "#e5e7eb",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+          DEFAULT: "#202f36",
+          foreground: "#e5e7eb",
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "24px",
+        md: "16px",
+        sm: "12px",
+      },
+      boxShadow: {
+        '3d-blue': '0 4px 0 0 #1899d6',
+        '3d-orange': '0 4px 0 0 #e58700',
+        '3d-green': '0 4px 0 0 #46a302',
+        '3d-purple': '0 4px 0 0 #a855f7',
+        '3d-red': '0 4px 0 0 #cc0000',
+        '3d-cyan': '0 4px 0 0 #06b6d4',
+        '3d-panel': '0 4px 0 0 #0b1116',
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
