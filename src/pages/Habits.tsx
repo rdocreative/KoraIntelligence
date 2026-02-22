@@ -420,8 +420,7 @@ const HabitsPage = () => {
         </div>
       </div>
 
-      {/* Ajuste 1: Redução do gap dos stat cards para gap-2 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 p-4 md:p-0 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-[12px] p-4 md:p-0 mt-6">
         {[
           { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, bg: "#1cb0f6", shadow: "#1899d6" },
           { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, bg: "#ff9600", shadow: "#e58700" },
@@ -448,8 +447,7 @@ const HabitsPage = () => {
       </div>
 
       <div className="mt-[20px] flex flex-col lg:flex-row gap-[20px] p-4 md:p-0">
-        {/* Ajuste 2: Redução da largura do container do calendário (de 65% para 60%) */}
-        <div className={cn("w-full transition-all duration-500", viewMode === 'weekly' ? 'lg:w-full' : 'lg:w-[60%]')}>
+        <div className={cn("w-full transition-all duration-500", viewMode === 'weekly' ? 'lg:w-full' : 'lg:w-[65%]')}>
           <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] py-[20px] px-[24px] shadow-[0_4px_0_0_#0b1116]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
               <div className="flex items-center gap-2">
@@ -591,8 +589,7 @@ const HabitsPage = () => {
         </div>
 
         {viewMode !== 'weekly' && (
-          /* Ajuste 2: Aumento da largura do painel lateral (de 35% para 40%) */
-          <div className="w-full lg:w-[40%] relative">
+          <div className="w-full lg:w-[35%] relative">
             <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] flex flex-col min-h-[500px] shadow-[0_4px_0_0_#0b1116] p-5 overflow-visible">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-[#e5e7eb] font-[800] text-[14px] uppercase tracking-[0.05em]">HÁBITOS ATIVOS</h2>
@@ -601,8 +598,7 @@ const HabitsPage = () => {
                 </div>
               </div>
 
-              {/* Ajuste 3: Centralização vertical dos hábitos usando flex flex-col justify-center */}
-              <div className="flex-1 overflow-visible flex flex-col justify-center">
+              <div className="flex-1 overflow-visible">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                   <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
                     {displayedHabitsData.pending.map((habit) => (
@@ -644,8 +640,7 @@ const HabitsPage = () => {
                 )}
               </div>
 
-              {/* Botão Novo Hábito com margem superior automática para ficar no rodapé */}
-              <div className="mt-auto pt-4 border-t-2 border-[#374151]">
+              <div className="mt-4 pt-4 border-t-2 border-[#374151]">
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                   <DialogTrigger asChild>
                     <Button className="w-full bg-[#22d3ee] hover:bg-[#22d3ee] active:translate-y-[1px] active:shadow-none transition-all duration-200 text-[#111b21] font-[800] text-[12px] uppercase tracking-[0.1em] h-12 rounded-[16px] shadow-[0_4px_0_0_#06b6d4]">
