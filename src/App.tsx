@@ -48,7 +48,7 @@ const ProtectedRoute = () => {
       <SideNav />
       <div className="flex-1 flex flex-col min-h-screen pl-[80px]">
         <TopBar />
-        <main className="flex-1 p-6 max-w-5xl mx-auto w-full overflow-visible">
+        <main className="flex-1 mx-auto max-w-5xl px-0 w-[120%] -ml-[10%] overflow-visible p-6">
           <Outlet />
         </main>
       </div>
