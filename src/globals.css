@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;800&family=Rajdhani:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&family=Rajdhani:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,42 +6,47 @@
 
 @layer base {
   :root {
-    --background: #111b21;
-    --foreground: #e5e7eb;
+    /* Fundo principal atualizado para o gradiente solicitado */
+    --background: 171 46% 5%;
+    --foreground: 171 10% 98%;
     
-    --card: #202f36;
-    --card-foreground: #e5e7eb;
- 
-    --popover: #202f36;
-    --popover-foreground: #e5e7eb;
- 
-    --primary: #22d3ee;
-    --primary-foreground: #111b21;
- 
-    --secondary: #37464f;
-    --secondary-foreground: #e5e7eb;
- 
-    --muted: #37464f;
-    --muted-foreground: #9ca3af;
- 
-    --accent: #202f36;
-    --accent-foreground: #e5e7eb;
- 
-    --destructive: #ff4b4b;
-    --destructive-foreground: #ffffff;
-
-    --border: #37464f;
-    --input: #131f24;
-    --ring: #22d3ee;
- 
+    /* Cards: #0f2220 */
+    --card: 173 38% 10%; 
+    /* Borda Primária: #2d5550 */
+    --border: 175 31% 25%; 
     --radius: 1.5rem;
+
+    /* Destaque principal: #00e5cc */
+    --primary: 173 100% 45%;
+    --primary-foreground: 173 60% 4%;
   }
- 
+
   body {
-    background-color: #111b21;
-    background-image: none; /* Removed gradients */
-    @apply text-foreground antialiased;
+    background: radial-gradient(
+      ellipse at 50% 0%, 
+      #0f2220 0%, 
+      #071412 70%
+    );
+    background-attachment: fixed;
+    @apply text-[#e8f5f3] antialiased;
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
+  }
+}
+
+@layer components {
+  /* Filtro de saturação global para cards conforme solicitado */
+  .card-glass, [class*="card"], [class*="Card"] {
+    filter: saturate(0.9);
+  }
+
+  .card-glass {
+    @apply bg-[#0f2220]/95 border border-[#2d5550] rounded-3xl backdrop-blur-2xl 
+    shadow-2xl shadow-black/80;
+  }
+
+  .item-glass {
+    @apply bg-[#0d1e1c]/60 border border-[#2a4a46] rounded-2xl hover:bg-[#0f2220]/90 
+    backdrop-blur-md transition-all duration-300 shadow-xl shadow-black/30;
   }
 }
