@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&family=Rajdhani:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,47 +6,58 @@
 
 @layer base {
   :root {
-    /* Fundo principal atualizado para o gradiente solicitado */
-    --background: 171 46% 5%;
-    --foreground: 171 10% 98%;
-    
-    /* Cards: #0f2220 */
-    --card: 173 38% 10%; 
-    /* Borda Primária: #2d5550 */
-    --border: 175 31% 25%; 
-    --radius: 1.5rem;
-
-    /* Destaque principal: #00e5cc */
-    --primary: 173 100% 45%;
-    --primary-foreground: 173 60% 4%;
+    --background: #111b21;
+    --foreground: #e5e7eb;
+    --radius: 1rem;
   }
 
   body {
-    background: radial-gradient(
-      ellipse at 50% 0%, 
-      #0f2220 0%, 
-      #071412 70%
-    );
-    background-attachment: fixed;
-    @apply text-[#e8f5f3] antialiased;
-    font-family: 'Exo 2', sans-serif;
-    font-weight: 600;
+    background-color: #111b21;
+    color: #e5e7eb;
+    font-family: 'Nunito', sans-serif;
+    @apply antialiased;
   }
 }
 
 @layer components {
-  /* Filtro de saturação global para cards conforme solicitado */
-  .card-glass, [class*="card"], [class*="Card"] {
-    filter: saturate(0.9);
+  .duo-panel {
+    @apply bg-panel border-2 border-border rounded-3xl shadow-panel transition-all;
   }
 
-  .card-glass {
-    @apply bg-[#0f2220]/95 border border-[#2d5550] rounded-3xl backdrop-blur-2xl 
-    shadow-2xl shadow-black/80;
+  .duo-button-primary {
+    @apply bg-primary text-white font-black uppercase tracking-wider rounded-2xl shadow-cyan 
+    active:translate-y-[1px] active:shadow-none transition-all px-6 py-3 flex items-center justify-center gap-2;
   }
 
-  .item-glass {
-    @apply bg-[#0d1e1c]/60 border border-[#2a4a46] rounded-2xl hover:bg-[#0f2220]/90 
-    backdrop-blur-md transition-all duration-300 shadow-xl shadow-black/30;
+  .duo-card-hover {
+    @apply transition-all hover:-translate-y-1;
   }
+
+  /* Specific shadow helpers if needed beyond tailwind config */
+  .shadow-3d-blue { box-shadow: 0 4px 0 0 #1899d6; }
+  .shadow-3d-orange { box-shadow: 0 4px 0 0 #e58700; }
+  .shadow-3d-green { box-shadow: 0 4px 0 0 #46a302; }
+  .shadow-3d-purple { box-shadow: 0 4px 0 0 #a855f7; }
+  .shadow-3d-red { box-shadow: 0 4px 0 0 #cc0000; }
+  .shadow-3d-cyan { box-shadow: 0 4px 0 0 #06b6d4; }
+  .shadow-3d-panel { box-shadow: 0 4px 0 0 #0b1116; }
+}
+
+/* Material Icons support */
+@import url('https://fonts.googleapis.com/css2?family=Material+Icons+Round&display=swap');
+
+.material-icons-round {
+  font-family: 'Material Icons Round';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
 }

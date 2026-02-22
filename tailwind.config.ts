@@ -19,81 +19,44 @@ export default {
     },
     extend: {
       fontFamily: {
-        // Agora a fonte padrão 'sans' é Exo 2
-        sans: ["'Exo 2'", "sans-serif"],
-        rajdhani: ["Rajdhani", "sans-serif"],
+        sans: ["Nunito", "sans-serif"],
       },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "#111b21",
+        panel: "#202f36",
+        sidebar: "#131f24",
+        "card-blue": "#1cb0f6",
+        "card-blue-shadow": "#1899d6",
+        "card-orange": "#ff9600",
+        "card-orange-shadow": "#e58700",
+        "card-green": "#58cc02",
+        "card-green-shadow": "#46a302",
+        "card-purple": "#ce82ff",
+        "card-purple-shadow": "#a855f7",
+        "card-red": "#ff4b4b",
+        "card-red-shadow": "#cc0000",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "#22d3ee",
+          dark: "#06b6d4",
+          foreground: "#ffffff",
         },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
-        },
+        "duo-gray": "#37464f",
+        text: "#e5e7eb",
+        "text-muted": "#9ca3af",
+        border: "#374151",
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        "2xl": "16px",
+        "3xl": "24px",
       },
-      keyframes: {
-        "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
-        },
-        "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
+      boxShadow: {
+        blue: "0 4px 0 0 #1899d6",
+        orange: "0 4px 0 0 #e58700",
+        green: "0 4px 0 0 #46a302",
+        purple: "0 4px 0 0 #a855f7",
+        red: "0 4px 0 0 #cc0000",
+        cyan: "0 4px 0 0 #06b6d4",
+        panel: "0 4px 0 0 #0b1116",
       },
     },
   },
