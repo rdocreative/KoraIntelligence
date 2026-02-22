@@ -89,7 +89,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
   } = useSortable({ 
     id: habit.id,
     transition: {
-      duration: 400,
+      duration: 150, // Updated for snappier feel
       easing: 'ease-in-out',
     },
     disabled: isCompleted 
@@ -110,11 +110,18 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     }
   };
 
-  // Mapped styles based on priority to match "Vermelho", "Laranja", "Verde" request
+  // Correction #3: Apply strict Duolingo-style properties
   const priorityStyles = {
-    high: "bg-[linear-gradient(135deg,rgba(255,75,75,0.4),rgba(255,75,75,0.2))] border-[#ff4b4b80]",
-    medium: "bg-[linear-gradient(135deg,rgba(255,150,0,0.4),rgba(255,150,0,0.2))] border-[#ff960080]",
-    low: "bg-[linear-gradient(135deg,rgba(88,204,2,0.4),rgba(88,204,2,0.2))] border-[#58cc0280]"
+    high: "bg-[linear-gradient(135deg,rgba(255,75,75,0.35),rgba(255,75,75,0.15))] border-[#ff4b4b99] shadow-[0_4px_0_0_#cc0000]",
+    medium: "bg-[linear-gradient(135deg,rgba(255,150,0,0.35),rgba(255,150,0,0.15))] border-[#ff960099] shadow-[0_4px_0_0_#e58700]",
+    low: "bg-[linear-gradient(135deg,rgba(88,204,2,0.35),rgba(88,204,2,0.15))] border-[#58cc0299] shadow-[0_4px_0_0_#46a302]"
+  };
+
+  // Correction #3: Checkbox styles per priority
+  const checkboxBorderStyles = {
+    high: "border-[#ff4b4b]",
+    medium: "border-[#ff9600]",
+    low: "border-[#58cc02]"
   };
 
   return (
@@ -127,7 +134,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[16px] border-2 p-[14px] px-[16px] mb-2 cursor-grab active:cursor-grabbing select-none transition-all duration-400 ease-in-out",
+        "group rounded-[16px] border-2 p-[14px] px-[16px] mb-2 cursor-grab active:cursor-grabbing select-none transition-transform duration-150 ease-out hover:scale-[1.02]",
         isDragging 
           ? "scale-[1.03] bg-[#202f36] border-[#22d3ee] shadow-2xl" 
           : priorityStyles[habit.priority],
@@ -139,8 +146,8 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
           onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
           onPointerDown={(e) => e.stopPropagation()}
           className={cn(
-            "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10 bg-white/10",
-            isCompleted ? "bg-[#22d3ee] border-[#22d3ee]" : "border-white/30 hover:border-[#22d3ee]"
+            "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10 bg-transparent",
+            isCompleted ? "bg-[#22d3ee] border-[#22d3ee]" : checkboxBorderStyles[habit.priority]
           )}
         >
           {isCompleted && <Check size={14} className="text-[#111b21] stroke-[4px]" />}
@@ -158,11 +165,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
               <Clock size={11} className="text-[#9ca3af]" />
               {habit.time}
             </div>
-            {/* Keeping the dot indicator but can remove if only border color matters */}
-            <div className={cn(
-              "w-1.5 h-1.5 rounded-full",
-              habit.priority === 'high' ? "bg-red-500" : habit.priority === 'medium' ? "bg-orange-500" : "bg-green-500"
-            )} />
           </div>
         </div>
 
@@ -437,7 +439,8 @@ const HabitsPage = () => {
           <div
             key={i}
             className={cn(
-              "py-[16px] px-[18px] rounded-[16px] flex items-center gap-3 transition-all duration-300",
+              // Correction #2: Reduced padding/height
+              "py-[12px] px-[20px] rounded-[16px] flex items-center gap-3 transition-all duration-300",
               "text-white border-none"
             )}
             style={{ backgroundColor: s.bg, boxShadow: `0 4px 0 0 ${s.shadow}` }}
@@ -653,6 +656,7 @@ const HabitsPage = () => {
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[35%] relative">
             {/* Habits List Panel */}
+            {/* Correction #7: Panel Styles */}
             <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] overflow-hidden flex flex-col min-h-[500px] shadow-[0_4px_0_0_#0b1116]">
               <div className="py-[20px] px-[24px] border-b-2 border-[#374151] flex items-center justify-between bg-[#111b21]/30">
                 <h2 className="text-[#e5e7eb] font-[700] text-[14px] uppercase tracking-[0.02em]">HÁBITOS ATIVOS</h2>
@@ -706,6 +710,7 @@ const HabitsPage = () => {
               <div className="p-4 border-t-2 border-[#374151]">
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                   <DialogTrigger asChild>
+                    {/* Correction #6: Button 3D Shadow */}
                     <Button className="w-full bg-[#22d3ee] hover:bg-[#22d3ee] active:translate-y-[1px] active:shadow-none transition-all duration-200 text-[#111b21] font-[800] text-[11px] uppercase tracking-[0.1em] h-12 rounded-[16px] shadow-[0_4px_0_0_#06b6d4]">
                       <Plus className="mr-2" size={18} strokeWidth={3} /> NOVO HÁBITO
                     </Button>

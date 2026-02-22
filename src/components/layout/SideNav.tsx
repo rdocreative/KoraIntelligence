@@ -30,7 +30,7 @@ const navItems = [
 export const SideNav = () => {
   return (
     <div className="fixed left-[20px] top-1/2 -translate-y-1/2 z-[100]">
-      <nav className="flex flex-col items-center gap-3 border-none bg-[#131f24] p-3 rounded-[32px] border-2 border-[#374151] shadow-[0_4px_0_0_#0b1116]">
+      <nav className="flex flex-col items-center gap-3 border-none bg-[#131f24] p-2 rounded-[32px] border-2 border-[#374151] shadow-[0_4px_0_0_#0b1116]">
         {navItems.map(({ icon: Icon, path, label, isSpecial }) => (
           <NavLink
             key={path}
