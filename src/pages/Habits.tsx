@@ -127,7 +127,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[16px] border-2 p-[14px] px-[16px] mb-2.5 cursor-grab active:cursor-grabbing select-none transition-all duration-150 ease-out hover:scale-[1.01] habit-card w-full", // Adicionado w-full e reduzido scale levemente
+        "group rounded-[16px] border-2 p-[14px] px-[16px] mb-2.5 cursor-grab active:cursor-grabbing select-none transition-all duration-150 ease-out hover:scale-[1.02] habit-card",
         isDragging 
           ? "scale-[1.03] bg-[#202f36] border-[#22d3ee] shadow-2xl" 
           : priorityStyles[habit.priority],
@@ -590,47 +590,45 @@ const HabitsPage = () => {
 
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[35%] relative">
-            <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] flex flex-col min-h-[500px] shadow-[0_4px_0_0_#0b1116] p-5 px-[20px] overflow-visible">
-              <div className="flex items-center justify-between mb-4 px-1">
+            <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] flex flex-col min-h-[500px] shadow-[0_4px_0_0_#0b1116] p-5 overflow-visible">
+              <div className="flex items-center justify-between mb-4">
                 <h2 className="text-[#e5e7eb] font-[800] text-[14px] uppercase tracking-[0.05em]">HÁBITOS ATIVOS</h2>
                 <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[11px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#22d3ee]/20">
                   {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
                 </div>
               </div>
 
-              <div className="flex-1 overflow-visible w-full">
+              <div className="flex-1 overflow-visible">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                   <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
-                    <div className="flex flex-col w-full">
-                      {displayedHabitsData.pending.map((habit) => (
-                        <SortableHabitItem 
-                          key={habit.id}
-                          habit={habit}
-                          isCompleted={false}
-                          onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
-                          onToggle={(id) => toggleHabit(id)}
-                        />
-                      ))}
-                      
-                      {displayedHabitsData.completed.length > 0 && (
-                        <>
-                          <div className="mt-8 mb-4 pt-4 border-t-2 border-[#374151] px-1">
-                            <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.08em]">
-                              CONCLUÍDOS HOJE
-                            </span>
-                          </div>
-                          {displayedHabitsData.completed.map((habit) => (
-                            <SortableHabitItem 
-                              key={habit.id}
-                              habit={habit}
-                              isCompleted={true}
-                              onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
-                              onToggle={(id) => toggleHabit(id)}
-                            />
-                          ))}
-                        </>
-                      )}
-                    </div>
+                    {displayedHabitsData.pending.map((habit) => (
+                      <SortableHabitItem 
+                        key={habit.id}
+                        habit={habit}
+                        isCompleted={false}
+                        onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
+                        onToggle={(id) => toggleHabit(id)}
+                      />
+                    ))}
+                    
+                    {displayedHabitsData.completed.length > 0 && (
+                      <>
+                        <div className="mt-8 mb-4 pt-4 border-t-2 border-[#374151]">
+                          <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.08em]">
+                            CONCLUÍDOS HOJE
+                          </span>
+                        </div>
+                        {displayedHabitsData.completed.map((habit) => (
+                          <SortableHabitItem 
+                            key={habit.id}
+                            habit={habit}
+                            isCompleted={true}
+                            onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
+                            onToggle={(id) => toggleHabit(id)}
+                          />
+                        ))}
+                      </>
+                    )}
                   </SortableContext>
                 </DndContext>
                 
