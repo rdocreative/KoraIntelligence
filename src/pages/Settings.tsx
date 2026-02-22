@@ -1,128 +1,137 @@
-"use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSettings } from "@/hooks/useSettings";
+import { useHabitTracker } from "@/hooks/useHabitTracker";
 import { useAuth } from "@/components/providers/AuthProvider";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { 
   User, 
   Trash2, 
-  LogOut,
-  Bell,
-  Moon,
-  Volume2,
-  ChevronRight
+  ShieldAlert,
+  Save,
+  LogOut
 } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const { settings, updateSettings } = useSettings();
+  const { resetAllData } = useHabitTracker();
   const { signOut, user } = useAuth();
+  const navigate = useNavigate();
   
   const [localName, setLocalName] = useState(settings.userName);
+  const [hasChanges, setHasChanges] = useState(false);
+
+  // Sincronizar nome com Supabase se disponível
+  useEffect(() => {
+    if (user?.user_metadata?.name && settings.userName === "Marcos Eduardo") {
+       // Se o nome for o padrão e tivermos um nome no Auth, usa o do Auth
+       setLocalName(user.user_metadata.name);
+       updateSettings({ userName: user.user_metadata.name });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    setLocalName(settings.userName);
+  }, [settings.userName]);
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalName(e.target.value);
+    setHasChanges(e.target.value !== settings.userName);
+  };
 
   const handleSave = () => {
     updateSettings({ userName: localName });
-    toast.success("Configurações salvas!");
+    setHasChanges(false);
+    toast.success("Configurações salvas!", { description: "Suas preferências foram atualizadas." });
+  };
+
+  const handleReset = () => {
+    if (confirm("ATENÇÃO: Isso apagará TODOS os seus hábitos, histórico de XP e progresso permanentemente. Deseja continuar?")) {
+      resetAllData();
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate("/login");
+      toast.success("Você saiu da conta.");
+    } catch (error) {
+      toast.error("Erro ao sair da conta.");
+    }
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       
-      {/* Profile Section */}
-      <div className="panel overflow-hidden">
-         <div className="p-6 border-b-2 border-duo-gray bg-duo-sidebar/50">
-            <h2 className="text-xl font-extrabold text-white uppercase flex items-center gap-2">
-               <User className="text-duo-primary" /> Perfil
-            </h2>
-         </div>
-         <div className="p-6 space-y-6">
-            <div className="grid gap-2">
-               <label className="text-xs font-black uppercase text-gray-500 tracking-widest">Nome de Exibição</label>
-               <Input 
-                  value={localName} 
-                  onChange={(e) => setLocalName(e.target.value)}
-                  className="bg-duo-bg border-2 border-duo-gray h-12 rounded-xl text-white font-bold focus:border-duo-primary focus:ring-0" 
-               />
-            </div>
-            <div className="grid gap-2">
-               <label className="text-xs font-black uppercase text-gray-500 tracking-widest">Email</label>
-               <div className="h-12 flex items-center px-4 rounded-xl bg-duo-sidebar border-2 border-duo-gray text-gray-500 font-bold">
-                  {user?.email || "usuario@exemplo.com"}
-               </div>
-            </div>
-            
-            <div className="flex justify-end">
-               <Button onClick={handleSave} className="btn-primary h-12 px-8">Salvar Alterações</Button>
-            </div>
+      {/* Header Actions */}
+      <div className="flex justify-between items-center">
+         <h2 className="text-2xl font-bold text-white">Configurações</h2>
+         <div className="flex gap-2">
+            <Button 
+                onClick={handleSave} 
+                disabled={!hasChanges} 
+                size="sm" 
+                className={`font-rajdhani font-bold px-6 shadow-lg transition-all ${hasChanges ? "bg-[#4adbc8] hover:bg-[#3bc7b6] text-black" : "bg-neutral-800 text-neutral-500 opacity-50"}`}
+            >
+                <Save className="w-3.5 h-3.5 mr-2" /> Salvar
+            </Button>
+            <Button 
+                onClick={handleLogout}
+                size="sm"
+                variant="outline"
+                className="border-neutral-700 text-neutral-300 hover:text-white hover:bg-white/5"
+            >
+                <LogOut className="w-3.5 h-3.5 mr-2" /> Sair
+            </Button>
          </div>
       </div>
 
-      {/* Preferences Section */}
-      <div className="panel overflow-hidden">
-         <div className="p-6 border-b-2 border-duo-gray bg-duo-sidebar/50">
-            <h2 className="text-xl font-extrabold text-white uppercase flex items-center gap-2">
-               <Settings className="text-card-purple" /> Preferências
-            </h2>
-         </div>
-         <div className="divide-y-2 divide-duo-gray">
-            <div className="p-4 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer group">
-               <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-duo-sidebar border-2 border-duo-gray flex items-center justify-center group-hover:border-card-purple group-hover:text-card-purple transition-colors">
-                     <Bell size={20} />
-                  </div>
-                  <span className="font-bold text-white uppercase">Notificações</span>
-               </div>
-               <div className="w-12 h-6 bg-card-green rounded-full relative shadow-inner">
-                  <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm" />
-               </div>
+      <div className="grid gap-6">
+        <Card className="glass-card border-none bg-[#121212]">
+          <CardHeader className="border-b border-white/5 pb-4">
+            <div className="flex items-center gap-2">
+              <User className="w-5 h-5 text-[#4adbc8]" />
+              <CardTitle className="text-lg font-bold text-white">Perfil</CardTitle>
             </div>
-
-            <div className="p-4 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer group">
-               <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-duo-sidebar border-2 border-duo-gray flex items-center justify-center group-hover:border-card-purple group-hover:text-card-purple transition-colors">
-                     <Moon size={20} />
-                  </div>
-                  <span className="font-bold text-white uppercase">Tema Escuro</span>
-               </div>
-               <div className="w-12 h-6 bg-card-green rounded-full relative shadow-inner">
-                  <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full shadow-sm" />
-               </div>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-xs font-black uppercase text-neutral-400">Email (Conta)</Label>
+                <Input value={user?.email || ""} disabled className="bg-[#0a0a0a] border-white/10 opacity-60" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-black uppercase text-neutral-400">Nome de Exibição</Label>
+                <Input value={localName} onChange={handleNameChange} className="bg-[#0a0a0a] border-white/10" />
+              </div>
             </div>
+          </CardContent>
+        </Card>
 
-            <div className="p-4 flex items-center justify-between hover:bg-white/5 transition-colors cursor-pointer group">
-               <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-duo-sidebar border-2 border-duo-gray flex items-center justify-center group-hover:border-card-purple group-hover:text-card-purple transition-colors">
-                     <Volume2 size={20} />
-                  </div>
-                  <span className="font-bold text-white uppercase">Efeitos Sonoros</span>
-               </div>
-               <div className="w-12 h-6 bg-duo-gray rounded-full relative shadow-inner">
-                  <div className="absolute left-1 top-1 w-4 h-4 bg-gray-400 rounded-full shadow-sm" />
-               </div>
+        <Card className="glass-card border border-red-900/20 bg-red-950/5">
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-2 text-red-600">
+              <ShieldAlert className="w-5 h-5" />
+              <CardTitle className="text-lg font-bold">Zona de Perigo</CardTitle>
             </div>
-         </div>
-      </div>
-
-      {/* Danger Zone */}
-      <div className="flex flex-col gap-4 pt-4">
-         <Button 
-            variant="outline" 
-            className="h-14 bg-duo-panel border-2 border-duo-gray hover:bg-card-red/10 hover:border-card-red hover:text-card-red text-gray-400 font-extrabold uppercase tracking-wider rounded-2xl justify-between group"
-            onClick={() => signOut()}
-         >
-            <span className="flex items-center gap-3"><LogOut /> Sair da Conta</span>
-            <ChevronRight className="group-hover:translate-x-1 transition-transform"/>
-         </Button>
-         
-         <Button 
-            variant="outline" 
-            className="h-14 bg-duo-panel border-2 border-duo-gray hover:bg-card-red/10 hover:border-card-red hover:text-card-red text-gray-400 font-extrabold uppercase tracking-wider rounded-2xl justify-between group"
-         >
-            <span className="flex items-center gap-3"><Trash2 /> Excluir Dados</span>
-            <ChevronRight className="group-hover:translate-x-1 transition-transform"/>
-         </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between p-4 bg-[#0a0a0a]/50 rounded-2xl border border-red-900/10">
+              <div>
+                <p className="text-sm font-bold text-white">Resetar Dados Locais</p>
+                <p className="text-xs text-neutral-500">Apaga hábitos, XP e histórico salvos neste navegador.</p>
+              </div>
+              <Button variant="destructive" size="sm" onClick={handleReset} className="bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white border border-red-600/20">
+                <Trash2 className="w-4 h-4 mr-2" /> Resetar
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
