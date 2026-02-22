@@ -20,8 +20,7 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
   return (
     <div 
       className={cn(
-        // List Item Padding: 14px 16px, Radius: 10px, Margin-bottom if list: ~8px
-        "group relative flex flex-col gap-3 p-[14px] px-[16px] rounded-[10px] border transition-all duration-300 backdrop-blur-xl overflow-hidden shadow-md shadow-black/20",
+        "group relative flex flex-col gap-3 p-[14px] px-[16px] rounded-[10px] border transition-all duration-300 backdrop-blur-xl overflow-hidden shadow-md shadow-black/20 habit-card",
         "bg-gradient-to-br from-red-950/15 to-red-600/15 border-white/10 hover:border-red-600/40",
         habit.completed && "opacity-60"
       )}
@@ -52,7 +51,6 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            {/* List Item Name: 14px, 600, #e8f5f3 */}
             <h3 className={cn("font-[600] text-[14px] text-[#e8f5f3] tracking-tight truncate", habit.completed ? "text-white/20 line-through" : "")}>
               {habit.title}
             </h3>
@@ -63,7 +61,6 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
             )}
           </div>
           
-          {/* Secondary Info / Days: 12px, 400, #5a8a85 (adjusted to fit visual) */}
           <div className="flex items-center gap-3 text-[11px] font-[700] uppercase tracking-widest">
             <div className="flex gap-1.5">
               {DAY_NAMES.map((day, i) => (
@@ -87,7 +84,6 @@ export const HabitCard = ({ habit, onComplete, index = 0 }: HabitCardProps) => {
             size="sm"
             onClick={() => onComplete(habit.id)}
             disabled={habit.completed || !isForToday}
-            // Badge/Button: 11px, 700, uppercase
             className={cn(
               "h-9 px-5 rounded-[10px] text-[11px] font-[700] uppercase tracking-widest transition-all shadow-md shadow-black/30",
               habit.completed 

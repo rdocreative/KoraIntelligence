@@ -75,7 +75,7 @@ const Index = () => {
             key={i} 
             to={stat.link}
             className={cn(
-              "relative group p-6 rounded-3xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl overflow-hidden",
+              "relative group p-6 rounded-3xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl overflow-hidden stat-card",
               "bg-gradient-to-br bg-opacity-10 backdrop-blur-md",
               stat.gradient,
               stat.border
@@ -110,7 +110,7 @@ const Index = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* Daily Focus Panel */}
-        <div className="p-8 rounded-3xl bg-[#0f2220] border border-[#2d5550] shadow-2xl relative overflow-hidden group">
+        <div className="p-8 rounded-3xl bg-[#0f2220] border border-[#2d5550] shadow-2xl relative overflow-hidden group task-card">
           <div className="absolute inset-0 bg-gradient-to-br from-[#4adbc8]/5 to-transparent pointer-events-none" />
           
           <h3 className="text-lg font-bold text-white uppercase tracking-wider mb-6 flex items-center gap-2">
@@ -148,7 +148,7 @@ const Index = () => {
         </div>
 
         {/* Quote / Motivation Panel */}
-        <div className="p-8 rounded-3xl bg-[#1a1a1a] border border-white/5 shadow-2xl flex flex-col justify-center relative overflow-hidden">
+        <div className="p-8 rounded-3xl bg-[#1a1a1a] border border-white/5 shadow-2xl flex flex-col justify-center relative overflow-hidden mission-card">
           <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl -mr-10 -mt-10" />
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -ml-10 -mb-10" />
           

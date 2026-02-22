@@ -127,7 +127,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[16px] border-2 p-[14px] px-[16px] mb-2.5 cursor-grab active:cursor-grabbing select-none transition-all duration-150 ease-out hover:scale-[1.02]",
+        "group rounded-[16px] border-2 p-[14px] px-[16px] mb-2.5 cursor-grab active:cursor-grabbing select-none transition-all duration-150 ease-out hover:scale-[1.02] habit-card",
         isDragging 
           ? "scale-[1.03] bg-[#202f36] border-[#22d3ee] shadow-2xl" 
           : priorityStyles[habit.priority],
@@ -430,7 +430,7 @@ const HabitsPage = () => {
           <div
             key={i}
             className={cn(
-              "py-[12px] px-[20px] rounded-[16px] flex items-center gap-3 transition-all duration-300",
+              "py-[12px] px-[20px] rounded-[16px] flex items-center gap-3 transition-all duration-300 stat-card",
               "text-white border-none"
             )}
             style={{ backgroundColor: s.bg, boxShadow: `0 4px 0 0 ${s.shadow}` }}
