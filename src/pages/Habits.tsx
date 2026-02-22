@@ -111,10 +111,10 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     low: "bg-[linear-gradient(90deg,#58cc02,rgba(40,100,0,0.8))] border-[#58cc02] shadow-[0_4px_0_0_#46a302]"
   };
 
-  const checkboxStyles = {
-    high: isCompleted ? "bg-[#ff4b4b] border-[#ff4b4b]" : "border-[#ff4b4b]",
-    medium: isCompleted ? "bg-[#ff9600] border-[#ff9600]" : "border-[#ff9600]",
-    low: isCompleted ? "bg-[#58cc02] border-[#58cc02]" : "border-[#58cc02]"
+  const iconColors = {
+    high: "#ff4b4b",
+    medium: "#ff9600",
+    low: "#58cc02"
   };
 
   return (
@@ -139,11 +139,19 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
           onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
           onPointerDown={(e) => e.stopPropagation()}
           className={cn(
-            "h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10 bg-transparent",
-            checkboxStyles[habit.priority]
+            "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
+            isCompleted 
+              ? "bg-white border-white" 
+              : "border-white/60 bg-black/10 hover:border-white hover:bg-black/20"
           )}
         >
-          {isCompleted && <Check size={12} className="text-white stroke-[4px]" />}
+          {isCompleted && (
+            <Check 
+              size={14} 
+              className="stroke-[4px]" 
+              style={{ color: iconColors[habit.priority] }} 
+            />
+          )}
         </button>
 
         <div className="flex-1 min-w-0">
