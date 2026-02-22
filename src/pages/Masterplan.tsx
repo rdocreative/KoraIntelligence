@@ -64,15 +64,15 @@ const MasterplanPage = () => {
 
     if (data.annual.progress === 0) {
         yearStatus = "Ponto de Partida";
-        statusColor = "text-neutral-400";
+        statusColor = "text-[#9ca3af]";
         statusMessage = "Sua jornada começa agora. Defina o ritmo.";
     } else if (data.annual.progress < yearProgress - 10) {
         yearStatus = "Atenção Necessária";
-        statusColor = "text-[#E8251A]";
+        statusColor = "text-[#ff4b4b]";
         statusMessage = "Acelere o ritmo para alcançar a meta.";
     } else if (data.annual.progress > yearProgress + 5) {
         yearStatus = "Excelente";
-        statusColor = "text-emerald-500";
+        statusColor = "text-[#58cc02]";
         statusMessage = "Você está superando as expectativas.";
     }
 
@@ -103,17 +103,32 @@ const MasterplanPage = () => {
   const activeWeeks = data.weeks.filter(w => new Date(w.endDate) >= new Date());
 
   return (
-    <div className="min-h-screen text-white pb-32">
+    <div className="min-h-screen text-[#e5e7eb] pb-32">
       <div className="relative z-10 max-w-7xl mx-auto space-y-6">
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
           
           {/* Navigation Tabs */}
           <div className="sticky top-4 z-30 flex justify-center mb-4">
-            <TabsList className="grid grid-cols-3 bg-[#0A0A0A]/80 backdrop-blur-xl p-1.5 border border-white/10 rounded-2xl h-14 shadow-2xl w-full max-w-sm ring-1 ring-white/5">
-              <TabsTrigger value="overview" className="rounded-xl font-bold data-[state=active]:bg-white data-[state=active]:text-black text-[10px] uppercase tracking-wider transition-all duration-300">Visão</TabsTrigger>
-              <TabsTrigger value="execution" className="rounded-xl font-bold data-[state=active]:bg-[#E8251A] data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Execução</TabsTrigger>
-              <TabsTrigger value="annual" className="rounded-xl font-bold data-[state=active]:bg-neutral-800 data-[state=active]:text-white text-[10px] uppercase tracking-wider transition-all duration-300">Ano</TabsTrigger>
+            <TabsList className="bg-[#202f36] border-2 border-[#37464f] p-1.5 rounded-2xl h-16 shadow-3d-panel w-full max-w-sm">
+              <TabsTrigger 
+                value="overview" 
+                className="rounded-xl h-full font-extrabold text-[#9ca3af] uppercase tracking-wider data-[state=active]:bg-[#1cb0f6] data-[state=active]:text-white data-[state=active]:shadow-none transition-all duration-200"
+              >
+                Visão
+              </TabsTrigger>
+              <TabsTrigger 
+                value="execution" 
+                className="rounded-xl h-full font-extrabold text-[#9ca3af] uppercase tracking-wider data-[state=active]:bg-[#ff9600] data-[state=active]:text-[#3f2400] data-[state=active]:shadow-none transition-all duration-200"
+              >
+                Execução
+              </TabsTrigger>
+              <TabsTrigger 
+                value="annual" 
+                className="rounded-xl h-full font-extrabold text-[#9ca3af] uppercase tracking-wider data-[state=active]:bg-[#ce82ff] data-[state=active]:text-[#491666] data-[state=active]:shadow-none transition-all duration-200"
+              >
+                Ano
+              </TabsTrigger>
             </TabsList>
           </div>
 
