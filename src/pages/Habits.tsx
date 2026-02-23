@@ -177,6 +177,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
   const getHabitStyle = (title: string) => {
+    // Azul Vibrante
     if (title === 'Beber 3L de água') {
       return {
         main: "#00B7FF",
@@ -186,6 +187,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         shadow: "#0088CCFC"
       };
     }
+    // Laranja Vibrante
     if (title === 'Ler 10 páginas') {
       return {
         main: "#FF9900",
@@ -195,6 +197,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         shadow: "#D47F00FC"
       };
     }
+    // Roxo Elétrico
     if (title === 'Academia') {
       return {
         main: "#D35CFF",
@@ -204,6 +207,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         shadow: "#8A2BE2FC"
       };
     }
+    // Verde Neon
     if (title === 'Meditar') {
       return {
         main: "#61FF00",
@@ -241,83 +245,84 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       {...attributes}
       {...listeners}
       className={cn(
-        "group relative rounded-[14px] border-[1px] mb-4 cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out overflow-hidden habit-card",
-        isDragging && "scale-[1.02] opacity-90",
+        "group rounded-[14px] border-[1px] p-[12px] px-[14px] mb-4 cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out hover:scale-[1.01] active:translate-y-[5px] active:shadow-none habit-card",
+        isDragging && "scale-[1.03] opacity-90",
         isCompleted && !isDragging && "opacity-[0.6] grayscale-[0.5]"
       )}
     >
-      {/* Faixa Lateral Colorida */}
-      <div 
-        className="absolute left-0 top-0 bottom-0 w-[5px]"
-        style={{ backgroundColor: theme.main }}
-      />
+      <div className="flex items-start gap-[12px]">
+        <button 
+          onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
+          onPointerDown={(e) => e.stopPropagation()}
+          className={cn(
+            "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10 mt-1",
+            isCompleted 
+              ? "bg-white border-white" 
+              : "border-white/30 bg-black/20 hover:border-white/50 hover:bg-black/30"
+          )}
+        >
+          {isCompleted && (
+            <Check 
+              size={14} 
+              className="stroke-[4px]" 
+              style={{ color: theme.dark }} 
+            />
+          )}
+        </button>
 
-      <div className="p-[14px] pl-[20px]">
-        <div className="flex items-start gap-[12px]">
-          <button 
-            onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
-            onPointerDown={(e) => e.stopPropagation()}
-            className={cn(
-              "h-7 w-7 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10 mt-0.5",
-              isCompleted 
-                ? "bg-white border-white" 
-                : "border-white/30 bg-black/20 hover:border-white/50 hover:bg-black/30"
-            )}
-          >
-            {isCompleted && (
-              <Check 
-                size={16} 
-                className="stroke-[4px]" 
-                style={{ color: theme.dark }} 
-              />
-            )}
-          </button>
-
-          <div className="flex-1 min-w-0">
-            <h3 className={cn(
-              "text-[15px] font-[800] text-[#ffffff] truncate leading-tight transition-all duration-200",
-              isCompleted && "line-through opacity-70"
-            )}>
-              {habit.title}
-            </h3>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <Clock size={12} className="text-white/40" />
-              <span className="text-[12px] font-[600] text-white/40">
+        <div className="flex-1 min-w-0">
+          <h3 className={cn(
+            "text-[14px] font-[800] text-[#ffffff] truncate leading-tight transition-all duration-200",
+            isCompleted && "line-through opacity-70"
+          )}>
+            {habit.title}
+          </h3>
+          <div className="flex flex-col items-start mt-[2px]">
+            <div className="flex items-center gap-1">
+              <Clock size={11} className="text-white/60" />
+              <span className="text-[11px] font-[500] text-white/60">
                 {habit.time}
               </span>
             </div>
-          </div>
-
-          <div className="flex items-center shrink-0 ml-auto gap-2">
-            {streakInfo.streak > 0 && (
-              <div className="flex items-center gap-1.5 bg-black/40 border border-white/5 px-[8px] py-[3px] rounded-[7px] text-white transition-all">
-                <Flame size={12} className="text-orange-400 fill-orange-400" />
-                <span className="text-[10px] font-bold">{streakInfo.streak}</span>
+            
+            {streakInfo.isLost && !isCompleted && (
+              <div className="mt-1 text-[10px] font-[800] text-[#FF4444] flex items-center gap-1">
+                💔 Sequência perdida
               </div>
             )}
-            
-            <button 
-              onClick={handleEditClick}
-              onPointerDown={(e) => e.stopPropagation()}
-              className="p-1 text-white/30 hover:text-white transition-colors z-10"
-            >
-              <ChevronRight size={20} />
-            </button>
           </div>
         </div>
 
-        {/* Barra de Progresso Interna */}
-        <div className="mt-4 pt-3 border-t border-white/5">
-          <div className="flex justify-between items-center mb-1.5">
-            <span className="text-[10px] font-[800] text-white/30 uppercase tracking-[0.1em]">Este mês</span>
-            <span className="text-[10px] font-[900] text-white/40 tabular-nums">{completionsThisMonth}/{target}</span>
-          </div>
-          <div className="h-[4px] w-full bg-black/20 rounded-full overflow-hidden">
-            <div 
-              className="h-full transition-all duration-700 ease-out" 
-              style={{ width: `${progressPercent}%`, backgroundColor: theme.main }}
-            />
-          </div>
+        <div className="flex items-center shrink-0 ml-auto gap-2">
+          {streakInfo.streak > 0 && (
+            <div className="flex items-center gap-1.5 bg-black/60 border border-white/5 px-[8px] py-[2px] rounded-[7px] text-white transition-all">
+              <Flame size={12} className="text-orange-400 fill-orange-400" />
+              <span className="text-[10px] font-bold">{streakInfo.streak}</span>
+            </div>
+          )}
+          
+          {!isCompleted && (
+            <button 
+              onClick={handleEditClick}
+              onPointerDown={(e) => e.stopPropagation()}
+              className="p-1 text-white/40 hover:text-white transition-colors z-10"
+            >
+              <ChevronRight size={18} />
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-3 pt-2.5 border-t border-white/5">
+        <div className="flex justify-between items-center mb-1.5">
+          <span className="text-[10px] font-[800] text-white/40 uppercase tracking-wider">Este mês</span>
+          <span className="text-[10px] font-[900] text-white/60 tabular-nums">{completionsThisMonth}/{target}</span>
+        </div>
+        <div className="h-[3px] w-full bg-black/20 rounded-full overflow-hidden">
+          <div 
+            className="h-full transition-all duration-700 ease-out opacity-60" 
+            style={{ width: `${progressPercent}%`, backgroundColor: theme.main }}
+          />
         </div>
       </div>
     </div>
@@ -593,7 +598,7 @@ const HabitsPage = () => {
         ))}
       </div>
 
-      <div className="mt-[20px] flex flex-col lg:flex-row gap-6 p-4 md:p-0">
+      <div className="mt-[20px] flex flex-col lg:flex-row gap-4 p-4 md:p-0">
         <div className={cn("transition-all duration-500", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
           <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#0b1116]">
             <div className="flex items-center justify-between mb-6">
@@ -753,78 +758,78 @@ const HabitsPage = () => {
         </div>
 
         {viewMode !== 'weekly' && (
-          <div className="w-full lg:w-[40%] flex flex-col gap-4">
-            <div className="flex items-center justify-between px-1">
-              <h2 className="text-[#e5e7eb] font-[900] text-[15px] uppercase tracking-[0.05em]">Hábitos Ativos</h2>
-              <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[11px] font-[800] px-[12px] py-[4px] rounded-[999px] border border-[#22d3ee]/20 tabular-nums">
-                {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
-              </div>
-            </div>
-
-            <div className="flex-1">
-              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
-                  {displayedHabitsData.pending.map((habit) => (
-                    <SortableHabitItem 
-                      key={habit.id}
-                      habit={habit}
-                      isCompleted={false}
-                      onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
-                      onToggle={(id) => toggleHabit(id)}
-                      currentDate={currentDate}
-                    />
-                  ))}
-                  
-                  {displayedHabitsData.completed.length > 0 && (
-                    <>
-                      <div className="mt-8 mb-4 px-1 flex items-center gap-3">
-                        <div className="h-[2px] flex-1 bg-[#374151]/30"></div>
-                        <span className="text-[11px] font-[900] text-[#9ca3af] uppercase tracking-[0.1em] shrink-0">
-                          Concluídos hoje
-                        </span>
-                        <div className="h-[2px] flex-1 bg-[#374151]/30"></div>
-                      </div>
-                      {displayedHabitsData.completed.map((habit) => (
-                        <SortableHabitItem 
-                          key={habit.id}
-                          habit={habit}
-                          isCompleted={true}
-                          onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
-                          onToggle={(id) => toggleHabit(id)}
-                          currentDate={currentDate}
-                        />
-                      ))}
-                    </>
-                  )}
-                </SortableContext>
-              </DndContext>
-              
-              {displayedHabitsData.all.length === 0 && (
-                <div className="py-20 flex flex-col items-center justify-center text-center opacity-40">
-                  <Clock size={32} className="text-[#9ca3af] mb-4" />
-                  <p className="text-[11px] font-[800] uppercase text-[#9ca3af] tracking-[0.15em]">Nada planejado para hoje</p>
+          <div className="w-full lg:w-[40%] relative">
+            <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] flex flex-col min-h-[480px] shadow-[0_4px_0_0_#0b1116] p-5 overflow-visible h-full">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.05em]">HÁBITOS ATIVOS</h2>
+                <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#22d3ee]/20">
+                  {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
                 </div>
-              )}
-            </div>
+              </div>
 
-            <div className="mt-2">
-              <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                <DialogTrigger asChild>
-                  <Button className="w-full bg-[#1CB0F6] hover:bg-[#1CB0F6] active:translate-y-[1px] active:shadow-none transition-all duration-200 text-white font-[900] text-[13px] uppercase tracking-[0.1em] h-12 rounded-[16px] shadow-[0_4px_0_0_#0E8FC7]">
-                    <Plus className="mr-2" size={18} strokeWidth={3} /> Novo Hábito
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-[#202f36] border-2 border-[#374151] text-[#e5e7eb] rounded-[24px]">
-                  <DialogHeader><DialogTitle className="uppercase tracking-widest text-sm text-[#22d3ee]">Criar Hábito</DialogTitle></DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid gap-2">
-                      <Label className="text-[11px] uppercase font-[700] tracking-[0.1em] text-[#9ca3af]">Título</Label>
-                      <Input placeholder="Beber água..." className="bg-[#131f24] border-[#374151] text-[#e5e7eb]" />
-                    </div>
+              <div className="flex-1 overflow-visible">
+                <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                  <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
+                    {displayedHabitsData.pending.map((habit) => (
+                      <SortableHabitItem 
+                        key={habit.id}
+                        habit={habit}
+                        isCompleted={false}
+                        onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
+                        onToggle={(id) => toggleHabit(id)}
+                        currentDate={currentDate}
+                      />
+                    ))}
+                    
+                    {displayedHabitsData.completed.length > 0 && (
+                      <>
+                        <div className="mt-6 mb-3 pt-3 border-t-2 border-[#374151]">
+                          <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.08em]">
+                            CONCLUÍDOS HOJE
+                          </span>
+                        </div>
+                        {displayedHabitsData.completed.map((habit) => (
+                          <SortableHabitItem 
+                            key={habit.id}
+                            habit={habit}
+                            isCompleted={true}
+                            onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
+                            onToggle={(id) => toggleHabit(id)}
+                            currentDate={currentDate}
+                          />
+                        ))}
+                      </>
+                    )}
+                  </SortableContext>
+                </DndContext>
+                
+                {displayedHabitsData.all.length === 0 && (
+                  <div className="h-full flex flex-col items-center justify-center p-10 text-center opacity-40">
+                    <Clock size={28} className="text-[#9ca3af] mb-3" />
+                    <p className="text-[10px] font-[700] uppercase text-[#9ca3af] tracking-[0.1em]">Nada planejado</p>
                   </div>
-                  <DialogFooter><Button className="bg-[#22d3ee] text-[#111b21] font-bold">CRIAR</Button></DialogFooter>
-                </DialogContent>
-              </Dialog>
+                )}
+              </div>
+
+              <div className="mt-auto pt-4 border-t-2 border-[#374151]">
+                <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="w-full bg-[#22d3ee] hover:bg-[#22d3ee] active:translate-y-[1px] active:shadow-none transition-all duration-200 text-[#111b21] font-[800] text-[11px] uppercase tracking-[0.1em] h-11 rounded-[16px] shadow-[0_4px_0_0_#06b6d4]">
+                      <Plus className="mr-2" size={16} strokeWidth={3} /> NOVO HÁBITO
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="bg-[#202f36] border-2 border-[#374151] text-[#e5e7eb] rounded-[24px]">
+                    <DialogHeader><DialogTitle className="uppercase tracking-widest text-sm text-[#22d3ee]">Criar Hábito</DialogTitle></DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid gap-2">
+                        <Label className="text-[11px] uppercase font-[700] tracking-[0.1em] text-[#9ca3af]">Título</Label>
+                        <Input placeholder="Beber água..." className="bg-[#131f24] border-[#374151] text-[#e5e7eb]" />
+                      </div>
+                    </div>
+                    <DialogFooter><Button className="bg-[#22d3ee] text-[#111b21] font-bold">CRIAR</Button></DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
           </div>
         )}
