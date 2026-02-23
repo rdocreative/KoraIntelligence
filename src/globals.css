@@ -11,7 +11,7 @@
   }
 
   :root {
-    /* Theme Palette - Deep Navy Blue (Updated to rgb(22, 28, 42)) */
+    /* Theme Palette */
     --background: #0d111a;
     --panel: #161c2a;
     --sidebar: #0f1420;
@@ -69,7 +69,7 @@
 
 @layer components {
   .card-glass {
-    /* Standardized Panel Style */
+    /* Standardized Panel Style using #161c2a via var(--panel) */
     background-color: var(--panel);
     border: 2px solid var(--border-ui);
     box-shadow: 0 4px 0 0 var(--shadow-ui);
