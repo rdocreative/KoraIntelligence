@@ -6,100 +6,17 @@
 
 @layer base {
   html {
+    /* Ajustando a escala global para 80% */
     font-size: 80%;
   }
 
   :root {
-    /* Light Theme (Default) */
-    --background: #f3f4f6; /* gray-100 */
-    --foreground: #111827; /* gray-900 */
-    
-    --card: #ffffff;
-    --card-foreground: #111827;
-    
-    --popover: #ffffff;
-    --popover-foreground: #111827;
-    
-    --primary: #0891b2; /* Cyan 700 - Better contrast for light */
-    --primary-foreground: #ffffff;
-    
-    --secondary: #e5e7eb;
-    --secondary-foreground: #1f2937;
-    
-    --muted: #f3f4f6;
-    --muted-foreground: #6b7280;
-    
-    --accent: #e5e7eb;
-    --accent-foreground: #111827;
-    
-    --destructive: #ef4444;
-    --destructive-foreground: #ffffff;
-    
-    --border: #d1d5db; /* gray-300 */
-    --input: #d1d5db;
-    --ring: #0891b2;
-    
-    --radius: 1rem;
-
-    /* Custom UI Vars - Light */
-    --panel: #ffffff;
-    --sidebar: #ffffff;
-    --border-ui: #e5e7eb; /* gray-200 */
-    --shadow-ui: #94a3b8; /* slate-400 */
-    
-    /* Card Colors - Adjusted for Light */
-    --card-blue: #0ea5e9;
-    --card-blue-shadow: #0284c7;
-    --card-orange: #f97316;
-    --card-orange-shadow: #ea580c;
-    --card-green: #22c55e;
-    --card-green-shadow: #16a34a;
-    --card-purple: #a855f7;
-    --card-purple-shadow: #9333ea;
-    --card-red: #ef4444;
-    --card-red-shadow: #dc2626;
-    
-    /* Text / UI */
-    --duo-gray: #475569;
-  }
-
-  .dark {
-    /* Dark Theme (Original) */
-    --background: #111b21; /* App background matched */
-    --foreground: #e5e7eb;
-    
-    --card: #111b21;
-    --card-foreground: #e5e7eb;
-    
-    --popover: #111b21;
-    --popover-foreground: #e5e7eb;
-    
-    --primary: #22d3ee;
-    --primary-foreground: #06090e;
-    
-    --secondary: #202f36;
-    --secondary-foreground: #e5e7eb;
-    
-    --muted: #202f36;
-    --muted-foreground: #9ca3af;
-    
-    --accent: #22d3ee;
-    --accent-foreground: #06090e;
-    
-    --destructive: #ff4b4b;
-    --destructive-foreground: #ffffff;
-    
-    --border: #202f36;
-    --input: #202f36;
-    --ring: #22d3ee;
-
-    /* Custom UI Vars - Dark */
+    /* Theme Palette - Deep Navy Blue (Almost Black) */
+    --background: #06090e;
     --panel: #111b21;
     --sidebar: #0a0f14;
-    --border-ui: #202f36;
-    --shadow-ui: #020305;
     
-    /* Card Colors - Original */
+    /* Card Colors */
     --card-blue: #1cb0f6;
     --card-blue-shadow: #1899d6;
     --card-orange: #ff9600;
@@ -111,7 +28,34 @@
     --card-red: #ff4b4b;
     --card-red-shadow: #cc0000;
     
+    /* Primary / Accent */
+    --primary: #22d3ee;
+    --primary-dark: #06b6d4;
+    
+    /* Text / UI */
     --duo-gray: #37464f;
+    --border-ui: #202f36;
+    --shadow-ui: #020305;
+    
+    /* Shadcn Mappings */
+    --foreground: #e5e7eb;
+    --card: #111b21;
+    --card-foreground: #e5e7eb;
+    --popover: #111b21;
+    --popover-foreground: #e5e7eb;
+    --primary-foreground: #06090e;
+    --secondary: #202f36;
+    --secondary-foreground: #e5e7eb;
+    --muted: #202f36;
+    --muted-foreground: #9ca3af;
+    --accent: #22d3ee;
+    --accent-foreground: #06090e;
+    --destructive: #ff4b4b;
+    --destructive-foreground: #ffffff;
+    --border: #202f36;
+    --input: #202f36;
+    --ring: #22d3ee;
+    --radius: 1rem;
   }
 
   body, #root {

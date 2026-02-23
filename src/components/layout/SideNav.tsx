@@ -30,7 +30,7 @@ const navItems = [
 export const SideNav = () => {
   return (
     <div className="fixed left-[18px] top-1/2 -translate-y-1/2 z-[100] flex opacity-100 visible">
-      <nav className="flex flex-col items-center gap-3 bg-card p-2 rounded-[32px] border-2 border-border shadow-[0_4px_0_0_var(--shadow-ui)] w-[56px] transition-colors duration-300">
+      <nav className="flex flex-col items-center gap-3 bg-[#202f36] p-2 rounded-[32px] border-2 border-[#374151] shadow-[0_4px_0_0_#0b1116] w-[56px]">
         {navItems.map(({ icon: Icon, path, label, isSpecial }) => (
           <NavLink
             key={path}
@@ -42,13 +42,13 @@ export const SideNav = () => {
               isSpecial && "w-[56px] h-[56px] my-2",
               
               // Active State (Normal items)
-              isActive && !isSpecial && "bg-primary shadow-[0_4px_0_0_var(--primary-dark)]",
+              isActive && !isSpecial && "bg-[#1cb0f6] shadow-[0_4px_0_0_#1899d6]",
               
               // Inactive State (Normal items)
-              !isActive && !isSpecial && "bg-transparent hover:bg-secondary",
+              !isActive && !isSpecial && "bg-transparent hover:bg-[#2a3f4a]",
               
               // Special Item States (Brain) - Always highlighted with app color
-              isSpecial && "bg-primary shadow-[0_4px_0_0_var(--primary-dark)]",
+              isSpecial && "bg-[#1cb0f6] shadow-[0_4px_0_0_#1899d6]",
               !isActive && isSpecial && "brightness-90 hover:brightness-100"
             )}
           >
@@ -58,7 +58,7 @@ export const SideNav = () => {
                 strokeWidth={isSpecial ? 2.5 : 2} 
                 className={cn(
                   "transition-colors",
-                  (isActive || isSpecial) ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground"
+                  (isActive || isSpecial) ? "text-white" : "text-[#9ca3af] group-hover:text-white"
                 )}
               />
             )}
