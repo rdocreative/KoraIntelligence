@@ -753,51 +753,41 @@ const HabitsPage = () => {
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[40%] relative">
             <div className="flex flex-col min-h-[480px] pt-4 px-2 overflow-visible h-full">
-              {/* Header Integrado com Legenda Horizontal */}
+              {/* Header Integrado com ajuda e contagem */}
               <div className="flex items-center justify-between mb-6 px-1">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <button className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 transition-all active:scale-95 group">
-                            <HelpCircle size={13} className="text-white group-hover:text-[#22d3ee] transition-colors" strokeWidth={3} />
-                          </button>
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-[#202f36] border-2 border-[#1e293b] p-4 max-w-[280px] text-white rounded-[18px] shadow-2xl">
-                          <div className="space-y-3">
-                            <p className="text-[11px] font-black text-[#22d3ee] uppercase tracking-[0.15em] border-b border-white/5 pb-2">Como usar os Hábitos?</p>
-                            <ul className="space-y-2.5 text-[10px] leading-relaxed text-white/70">
-                              <li className="flex gap-2">
-                                <span className="text-white font-black shrink-0">•</span>
-                                <span><strong className="text-white">ORDEM É PRIORIDADE:</strong> Arraste os cards. O topo é <span className="text-[#ef4444] font-bold">Máxima</span> e a base é <span className="text-[#22d3ee] font-bold">Normal</span>.</span>
-                              </li>
-                              <li className="flex gap-2">
-                                <span className="text-white font-black shrink-0">•</span>
-                                <span><strong className="text-white">CHECK:</strong> Clique no círculo colorido à esquerda para marcar como feito no dia.</span>
-                              </li>
-                              <li className="flex gap-2">
-                                <span className="text-white font-black shrink-0">•</span>
-                                <span><strong className="text-white">EDITAR:</strong> Use a seta na direita para ajustar o nome, horário ou excluir o hábito.</span>
-                              </li>
-                            </ul>
+                  <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button className="flex items-center justify-center w-5 h-5 rounded-full bg-white text-[#06090e] transition-all active:scale-95 shadow-[0_0_12px_rgba(255,255,255,0.4)] hover:shadow-[0_0_20px_rgba(34,211,238,0.6)] group">
+                          <HelpCircle size={13} strokeWidth={4} />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="bg-[#202f36] border-2 border-[#1e293b] p-3 max-w-[240px] text-white rounded-[16px] shadow-2xl">
+                        <div className="space-y-3">
+                          <div className="flex flex-col gap-1.5 border-b border-white/5 pb-2">
+                            <span className="text-[10px] font-black text-[#22d3ee] uppercase tracking-widest">Legenda de Prioridade</span>
+                            <div className="flex items-center gap-3 text-[8px] font-black text-white/70 uppercase">
+                              <span className="text-[#ef4444]">MÁXIMA</span>
+                              <div className="flex gap-1">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#f97316]" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#eab308]" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#22d3ee]" />
+                              </div>
+                              <span className="text-[#22d3ee]">NORMAL</span>
+                            </div>
                           </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-[8.5px] font-[800] text-[#9ca3af] uppercase tracking-widest">
-                    <span className="text-[#ef4444]/80">MÁXIMA</span>
-                    <div className="flex gap-1 items-center">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#f97316]" />
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#eab308]" />
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#22d3ee]" />
-                    </div>
-                    <span className="text-[#22d3ee]/80">NORMAL</span>
-                  </div>
+                          <div className="space-y-2 text-[9.5px] font-medium leading-relaxed text-white/80">
+                            <p>• <strong className="text-white">Arraste:</strong> A ordem define a prioridade. O que está no topo é mais urgente.</p>
+                            <p>• <strong className="text-white">Check:</strong> Clique no círculo à esquerda para marcar como feito.</p>
+                            <p>• <strong className="text-white">Editar:</strong> Use a seta lateral para ajustes rápidos ou excluir.</p>
+                          </div>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
 
                 <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-2.5 py-1 rounded-full border border-[#22d3ee]/10 shrink-0">
@@ -882,7 +872,7 @@ const HabitsPage = () => {
           habit={editingHabit.habit}
           rect={editingHabit.rect}
           onClose={() => setEditingHabit(null)}
-          onSave={(updated) => setHabits(prev => prev.map(h => h.id === updated.id ? updated : h))}
+          onSave={(updated) => setForm(updated)}
           onDelete={(id) => setHabits(prev => prev.filter(h => h.id !== id))}
         />
       )}
