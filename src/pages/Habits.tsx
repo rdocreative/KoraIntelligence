@@ -30,7 +30,11 @@ import {
   addWeeks,
   subWeeks,
   isBefore,
-  startOfDay
+  startOfDay,
+  setMonth,
+  setYear,
+  getYear,
+  getMonth
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -51,6 +55,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import WeeklyView from "@/components/habits/WeeklyView";
+import DateSelectorModal from "@/components/habits/DateSelectorModal";
 
 // --- Types ---
 type Priority = 'high' | 'medium' | 'low';
@@ -319,6 +324,7 @@ const HabitsPage = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDateSelectorOpen, setIsDateSelectorOpen] = useState(false);
   const [editingHabit, setEditingHabit] = useState<{habit: Habit, rect: DOMRect} | null>(null);
 
   const sensors = useSensors(
@@ -489,12 +495,16 @@ const HabitsPage = () => {
                 >
                   <ChevronLeft size={22} />
                 </button>
-                <div className="flex items-center gap-2 text-[13px] font-[700] text-[#e5e7eb] uppercase tracking-[0.02em] px-1">
-                  {viewMode === 'weekly' 
+                <button
+                  onClick={() => setIsDateSelectorOpen(true)}
+                  className="flex items-center gap-2 text-[13px] font-[700] text-[#e5e7eb] uppercase tracking-[0.02em] px-2 py-1 rounded-lg hover:bg-white/5 transition-colors group"
+                >
+                  {viewMode === 'weekly'
                     ? `Semana de ${format(startOfWeek(currentDate), 'dd/MM')}`
                     : format(currentDate, 'MMMM yyyy', { locale: ptBR })
                   }
-                </div>
+                  <Pencil size={12} className="opacity-0 group-hover:opacity-50 transition-opacity text-[#22d3ee]" />
+                </button>
                 <button 
                   onClick={() => {
                     if (viewMode === 'weekly') setCurrentDate(addWeeks(currentDate, 1));
@@ -724,7 +734,7 @@ const HabitsPage = () => {
       </div>
 
       {editingHabit && editingHabit.rect && (
-        <EditPopup 
+        <EditPopup
           habit={editingHabit.habit}
           rect={editingHabit.rect}
           onClose={() => setEditingHabit(null)}
@@ -732,6 +742,16 @@ const HabitsPage = () => {
           onDelete={(id) => setHabits(prev => prev.filter(h => h.id !== id))}
         />
       )}
+
+      <DateSelectorModal
+        isOpen={isDateSelectorOpen}
+        onClose={() => setIsDateSelectorOpen(false)}
+        currentDate={currentDate}
+        onSelectDate={(date) => {
+          setCurrentDate(date);
+          setSelectedDate(date);
+        }}
+      />
     </div>
   );
 };
