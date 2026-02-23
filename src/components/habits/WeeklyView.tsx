@@ -43,19 +43,6 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
     { label: 'Madruga', range: [0, 5], icon: CloudMoon }
   ];
 
-  // Regra 1: Ocultar seções vazias (só renderiza se tiver ao menos 1 hábito no período em qualquer dia da semana)
-  const activePeriods = useMemo(() => {
-    return allPeriods.filter(period => {
-      return habits.some(h => {
-        if (!h.active) return false;
-        const hour = parseInt(h.time.split(':')[0]);
-        // Verifica se o hábito pertence ao período e se está agendado para algum dia desta semana
-        const hasDayInWeek = h.weekDays.some(wd => weekDays.some(day => getDay(day) === wd));
-        return hour >= period.range[0] && hour < period.range[1] && hasDayInWeek;
-      });
-    });
-  }, [habits, weekDays]);
-
   const getHabitStyles = (priority: string) => {
     switch (priority) {
       case 'high':
@@ -89,7 +76,7 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
           {/* Canto Vazio Superior Esquerdo */}
           <div className="bg-[#161f26] border-b-2 border-r border-[#374151]" />
 
-          {/* Cabeçalho dos Dias (Aumentado conforme Regra 4) */}
+          {/* Cabeçalho dos Dias */}
           {weekDays.map((day, idx) => {
             const isToday = isSameDay(day, new Date());
             return (
@@ -113,87 +100,99 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
             );
           })}
 
-          {/* Linhas de Período (Regra 1: Apenas ativos) */}
-          {activePeriods.map((period, pIdx) => (
-            <React.Fragment key={period.label}>
-              {/* Coluna Lateral de Período (Regra 5: Aumentada) */}
-              <div className={cn(
-                "flex flex-col items-center justify-center gap-2 bg-[#161f26] border-r border-[#374151] py-6",
-                pIdx !== 0 && "border-t border-[#374151]"
-              )}>
-                <period.icon size={20} className="text-[#9ca3af]/40" />
-                <span className="text-[11px] font-[900] text-[#9ca3af]/40 uppercase tracking-[0.05em]">
-                  {period.label}
-                </span>
-              </div>
+          {/* Linhas de Período */}
+          {allPeriods.map((period, pIdx) => {
+            // Verifica se este período tem QUALQUER hábito em QUALQUER dia da semana
+            const hasHabitsInAnyDay = habits.some(h => {
+              if (!h.active) return false;
+              const hour = parseInt(h.time.split(':')[0]);
+              const matchesPeriod = hour >= period.range[0] && hour < period.range[1];
+              const matchesWeekDays = h.weekDays.some(wd => weekDays.some(day => getDay(day) === wd));
+              return matchesPeriod && matchesWeekDays;
+            });
 
-              {/* Células de Grade (Regra 2: Aumentada) */}
-              {weekDays.map((day, dIdx) => {
-                const dStr = format(day, 'yyyy-MM-dd');
-                const habitsInPeriod = habits.filter(h => {
-                  if (!h.active || !h.weekDays.includes(getDay(day))) return false;
-                  const hour = parseInt(h.time.split(':')[0]);
-                  return hour >= period.range[0] && hour < period.range[1];
-                });
+            return (
+              <React.Fragment key={period.label}>
+                {/* Coluna Lateral de Período */}
+                <div className={cn(
+                  "flex flex-col items-center justify-center gap-2 bg-[#161f26] border-r border-[#374151] py-6 transition-opacity duration-300",
+                  pIdx !== 0 && "border-t border-[#374151]",
+                  !hasHabitsInAnyDay && "opacity-30"
+                )}>
+                  <period.icon size={20} className="text-[#9ca3af]/40" />
+                  <span className="text-[11px] font-[900] text-[#9ca3af]/40 uppercase tracking-[0.05em]">
+                    {period.label}
+                  </span>
+                </div>
 
-                return (
-                  <div 
-                    key={day.toString() + period.label} 
-                    className={cn(
-                      "p-2 min-h-[80px] flex flex-col gap-2 justify-center min-w-0",
-                      dIdx !== 6 && "border-r border-[#2a3f4a]",
-                      pIdx !== 0 && "border-t border-[#374151]"
-                    )}
-                  >
-                    {habitsInPeriod.length > 0 ? (
-                      habitsInPeriod.map(habit => {
-                        const isDone = habit.completedDates.includes(dStr);
-                        const styles = getHabitStyles(habit.priority);
-                        
-                        return (
-                          /* Regra 3: Cards de Hábito Aumentados + Scale -10% aplicada no padding/font para balancear */
-                          <button
-                            key={habit.id}
-                            onClick={() => onToggleHabit(habit.id, day)}
-                            className={cn(
-                              "w-full text-left p-2 rounded-[10px] border transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-center overflow-hidden mb-1.5",
-                              styles.bg,
-                              styles.border,
-                              isDone && "opacity-50 grayscale"
-                            )}
-                          >
-                            <div className="flex items-center gap-2 w-full">
-                              <div className={cn(
-                                "h-[16px] w-[16px] rounded-full border flex items-center justify-center shrink-0",
-                                isDone ? "bg-[#22d3ee] border-[#22d3ee]" : styles.checkbox
-                              )}>
-                                {isDone && <Check size={10} className="text-[#111b21] stroke-[4px]" />}
+                {/* Células de Grade */}
+                {weekDays.map((day, dIdx) => {
+                  const dStr = format(day, 'yyyy-MM-dd');
+                  const habitsInPeriod = habits.filter(h => {
+                    if (!h.active || !h.weekDays.includes(getDay(day))) return false;
+                    const hour = parseInt(h.time.split(':')[0]);
+                    return hour >= period.range[0] && hour < period.range[1];
+                  });
+
+                  return (
+                    <div 
+                      key={day.toString() + period.label} 
+                      className={cn(
+                        "p-2 min-h-[80px] flex flex-col gap-2 justify-center min-w-0 transition-opacity duration-300",
+                        dIdx !== 6 && "border-r border-[#2a3f4a]",
+                        pIdx !== 0 && "border-t border-[#374151]",
+                        !hasHabitsInAnyDay && "opacity-30"
+                      )}
+                    >
+                      {habitsInPeriod.length > 0 ? (
+                        habitsInPeriod.map(habit => {
+                          const isDone = habit.completedDates.includes(dStr);
+                          const styles = getHabitStyles(habit.priority);
+                          
+                          return (
+                            <button
+                              key={habit.id}
+                              onClick={() => onToggleHabit(habit.id, day)}
+                              className={cn(
+                                "w-full text-left p-2 rounded-[10px] border transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-center overflow-hidden mb-1.5",
+                                styles.bg,
+                                styles.border,
+                                isDone && "opacity-50 grayscale"
+                              )}
+                            >
+                              <div className="flex items-center gap-2 w-full">
+                                <div className={cn(
+                                  "h-[16px] w-[16px] rounded-full border flex items-center justify-center shrink-0",
+                                  isDone ? "bg-[#22d3ee] border-[#22d3ee]" : styles.checkbox
+                                )}>
+                                  {isDone && <Check size={10} className="text-[#111b21] stroke-[4px]" />}
+                                </div>
+                                <span className={cn(
+                                  "text-[12px] font-[700] text-[#e5e7eb] truncate leading-tight max-w-full",
+                                  isDone && "line-through opacity-70"
+                                )}>
+                                  {habit.title}
+                                </span>
                               </div>
-                              <span className={cn(
-                                "text-[12px] font-[700] text-[#e5e7eb] truncate leading-tight max-w-full",
-                                isDone && "line-through opacity-70"
-                              )}>
-                                {habit.title}
+                              <span className="text-[11px] font-[600] text-[#d1d5db] ml-[24px] mt-0.5 leading-none">
+                                {habit.time}
                               </span>
-                            </div>
-                            <span className="text-[11px] font-[600] text-[#d1d5db] ml-[24px] mt-0.5 leading-none">
-                              {habit.time}
-                            </span>
-                          </button>
-                        );
-                      })
-                    ) : (
-                      <div className="flex-1 flex items-center justify-center p-1 opacity-20 select-none">
-                        <span className="text-[8px] font-[800] text-[#374151] uppercase text-center leading-[1.1]">
-                          Livre
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </React.Fragment>
-          ))}
+                            </button>
+                          );
+                        })
+                      ) : (
+                        <div className="flex-1 flex items-center justify-center p-1 select-none">
+                          <span className="text-[8px] font-[800] text-[#374151] uppercase text-center leading-[1.1] max-w-[60px]">
+                            {!hasHabitsInAnyDay ? "NENHUM HABITO ATIVO PRA ESSE HORARIO" : "Livre"}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </React.Fragment>
+            );
+          })}
 
           {/* Rodapé de Contagem */}
           <div className="bg-[#161f26] border-r border-[#374151] border-t-2 border-[#374151]" />
