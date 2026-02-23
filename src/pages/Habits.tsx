@@ -214,11 +214,11 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         };
       default:
         return {
-          main: "#22d3ee",
-          darkBorder: "#0891b2",
-          bg: "rgba(34, 211, 238, 0.08)",
+          main: "#4ade80",
+          darkBorder: "#16a34a",
+          bg: "rgba(74, 222, 128, 0.08)",
           tag: "PRIORIDADE NORMAL",
-          tagColor: "#22d3ee"
+          tagColor: "#4ade80"
         };
     }
   }, [habit.priority, isCompleted]);
@@ -768,23 +768,23 @@ const HabitsPage = () => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <button className="flex items-center justify-center w-5 h-5 rounded-full bg-white text-[#06090e] transition-all active:scale-95 shadow-[0_0_12px_rgba(255,255,255,0.4)] hover:shadow-[0_0_20px_rgba(34,211,238,0.6)] group">
+                        <button className="flex items-center justify-center w-5 h-5 rounded-full bg-white text-[#06090e] transition-all active:scale-95 shadow-[0_0_12px_rgba(255,255,255,0.4)] hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] group">
                           <HelpCircle size={13} strokeWidth={4} />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent side="top" className="bg-[#202f36] border-2 border-[#1e293b] p-3 max-w-[240px] text-white rounded-[16px] shadow-2xl">
                         <div className="space-y-3">
                           <div className="flex flex-col gap-1.5 border-b border-white/5 pb-2">
-                            <span className="text-[10px] font-black text-[#22d3ee] uppercase tracking-widest">Legenda de Prioridade</span>
+                            <span className="text-[10px] font-black text-[#4ade80] uppercase tracking-widest">Legenda de Prioridade</span>
                             <div className="flex items-center gap-3 text-[8px] font-black text-white/70 uppercase">
                               <span className="text-[#ef4444]">MÁXIMA</span>
                               <div className="flex gap-1">
                                 <div className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />
                                 <div className="w-1.5 h-1.5 rounded-full bg-[#f97316]" />
                                 <div className="w-1.5 h-1.5 rounded-full bg-[#eab308]" />
-                                <div className="w-1.5 h-1.5 rounded-full bg-[#22d3ee]" />
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#4ade80]" />
                               </div>
-                              <span className="text-[#22d3ee]">NORMAL</span>
+                              <span className="text-[#4ade80]">NORMAL</span>
                             </div>
                           </div>
                           <div className="space-y-2 text-[9.5px] font-medium leading-relaxed text-white/80">
@@ -798,7 +798,7 @@ const HabitsPage = () => {
                   </TooltipProvider>
                 </div>
 
-                <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-2.5 py-1 rounded-full border border-[#22d3ee]/10 shrink-0">
+                <div className="bg-[#4ade80]/10 text-[#4ade80] text-[10px] font-[700] px-2.5 py-1 rounded-full border border-[#4ade80]/10 shrink-0">
                   {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
                 </div>
               </div>
