@@ -31,10 +31,7 @@ import {
   subWeeks,
   isBefore,
   startOfDay,
-  setMonth,
-  setYear,
-  getYear,
-  getMonth
+  subDays
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -111,6 +108,71 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       onEdit(habit, cardRef.current.getBoundingClientRect());
     }
   };
+
+  // Cálculo de sequências (Streak) e Status de Perda
+  const streakInfo = useMemo(() => {
+    const today = startOfDay(new Date());
+    let streak = 0;
+    let isLost = false;
+    
+    // 1. Verificar o último dia agendado antes de hoje
+    let checkDate = subDays(today, 1);
+    let lastScheduledDate: Date | null = null;
+    
+    // Encontrar o dia agendado mais recente no passado (limite de 30 dias para performance)
+    for (let i = 0; i < 30; i++) {
+      const dayOfWeek = getDay(checkDate);
+      if (habit.weekDays.includes(dayOfWeek)) {
+        lastScheduledDate = checkDate;
+        break;
+      }
+      checkDate = subDays(checkDate, 1);
+    }
+
+    if (lastScheduledDate) {
+      const lastDateStr = format(lastScheduledDate, 'yyyy-MM-dd');
+      const wasLastCompleted = habit.completedDates.includes(lastDateStr);
+      
+      if (!wasLastCompleted) {
+        // Se o último dia programado foi perdido, o streak reseta
+        isLost = true;
+      } else {
+        // Se foi completado, contar consecutivamente para trás
+        streak = 1;
+        let prevDate = subDays(lastScheduledDate, 1);
+        let foundGap = false;
+        
+        // Loop para contar streak histórico
+        while (!foundGap) {
+          const dOfWeek = getDay(prevDate);
+          if (habit.weekDays.includes(dOfWeek)) {
+            const dStr = format(prevDate, 'yyyy-MM-dd');
+            if (habit.completedDates.includes(dStr)) {
+              streak++;
+            } else {
+              foundGap = true;
+            }
+          }
+          prevDate = subDays(prevDate, 1);
+          // Segurança para não entrar em loop infinito
+          if (streak > 365) break; 
+        }
+      }
+    }
+
+    // 2. Adicionar o dia de hoje se estiver completado
+    const todayStr = format(today, 'yyyy-MM-dd');
+    if (habit.completedDates.includes(todayStr)) {
+      if (isLost) {
+        streak = 1;
+        isLost = false;
+      } else {
+        streak++;
+      }
+    }
+
+    return { streak, isLost };
+  }, [habit.completedDates, habit.weekDays]);
 
   // Cálculo de conclusões no mês atual
   const completionsThisMonth = useMemo(() => {
@@ -206,17 +268,31 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
               {habit.time}
             </span>
           </div>
+          {streakInfo.isLost && !isCompleted && (
+            <div className="mt-1 text-[10px] font-[800] text-red-200/90 flex items-center gap-1">
+              Sequência perdida 💔
+            </div>
+          )}
         </div>
 
-        {!isCompleted && (
-          <button 
-            onClick={handleEditClick}
-            onPointerDown={(e) => e.stopPropagation()}
-            className="p-1 text-white/85 hover:text-white transition-colors z-10 ml-auto"
-          >
-            <ChevronRight size={16} />
-          </button>
-        )}
+        <div className="flex items-center shrink-0 ml-auto">
+          {streakInfo.streak > 0 && (
+            <div className="flex items-center gap-1 bg-black/30 px-2 py-0.5 rounded-full text-[11px] font-[800] text-white mr-1.5 transition-all">
+              <Flame size={12} className="text-orange-400 fill-orange-400" />
+              <span>{streakInfo.streak}</span>
+            </div>
+          )}
+          
+          {!isCompleted && (
+            <button 
+              onClick={handleEditClick}
+              onPointerDown={(e) => e.stopPropagation()}
+              className="p-1 text-white/85 hover:text-white transition-colors z-10"
+            >
+              <ChevronRight size={16} />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Progresso Mensal */}
