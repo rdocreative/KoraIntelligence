@@ -114,9 +114,9 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
   };
 
   const priorityStyles = {
-    high: "bg-[linear-gradient(90deg,rgba(120,0,0,0.85),rgba(255,75,75,0.65))] border-[#ff4b4b] shadow-[0_4px_0_0_#cc0000]",
-    medium: "bg-[linear-gradient(90deg,rgba(140,60,0,0.85),rgba(255,150,0,0.65))] border-[#ff9600] shadow-[0_4px_0_0_#e58700]",
-    low: "bg-[linear-gradient(90deg,rgba(30,80,0,0.85),rgba(88,204,2,0.65))] border-[#58cc02] shadow-[0_4px_0_0_#46a302]"
+    high: "bg-[linear-gradient(135deg,rgba(120,0,0,0.85),rgba(255,75,75,0.65))] border-[#ff4b4b] shadow-[0_4px_0_0_#cc0000]",
+    medium: "bg-[linear-gradient(135deg,rgba(140,60,0,0.85),rgba(255,150,0,0.65))] border-[#ff9600] shadow-[0_4px_0_0_#e58700]",
+    low: "bg-[linear-gradient(135deg,rgba(30,80,0,0.85),rgba(88,204,2,0.65))] border-[#58cc02] shadow-[0_4px_0_0_#46a302]"
   };
 
   const iconColors = {
