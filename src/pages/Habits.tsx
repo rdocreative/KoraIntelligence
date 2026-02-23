@@ -364,7 +364,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
     <div 
       ref={popupRef}
       style={{ top, left }}
-      className="fixed z-[1000] min-w-[280px] bg-[#111b21] border-2 border-[#202f36] rounded-[16px] p-[16px] px-[18px] shadow-[0_4px_0_0_#020305] animate-in fade-in slide-in-from-top-2 duration-200"
+      className="fixed z-[1000] min-w-[280px] bg-[#0f171e] border-2 border-[#1e293b] rounded-[16px] p-[16px] px-[18px] shadow-[0_4px_0_0_#020305] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="space-y-4">
         <div className="space-y-1">
@@ -372,7 +372,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
           <Input 
             value={form.title} 
             onChange={(e) => setForm({...form, title: e.target.value})}
-            className="h-9 bg-[#0a0f14] border-[#202f36] text-[14px] font-[600] text-[#e5e7eb] focus-visible:ring-[#22d3ee]" 
+            className="h-9 bg-[#0a0f14] border-[#1e293b] text-[14px] font-[600] text-[#e5e7eb] focus-visible:ring-[#22d3ee]" 
           />
         </div>
 
@@ -382,11 +382,11 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
             type="time"
             value={form.time} 
             onChange={(e) => setForm({...form, time: e.target.value})}
-            className="h-9 bg-[#0a0f14] border-[#202f36] text-[14px] font-[600] text-[#e5e7eb] focus-visible:ring-[#22d3ee]" 
+            className="h-9 bg-[#0a0f14] border-[#1e293b] text-[14px] font-[600] text-[#e5e7eb] focus-visible:ring-[#22d3ee]" 
           />
         </div>
 
-        <div className="flex items-center justify-between bg-[#0a0f14] p-2.5 rounded-[10px] border border-[#202f36]">
+        <div className="flex items-center justify-between bg-[#0a0f14] p-2.5 rounded-[10px] border border-[#1e293b]">
           <span className="text-[11px] font-[700] uppercase tracking-[0.1em] text-[#9ca3af] ml-1">
             {form.active ? 'Ativo' : 'Pausado'}
           </span>
@@ -539,7 +539,7 @@ const HabitsPage = () => {
     <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative">
       
       <div className="flex justify-center pt-4 pb-2">
-        <div className="bg-[#111b21] border-2 border-[#202f36] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-visible">
+        <div className="bg-[#0f171e] border-2 border-[#1e293b] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-visible">
           <button
             onClick={() => setActiveTab('overview')}
             className={cn(
@@ -580,10 +580,10 @@ const HabitsPage = () => {
             )}
             style={{
               background: `linear-gradient(135deg, ${s.from}, ${s.to})`,
-              boxShadow: `0 8px 0 0 ${s.shadow}`
+              boxShadow: `0 6px 0 0 ${s.shadow}`
             }}
           >
-            <div className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-white/20">
+            <div className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-black/20 ring-1 ring-white/10">
               <s.icon size={24} className="text-white fill-white/10" strokeWidth={3} />
             </div>
             <div className="flex flex-col">
@@ -596,9 +596,9 @@ const HabitsPage = () => {
 
       <div className="mt-[20px] flex flex-col lg:flex-row gap-4 p-4 md:p-0">
         <div className={cn("transition-all duration-500", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
-          <div className="bg-[#111b21] border-2 border-[#202f36] rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#020305]">
+          <div className="bg-[#0f171e] border-2 border-[#1e293b] rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#020305]">
             <div className="flex items-center justify-between mb-6">
-              <div className="bg-[#111b21] border-2 border-[#202f36] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1 overflow-visible">
+              <div className="bg-[#0f171e] border-2 border-[#1e293b] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1 overflow-visible">
                 {[
                   { id: 'monthly', icon: LayoutGrid, label: 'Mês' },
                   { id: 'weekly', icon: CalendarDays, label: 'Sem' }
@@ -679,7 +679,7 @@ const HabitsPage = () => {
                             className={cn(
                               "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
                               !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
-                              day.isCurrentMonth && (day.isFuture || (day.isPast && day.level === 0)) && "bg-[#16222b] border-[#202f36] text-[#e5e7eb]",
+                              day.isCurrentMonth && (day.isFuture || (day.isPast && day.level === 0)) && "bg-[#16222b] border-[#1e293b] text-[#e5e7eb]",
                               day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#0e3b4d] border-[#1a5e7a] text-white",
                               day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#00779e] border-[#0096c7] text-white",
                               day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#00CFFF] border-[#00CFFF] text-[#06090e]",
@@ -690,7 +690,7 @@ const HabitsPage = () => {
                             <span className="text-[13px] font-[700]">{format(day.date, 'd')}</span>
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent className="bg-[#111b21] border-[#202f36] text-[#e5e7eb] rounded-[10px]">
+                        <TooltipContent className="bg-[#0f171e] border-[#1e293b] text-[#e5e7eb] rounded-[10px]">
                           <p className="text-xs font-bold">{format(day.date, 'dd/MM')}</p>
                           <p className="text-[10px] text-[#9ca3af] font-bold uppercase">{day.done} de {day.total} feitos</p>
                         </TooltipContent>
@@ -707,13 +707,13 @@ const HabitsPage = () => {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <div className={cn(
-                              "w-2.5 h-2.5 rounded-full border border-[#202f36]",
+                              "w-2.5 h-2.5 rounded-full border border-[#1e293b]",
                               l === 0 ? "bg-[#16222b]" :
                               l === 1 ? "bg-[#0e3b4d]" :
                               l === 2 ? "bg-[#00779e]" : "bg-[#00CFFF]"
                             )} />
                           </TooltipTrigger>
-                          <TooltipContent className="bg-[#111b21] border-[#202f36] text-white">
+                          <TooltipContent className="bg-[#0f171e] border-[#1e293b] text-white">
                             {l === 0 ? "0 hábitos" : l === 3 ? "76-100% completado" : l === 1 ? "1-25% completado" : "26-75% completado"}
                           </TooltipContent>
                         </Tooltip>
@@ -736,7 +736,7 @@ const HabitsPage = () => {
                     </div>
                     <Progress
                       value={monthProgress}
-                      className="h-4 bg-[#0a0f14] border border-[#202f36] p-[3px]"
+                      className="h-4 bg-[#0a0f14] border border-[#1e293b] p-[3px]"
                       indicatorClassName="rounded-full bg-gradient-to-r from-[#22d3ee] to-[#06b6d4] shadow-[0_0_12px_rgba(34,211,238,0.4)]"
                     />
                 </div>
@@ -755,7 +755,7 @@ const HabitsPage = () => {
 
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[40%] relative">
-            <div className="bg-[#111b21] border-2 border-[#202f36] rounded-[24px] flex flex-col min-h-[480px] shadow-[0_4px_0_0_#020305] p-5 overflow-visible h-full">
+            <div className="bg-[#0f171e] border-2 border-[#1e293b] rounded-[24px] flex flex-col min-h-[480px] shadow-[0_4px_0_0_#020305] p-5 overflow-visible h-full">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.05em]">HÁBITOS ATIVOS</h2>
                 <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#22d3ee]/20">
@@ -779,7 +779,7 @@ const HabitsPage = () => {
                     
                     {displayedHabitsData.completed.length > 0 && (
                       <>
-                        <div className="mt-6 mb-3 pt-3 border-t-2 border-[#202f36]">
+                        <div className="mt-6 mb-3 pt-3 border-t-2 border-[#1e293b]">
                           <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.08em]">
                             CONCLUÍDOS HOJE
                           </span>
@@ -807,19 +807,19 @@ const HabitsPage = () => {
                 )}
               </div>
 
-              <div className="mt-auto pt-4 border-t-2 border-[#202f36]">
+              <div className="mt-auto pt-4 border-t-2 border-[#1e293b]">
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                   <DialogTrigger asChild>
                     <Button className="w-full bg-[#22d3ee] hover:bg-[#22d3ee] active:translate-y-[1px] active:shadow-none transition-all duration-200 text-[#06090e] font-[800] text-[11px] uppercase tracking-[0.1em] h-11 rounded-[16px] shadow-[0_4px_0_0_#06b6d4]">
                       <Plus className="mr-2" size={16} strokeWidth={3} /> NOVO HÁBITO
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="bg-[#111b21] border-2 border-[#202f36] text-[#e5e7eb] rounded-[24px]">
+                  <DialogContent className="bg-[#0f171e] border-2 border-[#1e293b] text-[#e5e7eb] rounded-[24px]">
                     <DialogHeader><DialogTitle className="uppercase tracking-widest text-sm text-[#22d3ee]">Criar Hábito</DialogTitle></DialogHeader>
                     <div className="grid gap-4 py-4">
                       <div className="grid gap-2">
                         <Label className="text-[11px] uppercase font-[700] tracking-[0.1em] text-[#9ca3af]">Título</Label>
-                        <Input placeholder="Beber água..." className="bg-[#0a0f14] border-[#202f36] text-[#e5e7eb]" />
+                        <Input placeholder="Beber água..." className="bg-[#0a0f14] border-[#1e293b] text-[#e5e7eb]" />
                       </div>
                     </div>
                     <DialogFooter><Button className="bg-[#22d3ee] text-[#06090e] font-bold">CRIAR</Button></DialogFooter>
