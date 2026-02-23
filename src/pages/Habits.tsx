@@ -177,53 +177,53 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
   const getHabitStyle = (title: string) => {
-    // Azul
+    // Azul Vibrante
     if (title === 'Beber 3L de água') {
       return {
-        main: "#1CB0F6",
-        dark: "#0E8FC7",
-        bg: "rgba(28, 176, 246, 0.11)",
-        border: "rgba(28, 176, 246, 0.22)",
-        shadow: "#0E8FC7FC"
+        main: "#00B7FF",
+        dark: "#0088CC",
+        bg: "rgba(0, 183, 255, 0.11)",
+        border: "rgba(0, 183, 255, 0.22)",
+        shadow: "#0088CCFC"
       };
     }
-    // Laranja
+    // Laranja Vibrante
     if (title === 'Ler 10 páginas') {
       return {
-        main: "#FF9600",
-        dark: "#CC7700",
-        bg: "rgba(255, 150, 0, 0.11)",
-        border: "rgba(255, 150, 0, 0.22)",
-        shadow: "#CC7700FC"
+        main: "#FF9900",
+        dark: "#D47F00",
+        bg: "rgba(255, 153, 0, 0.11)",
+        border: "rgba(255, 153, 0, 0.22)",
+        shadow: "#D47F00FC"
       };
     }
-    // Roxo
+    // Roxo Elétrico
     if (title === 'Academia') {
       return {
-        main: "#CE82FF",
-        dark: "#6B35A0",
-        bg: "rgba(206, 130, 255, 0.11)",
-        border: "rgba(206, 130, 255, 0.22)",
-        shadow: "#6B35A0FC"
+        main: "#D35CFF",
+        dark: "#8A2BE2",
+        bg: "rgba(211, 92, 255, 0.11)",
+        border: "rgba(211, 92, 255, 0.22)",
+        shadow: "#8A2BE2FC"
       };
     }
-    // Verde
+    // Verde Neon
     if (title === 'Meditar') {
       return {
-        main: "#58CC02",
-        dark: "#46A302",
-        bg: "rgba(88, 204, 2, 0.11)",
-        border: "rgba(88, 204, 2, 0.22)",
-        shadow: "#46A302FC"
+        main: "#61FF00",
+        dark: "#49C200",
+        bg: "rgba(97, 255, 0, 0.11)",
+        border: "rgba(97, 255, 0, 0.22)",
+        shadow: "#49C200FC"
       };
     }
     
     return {
-      main: "#22d3ee",
-      dark: "#0E8FC7",
-      bg: "rgba(34, 211, 238, 0.11)",
-      border: "rgba(34, 211, 238, 0.22)",
-      shadow: "#0E8FC7FC"
+      main: "#00E5FF",
+      dark: "#00B8CC",
+      bg: "rgba(0, 229, 255, 0.11)",
+      border: "rgba(0, 229, 255, 0.22)",
+      shadow: "#00B8CCFC"
     };
   };
 
@@ -571,10 +571,10 @@ const HabitsPage = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-0 mt-4">
         {[
-          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, bg: "#1A8FA8", shadow: "#0E8FC7" },
-          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, bg: "#C47A2A", shadow: "#CC7700" },
-          { label: "HOJE", value: stats.today, icon: CheckCircle2, bg: "#2A9E55", shadow: "#46A302" },
-          { label: "MÊS", value: stats.rate, icon: BarChart3, bg: "#7A52B8", shadow: "#6B35A0" }
+          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, bg: "#0099B5", shadow: "#00788E" },
+          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, bg: "#FF9900", shadow: "#CC7A00" },
+          { label: "HOJE", value: stats.today, icon: CheckCircle2, bg: "#58CC02", shadow: "#46A302" },
+          { label: "MÊS", value: stats.rate, icon: BarChart3, bg: "#CE82FF", shadow: "#A568CC" }
         ].map((s, i) => (
           <div
             key={i}
@@ -601,7 +601,6 @@ const HabitsPage = () => {
       <div className="mt-[20px] flex flex-col lg:flex-row gap-4 p-4 md:p-0">
         <div className={cn("transition-all duration-500", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
           <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#0b1116]">
-            {/* Header omitted for brevity but kept in logic */}
             <div className="flex items-center justify-between mb-6">
               <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1 overflow-visible">
                 {[
@@ -685,10 +684,10 @@ const HabitsPage = () => {
                               "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
                               !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
                               day.isCurrentMonth && (day.isFuture || (day.isPast && day.level === 0)) && "bg-[#2a3f4a] border-[#374151] text-[#e5e7eb]",
-                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#0e3b4d] border-[#1a5e7a] text-white",
-                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#00779e] border-[#0096c7] text-white",
-                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#00CFFF] border-[#00CFFF] text-[#111b21]",
-                              day.isCurrentMonth && day.isToday && "border-[#00CFFF] bg-transparent text-[#00CFFF]",
+                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#004D61] border-[#006E8A] text-white",
+                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#0089AD] border-[#00B5E5] text-white",
+                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#00E5FF] border-[#00E5FF] text-[#111b21]",
+                              day.isCurrentMonth && day.isToday && "border-[#00E5FF] bg-transparent text-[#00E5FF]",
                               day.isSelected && "ring-2 ring-white/50 ring-offset-2 ring-offset-[#111b21]"
                             )}
                           >
@@ -714,8 +713,8 @@ const HabitsPage = () => {
                             <div className={cn(
                               "w-2.5 h-2.5 rounded-full border border-[#374151]",
                               l === 0 ? "bg-[#2a3f4a]" :
-                              l === 1 ? "bg-[#0e3b4d]" :
-                              l === 2 ? "bg-[#00779e]" : "bg-[#00CFFF]"
+                              l === 1 ? "bg-[#004D61]" :
+                              l === 2 ? "bg-[#0089AD]" : "bg-[#00E5FF]"
                             )} />
                           </TooltipTrigger>
                           <TooltipContent className="bg-[#202f36] border-[#374151] text-white">
