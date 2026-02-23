@@ -177,7 +177,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   // Paleta com cores sólidas e stroke azul mais escuro
   const theme = {
     main: "#22d3ee",
-    darkBorder: "#0891b2", // Azul um pouco mais escuro solicitado
+    darkBorder: "#0891b2",
     bg: "rgba(34, 211, 238, 0.08)",
     completedBg: "rgba(34, 211, 238, 0.03)",
     completedBorder: "rgba(34, 211, 238, 0.15)"
@@ -697,7 +697,7 @@ const HabitsPage = () => {
 
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[40%] relative">
-            <div className="bg-[#202f36] border border-white/10 rounded-[24px] flex flex-col min-h-[480px] shadow-[0_4px_0_0_#020305] p-5 overflow-visible h-full">
+            <div className="flex flex-col min-h-[480px] p-5 overflow-visible h-full">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.05em]">HÁBITOS ATIVOS</h2>
                 <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#22d3ee]/20">
