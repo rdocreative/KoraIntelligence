@@ -115,11 +115,9 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
     let streak = 0;
     let isLost = false;
     
-    // 1. Verificar o último dia agendado antes de hoje
     let checkDate = subDays(today, 1);
     let lastScheduledDate: Date | null = null;
     
-    // Encontrar o dia agendado mais recente no passado (limite de 30 dias para performance)
     for (let i = 0; i < 30; i++) {
       const dayOfWeek = getDay(checkDate);
       if (habit.weekDays.includes(dayOfWeek)) {
@@ -134,15 +132,12 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       const wasLastCompleted = habit.completedDates.includes(lastDateStr);
       
       if (!wasLastCompleted) {
-        // Se o último dia programado foi perdido, o streak reseta
         isLost = true;
       } else {
-        // Se foi completado, contar consecutivamente para trás
         streak = 1;
         let prevDate = subDays(lastScheduledDate, 1);
         let foundGap = false;
         
-        // Loop para contar streak histórico
         while (!foundGap) {
           const dOfWeek = getDay(prevDate);
           if (habit.weekDays.includes(dOfWeek)) {
@@ -154,13 +149,11 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
             }
           }
           prevDate = subDays(prevDate, 1);
-          // Segurança para não entrar em loop infinito
           if (streak > 365) break; 
         }
       }
     }
 
-    // 2. Adicionar o dia de hoje se estiver completado
     const todayStr = format(today, 'yyyy-MM-dd');
     if (habit.completedDates.includes(todayStr)) {
       if (isLost) {
@@ -174,7 +167,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
     return { streak, isLost };
   }, [habit.completedDates, habit.weekDays]);
 
-  // Cálculo de conclusões no mês atual
   const completionsThisMonth = useMemo(() => {
     const monthStr = format(currentDate, 'yyyy-MM');
     return habit.completedDates.filter(date => date.startsWith(monthStr)).length;
@@ -183,30 +175,30 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const target = 30;
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
-  // Mapeamento de cores baseado no título do hábito
+  // Mapeamento de cores baseado no título do hábito com os NOVOS gradientes
   const getHabitStyle = (title: string) => {
     if (title === 'Beber 3L de água') {
       return {
-        classes: "bg-[linear-gradient(135deg,#0EA5E9,#0369A1)] border-[#0EA5E9] shadow-[0_4px_0_0_#0369A1]",
-        iconColor: "#0369A1"
+        classes: "bg-[linear-gradient(135deg,#2196B0,#1A7A90)] border-[#2196B0] shadow-[0_4px_0_0_#1A7A90]",
+        iconColor: "#1A7A90"
       };
     }
     if (title === 'Ler 10 páginas') {
       return {
-        classes: "bg-[linear-gradient(135deg,#F97316,#C2410C)] border-[#F97316] shadow-[0_4px_0_0_#C2410C]",
-        iconColor: "#C2410C"
+        classes: "bg-[linear-gradient(135deg,#C47A2A,#A05E18)] border-[#C47A2A] shadow-[0_4px_0_0_#A05E18]",
+        iconColor: "#A05E18"
       };
     }
     if (title === 'Academia') {
       return {
-        classes: "bg-[linear-gradient(135deg,#7C3AED,#5B2C6F)] border-[#7C3AED] shadow-[0_4px_0_0_#5B2C6F]",
-        iconColor: "#5B2C6F"
+        classes: "bg-[linear-gradient(135deg,#6A4DB0,#523A8C)] border-[#6A4DB0] shadow-[0_4px_0_0_#523A8C]",
+        iconColor: "#523A8C"
       };
     }
     if (title === 'Meditar') {
       return {
-        classes: "bg-[linear-gradient(135deg,#22C55E,#15803D)] border-[#22C55E] shadow-[0_4px_0_0_#15803D]",
-        iconColor: "#15803D"
+        classes: "bg-[linear-gradient(135deg,#2A9E55,#1E7A3E)] border-[#2A9E55] shadow-[0_4px_0_0_#1E7A3E]",
+        iconColor: "#1E7A3E"
       };
     }
     
@@ -295,7 +287,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         </div>
       </div>
 
-      {/* Progresso Mensal */}
       <div className="mt-3 pt-2.5 border-t border-white/10">
         <div className="flex justify-between items-center mb-1.5">
           <span className="text-[10px] font-[800] text-white/70 uppercase tracking-wider">Este mês</span>
@@ -555,10 +546,10 @@ const HabitsPage = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-0 mt-4">
         {[
-          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, bg: "#1cb0f6", shadow: "#1899d6" },
-          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, bg: "#ff9600", shadow: "#e58700" },
-          { label: "HOJE", value: stats.today, icon: CheckCircle2, bg: "#58cc02", shadow: "#46a302" },
-          { label: "MÊS", value: stats.rate, icon: BarChart3, bg: "#ce82ff", shadow: "#a855f7" }
+          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, bg: "#1A8FA8", shadow: "#1A8FA866" },
+          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, bg: "#C47A2A", shadow: "#C47A2A66" },
+          { label: "HOJE", value: stats.today, icon: CheckCircle2, bg: "#2A9E55", shadow: "#2A9E5566" },
+          { label: "MÊS", value: stats.rate, icon: BarChart3, bg: "#7A52B8", shadow: "#7A52B866" }
         ].map((s, i) => (
           <div
             key={i}
@@ -566,7 +557,10 @@ const HabitsPage = () => {
               "py-[10px] px-[18px] rounded-[16px] flex items-center gap-3 transition-all duration-300 stat-card",
               "text-white border-none"
             )}
-            style={{ backgroundColor: s.bg, boxShadow: `0 4px 0 0 ${s.shadow}` }}
+            style={{ 
+              background: `linear-gradient(135deg, ${s.bg}, ${s.bg}EE)`, 
+              boxShadow: `0 6px 16px 0 ${s.shadow}` 
+            }}
           >
             <div className={cn("w-12 h-12 rounded-[12px] flex items-center justify-center shrink-0 bg-black/20")}>
               <s.icon size={20} className="text-white" strokeWidth={2.5} />
