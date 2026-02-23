@@ -4,8 +4,8 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { 
   Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, Clock, Flame, 
-  BarChart3, CheckCircle2, Pencil, Trash2, 
-  Play, Pause, CalendarDays, Target, HelpCircle
+  BarChart3, Pencil, Trash2, 
+  Play, Pause, CalendarDays, HelpCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,7 +65,7 @@ interface Habit {
   time: string;
   completedDates: string[];
   active: boolean;
-  priority: number; // 0: Máxima, 1: Alta, 2: Média, 3: Normal
+  priority: number; 
 }
 
 // --- Sortable Item Component ---
@@ -180,8 +180,8 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
     if (isCompleted) {
       return {
         main: "#22d3ee",
-        darkBorder: "rgba(34, 211, 238, 0.15)",
-        bg: "rgba(34, 211, 238, 0.03)",
+        darkBorder: "rgba(34, 211, 238, 0.1)",
+        bg: "rgba(34, 211, 238, 0.02)",
         tag: "CONCLUÍDO",
         tagColor: "#9ca3af"
       };
@@ -191,32 +191,32 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       case 0:
         return {
           main: "#ef4444",
-          darkBorder: "#991b1b",
-          bg: "rgba(239, 68, 68, 0.08)",
+          darkBorder: "rgba(239, 68, 68, 0.2)",
+          bg: "rgba(239, 68, 68, 0.05)",
           tag: "PRIORIDADE MÁXIMA",
           tagColor: "#ef4444"
         };
       case 1:
         return {
           main: "#f97316",
-          darkBorder: "#9a3412",
-          bg: "rgba(249, 115, 22, 0.08)",
+          darkBorder: "rgba(249, 115, 22, 0.2)",
+          bg: "rgba(249, 115, 22, 0.05)",
           tag: "PRIORIDADE ALTA",
           tagColor: "#f97316"
         };
       case 2:
         return {
           main: "#eab308",
-          darkBorder: "#854d0e",
-          bg: "rgba(234, 179, 8, 0.08)",
+          darkBorder: "rgba(234, 179, 8, 0.2)",
+          bg: "rgba(234, 179, 8, 0.05)",
           tag: "PRIORIDADE MÉDIA",
           tagColor: "#eab308"
         };
       default:
         return {
           main: "#4ade80",
-          darkBorder: "#16a34a",
-          bg: "rgba(74, 222, 128, 0.08)",
+          darkBorder: "rgba(74, 222, 128, 0.2)",
+          bg: "rgba(74, 222, 128, 0.05)",
           tag: "PRIORIDADE NORMAL",
           tagColor: "#4ade80"
         };
@@ -233,35 +233,34 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         ...style,
         backgroundColor: priorityTheme.bg,
         borderColor: priorityTheme.darkBorder,
-        boxShadow: 'none',
       }}
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[16px] border-[2px] p-[14px] mb-[10px] cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out",
-        isDragging && "scale-[1.02] opacity-90",
-        isCompleted && !isDragging && "opacity-[0.4] grayscale-[0.6]"
+        "group rounded-[24px] border-[1.5px] p-[16px] mb-[12px] cursor-grab active:cursor-grabbing select-none transition-all duration-300 ease-out",
+        isDragging && "scale-[1.02] opacity-90 shadow-xl",
+        isCompleted && !isDragging && "opacity-[0.5] grayscale-[0.5]"
       )}
     >
-      <div className="flex items-center gap-3.5">
+      <div className="flex items-center gap-4">
         <button 
           onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
           onPointerDown={(e) => e.stopPropagation()}
           className={cn(
-            "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
+            "h-7 w-7 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
             isCompleted 
               ? "bg-[#22d3ee] border-[#22d3ee]" 
               : ""
           )}
           style={{
             borderColor: priorityTheme.main,
-            backgroundColor: isCompleted ? priorityTheme.main : "rgba(0,0,0,0.4)"
+            backgroundColor: isCompleted ? priorityTheme.main : "transparent"
           }}
         >
           {isCompleted && (
             <Check 
-              size={13} 
-              className="stroke-[4px] text-[#06090e]" 
+              size={14} 
+              className="stroke-[3.5px] text-[#06090e]" 
             />
           )}
         </button>
@@ -269,13 +268,13 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <h3 className={cn(
-              "text-[14px] font-[800] text-[#ffffff] truncate leading-tight transition-all duration-200",
+              "text-[15px] font-bold text-[#ffffff] truncate leading-tight transition-all duration-200",
               isCompleted && "line-through opacity-50"
             )}>
               {habit.title}
             </h3>
             <span 
-              className="text-[8.5px] font-[900] px-1.5 py-0.5 rounded-full border shrink-0 uppercase tracking-wider"
+              className="text-[9px] font-bold px-2 py-0.5 rounded-full border shrink-0 uppercase tracking-wide"
               style={{ 
                 color: priorityTheme.tagColor, 
                 borderColor: `${priorityTheme.tagColor}30`,
@@ -286,18 +285,18 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
             </span>
           </div>
           <div className="flex items-center gap-1.5">
-            <Clock size={12} className="text-white/40" />
-            <span className="text-[10.5px] font-[700] text-white/40">
+            <Clock size={12} className="text-white/30" />
+            <span className="text-[11px] font-semibold text-white/30">
               {habit.time}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center shrink-0 gap-2.5">
+        <div className="flex items-center shrink-0 gap-3">
           {streakInfo.streak > 0 && (
-            <div className="flex items-center gap-1.5 bg-black/50 border border-white/5 px-2.5 py-1 rounded-lg text-white">
+            <div className="flex items-center gap-1.5 bg-black/30 border border-white/5 px-3 py-1 rounded-full text-white">
               <Flame size={13} className="text-orange-400 fill-orange-400" />
-              <span className="text-[11px] font-black">{streakInfo.streak}</span>
+              <span className="text-[11px] font-bold">{streakInfo.streak}</span>
             </div>
           )}
           
@@ -305,7 +304,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
             <button 
               onClick={handleEditClick}
               onPointerDown={(e) => e.stopPropagation()}
-              className="p-1 text-white/30 hover:text-white transition-colors z-10"
+              className="p-1.5 text-white/20 hover:text-white transition-colors z-10"
             >
               <ChevronRight size={20} />
             </button>
@@ -313,16 +312,16 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         </div>
       </div>
 
-      <div className="mt-4 pt-2.5 border-t border-white/5">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-[9.5px] font-[800] text-white/30 uppercase tracking-[0.15em]">Meta Mensal</span>
-          <span className="text-[11px] font-[900] tabular-nums" style={{ color: priorityTheme.main }}>
+      <div className="mt-4 pt-3 border-t border-white/5">
+        <div className="flex justify-between items-center mb-2.5">
+          <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest">Meta Mensal</span>
+          <span className="text-[11px] font-bold tabular-nums" style={{ color: priorityTheme.main }}>
             {completionsThisMonth}/{target}
           </span>
         </div>
-        <div className="h-[4.5px] w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
+        <div className="h-[6px] w-full bg-black/20 rounded-full overflow-hidden">
           <div 
-            className="h-full transition-all duration-700 ease-out" 
+            className="h-full transition-all duration-700 ease-out rounded-full" 
             style={{ 
               width: `${progressPercent}%`,
               backgroundColor: priorityTheme.main
@@ -373,56 +372,56 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
     <div 
       ref={popupRef}
       style={{ top, left }}
-      className="fixed z-[1000] min-w-[280px] bg-[#202f36] border-2 border-[#1e293b] rounded-[20px] p-[18px] shadow-[0_10px_25px_-5px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-top-2 duration-200"
+      className="fixed z-[1000] min-w-[300px] bg-[#1e2a30] border border-white/10 rounded-[28px] p-5 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="space-y-4">
-        <div className="space-y-1.5">
-          <Label className="text-[10px] font-[800] uppercase tracking-[0.1em] text-white/40">Nome do Hábito</Label>
+        <div className="space-y-2">
+          <Label className="text-[10px] font-bold uppercase tracking-widest text-white/30 ml-1">Nome do Hábito</Label>
           <Input 
             value={form.title} 
             onChange={(e) => setForm({...form, title: e.target.value})}
-            className="h-10 bg-[#0a0f14] border-[#1e293b] text-[14px] font-[700] text-white focus-visible:ring-[#22d3ee] rounded-[12px]" 
+            className="h-11 bg-[#0a0f14]/50 border-white/5 text-[14px] font-semibold text-white focus-visible:ring-[#22d3ee] rounded-[16px]" 
           />
         </div>
 
-        <div className="space-y-1.5">
-          <Label className="text-[10px] font-[800] uppercase tracking-[0.1em] text-white/40">Horário Lembrete</Label>
+        <div className="space-y-2">
+          <Label className="text-[10px] font-bold uppercase tracking-widest text-white/30 ml-1">Horário Lembrete</Label>
           <Input 
             type="time"
             value={form.time} 
             onChange={(e) => setForm({...form, time: e.target.value})}
-            className="h-10 bg-[#0a0f14] border-[#1e293b] text-[14px] font-[700] text-white focus-visible:ring-[#22d3ee] rounded-[12px]" 
+            className="h-11 bg-[#0a0f14]/50 border-white/5 text-[14px] font-semibold text-white focus-visible:ring-[#22d3ee] rounded-[16px]" 
           />
         </div>
 
-        <div className="flex items-center justify-between bg-[#0a0f14] p-3 rounded-[12px] border border-[#1e293b]">
-          <span className="text-[10px] font-[800] uppercase tracking-[0.1em] text-white/40 ml-1">
-            Status: {form.active ? 'Ativo' : 'Pausado'}
+        <div className="flex items-center justify-between bg-black/20 p-4 rounded-[16px] border border-white/5">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-white/40">
+            {form.active ? 'Ativo' : 'Pausado'}
           </span>
           <button 
             onClick={() => setForm({...form, active: !form.active})}
             className={cn(
-              "p-1.5 rounded-[8px] transition-all",
+              "p-2 rounded-full transition-all",
               form.active ? "text-[#22d3ee] bg-[#22d3ee]/10" : "text-white/20 hover:text-white"
             )}
           >
-            {form.active ? <Play size={14} fill="currentColor" /> : <Pause size={14} fill="currentColor" />}
+            {form.active ? <Play size={16} fill="currentColor" /> : <Pause size={16} fill="currentColor" />}
           </button>
         </div>
 
         <div className="flex items-center gap-3 pt-2">
           <Button 
-            variant="outline" 
+            variant="ghost" 
             size="sm"
             onClick={() => { onDelete(habit.id); onClose(); }}
-            className="flex-1 h-10 bg-transparent border-[#ff4b4b]/40 text-[#ff4b4b] hover:bg-[#ff4b4b] hover:text-white text-[10px] font-[800] uppercase tracking-wider rounded-[12px] transition-all"
+            className="flex-1 h-11 text-[#ff4b4b] hover:bg-[#ff4b4b]/10 hover:text-[#ff4b4b] text-[11px] font-bold uppercase tracking-wider rounded-[16px]"
           >
-            <Trash2 size={14} className="mr-2" /> Excluir
+            <Trash2 size={16} className="mr-2" /> Excluir
           </Button>
           <Button 
             size="sm"
             onClick={() => { onSave(form); onClose(); }}
-            className="flex-[2] h-10 bg-[#22d3ee] hover:bg-[#06b6d4] text-[#06090e] font-[900] text-[10px] uppercase tracking-wider rounded-[12px] shadow-[0_4px_0_0_#0891b2] active:translate-y-[2px] active:shadow-none transition-all"
+            className="flex-[1.5] h-11 bg-[#22d3ee] hover:bg-[#06b6d4] text-[#06090e] font-bold text-[11px] uppercase tracking-wider rounded-[16px] transition-all shadow-lg shadow-cyan-500/20"
           >
             Salvar
           </Button>
@@ -449,7 +448,7 @@ const HabitsPage = () => {
   const [editingHabit, setEditingHabit] = useState<{habit: Habit, rect: DOMRect} | null>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 1 } }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -503,10 +502,10 @@ const HabitsPage = () => {
       if (totalCount > 0 && doneCount > 0) {
         const percentage = Math.round((doneCount / totalCount) * 100);
         
-        if (percentage >= 100) level = 4;       // VERDE (Tudo feito)
-        else if (percentage >= 66) level = 3;   // AMARELO
-        else if (percentage >= 33) level = 2;   // LARANJA
-        else level = 1;                         // VERMELHO
+        if (percentage >= 100) level = 4;
+        else if (percentage >= 66) level = 3;
+        else if (percentage >= 33) level = 2;
+        else level = 1;
       }
 
       const isPast = isBefore(startOfDay(day), startOfDay(new Date()));
@@ -556,43 +555,42 @@ const HabitsPage = () => {
   }, [habits, selectedDate]);
 
   return (
-    <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative w-full">
+    <div className="min-h-screen bg-background pb-12 animate-in fade-in duration-700 relative w-full">
       
-      {/* Tab Selector - Padding top increased from 8 to ~9 (35px) */}
-      <div className="flex justify-center pt-[35px] pb-0">
-        <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-visible">
+      {/* Tab Selector */}
+      <div className="flex justify-center pt-[40px] pb-0">
+        <div className="bg-[#1e2a30] border border-white/5 rounded-full p-1.5 shadow-xl flex items-center gap-1">
           <button
             onClick={() => setActiveTab('overview')}
             className={cn(
-              "flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0",
+              "flex items-center gap-2.5 px-6 py-2.5 rounded-full text-[13px] font-bold uppercase tracking-wider transition-all duration-300 border-none shrink-0",
               activeTab === 'overview'
-                ? "bg-[#22d3ee] text-[#06090e] shadow-[0_4px_0_0_#06b6d4]"
+                ? "bg-[#22d3ee] text-[#06090e] shadow-lg shadow-cyan-500/20"
                 : "bg-transparent text-[#9ca3af] hover:text-white"
             )}
           >
-            <LayoutGrid size={14} strokeWidth={3} /> Visão Geral
+            <LayoutGrid size={15} strokeWidth={2.5} /> Visão Geral
           </button>
           <button
             onClick={() => setActiveTab('charts')}
             className={cn(
-              "flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0",
+              "flex items-center gap-2.5 px-6 py-2.5 rounded-full text-[13px] font-bold uppercase tracking-wider transition-all duration-300 border-none shrink-0",
               activeTab === 'charts'
-                ? "bg-[#22d3ee] text-[#06090e] shadow-[0_4px_0_0_#06b6d4]"
+                ? "bg-[#22d3ee] text-[#06090e] shadow-lg shadow-cyan-500/20"
                 : "bg-transparent text-[#9ca3af] hover:text-white"
             )}
           >
-            <BarChart3 size={14} strokeWidth={3} /> Dashboard
+            <BarChart3 size={15} strokeWidth={2.5} /> Dashboard
           </button>
         </div>
       </div>
 
       {activeTab === 'overview' ? (
-        /* Main Content - Margin top increased from 8 to ~9 (35px) */
-        <div className="mt-[35px] flex flex-col lg:flex-row gap-6 p-4 md:p-0 items-start">
-          <div className={cn("transition-all duration-500 shrink-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
-            <div className="bg-[#202f36] border border-white/10 rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#020305]">
-              <div className="flex items-center justify-between mb-6">
-                <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1 overflow-visible">
+        <div className="mt-[40px] flex flex-col lg:flex-row gap-8 p-4 md:p-0 items-start max-w-7xl mx-auto">
+          <div className={cn("transition-all duration-500 shrink-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[62%]')}>
+            <div className="bg-[#1e2a30] border border-white/5 rounded-[32px] py-6 px-6 shadow-2xl">
+              <div className="flex items-center justify-between mb-8">
+                <div className="bg-black/20 rounded-full p-1 flex items-center gap-1">
                   {[
                     { id: 'monthly', icon: LayoutGrid, label: 'Mês' },
                     { id: 'weekly', icon: CalendarDays, label: 'Sem' }
@@ -601,30 +599,30 @@ const HabitsPage = () => {
                       key={mode.id}
                       onClick={() => setViewMode(mode.id as any)}
                       className={cn(
-                        "flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-[800] uppercase tracking-wider transition-all border-none shrink-0 whitespace-nowrap",
+                        "flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-widest transition-all shrink-0 whitespace-nowrap",
                         viewMode === mode.id 
-                          ? "bg-[#22d3ee] text-[#06090e] shadow-[0_4px_0_0_#06b6d4]" 
+                          ? "bg-[#22d3ee] text-[#06090e]" 
                           : "bg-transparent text-[#9ca3af] hover:text-white"
                       )}
                     >
-                      <mode.icon size={12} strokeWidth={3} /> {mode.label}
+                      <mode.icon size={13} strokeWidth={2.5} /> {mode.label}
                     </button>
                   ))}
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <button 
                     onClick={() => {
                       if (viewMode === 'weekly') setCurrentDate(subWeeks(currentDate, 1));
                       else setCurrentDate(subMonths(currentDate, 1));
                     }} 
-                    className="p-1 text-[#9ca3af] hover:text-[#22d3ee] transition-colors"
+                    className="p-1.5 text-[#9ca3af] hover:text-[#22d3ee] transition-colors bg-white/5 rounded-full"
                   >
-                    <ChevronLeft size={22} />
+                    <ChevronLeft size={20} />
                   </button>
                   <button
                     onClick={() => setIsDateSelectorOpen(true)}
-                    className="flex items-center gap-2 text-[14px] font-[800] text-[#e5e7eb] uppercase tracking-[0.05em] px-3 py-1.5 rounded-xl hover:bg-white/5 transition-colors group"
+                    className="flex items-center gap-2 text-[15px] font-bold text-[#e5e7eb] px-4 py-2 rounded-2xl hover:bg-white/5 transition-colors group"
                   >
                     {viewMode === 'weekly'
                       ? `Semana de ${format(startOfWeek(currentDate), 'dd/MM')}`
@@ -637,16 +635,16 @@ const HabitsPage = () => {
                       if (viewMode === 'weekly') setCurrentDate(addWeeks(currentDate, 1));
                       else setCurrentDate(addMonths(currentDate, 1));
                     }} 
-                    className="p-1 text-[#9ca3af] hover:text-[#22d3ee] transition-colors"
+                    className="p-1.5 text-[#9ca3af] hover:text-[#22d3ee] transition-colors bg-white/5 rounded-full"
                   >
-                    <ChevronRight size={22} />
+                    <ChevronRight size={20} />
                   </button>
                 </div>
 
                 <div className="flex items-center">
                   <button 
                     onClick={() => { setCurrentDate(new Date()); setSelectedDate(new Date()); }}
-                    className="text-[11px] font-[800] text-[#22d3ee] bg-[#22d3ee]/10 border border-[#22d3ee]/30 uppercase rounded-[999px] h-auto px-[14px] py-[6px] hover:bg-[#22d3ee] hover:text-[#06090e] transition-all"
+                    className="text-[11px] font-bold text-[#22d3ee] bg-[#22d3ee]/10 border border-[#22d3ee]/20 uppercase rounded-full px-5 py-2 hover:bg-[#22d3ee] hover:text-[#06090e] transition-all"
                   >
                     Hoje
                   </button>
@@ -655,13 +653,13 @@ const HabitsPage = () => {
 
               {viewMode === 'monthly' && (
                 <>
-                  <div className="grid grid-cols-7 mb-3">
+                  <div className="grid grid-cols-7 mb-4">
                     {['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].map(d => (
-                      <div key={d} className="text-center text-[10px] font-[700] text-[#22d3ee] uppercase tracking-[0.08em] py-1 opacity-80">{d}</div>
+                      <div key={d} className="text-center text-[10px] font-bold text-[#22d3ee]/60 uppercase tracking-widest py-1">{d}</div>
                     ))}
                   </div>
 
-                  <div className="grid grid-cols-7 gap-2">
+                  <div className="grid grid-cols-7 gap-3">
                     <TooltipProvider>
                       {calendarDays.map((day, i) => (
                         <Tooltip key={i}>
@@ -674,26 +672,26 @@ const HabitsPage = () => {
                                 setIsModalOpen(true);
                               }}
                               className={cn(
-                                "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative",
-                                !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
-                                day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#16222b] border-[#1e293b] text-[#e5e7eb]",
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#ef4444]/30 border-[#ef4444]/50 text-white", 
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#f97316]/30 border-[#f97316]/50 text-white", 
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#eab308]/30 border-[#eab308]/50 text-white", 
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#22c55e]/30 border-[#22c55e]/50 text-white", 
-                                day.isToday && !day.isSelected && "border-white/40",
-                                day.isSelected && "border-white z-10 scale-105 shadow-[0_0_15px_rgba(255,255,255,0.2)]"
+                                "min-h-[48px] aspect-square rounded-[18px] border-[1.5px] flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative",
+                                !day.isCurrentMonth && "text-white/10 border-transparent bg-transparent",
+                                day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-white/5 border-white/5 text-[#e5e7eb]",
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#ef4444]/20 border-[#ef4444]/40 text-white", 
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#f97316]/20 border-[#f97316]/40 text-white", 
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#eab308]/20 border-[#eab308]/40 text-white", 
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#22c55e]/20 border-[#22c55e]/40 text-white", 
+                                day.isToday && !day.isSelected && "border-white/30",
+                                day.isSelected && "border-[#22d3ee] bg-[#22d3ee]/10 z-10 scale-110 shadow-xl shadow-cyan-500/10"
                               )}
                             >
-                              <span className="text-[13px] font-[700]">{format(day.date, 'd')}</span>
+                              <span className="text-[14px] font-bold">{format(day.date, 'd')}</span>
                               {day.isToday && !day.isSelected && (
-                                <div className="absolute bottom-1 w-1 h-1 bg-white rounded-full" />
+                                <div className="absolute bottom-1.5 w-1.5 h-1.5 bg-[#22d3ee] rounded-full" />
                               )}
                             </div>
                           </TooltipTrigger>
-                          <TooltipContent className="bg-[#202f36] border-[#1e293b] text-[#e5e7eb] rounded-[10px]">
-                            <p className="text-xs font-bold">{format(day.date, 'dd/MM')}</p>
-                            <p className="text-[10px] text-[#9ca3af] font-bold uppercase">{day.done} de {day.total} feitos ({day.total > 0 ? Math.round((day.done/day.total)*100) : 0}%)</p>
+                          <TooltipContent className="bg-[#1e2a30] border-white/10 text-white rounded-2xl p-3">
+                            <p className="text-xs font-bold mb-1">{format(day.date, "dd 'de' MMMM", { locale: ptBR })}</p>
+                            <p className="text-[10px] text-white/50 font-bold uppercase tracking-wider">{day.done} de {day.total} hábitos concluídos</p>
                           </TooltipContent>
                         </Tooltip>
                       ))}
@@ -713,36 +711,26 @@ const HabitsPage = () => {
           </div>
 
           {viewMode !== 'weekly' && (
-            <div className="w-full lg:w-[40%] relative">
-              <div className="flex flex-col min-h-[480px] pt-4 px-2 overflow-visible h-full">
-                <div className="flex items-center justify-between mb-6 px-1">
+            <div className="w-full lg:w-[38%] relative">
+              <div className="flex flex-col min-h-[500px] h-full">
+                <div className="flex items-center justify-between mb-8 px-1">
                   <div className="flex items-center gap-3">
-                    <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
+                    <h2 className="text-white font-bold text-[14px] uppercase tracking-widest opacity-80">Hábitos de Hoje</h2>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button className="flex items-center justify-center w-5 h-5 rounded-full bg-white text-[#06090e] transition-all active:scale-95 group">
-                            <HelpCircle size={13} strokeWidth={4} />
+                          <button className="flex items-center justify-center w-6 h-6 rounded-full bg-white/10 text-white/40 hover:text-white transition-all active:scale-95 group">
+                            <HelpCircle size={14} strokeWidth={2.5} />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent side="top" className="bg-[#202f36] border-2 border-[#1e293b] p-3 max-w-[240px] text-white rounded-[16px] shadow-2xl">
-                          <div className="space-y-3">
-                            <div className="flex flex-col gap-1.5 border-b border-white/5 pb-2">
-                              <span className="text-[10px] font-black text-[#4ade80] uppercase tracking-widest">Escala de Prioridade</span>
-                              <div className="flex items-center gap-3 text-[8px] font-black text-white/70 uppercase">
-                                <span className="text-[#ef4444]">MÁXIMA</span>
-                                <div className="flex gap-1">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />
-                                  <div className="w-1.5 h-1.5 rounded-full bg-[#f97316]" />
-                                  <div className="w-1.5 h-1.5 rounded-full bg-[#eab308]" />
-                                  <div className="w-1.5 h-1.5 rounded-full bg-[#4ade80]" />
-                                </div>
-                                <span className="text-[#4ade80]">NORMAL</span>
+                        <TooltipContent side="top" className="bg-[#1e2a30] border border-white/10 p-4 max-w-[260px] text-white rounded-[24px] shadow-2xl">
+                          <div className="space-y-4">
+                            <div className="flex flex-col gap-2 border-b border-white/5 pb-3">
+                              <span className="text-[10px] font-bold text-[#22d3ee] uppercase tracking-widest">Dicas Rápidas</span>
+                              <div className="space-y-2 text-[11px] text-white/70 leading-relaxed">
+                                <p>• <strong className="text-white">Organizar:</strong> Pressione e arraste para reordenar.</p>
+                                <p>• <strong className="text-white">Concluir:</strong> Clique no círculo à esquerda do hábito.</p>
                               </div>
-                            </div>
-                            <div className="space-y-2 text-[9.5px] font-medium leading-relaxed text-white/80">
-                              <p>• <strong className="text-white">Arraste:</strong> A ordem define a prioridade.</p>
-                              <p>• <strong className="text-white">Check:</strong> Clique no círculo à esquerda.</p>
                             </div>
                           </div>
                         </TooltipContent>
@@ -750,12 +738,12 @@ const HabitsPage = () => {
                     </TooltipProvider>
                   </div>
 
-                  <div className="bg-[#4ade80]/10 text-[#4ade80] text-[10px] font-[700] px-2.5 py-1 rounded-full border border-[#4ade80]/10 shrink-0">
+                  <div className="bg-[#4ade80]/10 text-[#4ade80] text-[11px] font-bold px-3 py-1 rounded-full border border-[#4ade80]/20 shrink-0">
                     {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
                   </div>
                 </div>
 
-                <div className="flex-1 overflow-visible">
+                <div className="flex-1">
                   <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                     <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
                       {displayedHabitsData.pending.map((habit) => (
@@ -771,9 +759,9 @@ const HabitsPage = () => {
                       
                       {displayedHabitsData.completed.length > 0 && (
                         <>
-                          <div className="mt-6 mb-3 pt-3 border-t-2 border-white/5">
-                            <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.08em]">
-                              CONCLUÍDOS HOJE
+                          <div className="mt-8 mb-4 pt-4 border-t border-white/5">
+                            <span className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em]">
+                              Finalizados
                             </span>
                           </div>
                           {displayedHabitsData.completed.map((habit) => (
@@ -792,28 +780,30 @@ const HabitsPage = () => {
                   </DndContext>
                   
                   {displayedHabitsData.all.length === 0 && (
-                    <div className="h-full flex flex-col items-center justify-center p-10 text-center opacity-40">
-                      <Clock size={28} className="text-[#9ca3af] mb-3" />
-                      <p className="text-[10px] font-[700] uppercase text-[#9ca3af] tracking-[0.1em]">Nada planejado</p>
+                    <div className="h-full flex flex-col items-center justify-center p-12 text-center opacity-30">
+                      <Clock size={32} className="text-white mb-4" />
+                      <p className="text-[11px] font-bold uppercase text-white tracking-widest">Nada planejado para hoje</p>
                     </div>
                   )}
                 </div>
 
-                <div className="mt-auto pt-6 border-t-2 border-white/5">
+                <div className="mt-auto pt-8">
                   <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                     <DialogTrigger asChild>
-                      <Button className="w-full bg-[#22d3ee] hover:bg-[#22d3ee] active:translate-y-[1px] active:shadow-none transition-all duration-200 text-[#06090e] font-[800] text-[11px] uppercase tracking-[0.1em] h-11 rounded-[16px] shadow-[0_4px_0_0_#06b6d4]">
-                        <Plus className="mr-2" size={16} strokeWidth={3} /> NOVO HÁBITO
+                      <Button className="w-full bg-[#22d3ee] hover:bg-[#06b6d4] active:scale-[0.98] transition-all duration-300 text-[#06090e] font-bold text-[12px] uppercase tracking-widest h-14 rounded-[24px] shadow-xl shadow-cyan-500/20">
+                        <Plus className="mr-2" size={18} strokeWidth={3} /> NOVO HÁBITO
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-[#202f36] border-2 border-[#1e293b] text-[#e5e7eb] rounded-[24px]">
-                      <DialogHeader><DialogTitle className="uppercase tracking-widest text-sm text-[#22d3ee]">Criar Hábito</DialogTitle></DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label className="text-[11px] uppercase font-[700] tracking-[0.1em] text-[#9ca3af]">Título</Label>
+                    <DialogContent className="bg-[#1e2a30] border-white/10 text-white rounded-[32px] p-8">
+                      <DialogHeader>
+                        <DialogTitle className="uppercase tracking-[0.2em] text-[12px] font-bold text-[#22d3ee] mb-4">Criar Novo Hábito</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-6 py-4">
+                        <div className="space-y-2">
+                          <Label className="text-[11px] uppercase font-bold tracking-widest text-white/40 ml-1">Título do Hábito</Label>
                           <Input 
-                            placeholder="Beber água..." 
-                            className="bg-[#0a0f14] border-[#1e293b] text-[#e5e7eb]" 
+                            placeholder="Ex: Beber 3L de água" 
+                            className="h-12 bg-black/20 border-white/5 text-white rounded-[18px] px-5" 
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
                                 const val = (e.target as HTMLInputElement).value;
@@ -838,7 +828,9 @@ const HabitsPage = () => {
                           />
                         </div>
                       </div>
-                      <DialogFooter><Button className="bg-[#22d3ee] text-[#06090e] font-bold">CRIAR</Button></DialogFooter>
+                      <DialogFooter>
+                        <Button className="w-full h-12 bg-[#22d3ee] text-[#06090e] font-bold rounded-[18px] shadow-lg shadow-cyan-500/10">ADICIONAR</Button>
+                      </DialogFooter>
                     </DialogContent>
                   </Dialog>
                 </div>
@@ -847,7 +839,7 @@ const HabitsPage = () => {
           )}
         </div>
       ) : (
-        <div className="mt-[35px]">
+        <div className="mt-[40px] max-w-7xl mx-auto px-4">
           <DashboardOverview stats={stats} />
         </div>
       )}
