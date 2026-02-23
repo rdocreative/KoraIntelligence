@@ -11,8 +11,8 @@
   }
 
   :root {
-    /* Theme Palette - Deep Navy Blue (Updated to rgb(22, 28, 42) / #161c2a) */
-    --background: #161c2a;
+    /* Theme Palette - Deep Navy Blue (Updated to rgb(22, 28, 42)) */
+    --background: #0d111a;
     --panel: #161c2a;
     --sidebar: #0f1420;
     

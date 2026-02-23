@@ -44,7 +44,7 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#161c2a]">
+    <div className="flex min-h-screen bg-[#0d111a]">
       <SideNav />
       {/* pl aumentado para 85px para acomodar a SideNav maior */}
       <div className="flex-1 flex flex-col min-h-screen pl-[85px]">
