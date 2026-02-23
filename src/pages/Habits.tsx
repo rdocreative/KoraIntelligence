@@ -240,17 +240,17 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate, 
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[16px] border-[2px] p-3 mb-2 cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out",
+        "group rounded-[16px] border-[2px] p-[14px] mb-[10px] cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out",
         isDragging && "scale-[1.02] opacity-90",
         isCompleted && !isDragging && "opacity-[0.4] grayscale-[0.6]"
       )}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3.5">
         <button 
           onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
           onPointerDown={(e) => e.stopPropagation()}
           className={cn(
-            "h-5.5 w-5.5 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
+            "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
             isCompleted 
               ? "bg-[#22d3ee] border-[#22d3ee]" 
               : ""
@@ -262,22 +262,22 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate, 
         >
           {isCompleted && (
             <Check 
-              size={12} 
+              size={13} 
               className="stroke-[4px] text-[#06090e]" 
             />
           )}
         </button>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-0.5">
+          <div className="flex items-center gap-2 mb-1">
             <h3 className={cn(
-              "text-[13.5px] font-[800] text-[#ffffff] truncate leading-tight transition-all duration-200",
+              "text-[14px] font-[800] text-[#ffffff] truncate leading-tight transition-all duration-200",
               isCompleted && "line-through opacity-50"
             )}>
               {habit.title}
             </h3>
             <span 
-              className="text-[8px] font-[900] px-1.5 py-0.5 rounded-full border shrink-0 uppercase tracking-wider"
+              className="text-[8.5px] font-[900] px-1.5 py-0.5 rounded-full border shrink-0 uppercase tracking-wider"
               style={{ 
                 color: priorityTheme.tagColor, 
                 borderColor: `${priorityTheme.tagColor}30`,
@@ -288,18 +288,18 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate, 
             </span>
           </div>
           <div className="flex items-center gap-1.5">
-            <Clock size={11} className="text-white/40" />
-            <span className="text-[10px] font-[700] text-white/40">
+            <Clock size={12} className="text-white/40" />
+            <span className="text-[10.5px] font-[700] text-white/40">
               {habit.time}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center shrink-0 gap-2">
+        <div className="flex items-center shrink-0 gap-2.5">
           {streakInfo.streak > 0 && (
-            <div className="flex items-center gap-1 bg-black/50 border border-white/5 px-2 py-0.5 rounded-lg text-white">
-              <Flame size={12} className="text-orange-400 fill-orange-400" />
-              <span className="text-[10px] font-black">{streakInfo.streak}</span>
+            <div className="flex items-center gap-1.5 bg-black/50 border border-white/5 px-2.5 py-1 rounded-lg text-white">
+              <Flame size={13} className="text-orange-400 fill-orange-400" />
+              <span className="text-[11px] font-black">{streakInfo.streak}</span>
             </div>
           )}
           
@@ -309,20 +309,20 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate, 
               onPointerDown={(e) => e.stopPropagation()}
               className="p-1 text-white/30 hover:text-white transition-colors z-10"
             >
-              <ChevronRight size={18} />
+              <ChevronRight size={20} />
             </button>
           )}
         </div>
       </div>
 
-      <div className="mt-3 pt-2 border-t border-white/5">
-        <div className="flex justify-between items-center mb-1.5">
-          <span className="text-[9px] font-[800] text-white/30 uppercase tracking-[0.15em]">Meta Mensal</span>
-          <span className="text-[10px] font-[900] tabular-nums" style={{ color: priorityTheme.main }}>
+      <div className="mt-4 pt-2.5 border-t border-white/5">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-[9.5px] font-[800] text-white/30 uppercase tracking-[0.15em]">Meta Mensal</span>
+          <span className="text-[11px] font-[900] tabular-nums" style={{ color: priorityTheme.main }}>
             {completionsThisMonth}/{target}
           </span>
         </div>
-        <div className="h-[4px] w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
+        <div className="h-[4.5px] w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
           <div 
             className="h-full transition-all duration-700 ease-out" 
             style={{ 
@@ -772,6 +772,18 @@ const HabitsPage = () => {
                 </div>
               </div>
 
+              {/* Legenda de Prioridade */}
+              <div className="flex items-center gap-3 text-[9px] font-[800] text-[#9ca3af] uppercase tracking-widest mb-6 px-1">
+                <span>MÁXIMA</span>
+                <div className="flex gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-[#ef4444]" />
+                  <div className="w-2 h-2 rounded-full bg-[#f97316]" />
+                  <div className="w-2 h-2 rounded-full bg-[#eab308]" />
+                  <div className="w-2 h-2 rounded-full bg-[#22d3ee]" />
+                </div>
+                <span>NORMAL</span>
+              </div>
+
               <div className="flex-1 overflow-visible">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                   <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
@@ -790,7 +802,7 @@ const HabitsPage = () => {
                     
                     {displayedHabitsData.completed.length > 0 && (
                       <>
-                        <div className="mt-4 mb-3 pt-3 border-t-2 border-white/5">
+                        <div className="mt-6 mb-3 pt-3 border-t-2 border-white/5">
                           <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.08em]">
                             CONCLUÍDOS HOJE
                           </span>
