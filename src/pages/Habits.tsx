@@ -696,6 +696,11 @@ const HabitsPage = () => {
                           <TooltipTrigger asChild>
                             <div
                               onClick={() => setSelectedDate(day.date)}
+                              onContextMenu={(e) => {
+                                e.preventDefault();
+                                setSelectedDate(day.date);
+                                setIsModalOpen(true);
+                              }}
                               className={cn(
                                 "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative",
                                 !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
