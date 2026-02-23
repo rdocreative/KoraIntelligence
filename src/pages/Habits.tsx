@@ -666,14 +666,12 @@ const HabitsPage = () => {
                 </div>
 
                 <div className="flex items-center">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <button 
                     onClick={() => { setCurrentDate(new Date()); setSelectedDate(new Date()); }}
                     className="text-[11px] font-[800] text-[#22d3ee] bg-[#22d3ee]/10 border border-[#22d3ee]/30 uppercase rounded-[999px] h-auto px-[14px] py-[6px] hover:bg-[#22d3ee] hover:text-[#06090e] transition-all"
                   >
                     Hoje
-                  </Button>
+                  </button>
                 </div>
               </div>
 
@@ -693,7 +691,7 @@ const HabitsPage = () => {
                             <div
                               onClick={() => setSelectedDate(day.date)}
                               className={cn(
-                                "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
+                                "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative",
                                 !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
                                 day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#16222b] border-[#1e293b] text-[#e5e7eb]",
                                 day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#ef4444]/30 border-[#ef4444]/50 text-white", 
@@ -701,11 +699,14 @@ const HabitsPage = () => {
                                 day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#eab308]/30 border-[#eab308]/50 text-white", 
                                 day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#84cc16]/30 border-[#84cc16]/50 text-white", 
                                 day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 5 && "bg-[#22c55e]/30 border-[#22c55e]/50 text-white", 
-                                day.isCurrentMonth && day.isToday && "border-white",
-                                day.isSelected && "ring-2 ring-white/50 ring-offset-2 ring-offset-background"
+                                day.isToday && !day.isSelected && "border-white/40",
+                                day.isSelected && "border-white z-10 scale-105 shadow-[0_0_15px_rgba(255,255,255,0.2)]"
                               )}
                             >
                               <span className="text-[13px] font-[700]">{format(day.date, 'd')}</span>
+                              {day.isToday && !day.isSelected && (
+                                <div className="absolute bottom-1 w-1 h-1 bg-white rounded-full" />
+                              )}
                             </div>
                           </TooltipTrigger>
                           <TooltipContent className="bg-[#202f36] border-[#1e293b] text-[#e5e7eb] rounded-[10px]">
