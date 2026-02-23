@@ -64,6 +64,7 @@ interface Habit {
   time: string;
   completedDates: string[];
   active: boolean;
+  priority: number; // 0: Máxima, 1: Alta, 2: Média, 3: Normal
 }
 
 // --- Sortable Item Component ---
@@ -73,11 +74,9 @@ interface SortableItemProps {
   onEdit: (habit: Habit, rect: DOMRect) => void;
   onToggle: (id: string) => void;
   currentDate: Date;
-  index: number;
-  totalItems: number;
 }
 
-const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate, index, totalItems }: SortableItemProps) => {
+const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }: SortableItemProps) => {
   const {
     attributes,
     listeners,
@@ -176,7 +175,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate, 
   const target = 30;
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
-  // Lógica do Termômetro baseada na posição (index)
+  // Lógica do Termômetro baseada na propriedade priority do hábito
   const priorityTheme = useMemo(() => {
     if (isCompleted) {
       return {
@@ -188,42 +187,41 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate, 
       };
     }
 
-    const relativePos = index / Math.max(1, totalItems - 1);
-    
-    if (relativePos <= 0.25) {
-      return {
-        main: "#ef4444",
-        darkBorder: "#991b1b",
-        bg: "rgba(239, 68, 68, 0.08)",
-        tag: "PRIORIDADE MÁXIMA",
-        tagColor: "#ef4444"
-      };
-    } else if (relativePos <= 0.5) {
-      return {
-        main: "#f97316",
-        darkBorder: "#9a3412",
-        bg: "rgba(249, 115, 22, 0.08)",
-        tag: "PRIORIDADE ALTA",
-        tagColor: "#f97316"
-      };
-    } else if (relativePos <= 0.75) {
-      return {
-        main: "#eab308",
-        darkBorder: "#854d0e",
-        bg: "rgba(234, 179, 8, 0.08)",
-        tag: "PRIORIDADE MÉDIA",
-        tagColor: "#eab308"
-      };
-    } else {
-      return {
-        main: "#22d3ee",
-        darkBorder: "#0891b2",
-        bg: "rgba(34, 211, 238, 0.08)",
-        tag: "PRIORIDADE NORMAL",
-        tagColor: "#22d3ee"
-      };
+    switch (habit.priority) {
+      case 0:
+        return {
+          main: "#ef4444",
+          darkBorder: "#991b1b",
+          bg: "rgba(239, 68, 68, 0.08)",
+          tag: "PRIORIDADE MÁXIMA",
+          tagColor: "#ef4444"
+        };
+      case 1:
+        return {
+          main: "#f97316",
+          darkBorder: "#9a3412",
+          bg: "rgba(249, 115, 22, 0.08)",
+          tag: "PRIORIDADE ALTA",
+          tagColor: "#f97316"
+        };
+      case 2:
+        return {
+          main: "#eab308",
+          darkBorder: "#854d0e",
+          bg: "rgba(234, 179, 8, 0.08)",
+          tag: "PRIORIDADE MÉDIA",
+          tagColor: "#eab308"
+        };
+      default:
+        return {
+          main: "#22d3ee",
+          darkBorder: "#0891b2",
+          bg: "rgba(34, 211, 238, 0.08)",
+          tag: "PRIORIDADE NORMAL",
+          tagColor: "#22d3ee"
+        };
     }
-  }, [index, totalItems, isCompleted]);
+  }, [habit.priority, isCompleted]);
 
   return (
     <div 
@@ -438,10 +436,10 @@ const HabitsPage = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'charts'>('overview');
   const [viewMode, setViewMode] = useState<'monthly' | 'weekly'>('monthly');
   const [habits, setHabits] = useState<Habit[]>([
-    { id: '1', title: 'Beber 3L de água', emoji: '💧', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '08:00', completedDates: [], active: true },
-    { id: '2', title: 'Ler 10 páginas', emoji: '📚', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '21:00', completedDates: [], active: true },
-    { id: '3', title: 'Academia', emoji: '💪', frequency: 'weekly', weekDays: [1,3,5], time: '18:00', completedDates: [], active: true },
-    { id: '4', title: 'Meditar', emoji: '🧘', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '07:30', completedDates: [], active: true },
+    { id: '1', title: 'Beber 3L de água', emoji: '💧', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '08:00', completedDates: [], active: true, priority: 0 },
+    { id: '2', title: 'Ler 10 páginas', emoji: '📚', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '21:00', completedDates: [], active: true, priority: 1 },
+    { id: '3', title: 'Academia', emoji: '💪', frequency: 'weekly', weekDays: [1,3,5], time: '18:00', completedDates: [], active: true, priority: 2 },
+    { id: '4', title: 'Meditar', emoji: '🧘', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '07:30', completedDates: [], active: true, priority: 3 },
   ]);
 
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -461,7 +459,17 @@ const HabitsPage = () => {
       setHabits((items) => {
         const oldIndex = items.findIndex((i) => i.id === active.id);
         const newIndex = items.findIndex((i) => i.id === over?.id);
-        return arrayMove(items, oldIndex, newIndex);
+        const reordered = arrayMove(items, oldIndex, newIndex);
+        
+        // Recalcula prioridade APENAS após a reordenação manual
+        return reordered.map((item, idx) => {
+          const relativePos = idx / Math.max(1, reordered.length - 1);
+          let p = 3;
+          if (relativePos <= 0.25) p = 0;
+          else if (relativePos <= 0.5) p = 1;
+          else if (relativePos <= 0.75) p = 2;
+          return { ...item, priority: p };
+        });
       });
     }
   };
@@ -798,7 +806,7 @@ const HabitsPage = () => {
               <div className="flex-1 overflow-visible">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                   <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
-                    {displayedHabitsData.pending.map((habit, idx) => (
+                    {displayedHabitsData.pending.map((habit) => (
                       <SortableHabitItem 
                         key={habit.id}
                         habit={habit}
@@ -806,8 +814,6 @@ const HabitsPage = () => {
                         onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
                         onToggle={(id) => toggleHabit(id)}
                         currentDate={currentDate}
-                        index={idx}
-                        totalItems={displayedHabitsData.all.length}
                       />
                     ))}
                     
@@ -818,7 +824,7 @@ const HabitsPage = () => {
                             CONCLUÍDOS HOJE
                           </span>
                         </div>
-                        {displayedHabitsData.completed.map((habit, idx) => (
+                        {displayedHabitsData.completed.map((habit) => (
                           <SortableHabitItem 
                             key={habit.id}
                             habit={habit}
@@ -826,8 +832,6 @@ const HabitsPage = () => {
                             onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
                             onToggle={(id) => toggleHabit(id)}
                             currentDate={currentDate}
-                            index={displayedHabitsData.pending.length + idx}
-                            totalItems={displayedHabitsData.all.length}
                           />
                         ))}
                       </>
@@ -855,7 +859,31 @@ const HabitsPage = () => {
                     <div className="grid gap-4 py-4">
                       <div className="grid gap-2">
                         <Label className="text-[11px] uppercase font-[700] tracking-[0.1em] text-[#9ca3af]">Título</Label>
-                        <Input placeholder="Beber água..." className="bg-[#0a0f14] border-[#1e293b] text-[#e5e7eb]" />
+                        <Input 
+                          placeholder="Beber água..." 
+                          className="bg-[#0a0f14] border-[#1e293b] text-[#e5e7eb]" 
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              const val = (e.target as HTMLInputElement).value;
+                              if (val) {
+                                const newHabit: Habit = {
+                                  id: Math.random().toString(36).substr(2, 9),
+                                  title: val,
+                                  emoji: '✨',
+                                  frequency: 'daily',
+                                  weekDays: [0,1,2,3,4,5,6],
+                                  time: format(new Date(), 'HH:mm'),
+                                  completedDates: [],
+                                  active: true,
+                                  priority: 3
+                                };
+                                setHabits(prev => [...prev, newHabit]);
+                                setIsModalOpen(false);
+                                (e.target as HTMLInputElement).value = '';
+                              }
+                            }
+                          }}
+                        />
                       </div>
                     </div>
                     <DialogFooter><Button className="bg-[#22d3ee] text-[#06090e] font-bold">CRIAR</Button></DialogFooter>
@@ -872,7 +900,7 @@ const HabitsPage = () => {
           habit={editingHabit.habit}
           rect={editingHabit.rect}
           onClose={() => setEditingHabit(null)}
-          onSave={(updated) => setForm(updated)}
+          onSave={(updated) => setHabits(prev => prev.map(h => h.id === updated.id ? updated : h))}
           onDelete={(id) => setHabits(prev => prev.filter(h => h.id !== id))}
         />
       )}
