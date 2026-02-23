@@ -386,7 +386,9 @@ const HabitsPage = () => {
     const currentMonthDays = calendarDays.filter(day => day.isCurrentMonth);
     const totalPossible = currentMonthDays.reduce((acc, day) => acc + day.total, 0);
     const totalDone = currentMonthDays.reduce((acc, day) => acc + day.done, 0);
-    return totalPossible === 0 ? 0 : Math.round((totalDone / totalPossible) * 100);
+    const realProgress = totalPossible === 0 ? 0 : Math.round((totalDone / totalPossible) * 100);
+    // Adicionando um "boost" de 10% conforme solicitado
+    return Math.min(100, realProgress + 10);
   }, [calendarDays]);
 
   const stats = useMemo(() => {
@@ -598,7 +600,7 @@ const HabitsPage = () => {
                   <span>MAIS</span>
                 </div>
 
-                <div className="mt-8 space-y-3 px-2">
+                <div className="mt-6 space-y-3 px-2">
                   <div className="flex justify-between items-end">
                     <div className="flex flex-col">
                       <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.15em] mb-0.5">Progresso Mensal</span>
