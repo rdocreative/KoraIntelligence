@@ -174,54 +174,13 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const target = 30;
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
-  const getHabitStyle = (title: string) => {
-    if (title === 'Beber 3L de água') {
-      return {
-        main: "#1CB0F6",
-        dark: "#0E8FC7",
-        bg: "rgba(28, 176, 246, 0.11)",
-        border: "rgba(28, 176, 246, 0.22)",
-        shadow: "#0E8FC7FC"
-      };
-    }
-    if (title === 'Ler 10 páginas') {
-      return {
-        main: "#FF9600",
-        dark: "#CC7700",
-        bg: "rgba(255, 150, 0, 0.11)",
-        border: "rgba(255, 150, 0, 0.22)",
-        shadow: "#CC7700FC"
-      };
-    }
-    if (title === 'Academia') {
-      return {
-        main: "#CE82FF",
-        dark: "#6B35A0",
-        bg: "rgba(206, 130, 255, 0.11)",
-        border: "rgba(206, 130, 255, 0.22)",
-        shadow: "#6B35A0FC"
-      };
-    }
-    if (title === 'Meditar') {
-      return {
-        main: "#58CC02",
-        dark: "#46A302",
-        bg: "rgba(88, 204, 2, 0.11)",
-        border: "rgba(88, 204, 2, 0.22)",
-        shadow: "#46A302FC"
-      };
-    }
-    
-    return {
-      main: "#22d3ee",
-      dark: "#0E8FC7",
-      bg: "rgba(34, 211, 238, 0.11)",
-      border: "rgba(34, 211, 238, 0.22)",
-      shadow: "#0E8FC7FC"
-    };
+  // Paleta padronizada para todos os hábitos
+  const theme = {
+    main: "#22d3ee",
+    dark: "#0891b2",
+    bg: "rgba(34, 211, 238, 0.05)",
+    border: "rgba(34, 211, 238, 0.15)"
   };
-
-  const theme = getHabitStyle(habit.title);
 
   return (
     <div 
@@ -233,15 +192,14 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         ...style,
         backgroundColor: theme.bg,
         borderColor: theme.border,
-        boxShadow: isCompleted ? 'none' : `0px 5px 0px ${theme.shadow}`,
-        transform: isCompleted ? `${CSS.Translate.toString(transform)} translateY(5px)` : CSS.Translate.toString(transform),
+        boxShadow: 'none', // Removido o stroke inferior sólido
       }}
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[14px] border-[1px] p-[12px] px-[14px] mb-4 cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out hover:scale-[1.01] active:translate-y-[5px] active:shadow-none habit-card",
+        "group rounded-[18px] border-[1.5px] p-[14px] mb-4 cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out hover:bg-[#22d3ee]/10",
         isDragging && "scale-[1.03] opacity-90",
-        isCompleted && !isDragging && "opacity-[0.6] grayscale-[0.5]"
+        isCompleted && !isDragging && "opacity-[0.5] grayscale-[0.8]"
       )}
     >
       <div className="flex items-start gap-[12px]">
@@ -249,17 +207,16 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
           onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
           onPointerDown={(e) => e.stopPropagation()}
           className={cn(
-            "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10 mt-1",
+            "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10 mt-0.5",
             isCompleted 
-              ? "bg-white border-white" 
-              : "border-white/30 bg-black/20 hover:border-white/50 hover:bg-black/30"
+              ? "bg-[#22d3ee] border-[#22d3ee]" 
+              : "border-[#22d3ee]/30 bg-black/20 hover:border-[#22d3ee]/60"
           )}
         >
           {isCompleted && (
             <Check 
               size={14} 
-              className="stroke-[4px]" 
-              style={{ color: theme.dark }} 
+              className="stroke-[4px] text-[#06090e]" 
             />
           )}
         </button>
@@ -267,20 +224,20 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         <div className="flex-1 min-w-0">
           <h3 className={cn(
             "text-[14px] font-[800] text-[#ffffff] truncate leading-tight transition-all duration-200",
-            isCompleted && "line-through opacity-70"
+            isCompleted && "line-through opacity-60"
           )}>
             {habit.title}
           </h3>
-          <div className="flex flex-col items-start mt-[2px]">
-            <div className="flex items-center gap-1">
-              <Clock size={11} className="text-white/60" />
-              <span className="text-[11px] font-[500] text-white/60">
+          <div className="flex flex-col items-start mt-[4px]">
+            <div className="flex items-center gap-1.5">
+              <Clock size={12} className="text-white/40" />
+              <span className="text-[11px] font-[600] text-white/40">
                 {habit.time}
               </span>
             </div>
             
             {streakInfo.isLost && !isCompleted && (
-              <div className="mt-1 text-[10px] font-[800] text-[#FF4444] flex items-center gap-1">
+              <div className="mt-1.5 text-[10px] font-[800] text-[#FF4444] flex items-center gap-1 uppercase tracking-wider">
                 💔 Sequência perdida
               </div>
             )}
@@ -289,9 +246,9 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
 
         <div className="flex items-center shrink-0 ml-auto gap-2">
           {streakInfo.streak > 0 && (
-            <div className="flex items-center gap-1.5 bg-black/60 border border-white/5 px-[8px] py-[2px] rounded-[7px] text-white transition-all">
+            <div className="flex items-center gap-1.5 bg-black/40 border border-white/5 px-[8px] py-[3px] rounded-[8px] text-white">
               <Flame size={12} className="text-orange-400 fill-orange-400" />
-              <span className="text-[10px] font-bold">{streakInfo.streak}</span>
+              <span className="text-[10px] font-black">{streakInfo.streak}</span>
             </div>
           )}
           
@@ -299,7 +256,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
             <button 
               onClick={handleEditClick}
               onPointerDown={(e) => e.stopPropagation()}
-              className="p-1 text-white/40 hover:text-white transition-colors z-10"
+              className="p-1 text-white/20 hover:text-white transition-colors z-10"
             >
               <ChevronRight size={18} />
             </button>
@@ -307,15 +264,15 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         </div>
       </div>
 
-      <div className="mt-3 pt-2.5 border-t border-white/5">
-        <div className="flex justify-between items-center mb-1.5">
-          <span className="text-[10px] font-[800] text-white/40 uppercase tracking-wider">Este mês</span>
-          <span className="text-[10px] font-[900] text-white/60 tabular-nums">{completionsThisMonth}/{target}</span>
+      <div className="mt-4 pt-3 border-t border-white/5">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-[9px] font-[900] text-white/30 uppercase tracking-[0.15em]">Meta Mensal</span>
+          <span className="text-[10px] font-[900] text-[#22d3ee] tabular-nums">{completionsThisMonth}/{target}</span>
         </div>
-        <div className="h-[3px] w-full bg-black/20 rounded-full overflow-hidden">
+        <div className="h-[4px] w-full bg-black/30 rounded-full overflow-hidden">
           <div 
-            className="h-full transition-all duration-700 ease-out opacity-60" 
-            style={{ width: `${progressPercent}%`, backgroundColor: theme.main }}
+            className="h-full transition-all duration-700 ease-out bg-[#22d3ee] opacity-80 shadow-[0_0_8px_rgba(34,211,238,0.3)]" 
+            style={{ width: `${progressPercent}%` }}
           />
         </div>
       </div>
@@ -362,37 +319,37 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
     <div 
       ref={popupRef}
       style={{ top, left }}
-      className="fixed z-[1000] min-w-[280px] bg-[#202f36] border-2 border-[#1e293b] rounded-[16px] p-[16px] px-[18px] shadow-[0_4px_0_0_#020305] animate-in fade-in slide-in-from-top-2 duration-200"
+      className="fixed z-[1000] min-w-[280px] bg-[#202f36] border-2 border-[#1e293b] rounded-[20px] p-[18px] shadow-[0_10px_25px_-5px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="space-y-4">
-        <div className="space-y-1">
-          <Label className="text-[11px] font-[700] uppercase tracking-[0.1em] text-[#9ca3af]">Nome</Label>
+        <div className="space-y-1.5">
+          <Label className="text-[10px] font-[800] uppercase tracking-[0.1em] text-white/40">Nome do Hábito</Label>
           <Input 
             value={form.title} 
             onChange={(e) => setForm({...form, title: e.target.value})}
-            className="h-9 bg-[#0a0f14] border-[#1e293b] text-[14px] font-[600] text-[#e5e7eb] focus-visible:ring-[#22d3ee]" 
+            className="h-10 bg-[#0a0f14] border-[#1e293b] text-[14px] font-[700] text-white focus-visible:ring-[#22d3ee] rounded-[12px]" 
           />
         </div>
 
-        <div className="space-y-1">
-          <Label className="text-[11px] font-[700] uppercase tracking-[0.1em] text-[#9ca3af]">Horário</Label>
+        <div className="space-y-1.5">
+          <Label className="text-[10px] font-[800] uppercase tracking-[0.1em] text-white/40">Horário Lembrete</Label>
           <Input 
             type="time"
             value={form.time} 
             onChange={(e) => setForm({...form, time: e.target.value})}
-            className="h-9 bg-[#0a0f14] border-[#1e293b] text-[14px] font-[600] text-[#e5e7eb] focus-visible:ring-[#22d3ee]" 
+            className="h-10 bg-[#0a0f14] border-[#1e293b] text-[14px] font-[700] text-white focus-visible:ring-[#22d3ee] rounded-[12px]" 
           />
         </div>
 
-        <div className="flex items-center justify-between bg-[#0a0f14] p-2.5 rounded-[10px] border border-[#1e293b]">
-          <span className="text-[11px] font-[700] uppercase tracking-[0.1em] text-[#9ca3af] ml-1">
-            {form.active ? 'Ativo' : 'Pausado'}
+        <div className="flex items-center justify-between bg-[#0a0f14] p-3 rounded-[12px] border border-[#1e293b]">
+          <span className="text-[10px] font-[800] uppercase tracking-[0.1em] text-white/40 ml-1">
+            Status: {form.active ? 'Ativo' : 'Pausado'}
           </span>
           <button 
             onClick={() => setForm({...form, active: !form.active})}
             className={cn(
-              "p-1.5 rounded-[8px] transition-colors",
-              form.active ? "text-[#22d3ee] bg-[#22d3ee]/10" : "text-[#9ca3af]"
+              "p-1.5 rounded-[8px] transition-all",
+              form.active ? "text-[#22d3ee] bg-[#22d3ee]/10" : "text-white/20 hover:text-white"
             )}
           >
             {form.active ? <Play size={14} fill="currentColor" /> : <Pause size={14} fill="currentColor" />}
@@ -404,14 +361,14 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
             variant="outline" 
             size="sm"
             onClick={() => { onDelete(habit.id); onClose(); }}
-            className="flex-1 h-9 bg-transparent border-[#ff4b4b] text-[#ff4b4b] hover:bg-[#ff4b4b] hover:text-white text-[11px] font-[700] uppercase tracking-wider rounded-[10px]"
+            className="flex-1 h-10 bg-transparent border-[#ff4b4b]/40 text-[#ff4b4b] hover:bg-[#ff4b4b] hover:text-white text-[10px] font-[800] uppercase tracking-wider rounded-[12px] transition-all"
           >
-            <Trash2 size={14} className="mr-1.5" /> Excluir
+            <Trash2 size={14} className="mr-2" /> Excluir
           </Button>
           <Button 
             size="sm"
             onClick={() => { onSave(form); onClose(); }}
-            className="flex-[2] h-9 bg-[#22d3ee] hover:bg-[#06b6d4] text-[#06090e] font-[800] text-[11px] uppercase tracking-wider rounded-[10px]"
+            className="flex-[2] h-10 bg-[#22d3ee] hover:bg-[#06b6d4] text-[#06090e] font-[900] text-[10px] uppercase tracking-wider rounded-[12px] shadow-[0_4px_0_0_#0891b2] active:translate-y-[2px] active:shadow-none transition-all"
           >
             Salvar
           </Button>
