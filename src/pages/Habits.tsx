@@ -753,24 +753,25 @@ const HabitsPage = () => {
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[40%] relative">
             <div className="flex flex-col min-h-[480px] pt-4 px-2 overflow-visible h-full">
-              {/* Header Integrado com Legenda */}
-              <div className="flex flex-col gap-3 mb-6 px-1">
-                <div className="flex items-center justify-between">
+              {/* Header Integrado com Legenda Horizontal */}
+              <div className="flex items-center justify-between mb-6 px-1">
+                <div className="flex items-center gap-3">
                   <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
-                  <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-2.5 py-1 rounded-full border border-[#22d3ee]/10">
-                    {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
+                  
+                  <div className="flex items-center gap-2 text-[8.5px] font-[800] text-[#9ca3af] uppercase tracking-widest">
+                    <span className="text-[#ef4444]/80">MÁXIMA</span>
+                    <div className="flex gap-1 items-center">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#f97316]" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#eab308]" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#22d3ee]" />
+                    </div>
+                    <span className="text-[#22d3ee]/80">NORMAL</span>
                   </div>
                 </div>
-                
-                <div className="flex items-center gap-3 text-[9px] font-[800] text-[#9ca3af] uppercase tracking-widest">
-                  <span>MÁXIMA</span>
-                  <div className="flex gap-1.5 items-center">
-                    <div className="w-2 h-2 rounded-full bg-[#ef4444]" />
-                    <div className="w-2 h-2 rounded-full bg-[#f97316]" />
-                    <div className="w-2 h-2 rounded-full bg-[#eab308]" />
-                    <div className="w-2 h-2 rounded-full bg-[#22d3ee]" />
-                  </div>
-                  <span>PRIORIDADE NORMAL</span>
+
+                <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-2.5 py-1 rounded-full border border-[#22d3ee]/10 shrink-0">
+                  {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
                 </div>
               </div>
 
