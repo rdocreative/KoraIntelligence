@@ -174,13 +174,13 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const target = 30;
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
-  // Paleta intensificada com degradê
+  // Paleta com cores sólidas e stroke azul mais escuro
   const theme = {
     main: "#22d3ee",
-    dark: "#0891b2",
-    gradient: "linear-gradient(145deg, rgba(34, 211, 238, 0.18), rgba(34, 211, 238, 0.04))",
-    completedGradient: "linear-gradient(145deg, rgba(34, 211, 238, 0.08), rgba(34, 211, 238, 0.02))",
-    border: "rgba(34, 211, 238, 0.4)"
+    darkBorder: "#0891b2", // Azul um pouco mais escuro solicitado
+    bg: "rgba(34, 211, 238, 0.08)",
+    completedBg: "rgba(34, 211, 238, 0.03)",
+    completedBorder: "rgba(34, 211, 238, 0.15)"
   };
 
   return (
@@ -191,15 +191,15 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       }}
       style={{
         ...style,
-        background: isCompleted ? theme.completedGradient : theme.gradient,
-        borderColor: isCompleted ? "rgba(34, 211, 238, 0.15)" : theme.border,
-        boxShadow: isCompleted ? 'none' : '0 10px 30px -10px rgba(34, 211, 238, 0.1)',
+        backgroundColor: isCompleted ? theme.completedBg : theme.bg,
+        borderColor: isCompleted ? theme.completedBorder : theme.darkBorder,
+        boxShadow: 'none',
       }}
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[20px] border-[2px] p-[16px] mb-4 cursor-grab active:cursor-grabbing select-none transition-all duration-300 ease-out hover:scale-[1.01]",
-        isDragging && "scale-[1.03] opacity-90",
+        "group rounded-[20px] border-[2.5px] p-[16px] mb-4 cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out hover:bg-[#22d3ee]/10",
+        isDragging && "scale-[1.02] opacity-90",
         isCompleted && !isDragging && "opacity-[0.4] grayscale-[0.6]"
       )}
     >
@@ -268,11 +268,11 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       <div className="mt-5 pt-3.5 border-t border-white/10">
         <div className="flex justify-between items-center mb-2.5">
           <span className="text-[10px] font-[900] text-white/40 uppercase tracking-[0.2em]">Meta Mensal</span>
-          <span className="text-[11px] font-[950] text-[#22d3ee] tabular-nums drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]">{completionsThisMonth}/{target}</span>
+          <span className="text-[11px] font-[950] text-[#22d3ee] tabular-nums">{completionsThisMonth}/{target}</span>
         </div>
         <div className="h-[6px] w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
           <div 
-            className="h-full transition-all duration-700 ease-out bg-[#22d3ee] shadow-[0_0_12px_rgba(34,211,238,0.6)]" 
+            className="h-full transition-all duration-700 ease-out bg-[#22d3ee]" 
             style={{ width: `${progressPercent}%` }}
           />
         </div>
