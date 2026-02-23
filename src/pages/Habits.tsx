@@ -483,9 +483,11 @@ const HabitsPage = () => {
       
       let level = 0;
       if (percent > 0) {
-        if (percent <= 0.25) level = 1;
-        else if (percent <= 0.75) level = 2;
-        else level = 3;
+        if (percent <= 0.2) level = 1;
+        else if (percent <= 0.4) level = 2;
+        else if (percent <= 0.6) level = 3;
+        else if (percent <= 0.8) level = 4;
+        else level = 5;
       }
 
       const isPast = isBefore(startOfDay(day), startOfDay(new Date()));
@@ -534,10 +536,12 @@ const HabitsPage = () => {
     return { pending, completed, all: [...pending, ...completed] };
   }, [habits, selectedDate]);
 
-  // Thermometer color logic for Progress Bar
+  // Smoother Thermometer Gradient for Progress Bar
   const thermometerColor = useMemo(() => {
-    if (monthProgress < 30) return "from-[#ff4b4b] to-[#ff9600]";
-    if (monthProgress < 75) return "from-[#ff9600] to-[#58cc02]";
+    if (monthProgress < 20) return "from-[#ff4b4b] to-[#ff4b4b]";
+    if (monthProgress < 40) return "from-[#ff4b4b] to-[#ff9600]";
+    if (monthProgress < 60) return "from-[#ff9600] to-[#facc15]";
+    if (monthProgress < 80) return "from-[#facc15] to-[#58cc02]";
     return "from-[#58cc02] to-[#4ade80]";
   }, [monthProgress]);
 
@@ -686,10 +690,12 @@ const HabitsPage = () => {
                               "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
                               !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
                               day.isCurrentMonth && (day.isFuture || (day.isPast && day.level === 0)) && "bg-[#16222b] border-[#1e293b] text-[#e5e7eb]",
-                              // Termômetro: Vermelho -> Laranja -> Verde Suave
-                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#4a1c1c] border-[#ff4b4b] text-white",
-                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#4a3a1c] border-[#ff9600] text-white",
-                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#1c4a1c] border-[#4ade80] text-white",
+                              // Granular Thermometer Levels
+                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-gradient-to-br from-[#4a1c1c] to-[#ff4b4b] border-[#ff4b4b] text-white shadow-[0_0_10px_rgba(255,75,75,0.2)]",
+                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-gradient-to-br from-[#4a301c] to-[#ff9600] border-[#ff9600] text-white shadow-[0_0_10px_rgba(255,150,0,0.2)]",
+                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-gradient-to-br from-[#4a4a1c] to-[#facc15] border-[#facc15] text-white shadow-[0_0_10px_rgba(250,204,21,0.2)]",
+                              day.isCurrentMonth && day.isPast && day.level === 4 && "bg-gradient-to-br from-[#2a4a1c] to-[#58cc02] border-[#58cc02] text-white shadow-[0_0_10px_rgba(88,204,2,0.2)]",
+                              day.isCurrentMonth && day.isPast && day.level === 5 && "bg-gradient-to-br from-[#1c4a2a] to-[#4ade80] border-[#4ade80] text-white shadow-[0_0_15px_rgba(74,222,128,0.3)]",
                               day.isCurrentMonth && day.isToday && "border-white bg-transparent text-white",
                               day.isSelected && "ring-2 ring-white/50 ring-offset-2 ring-offset-background"
                             )}
@@ -707,9 +713,9 @@ const HabitsPage = () => {
                 </div>
 
                 <div className="mt-6 flex items-center justify-center gap-3 text-[10px] font-[700] text-[#9ca3af] uppercase tracking-widest">
-                  <span>MENOS</span>
+                  <span>FRIO</span>
                   <div className="flex gap-1.5">
-                    {[0, 1, 2, 3].map(l => (
+                    {[0, 1, 2, 3, 4, 5].map(l => (
                       <TooltipProvider key={l}>
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -717,17 +723,19 @@ const HabitsPage = () => {
                               "w-2.5 h-2.5 rounded-full border border-[#1e293b]",
                               l === 0 ? "bg-[#16222b]" :
                               l === 1 ? "bg-[#ff4b4b]" :
-                              l === 2 ? "bg-[#ff9600]" : "bg-[#4ade80]"
+                              l === 2 ? "bg-[#ff9600]" :
+                              l === 3 ? "bg-[#facc15]" :
+                              l === 4 ? "bg-[#58cc02]" : "bg-[#4ade80]"
                             )} />
                           </TooltipTrigger>
                           <TooltipContent className="bg-[#202f36] border-[#1e293b] text-white">
-                            {l === 0 ? "0 hábitos" : l === 3 ? "76-100% completado" : l === 1 ? "1-25% completado" : "26-75% completado"}
+                            {l === 0 ? "0%" : `${l*20}%` }
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     ))}
                   </div>
-                  <span>MAIS</span>
+                  <span>QUENTE</span>
                 </div>
 
                 <div className="mt-6 space-y-3 px-2">
