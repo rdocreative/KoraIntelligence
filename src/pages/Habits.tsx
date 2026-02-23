@@ -727,34 +727,6 @@ const HabitsPage = () => {
                       ))}
                     </TooltipProvider>
                   </div>
-
-                  <div className="mt-6 flex flex-col items-center gap-3">
-                    <div className="flex items-center gap-3 text-[10px] font-[700] text-[#9ca3af] uppercase tracking-widest">
-                      <span>FRIO</span>
-                      <div className="flex gap-1.5">
-                        {[0, 1, 2, 3, 4].map(l => (
-                          <TooltipProvider key={l}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <div className={cn(
-                                  "w-2.5 h-2.5 rounded-full border border-white/5",
-                                  l === 0 ? "bg-[#16222b]" :
-                                  l === 1 ? "bg-[#ef4444]/50" : 
-                                  l === 2 ? "bg-[#f97316]/50" : 
-                                  l === 3 ? "bg-[#eab308]/50" : 
-                                  "bg-[#22c55e]/50" 
-                                )} />
-                              </TooltipTrigger>
-                              <TooltipContent className="bg-[#202f36] border-[#1e293b] text-white">
-                                {l === 0 ? "0%" : l === 4 ? "100%" : `${l * 25}%+` }
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        ))}
-                      </div>
-                      <span>QUENTE</span>
-                    </div>
-                  </div>
                 </>
               )}
 
