@@ -559,30 +559,29 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative w-full">
       
-      {/* Main Tabs Selection (Visão Geral / Dashboard) */}
       <div className="flex justify-center pt-4 pb-2">
-        <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-hidden">
+        <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-visible">
           <button
             onClick={() => setActiveTab('overview')}
             className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] font-[900] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0",
+              "flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0",
               activeTab === 'overview'
                 ? "bg-[#22d3ee] text-[#06090e] shadow-[0_4px_0_0_#06b6d4]"
                 : "bg-transparent text-[#9ca3af] hover:text-white"
             )}
           >
-            <LayoutGrid size={15} strokeWidth={4} /> Visão Geral
+            <LayoutGrid size={14} strokeWidth={3} /> Visão Geral
           </button>
           <button
             onClick={() => setActiveTab('charts')}
             className={cn(
-              "flex items-center gap-2 px-5 py-2.5 rounded-full text-[12px] font-[900] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0",
+              "flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0",
               activeTab === 'charts'
                 ? "bg-[#22d3ee] text-[#06090e] shadow-[0_4px_0_0_#06b6d4]"
                 : "bg-transparent text-[#9ca3af] hover:text-white"
             )}
           >
-            <BarChart3 size={15} strokeWidth={4} /> Dashboard
+            <BarChart3 size={14} strokeWidth={3} /> Dashboard
           </button>
         </div>
       </div>
@@ -621,9 +620,7 @@ const HabitsPage = () => {
           <div className={cn("transition-all duration-500 shrink-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
             <div className="bg-[#202f36] border border-white/10 rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#020305]">
               <div className="flex items-center justify-between mb-6">
-                
-                {/* View Mode Switcher (Mês / Sem) - Standardized with main tabs */}
-                <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-hidden">
+                <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1 overflow-visible">
                   {[
                     { id: 'monthly', icon: LayoutGrid, label: 'Mês' },
                     { id: 'weekly', icon: CalendarDays, label: 'Sem' }
@@ -632,13 +629,13 @@ const HabitsPage = () => {
                       key={mode.id}
                       onClick={() => setViewMode(mode.id as any)}
                       className={cn(
-                        "flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-[900] uppercase tracking-wider transition-all border-none shrink-0 whitespace-nowrap",
+                        "flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-[800] uppercase tracking-wider transition-all border-none shrink-0 whitespace-nowrap",
                         viewMode === mode.id 
                           ? "bg-[#22d3ee] text-[#06090e] shadow-[0_4px_0_0_#06b6d4]" 
                           : "bg-transparent text-[#9ca3af] hover:text-white"
                       )}
                     >
-                      <mode.icon size={13} strokeWidth={4} /> {mode.label}
+                      <mode.icon size={12} strokeWidth={3} /> {mode.label}
                     </button>
                   ))}
                 </div>
