@@ -174,7 +174,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const target = 30;
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
-  // Paleta com cores sólidas e stroke azul mais escuro
   const theme = {
     main: "#22d3ee",
     darkBorder: "#0891b2",
@@ -198,17 +197,17 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[20px] border-[2.5px] p-[16px] mb-4 cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out hover:bg-[#22d3ee]/10",
+        "group rounded-[16px] border-[2px] p-3 mb-2 cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out hover:bg-[#22d3ee]/10",
         isDragging && "scale-[1.02] opacity-90",
         isCompleted && !isDragging && "opacity-[0.4] grayscale-[0.6]"
       )}
     >
-      <div className="flex items-start gap-[14px]">
+      <div className="flex items-center gap-3">
         <button 
           onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
           onPointerDown={(e) => e.stopPropagation()}
           className={cn(
-            "h-7 w-7 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10 mt-0.5",
+            "h-5.5 w-5.5 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
             isCompleted 
               ? "bg-[#22d3ee] border-[#22d3ee]" 
               : "border-[#22d3ee] bg-black/40 hover:bg-[#22d3ee]/20"
@@ -216,7 +215,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         >
           {isCompleted && (
             <Check 
-              size={16} 
+              size={12} 
               className="stroke-[4px] text-[#06090e]" 
             />
           )}
@@ -224,32 +223,24 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
 
         <div className="flex-1 min-w-0">
           <h3 className={cn(
-            "text-[15px] font-[900] text-[#ffffff] truncate leading-tight transition-all duration-200",
+            "text-[13.5px] font-[800] text-[#ffffff] truncate leading-tight transition-all duration-200",
             isCompleted && "line-through opacity-50"
           )}>
             {habit.title}
           </h3>
-          <div className="flex flex-col items-start mt-[4px]">
-            <div className="flex items-center gap-1.5">
-              <Clock size={13} className="text-white/60" />
-              <span className="text-[12px] font-[700] text-white/60">
-                {habit.time}
-              </span>
-            </div>
-            
-            {streakInfo.isLost && !isCompleted && (
-              <div className="mt-2 text-[11px] font-[900] text-[#FF4444] flex items-center gap-1.5 uppercase tracking-wider">
-                💔 Sequência perdida
-              </div>
-            )}
+          <div className="flex items-center gap-1.5 mt-0.5">
+            <Clock size={11} className="text-white/40" />
+            <span className="text-[10px] font-[700] text-white/40">
+              {habit.time}
+            </span>
           </div>
         </div>
 
-        <div className="flex items-center shrink-0 ml-auto gap-2">
+        <div className="flex items-center shrink-0 gap-2">
           {streakInfo.streak > 0 && (
-            <div className="flex items-center gap-1.5 bg-black/50 border border-[#22d3ee]/20 px-[10px] py-[4px] rounded-[10px] text-white">
-              <Flame size={14} className="text-orange-400 fill-orange-400" />
-              <span className="text-[11px] font-black">{streakInfo.streak}</span>
+            <div className="flex items-center gap-1 bg-black/50 border border-[#22d3ee]/10 px-2 py-0.5 rounded-lg text-white">
+              <Flame size={12} className="text-orange-400 fill-orange-400" />
+              <span className="text-[10px] font-black">{streakInfo.streak}</span>
             </div>
           )}
           
@@ -257,20 +248,20 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
             <button 
               onClick={handleEditClick}
               onPointerDown={(e) => e.stopPropagation()}
-              className="p-1 text-white/40 hover:text-white transition-colors z-10"
+              className="p-1 text-white/30 hover:text-white transition-colors z-10"
             >
-              <ChevronRight size={20} />
+              <ChevronRight size={18} />
             </button>
           )}
         </div>
       </div>
 
-      <div className="mt-5 pt-3.5 border-t border-white/10">
-        <div className="flex justify-between items-center mb-2.5">
-          <span className="text-[10px] font-[900] text-white/40 uppercase tracking-[0.2em]">Meta Mensal</span>
-          <span className="text-[11px] font-[950] text-[#22d3ee] tabular-nums">{completionsThisMonth}/{target}</span>
+      <div className="mt-3 pt-2 border-t border-white/5">
+        <div className="flex justify-between items-center mb-1.5">
+          <span className="text-[9px] font-[800] text-white/30 uppercase tracking-[0.15em]">Meta Mensal</span>
+          <span className="text-[10px] font-[900] text-[#22d3ee] tabular-nums">{completionsThisMonth}/{target}</span>
         </div>
-        <div className="h-[6px] w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
+        <div className="h-[4px] w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
           <div 
             className="h-full transition-all duration-700 ease-out bg-[#22d3ee]" 
             style={{ width: `${progressPercent}%` }}
@@ -546,8 +537,8 @@ const HabitsPage = () => {
         ))}
       </div>
 
-      <div className="mt-[20px] flex flex-col lg:flex-row gap-4 p-4 md:p-0">
-        <div className={cn("transition-all duration-500", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
+      <div className="mt-[20px] flex flex-col lg:flex-row gap-6 p-4 md:p-0 items-start">
+        <div className={cn("transition-all duration-500 shrink-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
           <div className="bg-[#202f36] border border-white/10 rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#020305]">
             <div className="flex items-center justify-between mb-6">
               <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1 overflow-visible">
@@ -697,10 +688,10 @@ const HabitsPage = () => {
 
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[40%] relative">
-            <div className="flex flex-col min-h-[480px] p-5 overflow-visible h-full">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.05em]">HÁBITOS ATIVOS</h2>
-                <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#22d3ee]/20">
+            <div className="flex flex-col min-h-[480px] pt-4 px-2 overflow-visible h-full">
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
+                <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-2.5 py-1 rounded-full border border-[#22d3ee]/10">
                   {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
                 </div>
               </div>
@@ -721,7 +712,7 @@ const HabitsPage = () => {
                     
                     {displayedHabitsData.completed.length > 0 && (
                       <>
-                        <div className="mt-6 mb-3 pt-3 border-t-2 border-[#1e293b]">
+                        <div className="mt-4 mb-3 pt-3 border-t-2 border-white/5">
                           <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.08em]">
                             CONCLUÍDOS HOJE
                           </span>
@@ -749,7 +740,7 @@ const HabitsPage = () => {
                 )}
               </div>
 
-              <div className="mt-auto pt-4 border-t-2 border-[#1e293b]">
+              <div className="mt-auto pt-6 border-t-2 border-white/5">
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                   <DialogTrigger asChild>
                     <Button className="w-full bg-[#22d3ee] hover:bg-[#22d3ee] active:translate-y-[1px] active:shadow-none transition-all duration-200 text-[#06090e] font-[800] text-[11px] uppercase tracking-[0.1em] h-11 rounded-[16px] shadow-[0_4px_0_0_#06b6d4]">
