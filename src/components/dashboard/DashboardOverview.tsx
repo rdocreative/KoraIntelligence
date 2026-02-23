@@ -5,7 +5,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell, AreaChart, Area 
 } from 'recharts';
-import { Trophy, Star, Zap, TrendingUp, Target, Award } from "lucide-react";
+import { Trophy, Star, Zap, TrendingUp, Target, Award, Flame, CheckCircle2, CalendarDays } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const DATA_EVOLUTION = [
@@ -25,9 +25,57 @@ const DATA_DISTRIBUTION = [
   { name: 'Mente', value: 200, color: '#a855f7' },
 ];
 
-const DashboardOverview = () => {
+interface DashboardOverviewProps {
+  stats?: {
+    total: number | string;
+    today: string;
+    streak: string;
+    progress: string;
+  };
+}
+
+const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
+  // Fallback stats if not provided
+  const displayStats = stats || {
+    total: 4,
+    today: "0/4",
+    streak: "7d",
+    progress: "0%"
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      
+      {/* Stats Cards - Moved from HabitsPage to here */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-0">
+        {[
+          { label: "TOTAL HÁBITOS", value: displayStats.total, icon: Target, from: "#22D3EE", to: "#06B6D4", shadow: "#0891B2" },
+          { label: "SEQUÊNCIA", value: displayStats.streak, icon: Flame, from: "#FB923C", to: "#F97316", shadow: "#EA580C" },
+          { label: "COMPLETOS HOJE", value: displayStats.today, icon: CheckCircle2, from: "#4ADE80", to: "#22C55E", shadow: "#16A34A" },
+          { label: "MES", value: displayStats.progress, icon: CalendarDays, from: "#A855F7", to: "#6366F1", shadow: "#7C3AED" }
+        ].map((s, i) => (
+          <div
+            key={i}
+            className={cn(
+              "py-6 px-7 rounded-[28px] flex items-center gap-5 transition-all duration-300",
+              "text-white cursor-default hover:translate-y-[-2px] border-[1.5px] border-white/20"
+            )}
+            style={{
+              background: `linear-gradient(135deg, ${s.from}, ${s.to})`,
+              boxShadow: `0 8px 0 0 ${s.shadow}`
+            }}
+          >
+            <div className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-black/30 ring-1 ring-white/10">
+              <s.icon size={26} className="text-white fill-white/10" strokeWidth={3} />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[11px] font-[900] text-white uppercase tracking-[0.12em] leading-tight mb-1 drop-shadow-sm">{s.label}</span>
+              <span className="text-[31px] font-[950] text-white leading-none tracking-tight drop-shadow-sm">{s.value}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* Sistema de Gamificação / XP */}
       <div className="bg-[#202f36] border border-white/10 rounded-[32px] p-6 shadow-[0_6px_0_0_#020305] relative overflow-hidden">
         <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
