@@ -133,7 +133,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       
       let historicalStreak = 0;
       let prevDate = wasLastCompleted ? subDays(lastScheduledDate, 1) : lastScheduledDate;
-      let gapFound = false;
+      let foundGap = false;
       while (!foundGap) {
         const dOfWeek = getDay(prevDate);
         if (habit.weekDays.includes(dOfWeek)) {
