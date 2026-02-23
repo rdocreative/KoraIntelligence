@@ -10,7 +10,7 @@ import {
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { cn } from "@/lib/utils";
-import { Check, Sun, Moon, Sunrise, CloudMoon } from "lucide-react";
+import { Check, Sun, Moon, Sunrise } from "lucide-react";
 
 interface Habit {
   id: string;
@@ -35,12 +35,11 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
     return Array.from({ length: 7 }, (_, i) => addDays(start, i));
   }, [currentDate]);
 
-  // Períodos fixos
+  // Períodos fixos - Removido "Madruga" conforme solicitado
   const allPeriods = [
     { label: 'Manhã', range: [5, 12], icon: Sunrise },
     { label: 'Tarde', range: [12, 18], icon: Sun },
-    { label: 'Noite', range: [18, 24], icon: Moon },
-    { label: 'Madruga', range: [0, 5], icon: CloudMoon }
+    { label: 'Noite', range: [18, 24], icon: Moon }
   ];
 
   const getHabitStyles = (priority: string) => {
@@ -68,7 +67,7 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
   };
 
   return (
-    <div className="w-full rounded-[24px] overflow-visible border-2 border-[#374151] bg-[#1a262e] h-auto">
+    <div className="w-full rounded-[32px] overflow-hidden border-2 border-[#374151] bg-[#1a262e] h-auto">
       <div className="w-full overflow-visible">
         {/* Grade Principal */}
         <div className="grid grid-cols-[60px_repeat(7,1fr)] w-full overflow-visible">
@@ -102,7 +101,6 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
 
           {/* Linhas de Período */}
           {allPeriods.map((period, pIdx) => {
-            // Verifica se este período tem QUALQUER hábito em QUALQUER dia da semana
             const hasHabitsInAnyDay = habits.some(h => {
               if (!h.active) return false;
               const hour = parseInt(h.time.split(':')[0]);
@@ -154,7 +152,7 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                               key={habit.id}
                               onClick={() => onToggleHabit(habit.id, day)}
                               className={cn(
-                                "w-full text-left p-2 rounded-[10px] border transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-center overflow-hidden mb-1.5",
+                                "w-full text-left p-2 rounded-[12px] border transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-center overflow-hidden mb-1.5",
                                 styles.bg,
                                 styles.border,
                                 isDone && "opacity-50 grayscale"
@@ -183,7 +181,7 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                       ) : (
                         <div className="flex-1 flex items-center justify-center p-1 select-none">
                           <span className="text-[8px] font-[800] text-[#374151] uppercase text-center leading-[1.1] max-w-[60px]">
-                            {!hasHabitsInAnyDay ? "NENHUM HABITO ATIVO PRA ESSE HORARIO" : "Livre"}
+                            {!hasHabitsInAnyDay ? "NENHUM HABITO ATIVO" : "Livre"}
                           </span>
                         </div>
                       )}
