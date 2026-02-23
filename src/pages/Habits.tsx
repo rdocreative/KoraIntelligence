@@ -536,13 +536,13 @@ const HabitsPage = () => {
     return { pending, completed, all: [...pending, ...completed] };
   }, [habits, selectedDate]);
 
-  // Thermometer color logic: Starts with Red
+  // STRICT Red to Green Thermometer
   const thermometerColor = useMemo(() => {
-    if (monthProgress < 20) return "from-[#ff4b4b] to-[#ff4b4b]";
-    if (monthProgress < 40) return "from-[#ff4b4b] to-[#ff9600]";
-    if (monthProgress < 60) return "from-[#ff9600] to-[#facc15]";
-    if (monthProgress < 80) return "from-[#facc15] to-[#58cc02]";
-    return "from-[#58cc02] to-[#4ade80]";
+    if (monthProgress < 20) return "from-[#ef4444] to-[#ef4444]"; // Red
+    if (monthProgress < 40) return "from-[#ef4444] to-[#f97316]"; // Red to Orange
+    if (monthProgress < 60) return "from-[#f97316] to-[#eab308]"; // Orange to Yellow
+    if (monthProgress < 80) return "from-[#eab308] to-[#84cc16]"; // Yellow to Lime
+    return "from-[#84cc16] to-[#22c55e]"; // Lime to Green
   }, [monthProgress]);
 
   return (
@@ -690,12 +690,13 @@ const HabitsPage = () => {
                               "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
                               !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
                               day.isCurrentMonth && (day.isFuture || (day.isPast && day.level === 0)) && "bg-[#16222b] border-[#1e293b] text-[#e5e7eb]",
-                              // Soft Thermometer Levels (Red to Green)
-                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#ff4b4b]/20 border-[#ff4b4b]/40 text-white",
-                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#ff9600]/20 border-[#ff9600]/40 text-white",
-                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#facc15]/20 border-[#facc15]/40 text-white",
-                              day.isCurrentMonth && day.isPast && day.level === 4 && "bg-[#58cc02]/20 border-[#58cc02]/40 text-white",
-                              day.isCurrentMonth && day.isPast && day.level === 5 && "bg-[#4ade80]/20 border-[#4ade80]/40 text-white",
+                              // Soft Thermometer Levels (Strict Red -> Green)
+                              // Uses slightly more vivid base colors but soft opacity
+                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#ef4444]/30 border-[#ef4444]/50 text-white", // Red
+                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#f97316]/30 border-[#f97316]/50 text-white", // Orange
+                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#eab308]/30 border-[#eab308]/50 text-white", // Yellow
+                              day.isCurrentMonth && day.isPast && day.level === 4 && "bg-[#84cc16]/30 border-[#84cc16]/50 text-white", // Lime
+                              day.isCurrentMonth && day.isPast && day.level === 5 && "bg-[#22c55e]/30 border-[#22c55e]/50 text-white", // Green
                               day.isCurrentMonth && day.isToday && "border-white bg-transparent text-white",
                               day.isSelected && "ring-2 ring-white/50 ring-offset-2 ring-offset-background"
                             )}
@@ -722,10 +723,11 @@ const HabitsPage = () => {
                             <div className={cn(
                               "w-2.5 h-2.5 rounded-full border border-white/5",
                               l === 0 ? "bg-[#16222b]" :
-                              l === 1 ? "bg-[#ff4b4b]/60" :
-                              l === 2 ? "bg-[#ff9600]/60" :
-                              l === 3 ? "bg-[#facc15]/60" :
-                              l === 4 ? "bg-[#58cc02]/60" : "bg-[#4ade80]/60"
+                              l === 1 ? "bg-[#ef4444]/50" : // Red
+                              l === 2 ? "bg-[#f97316]/50" : // Orange
+                              l === 3 ? "bg-[#eab308]/50" : // Yellow
+                              l === 4 ? "bg-[#84cc16]/50" : // Lime
+                              "bg-[#22c55e]/50" // Green
                             )} />
                           </TooltipTrigger>
                           <TooltipContent className="bg-[#202f36] border-[#1e293b] text-white">
