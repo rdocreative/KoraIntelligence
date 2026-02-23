@@ -58,7 +58,6 @@ import WeeklyView from "@/components/habits/WeeklyView";
 import DateSelectorModal from "@/components/habits/DateSelectorModal";
 
 // --- Types ---
-type Priority = 'high' | 'medium' | 'low';
 type Frequency = 'daily' | 'weekly';
 
 interface Habit {
@@ -66,7 +65,6 @@ interface Habit {
   title: string;
   emoji: string;
   frequency: Frequency;
-  priority: Priority;
   weekDays: number[];
   time: string;
   completedDates: string[];
@@ -79,9 +77,10 @@ interface SortableItemProps {
   isCompleted: boolean;
   onEdit: (habit: Habit, rect: DOMRect) => void;
   onToggle: (id: string) => void;
+  currentDate: Date;
 }
 
-const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableItemProps) => {
+const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }: SortableItemProps) => {
   const {
     attributes,
     listeners,
@@ -113,6 +112,15 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     }
   };
 
+  // Cálculo de conclusões no mês atual
+  const completionsThisMonth = useMemo(() => {
+    const monthStr = format(currentDate, 'yyyy-MM');
+    return habit.completedDates.filter(date => date.startsWith(monthStr)).length;
+  }, [habit.completedDates, currentDate]);
+
+  const target = 30;
+  const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
+
   // Mapeamento de cores baseado no título do hábito
   const getHabitStyle = (title: string) => {
     if (title === 'Beber 3L de água') {
@@ -140,13 +148,10 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
       };
     }
     
-    // Fallback para prioridades originais
-    const priorityStyles = {
-      high: { classes: "bg-[linear-gradient(135deg,rgba(120,0,0,0.85),rgba(255,75,75,0.65))] border-[#ff4b4b] shadow-[0_4px_0_0_#cc0000]", iconColor: "#ff4b4b" },
-      medium: { classes: "bg-[linear-gradient(135deg,rgba(140,60,0,0.85),rgba(255,150,0,0.65))] border-[#ff9600] shadow-[0_4px_0_0_#e58700]", iconColor: "#ff9600" },
-      low: { classes: "bg-[linear-gradient(135deg,rgba(30,80,0,0.85),rgba(88,204,2,0.65))] border-[#58cc02] shadow-[0_4px_0_0_#46a302]", iconColor: "#58cc02" }
+    return {
+      classes: "bg-[#202f36] border-[#374151] shadow-[0_4px_0_0_#0b1116]",
+      iconColor: "#22d3ee"
     };
-    return priorityStyles[habit.priority];
   };
 
   const theme = getHabitStyle(habit.title);
@@ -213,6 +218,20 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
           </button>
         )}
       </div>
+
+      {/* Progresso Mensal */}
+      <div className="mt-3 pt-2.5 border-t border-white/10">
+        <div className="flex justify-between items-center mb-1.5">
+          <span className="text-[10px] font-[800] text-white/70 uppercase tracking-wider">Este mês</span>
+          <span className="text-[10px] font-[900] text-white tabular-nums">{completionsThisMonth}/{target}</span>
+        </div>
+        <div className="h-[3px] w-full bg-black/20 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-white transition-all duration-700 ease-out opacity-60" 
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+      </div>
     </div>
   );
 };
@@ -278,28 +297,6 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
           />
         </div>
 
-        <div className="space-y-1">
-          <Label className="text-[11px] font-[700] uppercase tracking-[0.1em] text-[#9ca3af]">Prioridade</Label>
-          <div className="flex gap-2">
-            {[
-              { v: 'high', c: 'bg-[#ff4b4b] text-white', l: 'Alta' }, 
-              { v: 'medium', c: 'bg-[#ff9600] text-white', l: 'Média' }, 
-              { v: 'low', c: 'bg-[#58cc02] text-white', l: 'Baixa' }
-            ].map((p) => (
-              <button
-                key={p.v}
-                onClick={() => setForm({...form, priority: p.v as Priority})}
-                className={cn(
-                  "flex-1 h-8 rounded-[10px] text-[11px] font-[700] uppercase tracking-wider transition-all",
-                  form.priority === p.v ? p.c : "bg-[#131f24] text-[#9ca3af] hover:bg-[#374151]"
-                )}
-              >
-                {p.l}
-              </button>
-            ))}
-          </div>
-        </div>
-
         <div className="flex items-center justify-between bg-[#131f24] p-2.5 rounded-[10px] border border-[#374151]">
           <span className="text-[11px] font-[700] uppercase tracking-[0.1em] text-[#9ca3af] ml-1">
             {form.active ? 'Ativo' : 'Pausado'}
@@ -341,10 +338,10 @@ const HabitsPage = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'charts'>('overview');
   const [viewMode, setViewMode] = useState<'monthly' | 'weekly'>('monthly');
   const [habits, setHabits] = useState<Habit[]>([
-    { id: '1', title: 'Beber 3L de água', emoji: '💧', frequency: 'daily', priority: 'high', weekDays: [0,1,2,3,4,5,6], time: '08:00', completedDates: [], active: true },
-    { id: '2', title: 'Ler 10 páginas', emoji: '📚', frequency: 'daily', priority: 'medium', weekDays: [0,1,2,3,4,5,6], time: '21:00', completedDates: [], active: true },
-    { id: '3', title: 'Academia', emoji: '💪', frequency: 'weekly', priority: 'high', weekDays: [1,3,5], time: '18:00', completedDates: [], active: true },
-    { id: '4', title: 'Meditar', emoji: '🧘', frequency: 'daily', priority: 'low', weekDays: [0,1,2,3,4,5,6], time: '07:30', completedDates: [], active: true },
+    { id: '1', title: 'Beber 3L de água', emoji: '💧', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '08:00', completedDates: [], active: true },
+    { id: '2', title: 'Ler 10 páginas', emoji: '📚', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '21:00', completedDates: [], active: true },
+    { id: '3', title: 'Academia', emoji: '💪', frequency: 'weekly', weekDays: [1,3,5], time: '18:00', completedDates: [], active: true },
+    { id: '4', title: 'Meditar', emoji: '🧘', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '07:30', completedDates: [], active: true },
   ]);
 
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -425,7 +422,6 @@ const HabitsPage = () => {
     const totalPossible = currentMonthDays.reduce((acc, day) => acc + day.total, 0);
     const totalDone = currentMonthDays.reduce((acc, day) => acc + day.done, 0);
     const realProgress = totalPossible === 0 ? 0 : Math.round((totalDone / totalPossible) * 100);
-    // Adicionando um "boost" de 10% conforme solicitado
     return Math.min(100, realProgress + 10);
   }, [calendarDays]);
 
@@ -510,9 +506,7 @@ const HabitsPage = () => {
       <div className="mt-[20px] flex flex-col lg:flex-row gap-4 p-4 md:p-0">
         <div className={cn("transition-all duration-500", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
           <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#0b1116]">
-            {/* Header Reorganizado */}
             <div className="flex items-center justify-between mb-6">
-              {/* Esquerda: Mes/Sem */}
               <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1 overflow-visible">
                 {[
                   { id: 'monthly', icon: LayoutGrid, label: 'Mês' },
@@ -533,7 +527,6 @@ const HabitsPage = () => {
                 ))}
               </div>
 
-              {/* Centro: Nome do Mes com Setas */}
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => {
@@ -565,7 +558,6 @@ const HabitsPage = () => {
                 </button>
               </div>
 
-              {/* Direita: Hoje */}
               <div className="flex items-center">
                 <Button 
                   variant="ghost" 
@@ -595,21 +587,12 @@ const HabitsPage = () => {
                             onClick={() => setSelectedDate(day.date)}
                             className={cn(
                               "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
-                              // Estilo Base (fora do mês)
                               !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
-                              
-                              // Dias Futuros ou Sem Dados (Cinza Escuro)
                               day.isCurrentMonth && (day.isFuture || (day.isPast && day.level === 0)) && "bg-[#2a3f4a] border-[#374151] text-[#e5e7eb]",
-                              
-                              // Dias Passados com Progresso
                               day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#0e3b4d] border-[#1a5e7a] text-white",
                               day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#00779e] border-[#0096c7] text-white",
                               day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#00CFFF] border-[#00CFFF] text-[#111b21]",
-                              
-                              // Dia Atual (Borda Ciano, Sem Preenchimento)
                               day.isCurrentMonth && day.isToday && "border-[#00CFFF] bg-transparent text-[#00CFFF]",
-                              
-                              // Seleção
                               day.isSelected && "ring-2 ring-white/50 ring-offset-2 ring-offset-[#111b21]"
                             )}
                           >
@@ -665,12 +648,6 @@ const HabitsPage = () => {
                       className="h-4 bg-[#131f24] border border-[#374151] p-[3px]"
                       indicatorClassName="rounded-full bg-gradient-to-r from-[#22d3ee] to-[#06b6d4] shadow-[0_0_12px_rgba(34,211,238,0.4)]"
                     />
-                    <p className="text-[10px] font-[600] text-[#9ca3af] text-center italic opacity-80">
-                    {monthProgress === 100 ? "Incrível! Você dominou o mês!" :
-                     monthProgress > 75 ? "Quase lá! Mantenha o foco!" :
-                     monthProgress > 50 ? "Bom ritmo! Continue firme." :
-                     monthProgress > 0 ? "Cada pequeno passo conta!" : "Comece sua jornada hoje!"}
-                  </p>
                 </div>
               </>
             )}
@@ -705,6 +682,7 @@ const HabitsPage = () => {
                         isCompleted={false}
                         onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
                         onToggle={(id) => toggleHabit(id)}
+                        currentDate={currentDate}
                       />
                     ))}
                     
@@ -722,6 +700,7 @@ const HabitsPage = () => {
                             isCompleted={true}
                             onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
                             onToggle={(id) => toggleHabit(id)}
+                            currentDate={currentDate}
                           />
                         ))}
                       </>
