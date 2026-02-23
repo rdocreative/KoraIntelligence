@@ -131,18 +131,17 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       const lastDateStr = format(lastScheduledDate, 'yyyy-MM-dd');
       const wasLastCompleted = habit.completedDates.includes(lastDateStr);
       
-      // Contar streak histórica para saber se "tinha uma sequência"
       let historicalStreak = 0;
       let prevDate = wasLastCompleted ? subDays(lastScheduledDate, 1) : lastScheduledDate;
       let gapFound = false;
-      while (!gapFound) {
+      while (!foundGap) {
         const dOfWeek = getDay(prevDate);
         if (habit.weekDays.includes(dOfWeek)) {
           const dStr = format(prevDate, 'yyyy-MM-dd');
           if (habit.completedDates.includes(dStr)) {
             historicalStreak++;
           } else {
-            gapFound = true;
+            foundGap = true;
           }
         }
         prevDate = subDays(prevDate, 1);
@@ -150,7 +149,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       }
 
       if (!wasLastCompleted) {
-        // Se não completou o último dia agendado E tinha uma sequência antes dele
         if (historicalStreak > 0) {
           isLost = true;
         }
@@ -166,11 +164,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         streak = 1;
         isLost = false;
       } else {
-        // Se já tínhamos calculado o streak até ontem, apenas somamos hoje
-        // Mas o cálculo acima já considera o dia de ontem, então se hoje está completo e ontem também:
-        // O loop historical + wasLastCompleted já cobriu até ontem.
         if (streak === 0) streak = 1;
-        else streak = streak; // O streak já foi contado no bloco anterior se ontem foi completo
       }
     }
 
@@ -271,7 +265,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
               </span>
             </div>
             
-            {/* Aviso de Sequência Perdida Centralizado Abaixo do Horário */}
             {streakInfo.isLost && !isCompleted && (
               <div className="mt-1 text-[10px] font-[800] text-[#FF4444] flex items-center gap-1">
                 💔 Sequência perdida
@@ -281,7 +274,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         </div>
 
         <div className="flex items-center shrink-0 ml-auto gap-2">
-          {/* Badge de Streak em Destaque */}
           {streakInfo.streak > 0 && (
             <div className="flex items-center gap-1.5 bg-black/30 px-[10px] py-[6px] rounded-[10px] text-white transition-all">
               <Flame size={16} className="text-orange-400 fill-orange-400" />
@@ -560,10 +552,10 @@ const HabitsPage = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-0 mt-4">
         {[
-          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, bg: "#1A8FA8", shadow: "#1A8FA866" },
-          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, bg: "#C47A2A", shadow: "#C47A2A66" },
-          { label: "HOJE", value: stats.today, icon: CheckCircle2, bg: "#2A9E55", shadow: "#2A9E5566" },
-          { label: "MÊS", value: stats.rate, icon: BarChart3, bg: "#7A52B8", shadow: "#7A52B866" }
+          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, bg: "#1A8FA8", shadow: "#0E8FC7" },
+          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, bg: "#C47A2A", shadow: "#CC7700" },
+          { label: "HOJE", value: stats.today, icon: CheckCircle2, bg: "#2A9E55", shadow: "#46A302" },
+          { label: "MÊS", value: stats.rate, icon: BarChart3, bg: "#7A52B8", shadow: "#6B35A0" }
         ].map((s, i) => (
           <div
             key={i}
@@ -573,7 +565,7 @@ const HabitsPage = () => {
             )}
             style={{ 
               background: `linear-gradient(135deg, ${s.bg}, ${s.bg}EE)`, 
-              boxShadow: `0 6px 16px 0 ${s.shadow}` 
+              boxShadow: `0 4px 0 0 ${s.shadow}, 0 6px 16px 0 ${s.shadow}66`
             }}
           >
             <div className={cn("w-12 h-12 rounded-[12px] flex items-center justify-center shrink-0 bg-black/20")}>
