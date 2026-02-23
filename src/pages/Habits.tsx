@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { 
   format, 
@@ -348,13 +349,6 @@ const HabitsPage = () => {
     }));
   };
 
-  const stats = useMemo(() => {
-    const todayStr = format(new Date(), 'yyyy-MM-dd');
-    const scheduledToday = habits.filter(h => h.active && h.weekDays.includes(getDay(new Date())));
-    const completedToday = scheduledToday.filter(h => h.completedDates.includes(todayStr)).length;
-    return { total: habits.length, today: `${completedToday}/${scheduledToday.length}`, streak: `7d`, rate: `85%` };
-  }, [habits]);
-
   const calendarDays = useMemo(() => {
     const monthStart = startOfMonth(currentDate);
     const startDate = startOfWeek(monthStart);
@@ -387,6 +381,25 @@ const HabitsPage = () => {
       };
     });
   }, [currentDate, selectedDate, habits]);
+
+  const monthProgress = useMemo(() => {
+    const currentMonthDays = calendarDays.filter(day => day.isCurrentMonth);
+    const totalPossible = currentMonthDays.reduce((acc, day) => acc + day.total, 0);
+    const totalDone = currentMonthDays.reduce((acc, day) => acc + day.done, 0);
+    return totalPossible === 0 ? 0 : Math.round((totalDone / totalPossible) * 100);
+  }, [calendarDays]);
+
+  const stats = useMemo(() => {
+    const todayStr = format(new Date(), 'yyyy-MM-dd');
+    const scheduledToday = habits.filter(h => h.active && h.weekDays.includes(getDay(new Date())));
+    const completedToday = scheduledToday.filter(h => h.completedDates.includes(todayStr)).length;
+    return {
+      total: habits.length,
+      today: `${completedToday}/${scheduledToday.length}`,
+      streak: `7d`,
+      rate: `${monthProgress}%`
+    };
+  }, [habits, monthProgress]);
 
   const displayedHabitsData = useMemo(() => {
     const dateStr = format(selectedDate, 'yyyy-MM-dd');
@@ -583,6 +596,30 @@ const HabitsPage = () => {
                     ))}
                   </div>
                   <span>MAIS</span>
+                </div>
+
+                <div className="mt-8 space-y-3 px-2">
+                  <div className="flex justify-between items-end">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.15em] mb-0.5">Progresso Mensal</span>
+                      <span className="text-[11px] font-[600] text-[#22d3ee]/70 uppercase tracking-tight">Consistência de {format(currentDate, 'MMMM', { locale: ptBR })}</span>
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                        <span className="text-[20px] font-[900] text-[#22d3ee] tabular-nums leading-none">{monthProgress}</span>
+                        <span className="text-[12px] font-[800] text-[#22d3ee]">%</span>
+                      </div>
+                    </div>
+                    <Progress
+                      value={monthProgress}
+                      className="h-4 bg-[#131f24] border border-[#374151] p-[3px]"
+                      indicatorClassName="rounded-full bg-gradient-to-r from-[#22d3ee] to-[#06b6d4] shadow-[0_0_12px_rgba(34,211,238,0.4)]"
+                    />
+                    <p className="text-[10px] font-[600] text-[#9ca3af] text-center italic opacity-80">
+                    {monthProgress === 100 ? "Incrível! Você dominou o mês!" :
+                     monthProgress > 75 ? "Quase lá! Mantenha o foco!" :
+                     monthProgress > 50 ? "Bom ritmo! Continue firme." :
+                     monthProgress > 0 ? "Cada pequeno passo conta!" : "Comece sua jornada hoje!"}
+                  </p>
                 </div>
               </>
             )}
