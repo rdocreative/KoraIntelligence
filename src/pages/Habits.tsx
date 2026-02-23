@@ -5,8 +5,7 @@ import {
   Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, Clock, Flame, 
   BarChart3, CheckCircle2, Pencil, Trash2, 
-  Play, Pause, CalendarDays, Target,
-  List
+  Play, Pause, CalendarDays, Target
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -88,7 +87,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   } = useSortable({ 
     id: habit.id,
     transition: {
-      duration: 150, 
+      duration: 200, 
       easing: 'ease-in-out',
     },
     disabled: isCompleted 
@@ -109,7 +108,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
     }
   };
 
-  // Cálculo de sequências (Streak) e Status de Perda
+  // Cálculo de sequências (Streak)
   const streakInfo = useMemo(() => {
     const today = startOfDay(new Date());
     let streak = 0;
@@ -149,9 +148,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       }
 
       if (!wasLastCompleted) {
-        if (historicalStreak > 0) {
-          isLost = true;
-        }
+        if (historicalStreak > 0) isLost = true;
         streak = 0;
       } else {
         streak = historicalStreak + 1;
@@ -163,8 +160,8 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       if (isLost) {
         streak = 1;
         isLost = false;
-      } else {
-        if (streak === 0) streak = 1;
+      } else if (streak === 0) {
+        streak = 1;
       }
     }
 
@@ -180,34 +177,53 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
   const getHabitStyle = (title: string) => {
+    // Azul
     if (title === 'Beber 3L de água') {
       return {
-        classes: "bg-[linear-gradient(135deg,#2196B0,#1A7A90)] border-[#2196B0] shadow-[0_4px_0_0_#1A7A90]",
-        iconColor: "#1A7A90"
+        main: "#1CB0F6",
+        dark: "#0E8FC7",
+        bg: "rgba(28, 176, 246, 0.11)",
+        border: "rgba(28, 176, 246, 0.22)",
+        shadow: "#0E8FC7FC"
       };
     }
+    // Laranja
     if (title === 'Ler 10 páginas') {
       return {
-        classes: "bg-[linear-gradient(135deg,#C47A2A,#A05E18)] border-[#C47A2A] shadow-[0_4px_0_0_#A05E18]",
-        iconColor: "#A05E18"
+        main: "#FF9600",
+        dark: "#CC7700",
+        bg: "rgba(255, 150, 0, 0.11)",
+        border: "rgba(255, 150, 0, 0.22)",
+        shadow: "#CC7700FC"
       };
     }
+    // Roxo
     if (title === 'Academia') {
       return {
-        classes: "bg-[linear-gradient(135deg,#6A4DB0,#523A8C)] border-[#6A4DB0] shadow-[0_4px_0_0_#523A8C]",
-        iconColor: "#523A8C"
+        main: "#CE82FF",
+        dark: "#6B35A0",
+        bg: "rgba(206, 130, 255, 0.11)",
+        border: "rgba(206, 130, 255, 0.22)",
+        shadow: "#6B35A0FC"
       };
     }
+    // Verde
     if (title === 'Meditar') {
       return {
-        classes: "bg-[linear-gradient(135deg,#2A9E55,#1E7A3E)] border-[#2A9E55] shadow-[0_4px_0_0_#1E7A3E]",
-        iconColor: "#1E7A3E"
+        main: "#58CC02",
+        dark: "#46A302",
+        bg: "rgba(88, 204, 2, 0.11)",
+        border: "rgba(88, 204, 2, 0.22)",
+        shadow: "#46A302FC"
       };
     }
     
     return {
-      classes: "bg-[#202f36] border-[#374151] shadow-[0_4px_0_0_#0b1116]",
-      iconColor: "#22d3ee"
+      main: "#22d3ee",
+      dark: "#0E8FC7",
+      bg: "rgba(34, 211, 238, 0.11)",
+      border: "rgba(34, 211, 238, 0.22)",
+      shadow: "#0E8FC7FC"
     };
   };
 
@@ -219,15 +235,19 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         setNodeRef(node);
         cardRef.current = node as HTMLDivElement;
       }}
-      style={style}
+      style={{
+        ...style,
+        backgroundColor: theme.bg,
+        borderColor: theme.border,
+        boxShadow: isCompleted ? 'none' : `0px 5px 0px ${theme.shadow}`,
+        transform: isCompleted ? `${CSS.Translate.toString(transform)} translateY(5px)` : CSS.Translate.toString(transform),
+      }}
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[16px] border-2 p-[12px] px-[14px] mb-4 cursor-grab active:cursor-grabbing select-none transition-all duration-150 ease-out hover:scale-[1.02] habit-card",
-        isDragging 
-          ? "scale-[1.03] bg-[#202f36] border-[#22d3ee] shadow-2xl" 
-          : theme.classes,
-        isCompleted && !isDragging && "opacity-[0.45] grayscale"
+        "group rounded-[14px] border-[1px] p-[12px] px-[14px] mb-4 cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out hover:scale-[1.01] active:translate-y-[5px] active:shadow-none habit-card",
+        isDragging && "scale-[1.03] opacity-90",
+        isCompleted && !isDragging && "opacity-[0.6] grayscale-[0.5]"
       )}
     >
       <div className="flex items-start gap-[12px]">
@@ -238,29 +258,29 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
             "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10 mt-1",
             isCompleted 
               ? "bg-white border-white" 
-              : "border-white/70 bg-black/10 hover:border-white hover:bg-black/20"
+              : "border-white/30 bg-black/20 hover:border-white/50 hover:bg-black/30"
           )}
         >
           {isCompleted && (
             <Check 
               size={14} 
               className="stroke-[4px]" 
-              style={{ color: theme.iconColor }} 
+              style={{ color: theme.dark }} 
             />
           )}
         </button>
 
         <div className="flex-1 min-w-0">
           <h3 className={cn(
-            "text-[14px] font-[800] text-[#ffffff] truncate leading-tight transition-all duration-400",
+            "text-[14px] font-[800] text-[#ffffff] truncate leading-tight transition-all duration-200",
             isCompleted && "line-through opacity-70"
           )}>
             {habit.title}
           </h3>
           <div className="flex flex-col items-start mt-[2px]">
             <div className="flex items-center gap-1">
-              <Clock size={11} className="text-white/85" />
-              <span className="text-[11px] font-[500] text-white/85">
+              <Clock size={11} className="text-white/60" />
+              <span className="text-[11px] font-[500] text-white/60">
                 {habit.time}
               </span>
             </div>
@@ -275,9 +295,9 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
 
         <div className="flex items-center shrink-0 ml-auto gap-2">
           {streakInfo.streak > 0 && (
-            <div className="flex items-center gap-1.5 bg-black/30 px-[10px] py-[6px] rounded-[10px] text-white transition-all">
-              <Flame size={16} className="text-orange-400 fill-orange-400" />
-              <span className="text-[14px] font-[900]">{streakInfo.streak}</span>
+            <div className="flex items-center gap-1.5 bg-black/60 border border-white/5 px-[8px] py-[2px] rounded-[7px] text-white transition-all">
+              <Flame size={12} className="text-orange-400 fill-orange-400" />
+              <span className="text-[10px] font-bold">{streakInfo.streak}</span>
             </div>
           )}
           
@@ -285,7 +305,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
             <button 
               onClick={handleEditClick}
               onPointerDown={(e) => e.stopPropagation()}
-              className="p-1 text-white/85 hover:text-white transition-colors z-10"
+              className="p-1 text-white/40 hover:text-white transition-colors z-10"
             >
               <ChevronRight size={18} />
             </button>
@@ -293,15 +313,15 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         </div>
       </div>
 
-      <div className="mt-3 pt-2.5 border-t border-white/10">
+      <div className="mt-3 pt-2.5 border-t border-white/5">
         <div className="flex justify-between items-center mb-1.5">
-          <span className="text-[10px] font-[800] text-white/70 uppercase tracking-wider">Este mês</span>
-          <span className="text-[10px] font-[900] text-white tabular-nums">{completionsThisMonth}/{target}</span>
+          <span className="text-[10px] font-[800] text-white/40 uppercase tracking-wider">Este mês</span>
+          <span className="text-[10px] font-[900] text-white/60 tabular-nums">{completionsThisMonth}/{target}</span>
         </div>
         <div className="h-[3px] w-full bg-black/20 rounded-full overflow-hidden">
           <div 
-            className="h-full bg-white transition-all duration-700 ease-out opacity-60" 
-            style={{ width: `${progressPercent}%` }}
+            className="h-full transition-all duration-700 ease-out opacity-60" 
+            style={{ width: `${progressPercent}%`, backgroundColor: theme.main }}
           />
         </div>
       </div>
@@ -494,8 +514,7 @@ const HabitsPage = () => {
     const currentMonthDays = calendarDays.filter(day => day.isCurrentMonth);
     const totalPossible = currentMonthDays.reduce((acc, day) => acc + day.total, 0);
     const totalDone = currentMonthDays.reduce((acc, day) => acc + day.done, 0);
-    const realProgress = totalPossible === 0 ? 0 : Math.round((totalDone / totalPossible) * 100);
-    return Math.min(100, realProgress + 10);
+    return totalPossible === 0 ? 0 : Math.round((totalDone / totalPossible) * 100);
   }, [calendarDays]);
 
   const stats = useMemo(() => {
@@ -582,6 +601,7 @@ const HabitsPage = () => {
       <div className="mt-[20px] flex flex-col lg:flex-row gap-4 p-4 md:p-0">
         <div className={cn("transition-all duration-500", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
           <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#0b1116]">
+            {/* Header omitted for brevity but kept in logic */}
             <div className="flex items-center justify-between mb-6">
               <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1 overflow-visible">
                 {[
