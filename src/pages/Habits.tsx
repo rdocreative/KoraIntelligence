@@ -118,7 +118,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
     let checkDate = subDays(today, 1);
     let lastScheduledDate: Date | null = null;
     
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 60; i++) {
       const dayOfWeek = getDay(checkDate);
       if (habit.weekDays.includes(dayOfWeek)) {
         lastScheduledDate = checkDate;
@@ -131,26 +131,32 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       const lastDateStr = format(lastScheduledDate, 'yyyy-MM-dd');
       const wasLastCompleted = habit.completedDates.includes(lastDateStr);
       
-      if (!wasLastCompleted) {
-        isLost = true;
-      } else {
-        streak = 1;
-        let prevDate = subDays(lastScheduledDate, 1);
-        let foundGap = false;
-        
-        while (!foundGap) {
-          const dOfWeek = getDay(prevDate);
-          if (habit.weekDays.includes(dOfWeek)) {
-            const dStr = format(prevDate, 'yyyy-MM-dd');
-            if (habit.completedDates.includes(dStr)) {
-              streak++;
-            } else {
-              foundGap = true;
-            }
+      // Contar streak histórica para saber se "tinha uma sequência"
+      let historicalStreak = 0;
+      let prevDate = wasLastCompleted ? subDays(lastScheduledDate, 1) : lastScheduledDate;
+      let gapFound = false;
+      while (!gapFound) {
+        const dOfWeek = getDay(prevDate);
+        if (habit.weekDays.includes(dOfWeek)) {
+          const dStr = format(prevDate, 'yyyy-MM-dd');
+          if (habit.completedDates.includes(dStr)) {
+            historicalStreak++;
+          } else {
+            gapFound = true;
           }
-          prevDate = subDays(prevDate, 1);
-          if (streak > 365) break; 
         }
+        prevDate = subDays(prevDate, 1);
+        if (historicalStreak > 365) break;
+      }
+
+      if (!wasLastCompleted) {
+        // Se não completou o último dia agendado E tinha uma sequência antes dele
+        if (historicalStreak > 0) {
+          isLost = true;
+        }
+        streak = 0;
+      } else {
+        streak = historicalStreak + 1;
       }
     }
 
@@ -160,7 +166,11 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         streak = 1;
         isLost = false;
       } else {
-        streak++;
+        // Se já tínhamos calculado o streak até ontem, apenas somamos hoje
+        // Mas o cálculo acima já considera o dia de ontem, então se hoje está completo e ontem também:
+        // O loop historical + wasLastCompleted já cobriu até ontem.
+        if (streak === 0) streak = 1;
+        else streak = streak; // O streak já foi contado no bloco anterior se ontem foi completo
       }
     }
 
@@ -175,7 +185,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const target = 30;
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
-  // Mapeamento de cores baseado no título do hábito com os NOVOS gradientes
   const getHabitStyle = (title: string) => {
     if (title === 'Beber 3L de água') {
       return {
@@ -227,12 +236,12 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         isCompleted && !isDragging && "opacity-[0.45] grayscale"
       )}
     >
-      <div className="flex items-center gap-[12px]">
+      <div className="flex items-start gap-[12px]">
         <button 
           onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
           onPointerDown={(e) => e.stopPropagation()}
           className={cn(
-            "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
+            "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10 mt-1",
             isCompleted 
               ? "bg-white border-white" 
               : "border-white/70 bg-black/10 hover:border-white hover:bg-black/20"
@@ -254,24 +263,29 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
           )}>
             {habit.title}
           </h3>
-          <div className="flex items-center gap-1 mt-[2px]">
-            <Clock size={11} className="text-white/85" />
-            <span className="text-[11px] font-[500] text-white/85">
-              {habit.time}
-            </span>
-          </div>
-          {streakInfo.isLost && !isCompleted && (
-            <div className="mt-1 text-[10px] font-[800] text-red-200/90 flex items-center gap-1">
-              Sequência perdida 💔
+          <div className="flex flex-col items-start mt-[2px]">
+            <div className="flex items-center gap-1">
+              <Clock size={11} className="text-white/85" />
+              <span className="text-[11px] font-[500] text-white/85">
+                {habit.time}
+              </span>
             </div>
-          )}
+            
+            {/* Aviso de Sequência Perdida Centralizado Abaixo do Horário */}
+            {streakInfo.isLost && !isCompleted && (
+              <div className="mt-1 text-[10px] font-[800] text-[#FF4444] flex items-center gap-1">
+                💔 Sequência perdida
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="flex items-center shrink-0 ml-auto">
+        <div className="flex items-center shrink-0 ml-auto gap-2">
+          {/* Badge de Streak em Destaque */}
           {streakInfo.streak > 0 && (
-            <div className="flex items-center gap-1 bg-black/30 px-2 py-0.5 rounded-full text-[11px] font-[800] text-white mr-1.5 transition-all">
-              <Flame size={12} className="text-orange-400 fill-orange-400" />
-              <span>{streakInfo.streak}</span>
+            <div className="flex items-center gap-1.5 bg-black/30 px-[10px] py-[6px] rounded-[10px] text-white transition-all">
+              <Flame size={16} className="text-orange-400 fill-orange-400" />
+              <span className="text-[14px] font-[900]">{streakInfo.streak}</span>
             </div>
           )}
           
@@ -281,7 +295,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
               onPointerDown={(e) => e.stopPropagation()}
               className="p-1 text-white/85 hover:text-white transition-colors z-10"
             >
-              <ChevronRight size={16} />
+              <ChevronRight size={18} />
             </button>
           )}
         </div>
