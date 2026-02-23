@@ -11,10 +11,10 @@
   }
 
   :root {
-    /* Theme Palette */
-    --background: #111b21;
-    --panel: #202f36;
-    --sidebar: #131f24;
+    /* Theme Palette - Deep Navy Blue (Almost Black) */
+    --background: #06090e;
+    --panel: #111b21;
+    --sidebar: #0a0f14;
     
     /* Card Colors */
     --card-blue: #1cb0f6;
@@ -34,26 +34,26 @@
     
     /* Text / UI */
     --duo-gray: #37464f;
-    --border-ui: #374151;
-    --shadow-ui: #0b1116;
+    --border-ui: #202f36;
+    --shadow-ui: #020305;
     
     /* Shadcn Mappings */
     --foreground: #e5e7eb;
-    --card: #202f36;
+    --card: #111b21;
     --card-foreground: #e5e7eb;
-    --popover: #202f36;
+    --popover: #111b21;
     --popover-foreground: #e5e7eb;
-    --primary-foreground: #111b21;
-    --secondary: #37464f;
+    --primary-foreground: #06090e;
+    --secondary: #202f36;
     --secondary-foreground: #e5e7eb;
-    --muted: #37464f;
+    --muted: #202f36;
     --muted-foreground: #9ca3af;
     --accent: #22d3ee;
-    --accent-foreground: #111b21;
+    --accent-foreground: #06090e;
     --destructive: #ff4b4b;
     --destructive-foreground: #ffffff;
-    --border: #374151;
-    --input: #374151;
+    --border: #202f36;
+    --input: #202f36;
     --ring: #22d3ee;
     --radius: 1rem;
   }
@@ -81,7 +81,7 @@
     background-color: var(--primary);
     box-shadow: 0 4px 0 0 var(--primary-dark);
     border-radius: 16px;
-    color: #111b21;
+    color: #06090e;
     transition: all 0.15s ease;
   }
   .btn-primary:active {
