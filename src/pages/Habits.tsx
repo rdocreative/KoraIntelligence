@@ -5,7 +5,7 @@ import {
   Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, Clock, Flame, 
   BarChart3, CheckCircle2, Pencil, Trash2, 
-  Play, Pause, CalendarDays, Target
+  Play, Pause, CalendarDays, Target, AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -73,9 +73,11 @@ interface SortableItemProps {
   onEdit: (habit: Habit, rect: DOMRect) => void;
   onToggle: (id: string) => void;
   currentDate: Date;
+  index: number;
+  totalItems: number;
 }
 
-const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }: SortableItemProps) => {
+const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate, index, totalItems }: SortableItemProps) => {
   const {
     attributes,
     listeners,
@@ -174,13 +176,54 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const target = 30;
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
-  const theme = {
-    main: "#22d3ee",
-    darkBorder: "#0891b2",
-    bg: "rgba(34, 211, 238, 0.08)",
-    completedBg: "rgba(34, 211, 238, 0.03)",
-    completedBorder: "rgba(34, 211, 238, 0.15)"
-  };
+  // Lógica do Termômetro baseada na posição (index)
+  const priorityTheme = useMemo(() => {
+    if (isCompleted) {
+      return {
+        main: "#22d3ee",
+        darkBorder: "rgba(34, 211, 238, 0.15)",
+        bg: "rgba(34, 211, 238, 0.03)",
+        tag: "CONCLUÍDO",
+        tagColor: "#9ca3af"
+      };
+    }
+
+    const relativePos = index / Math.max(1, totalItems - 1);
+    
+    if (relativePos <= 0.25) {
+      return {
+        main: "#ef4444",
+        darkBorder: "#991b1b",
+        bg: "rgba(239, 68, 68, 0.08)",
+        tag: "PRIORIDADE MÁXIMA",
+        tagColor: "#ef4444"
+      };
+    } else if (relativePos <= 0.5) {
+      return {
+        main: "#f97316",
+        darkBorder: "#9a3412",
+        bg: "rgba(249, 115, 22, 0.08)",
+        tag: "PRIORIDADE ALTA",
+        tagColor: "#f97316"
+      };
+    } else if (relativePos <= 0.75) {
+      return {
+        main: "#eab308",
+        darkBorder: "#854d0e",
+        bg: "rgba(234, 179, 8, 0.08)",
+        tag: "PRIORIDADE MÉDIA",
+        tagColor: "#eab308"
+      };
+    } else {
+      return {
+        main: "#22d3ee",
+        darkBorder: "#0891b2",
+        bg: "rgba(34, 211, 238, 0.08)",
+        tag: "ROTINA NORMAL",
+        tagColor: "#22d3ee"
+      };
+    }
+  }, [index, totalItems, isCompleted]);
 
   return (
     <div 
@@ -190,14 +233,14 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       }}
       style={{
         ...style,
-        backgroundColor: isCompleted ? theme.completedBg : theme.bg,
-        borderColor: isCompleted ? theme.completedBorder : theme.darkBorder,
+        backgroundColor: priorityTheme.bg,
+        borderColor: priorityTheme.darkBorder,
         boxShadow: 'none',
       }}
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[16px] border-[2px] p-3 mb-2 cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out hover:bg-[#22d3ee]/10",
+        "group rounded-[16px] border-[2px] p-3 mb-2 cursor-grab active:cursor-grabbing select-none transition-all duration-200 ease-out",
         isDragging && "scale-[1.02] opacity-90",
         isCompleted && !isDragging && "opacity-[0.4] grayscale-[0.6]"
       )}
@@ -210,8 +253,12 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
             "h-5.5 w-5.5 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
             isCompleted 
               ? "bg-[#22d3ee] border-[#22d3ee]" 
-              : "border-[#22d3ee] bg-black/40 hover:bg-[#22d3ee]/20"
+              : ""
           )}
+          style={{
+            borderColor: priorityTheme.main,
+            backgroundColor: isCompleted ? priorityTheme.main : "rgba(0,0,0,0.4)"
+          }}
         >
           {isCompleted && (
             <Check 
@@ -222,13 +269,25 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         </button>
 
         <div className="flex-1 min-w-0">
-          <h3 className={cn(
-            "text-[13.5px] font-[800] text-[#ffffff] truncate leading-tight transition-all duration-200",
-            isCompleted && "line-through opacity-50"
-          )}>
-            {habit.title}
-          </h3>
-          <div className="flex items-center gap-1.5 mt-0.5">
+          <div className="flex items-center gap-2 mb-0.5">
+            <h3 className={cn(
+              "text-[13.5px] font-[800] text-[#ffffff] truncate leading-tight transition-all duration-200",
+              isCompleted && "line-through opacity-50"
+            )}>
+              {habit.title}
+            </h3>
+            <span 
+              className="text-[8px] font-[900] px-1.5 py-0.5 rounded-full border shrink-0 uppercase tracking-wider"
+              style={{ 
+                color: priorityTheme.tagColor, 
+                borderColor: `${priorityTheme.tagColor}30`,
+                backgroundColor: `${priorityTheme.tagColor}10`
+              }}
+            >
+              {priorityTheme.tag}
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
             <Clock size={11} className="text-white/40" />
             <span className="text-[10px] font-[700] text-white/40">
               {habit.time}
@@ -238,7 +297,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
 
         <div className="flex items-center shrink-0 gap-2">
           {streakInfo.streak > 0 && (
-            <div className="flex items-center gap-1 bg-black/50 border border-[#22d3ee]/10 px-2 py-0.5 rounded-lg text-white">
+            <div className="flex items-center gap-1 bg-black/50 border border-white/5 px-2 py-0.5 rounded-lg text-white">
               <Flame size={12} className="text-orange-400 fill-orange-400" />
               <span className="text-[10px] font-black">{streakInfo.streak}</span>
             </div>
@@ -259,12 +318,17 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       <div className="mt-3 pt-2 border-t border-white/5">
         <div className="flex justify-between items-center mb-1.5">
           <span className="text-[9px] font-[800] text-white/30 uppercase tracking-[0.15em]">Meta Mensal</span>
-          <span className="text-[10px] font-[900] text-[#22d3ee] tabular-nums">{completionsThisMonth}/{target}</span>
+          <span className="text-[10px] font-[900] tabular-nums" style={{ color: priorityTheme.main }}>
+            {completionsThisMonth}/{target}
+          </span>
         </div>
         <div className="h-[4px] w-full bg-black/40 rounded-full overflow-hidden border border-white/5">
           <div 
-            className="h-full transition-all duration-700 ease-out bg-[#22d3ee]" 
-            style={{ width: `${progressPercent}%` }}
+            className="h-full transition-all duration-700 ease-out" 
+            style={{ 
+              width: `${progressPercent}%`,
+              backgroundColor: priorityTheme.main
+            }}
           />
         </div>
       </div>
@@ -690,7 +754,19 @@ const HabitsPage = () => {
           <div className="w-full lg:w-[40%] relative">
             <div className="flex flex-col min-h-[480px] pt-4 px-2 overflow-visible h-full">
               <div className="flex items-center justify-between mb-5">
-                <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <AlertCircle size={14} className="text-white/20 cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-[#202f36] border-[#1e293b] text-[10px] max-w-[200px]">
+                        A cor indica a prioridade: do Vermelho (Topo/Máxima) ao Ciano (Base/Normal). Arraste para reordenar.
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
                 <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-2.5 py-1 rounded-full border border-[#22d3ee]/10">
                   {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
                 </div>
@@ -699,7 +775,7 @@ const HabitsPage = () => {
               <div className="flex-1 overflow-visible">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                   <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
-                    {displayedHabitsData.pending.map((habit) => (
+                    {displayedHabitsData.pending.map((habit, idx) => (
                       <SortableHabitItem 
                         key={habit.id}
                         habit={habit}
@@ -707,6 +783,8 @@ const HabitsPage = () => {
                         onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
                         onToggle={(id) => toggleHabit(id)}
                         currentDate={currentDate}
+                        index={idx}
+                        totalItems={displayedHabitsData.all.length}
                       />
                     ))}
                     
@@ -717,7 +795,7 @@ const HabitsPage = () => {
                             CONCLUÍDOS HOJE
                           </span>
                         </div>
-                        {displayedHabitsData.completed.map((habit) => (
+                        {displayedHabitsData.completed.map((habit, idx) => (
                           <SortableHabitItem 
                             key={habit.id}
                             habit={habit}
@@ -725,6 +803,8 @@ const HabitsPage = () => {
                             onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
                             onToggle={(id) => toggleHabit(id)}
                             currentDate={currentDate}
+                            index={displayedHabitsData.pending.length + idx}
+                            totalItems={displayedHabitsData.all.length}
                           />
                         ))}
                       </>
