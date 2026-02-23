@@ -246,7 +246,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         isCompleted && !isDragging && "opacity-[0.6] grayscale-[0.5]"
       )}
     >
-      {/* Faixa Lateral Colorida */}
       <div 
         className="absolute left-0 top-0 bottom-0 w-[5px]"
         style={{ backgroundColor: theme.main }}
@@ -306,7 +305,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
           </div>
         </div>
 
-        {/* Barra de Progresso Interna */}
         <div className="mt-4 pt-3 border-t border-white/5">
           <div className="flex justify-between items-center mb-1.5">
             <span className="text-[10px] font-[800] text-white/30 uppercase tracking-[0.1em]">Este mês</span>
@@ -593,7 +591,7 @@ const HabitsPage = () => {
         ))}
       </div>
 
-      <div className="mt-[20px] flex flex-col lg:flex-row gap-6 p-4 md:p-0">
+      <div className="mt-[20px] flex flex-col lg:flex-row gap-6 p-4 md:p-0 items-start">
         <div className={cn("transition-all duration-500", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
           <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#0b1116]">
             <div className="flex items-center justify-between mb-6">
@@ -753,9 +751,11 @@ const HabitsPage = () => {
         </div>
 
         {viewMode !== 'weekly' && (
-          <div className="w-full lg:w-[40%] flex flex-col gap-4">
-            <div className="flex items-center justify-between px-1">
-              <h2 className="text-[#e5e7eb] font-[900] text-[15px] uppercase tracking-[0.05em]">Hábitos Ativos</h2>
+          <div className="w-full lg:w-[40%] flex flex-col pt-3">
+            <div className="flex items-center justify-between px-1 mb-[22px]">
+              <h2 className="text-[#e5e7eb] font-[900] text-[15px] uppercase tracking-[0.05em] flex items-center gap-2">
+                Hábitos Ativos
+              </h2>
               <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[11px] font-[800] px-[12px] py-[4px] rounded-[999px] border border-[#22d3ee]/20 tabular-nums">
                 {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
               </div>
@@ -764,38 +764,40 @@ const HabitsPage = () => {
             <div className="flex-1">
               <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                 <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
-                  {displayedHabitsData.pending.map((habit) => (
-                    <SortableHabitItem 
-                      key={habit.id}
-                      habit={habit}
-                      isCompleted={false}
-                      onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
-                      onToggle={(id) => toggleHabit(id)}
-                      currentDate={currentDate}
-                    />
-                  ))}
-                  
-                  {displayedHabitsData.completed.length > 0 && (
-                    <>
-                      <div className="mt-8 mb-4 px-1 flex items-center gap-3">
-                        <div className="h-[2px] flex-1 bg-[#374151]/30"></div>
-                        <span className="text-[11px] font-[900] text-[#9ca3af] uppercase tracking-[0.1em] shrink-0">
-                          Concluídos hoje
-                        </span>
-                        <div className="h-[2px] flex-1 bg-[#374151]/30"></div>
+                  <div className="space-y-1">
+                    {displayedHabitsData.pending.map((habit) => (
+                      <SortableHabitItem 
+                        key={habit.id}
+                        habit={habit}
+                        isCompleted={false}
+                        onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
+                        onToggle={(id) => toggleHabit(id)}
+                        currentDate={currentDate}
+                      />
+                    ))}
+                    
+                    {displayedHabitsData.completed.length > 0 && (
+                      <div className="animate-in fade-in slide-in-from-top-2 duration-500">
+                        <div className="mt-8 mb-4 px-1 flex items-center gap-3">
+                          <div className="h-[2px] flex-1 bg-[#374151]/30"></div>
+                          <span className="text-[11px] font-[900] text-[#9ca3af] uppercase tracking-[0.1em] shrink-0">
+                            Concluídos hoje
+                          </span>
+                          <div className="h-[2px] flex-1 bg-[#374151]/30"></div>
+                        </div>
+                        {displayedHabitsData.completed.map((habit) => (
+                          <SortableHabitItem 
+                            key={habit.id}
+                            habit={habit}
+                            isCompleted={true}
+                            onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
+                            onToggle={(id) => toggleHabit(id)}
+                            currentDate={currentDate}
+                          />
+                        ))}
                       </div>
-                      {displayedHabitsData.completed.map((habit) => (
-                        <SortableHabitItem 
-                          key={habit.id}
-                          habit={habit}
-                          isCompleted={true}
-                          onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
-                          onToggle={(id) => toggleHabit(id)}
-                          currentDate={currentDate}
-                        />
-                      ))}
-                    </>
-                  )}
+                    )}
+                  </div>
                 </SortableContext>
               </DndContext>
               
@@ -807,7 +809,7 @@ const HabitsPage = () => {
               )}
             </div>
 
-            <div className="mt-2">
+            <div className="mt-4">
               <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                 <DialogTrigger asChild>
                   <Button className="w-full bg-[#1CB0F6] hover:bg-[#1CB0F6] active:translate-y-[1px] active:shadow-none transition-all duration-200 text-white font-[900] text-[13px] uppercase tracking-[0.1em] h-12 rounded-[16px] shadow-[0_4px_0_0_#0E8FC7]">
