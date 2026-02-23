@@ -68,8 +68,8 @@ export const TopBar = () => {
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none">
-      {/* max-w aumentado para 100rem */}
-      <div className="flex items-center justify-center sm:justify-between w-full max-w-[100rem] pointer-events-auto py-4 px-6 overflow-visible">
+      {/* Alinhando px-5 com o main do App.tsx */}
+      <div className="flex items-center justify-center sm:justify-between w-full max-w-[100rem] pointer-events-auto py-4 px-5 overflow-visible">
         
         {/* LADO ESQUERDO: Main Page Capsule */}
         <div 

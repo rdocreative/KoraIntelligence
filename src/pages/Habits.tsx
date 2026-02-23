@@ -557,7 +557,7 @@ const HabitsPage = () => {
   }, [habits, selectedDate]);
 
   return (
-    <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative max-w-7xl mx-auto px-4">
+    <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative w-full">
       
       <div className="flex justify-center pt-4 pb-2">
         <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-visible">

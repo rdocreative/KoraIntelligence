@@ -104,7 +104,7 @@ const MasterplanPage = () => {
 
   return (
     <div className="min-h-screen text-white pb-32">
-      <div className="relative z-10 max-w-7xl mx-auto space-y-6">
+      <div className="relative z-10 w-full space-y-6">
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
           
