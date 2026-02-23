@@ -174,11 +174,12 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const target = 30;
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
-  // Paleta intensificada para maior destaque
+  // Paleta intensificada com degradê
   const theme = {
     main: "#22d3ee",
     dark: "#0891b2",
-    bg: "rgba(34, 211, 238, 0.12)",
+    gradient: "linear-gradient(145deg, rgba(34, 211, 238, 0.18), rgba(34, 211, 238, 0.04))",
+    completedGradient: "linear-gradient(145deg, rgba(34, 211, 238, 0.08), rgba(34, 211, 238, 0.02))",
     border: "rgba(34, 211, 238, 0.4)"
   };
 
@@ -190,14 +191,14 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       }}
       style={{
         ...style,
-        backgroundColor: isCompleted ? "rgba(34, 211, 238, 0.05)" : theme.bg,
+        background: isCompleted ? theme.completedGradient : theme.gradient,
         borderColor: isCompleted ? "rgba(34, 211, 238, 0.15)" : theme.border,
-        boxShadow: isCompleted ? 'none' : '0 0 20px rgba(34, 211, 238, 0.05)',
+        boxShadow: isCompleted ? 'none' : '0 10px 30px -10px rgba(34, 211, 238, 0.1)',
       }}
       {...attributes}
       {...listeners}
       className={cn(
-        "group rounded-[20px] border-[2px] p-[16px] mb-4 cursor-grab active:cursor-grabbing select-none transition-all duration-300 ease-out hover:bg-[#22d3ee]/20 hover:border-[#22d3ee]/60",
+        "group rounded-[20px] border-[2px] p-[16px] mb-4 cursor-grab active:cursor-grabbing select-none transition-all duration-300 ease-out hover:scale-[1.01]",
         isDragging && "scale-[1.03] opacity-90",
         isCompleted && !isDragging && "opacity-[0.4] grayscale-[0.6]"
       )}
