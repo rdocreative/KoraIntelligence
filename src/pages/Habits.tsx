@@ -766,31 +766,27 @@ const HabitsPage = () => {
                 <div className="flex items-center gap-3">
                   <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
                   <TooltipProvider>
-                    <Tooltip>
+                    <Tooltip delayDuration={200}>
                       <TooltipTrigger asChild>
-                        <button className="flex items-center justify-center w-5 h-5 rounded-full bg-white text-[#06090e] transition-all active:scale-95 group">
+                        <button className="flex items-center justify-center w-5 h-5 rounded-full bg-white text-[#06090e] transition-all active:scale-95 group shadow-none hover:bg-[#e5e7eb]">
                           <HelpCircle size={13} strokeWidth={4} />
                         </button>
                       </TooltipTrigger>
-                      <TooltipContent side="top" className="bg-[#202f36] border-2 border-[#1e293b] p-3 max-w-[240px] text-white rounded-[16px] shadow-2xl">
-                        <div className="space-y-3">
-                          <div className="flex flex-col gap-1.5 border-b border-white/5 pb-2">
-                            <span className="text-[10px] font-black text-[#4ade80] uppercase tracking-widest">Escala de Prioridade</span>
-                            <div className="flex items-center gap-3 text-[8px] font-black text-white/70 uppercase">
-                              <span className="text-[#ef4444]">MÁXIMA</span>
-                              <div className="flex gap-1">
-                                <div className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />
-                                <div className="w-1.5 h-1.5 rounded-full bg-[#f97316]" />
-                                <div className="w-1.5 h-1.5 rounded-full bg-[#eab308]" />
-                                <div className="w-1.5 h-1.5 rounded-full bg-[#4ade80]" />
-                              </div>
-                              <span className="text-[#4ade80]">NORMAL</span>
+                      <TooltipContent side="top" className="bg-[#1a2329] border border-white/10 p-3 max-w-[200px] text-white rounded-[12px] shadow-xl">
+                        <div className="space-y-2.5">
+                          <div className="flex items-center justify-between border-b border-white/5 pb-1.5">
+                            <span className="text-[9px] font-black text-[#ef4444] uppercase tracking-tighter">Máximo</span>
+                            <div className="flex gap-0.5">
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#f97316]" />
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#eab308]" />
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#4ade80]" />
                             </div>
+                            <span className="text-[9px] font-black text-[#4ade80] uppercase tracking-tighter">Normal</span>
                           </div>
-                          <div className="space-y-2 text-[9.5px] font-medium leading-relaxed text-white/80">
-                            <p>• <strong className="text-white">Arraste:</strong> A ordem define a prioridade. O topo é o mais urgente.</p>
-                            <p>• <strong className="text-white">Check:</strong> Clique no círculo à esquerda para marcar como feito.</p>
-                            <p>• <strong className="text-white">Editar:</strong> Use a seta lateral para ajustes ou excluir.</p>
+                          <div className="text-[10px] leading-[1.3] text-white/70 space-y-1.5">
+                            <p>Organize por <strong className="text-white">ordem de importância</strong> arrastando os hábitos.</p>
+                            <p>O topo recebe <strong className="text-white">prioridade máxima</strong> (vermelho) e o final <strong className="text-white">normal</strong> (verde).</p>
                           </div>
                         </div>
                       </TooltipContent>
