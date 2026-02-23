@@ -504,10 +504,9 @@ const HabitsPage = () => {
       if (totalCount > 0 && doneCount > 0) {
         const percentage = Math.round((doneCount / totalCount) * 100);
         
-        if (percentage >= 100) level = 5;       // VERDE (Tudo feito)
-        else if (percentage >= 75) level = 4;   // VERDE CLARO
-        else if (percentage >= 50) level = 3;   // AMARELO
-        else if (percentage >= 25) level = 2;   // LARANJA
+        if (percentage >= 100) level = 4;       // VERDE (Tudo feito)
+        else if (percentage >= 66) level = 3;   // AMARELO
+        else if (percentage >= 33) level = 2;   // LARANJA
         else level = 1;                         // VERMELHO
       }
 
@@ -704,8 +703,7 @@ const HabitsPage = () => {
                                 day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#ef4444]/30 border-[#ef4444]/50 text-white", 
                                 day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#f97316]/30 border-[#f97316]/50 text-white", 
                                 day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#eab308]/30 border-[#eab308]/50 text-white", 
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#84cc16]/30 border-[#84cc16]/50 text-white", 
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 5 && "bg-[#22c55e]/30 border-[#22c55e]/50 text-white", 
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#22c55e]/30 border-[#22c55e]/50 text-white", 
                                 day.isToday && !day.isSelected && "border-white/40",
                                 day.isSelected && "border-white z-10 scale-105 shadow-[0_0_15px_rgba(255,255,255,0.2)]"
                               )}
@@ -729,7 +727,7 @@ const HabitsPage = () => {
                     <div className="flex items-center gap-3 text-[10px] font-[700] text-[#9ca3af] uppercase tracking-widest">
                       <span>FRIO</span>
                       <div className="flex gap-1.5">
-                        {[0, 1, 2, 3, 4, 5].map(l => (
+                        {[0, 1, 2, 3, 4].map(l => (
                           <TooltipProvider key={l}>
                             <Tooltip>
                               <TooltipTrigger asChild>
@@ -739,12 +737,11 @@ const HabitsPage = () => {
                                   l === 1 ? "bg-[#ef4444]/50" : 
                                   l === 2 ? "bg-[#f97316]/50" : 
                                   l === 3 ? "bg-[#eab308]/50" : 
-                                  l === 4 ? "bg-[#84cc16]/50" : 
                                   "bg-[#22c55e]/50" 
                                 )} />
                               </TooltipTrigger>
                               <TooltipContent className="bg-[#202f36] border-[#1e293b] text-white">
-                                {l === 0 ? "0%" : l === 5 ? "100%" : `${l * 20}%+` }
+                                {l === 0 ? "0%" : l === 4 ? "100%" : `${l * 25}%+` }
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
