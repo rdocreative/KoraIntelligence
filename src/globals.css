@@ -11,8 +11,8 @@
   }
 
   :root {
-    /* Theme Palette - Deep Navy Blue (Darkened by 15%) */
-    --background: #05080c;
+    /* Theme Palette - Deep Navy Blue (Darkened by an additional 20%) */
+    --background: #020406;
     --panel: #111b21;
     --sidebar: #0a0f14;
     
