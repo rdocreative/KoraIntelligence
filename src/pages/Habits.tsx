@@ -565,7 +565,7 @@ const HabitsPage = () => {
             )}
             style={{ 
               background: `linear-gradient(135deg, ${s.bg}, ${s.bg}EE)`, 
-              boxShadow: `0 4px 0 0 ${s.shadow}, 0 6px 16px 0 ${s.shadow}66`
+              boxShadow: `0 4px 0 0 ${s.shadow}`
             }}
           >
             <div className={cn("w-12 h-12 rounded-[12px] flex items-center justify-center shrink-0 bg-black/20")}>
