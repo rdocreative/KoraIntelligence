@@ -113,17 +113,43 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
     }
   };
 
-  const priorityStyles = {
-    high: "bg-[linear-gradient(135deg,rgba(120,0,0,0.85),rgba(255,75,75,0.65))] border-[#ff4b4b] shadow-[0_4px_0_0_#cc0000]",
-    medium: "bg-[linear-gradient(135deg,rgba(140,60,0,0.85),rgba(255,150,0,0.65))] border-[#ff9600] shadow-[0_4px_0_0_#e58700]",
-    low: "bg-[linear-gradient(135deg,rgba(30,80,0,0.85),rgba(88,204,2,0.65))] border-[#58cc02] shadow-[0_4px_0_0_#46a302]"
+  // Mapeamento de cores baseado no título do hábito
+  const getHabitStyle = (title: string) => {
+    if (title === 'Beber 3L de água') {
+      return {
+        classes: "bg-[linear-gradient(135deg,#0EA5E9,#0369A1)] border-[#0EA5E9] shadow-[0_4px_0_0_#0369A1]",
+        iconColor: "#0369A1"
+      };
+    }
+    if (title === 'Ler 10 páginas') {
+      return {
+        classes: "bg-[linear-gradient(135deg,#F97316,#C2410C)] border-[#F97316] shadow-[0_4px_0_0_#C2410C]",
+        iconColor: "#C2410C"
+      };
+    }
+    if (title === 'Academia') {
+      return {
+        classes: "bg-[linear-gradient(135deg,#7C3AED,#5B2C6F)] border-[#7C3AED] shadow-[0_4px_0_0_#5B2C6F]",
+        iconColor: "#5B2C6F"
+      };
+    }
+    if (title === 'Meditar') {
+      return {
+        classes: "bg-[linear-gradient(135deg,#22C55E,#15803D)] border-[#22C55E] shadow-[0_4px_0_0_#15803D]",
+        iconColor: "#15803D"
+      };
+    }
+    
+    // Fallback para prioridades originais
+    const priorityStyles = {
+      high: { classes: "bg-[linear-gradient(135deg,rgba(120,0,0,0.85),rgba(255,75,75,0.65))] border-[#ff4b4b] shadow-[0_4px_0_0_#cc0000]", iconColor: "#ff4b4b" },
+      medium: { classes: "bg-[linear-gradient(135deg,rgba(140,60,0,0.85),rgba(255,150,0,0.65))] border-[#ff9600] shadow-[0_4px_0_0_#e58700]", iconColor: "#ff9600" },
+      low: { classes: "bg-[linear-gradient(135deg,rgba(30,80,0,0.85),rgba(88,204,2,0.65))] border-[#58cc02] shadow-[0_4px_0_0_#46a302]", iconColor: "#58cc02" }
+    };
+    return priorityStyles[habit.priority];
   };
 
-  const iconColors = {
-    high: "#ff4b4b",
-    medium: "#ff9600",
-    low: "#58cc02"
-  };
+  const theme = getHabitStyle(habit.title);
 
   return (
     <div 
@@ -138,7 +164,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
         "group rounded-[16px] border-2 p-[12px] px-[14px] mb-4 cursor-grab active:cursor-grabbing select-none transition-all duration-150 ease-out hover:scale-[1.02] habit-card",
         isDragging 
           ? "scale-[1.03] bg-[#202f36] border-[#22d3ee] shadow-2xl" 
-          : priorityStyles[habit.priority],
+          : theme.classes,
         isCompleted && !isDragging && "opacity-[0.45] grayscale"
       )}
     >
@@ -157,7 +183,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle }: SortableIte
             <Check 
               size={14} 
               className="stroke-[4px]" 
-              style={{ color: iconColors[habit.priority] }} 
+              style={{ color: theme.iconColor }} 
             />
           )}
         </button>
