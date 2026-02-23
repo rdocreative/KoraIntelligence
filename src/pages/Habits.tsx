@@ -373,7 +373,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
     <div 
       ref={popupRef}
       style={{ top, left }}
-      className="fixed z-[1000] min-w-[280px] bg-[#161c2a] border-2 border-[#1e293b] rounded-[20px] p-[18px] shadow-[0_10px_25px_-5px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-top-2 duration-200"
+      className="fixed z-[1000] min-w-[280px] bg-[#202f36] border-2 border-[#1e293b] rounded-[20px] p-[18px] shadow-[0_10px_25px_-5px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="space-y-4">
         <div className="space-y-1.5">
@@ -558,9 +558,9 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative w-full">
       
-      {/* Tab Selector */}
+      {/* Tab Selector - Padding top increased from 8 to ~9 (35px) */}
       <div className="flex justify-center pt-[35px] pb-0">
-        <div className="bg-[#161c2a] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-visible">
+        <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-visible">
           <button
             onClick={() => setActiveTab('overview')}
             className={cn(
@@ -587,12 +587,12 @@ const HabitsPage = () => {
       </div>
 
       {activeTab === 'overview' ? (
-        /* Main Content */
+        /* Main Content - Margin top increased from 8 to ~9 (35px) */
         <div className="mt-[35px] flex flex-col lg:flex-row gap-6 p-4 md:p-0 items-start">
           <div className={cn("transition-all duration-500 shrink-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
-            <div className="bg-[#161c2a] border border-white/10 rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#020305]">
+            <div className="bg-[#202f36] border border-white/10 rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#020305]">
               <div className="flex items-center justify-between mb-6">
-                <div className="bg-[#161c2a] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1 overflow-visible">
+                <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1 overflow-visible">
                   {[
                     { id: 'monthly', icon: LayoutGrid, label: 'Mês' },
                     { id: 'weekly', icon: CalendarDays, label: 'Sem' }
@@ -691,7 +691,7 @@ const HabitsPage = () => {
                               )}
                             </div>
                           </TooltipTrigger>
-                          <TooltipContent className="bg-[#161c2a] border-[#1e293b] text-[#e5e7eb] rounded-[10px]">
+                          <TooltipContent className="bg-[#202f36] border-[#1e293b] text-[#e5e7eb] rounded-[10px]">
                             <p className="text-xs font-bold">{format(day.date, 'dd/MM')}</p>
                             <p className="text-[10px] text-[#9ca3af] font-bold uppercase">{day.done} de {day.total} feitos ({day.total > 0 ? Math.round((day.done/day.total)*100) : 0}%)</p>
                           </TooltipContent>
@@ -725,7 +725,7 @@ const HabitsPage = () => {
                             <HelpCircle size={13} strokeWidth={4} />
                           </button>
                         </TooltipTrigger>
-                        <TooltipContent side="top" className="bg-[#161c2a] border-2 border-[#1e293b] p-3 max-w-[240px] text-white rounded-[16px] shadow-2xl">
+                        <TooltipContent side="top" className="bg-[#202f36] border-2 border-[#1e293b] p-3 max-w-[240px] text-white rounded-[16px] shadow-2xl">
                           <div className="space-y-3">
                             <div className="flex flex-col gap-1.5 border-b border-white/5 pb-2">
                               <span className="text-[10px] font-black text-[#4ade80] uppercase tracking-widest">Escala de Prioridade</span>
@@ -806,7 +806,7 @@ const HabitsPage = () => {
                         <Plus className="mr-2" size={16} strokeWidth={3} /> NOVO HÁBITO
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-[#161c2a] border-2 border-[#1e293b] text-[#e5e7eb] rounded-[24px]">
+                    <DialogContent className="bg-[#202f36] border-2 border-[#1e293b] text-[#e5e7eb] rounded-[24px]">
                       <DialogHeader><DialogTitle className="uppercase tracking-widest text-sm text-[#22d3ee]">Criar Hábito</DialogTitle></DialogHeader>
                       <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
