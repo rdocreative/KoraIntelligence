@@ -11,10 +11,10 @@
   }
 
   :root {
-    /* Theme Palette - Deep Navy Blue (Darkened by an additional 20%) */
-    --background: #020406;
-    --panel: #111b21;
-    --sidebar: #0a0f14;
+    /* Theme Palette - Updated to requested colors */
+    --background: #111620;
+    --panel: #161c2a;
+    --sidebar: #0d111a;
     
     /* Card Colors */
     --card-blue: #1cb0f6;
@@ -34,26 +34,26 @@
     
     /* Text / UI */
     --duo-gray: #37464f;
-    --border-ui: #202f36;
-    --shadow-ui: #020305;
+    --border-ui: #2a3441;
+    --shadow-ui: #0a0d14;
     
     /* Shadcn Mappings */
     --foreground: #e5e7eb;
-    --card: #111b21;
+    --card: #161c2a;
     --card-foreground: #e5e7eb;
-    --popover: #111b21;
+    --popover: #161c2a;
     --popover-foreground: #e5e7eb;
     --primary-foreground: #06090e;
-    --secondary: #202f36;
+    --secondary: #2a3441;
     --secondary-foreground: #e5e7eb;
-    --muted: #202f36;
+    --muted: #2a3441;
     --muted-foreground: #9ca3af;
     --accent: #22d3ee;
     --accent-foreground: #06090e;
     --destructive: #ff4b4b;
     --destructive-foreground: #ffffff;
-    --border: #202f36;
-    --input: #202f36;
+    --border: #2a3441;
+    --input: #2a3441;
     --ring: #22d3ee;
     --radius: 1rem;
   }
