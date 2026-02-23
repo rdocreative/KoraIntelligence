@@ -500,6 +500,13 @@ const HabitsPage = () => {
     });
   }, [currentDate, selectedDate, habits]);
 
+  const monthProgressValue = useMemo(() => {
+    const currentMonthDays = calendarDays.filter(day => day.isCurrentMonth);
+    const totalPossible = currentMonthDays.reduce((acc, day) => acc + day.total, 0);
+    const totalDone = currentMonthDays.reduce((acc, day) => acc + day.done, 0);
+    return totalPossible === 0 ? 0 : Math.round((totalDone / totalPossible) * 100);
+  }, [calendarDays]);
+
   const stats = useMemo(() => {
     const todayStr = format(new Date(), 'yyyy-MM-dd');
     const scheduledToday = habits.filter(h => h.active && h.weekDays.includes(getDay(new Date())));
@@ -507,9 +514,10 @@ const HabitsPage = () => {
     return {
       total: habits.length,
       today: `${completedToday}/${scheduledToday.length}`,
-      streak: `7d`
+      streak: `7d`,
+      progress: `${monthProgressValue}%`
     };
-  }, [habits]);
+  }, [habits, monthProgressValue]);
 
   const displayedHabitsData = useMemo(() => {
     const dateStr = format(selectedDate, 'yyyy-MM-dd');
@@ -553,28 +561,29 @@ const HabitsPage = () => {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-0 mt-8">
         {[
-          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, from: "#22D3EE", to: "#06B6D4", shadow: "#0891B2" },
-          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, from: "#FB923C", to: "#F97316", shadow: "#EA580C" },
-          { label: "HOJE", value: stats.today, icon: CheckCircle2, from: "#4ADE80", to: "#22C55E", shadow: "#16A34A" },
-          { label: "MÊS", value: `${format(currentDate, 'MMMM', { locale: ptBR })}`, icon: CalendarDays, from: "#A855F7", to: "#6366F1", shadow: "#7C3AED" }
+          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, from: "#22D3EE", to: "#06B6D4", border: "rgba(255,255,255,0.2)" },
+          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, from: "#FB923C", to: "#F97316", border: "rgba(255,255,255,0.2)" },
+          { label: "COMPLETOS HOJE", value: stats.today, icon: CheckCircle2, from: "#4ADE80", to: "#22C55E", border: "rgba(255,255,255,0.2)" },
+          { label: "MES", value: stats.progress, icon: CalendarDays, from: "#A855F7", to: "#6366F1", border: "rgba(255,255,255,0.2)" }
         ].map((s, i) => (
           <div
             key={i}
             className={cn(
-              "py-5 px-6 rounded-[28px] flex items-center gap-4 transition-all duration-300",
-              "text-white border border-white/10 cursor-default hover:translate-y-[-2px] active:translate-y-[4px] active:shadow-none"
+              "py-6 px-7 rounded-[28px] flex items-center gap-5 transition-all duration-300",
+              "text-white cursor-default hover:translate-y-[-2px] border-[1.5px]"
             )}
             style={{
               background: `linear-gradient(135deg, ${s.from}, ${s.to})`,
-              boxShadow: `0 6px 0 0 ${s.shadow}`
+              borderColor: s.border,
+              boxShadow: 'none'
             }}
           >
-            <div className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-black/40 ring-1 ring-white/10 shadow-[0_0_15px_rgba(255,255,255,0.1)]">
-              <s.icon size={24} className="text-white fill-white/10" strokeWidth={3} />
+            <div className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-black/30 ring-1 ring-white/10">
+              <s.icon size={26} className="text-white fill-white/10" strokeWidth={3} />
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] font-[900] text-white/80 uppercase tracking-[0.1em] leading-tight mb-1">{s.label}</span>
-              <span className={cn("font-[900] text-white leading-none tracking-tight", typeof s.value === 'string' && s.value.length > 5 ? "text-[18px]" : "text-[28px]")}>{s.value}</span>
+              <span className="text-[11px] font-[900] text-white uppercase tracking-[0.12em] leading-tight mb-1 drop-shadow-sm">{s.label}</span>
+              <span className="text-[31px] font-[950] text-white leading-none tracking-tight drop-shadow-sm">{s.value}</span>
             </div>
           </div>
         ))}
