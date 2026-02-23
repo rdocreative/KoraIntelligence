@@ -768,14 +768,14 @@ const HabitsPage = () => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <button className="flex items-center justify-center w-5 h-5 rounded-full bg-white text-[#06090e] transition-all active:scale-95 shadow-[0_0_12px_rgba(255,255,255,0.4)] hover:shadow-[0_0_20px_rgba(255,255,255,0.6)] group">
+                        <button className="flex items-center justify-center w-5 h-5 rounded-full bg-white text-[#06090e] transition-all active:scale-95 group">
                           <HelpCircle size={13} strokeWidth={4} />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent side="top" className="bg-[#202f36] border-2 border-[#1e293b] p-3 max-w-[240px] text-white rounded-[16px] shadow-2xl">
                         <div className="space-y-3">
                           <div className="flex flex-col gap-1.5 border-b border-white/5 pb-2">
-                            <span className="text-[10px] font-black text-[#4ade80] uppercase tracking-widest">Legenda de Prioridade</span>
+                            <span className="text-[10px] font-black text-[#4ade80] uppercase tracking-widest">Escala de Prioridade</span>
                             <div className="flex items-center gap-3 text-[8px] font-black text-white/70 uppercase">
                               <span className="text-[#ef4444]">MÁXIMA</span>
                               <div className="flex gap-1">
@@ -788,9 +788,9 @@ const HabitsPage = () => {
                             </div>
                           </div>
                           <div className="space-y-2 text-[9.5px] font-medium leading-relaxed text-white/80">
-                            <p>• <strong className="text-white">Arraste:</strong> A ordem define a prioridade. O que está no topo é mais urgente.</p>
+                            <p>• <strong className="text-white">Arraste:</strong> A ordem define a prioridade. O topo é o mais urgente.</p>
                             <p>• <strong className="text-white">Check:</strong> Clique no círculo à esquerda para marcar como feito.</p>
-                            <p>• <strong className="text-white">Editar:</strong> Use a seta lateral para ajustes rápidos ou excluir.</p>
+                            <p>• <strong className="text-white">Editar:</strong> Use a seta lateral para ajustes ou excluir.</p>
                           </div>
                         </div>
                       </TooltipContent>
