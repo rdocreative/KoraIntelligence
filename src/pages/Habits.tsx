@@ -5,7 +5,7 @@ import {
   Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, Clock, Flame, 
   BarChart3, CheckCircle2, Pencil, Trash2, 
-  Play, Pause, CalendarDays, Target, AlertCircle
+  Play, Pause, CalendarDays, Target
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -219,7 +219,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate, 
         main: "#22d3ee",
         darkBorder: "#0891b2",
         bg: "rgba(34, 211, 238, 0.08)",
-        tag: "ROTINA NORMAL",
+        tag: "PRIORIDADE NORMAL",
         tagColor: "#22d3ee"
       };
     }
@@ -753,35 +753,25 @@ const HabitsPage = () => {
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[40%] relative">
             <div className="flex flex-col min-h-[480px] pt-4 px-2 overflow-visible h-full">
-              <div className="flex items-center justify-between mb-5">
-                <div className="flex items-center gap-2">
+              {/* Header Integrado com Legenda */}
+              <div className="flex flex-col gap-3 mb-6 px-1">
+                <div className="flex items-center justify-between">
                   <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <AlertCircle size={14} className="text-white/20 cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent className="bg-[#202f36] border-[#1e293b] text-[10px] max-w-[200px]">
-                        A cor indica a prioridade: do Vermelho (Topo/Máxima) ao Ciano (Base/Normal). Arraste para reordenar.
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-2.5 py-1 rounded-full border border-[#22d3ee]/10">
+                    {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
+                  </div>
                 </div>
-                <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-2.5 py-1 rounded-full border border-[#22d3ee]/10">
-                  {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
+                
+                <div className="flex items-center gap-3 text-[9px] font-[800] text-[#9ca3af] uppercase tracking-widest">
+                  <span>MÁXIMA</span>
+                  <div className="flex gap-1.5 items-center">
+                    <div className="w-2 h-2 rounded-full bg-[#ef4444]" />
+                    <div className="w-2 h-2 rounded-full bg-[#f97316]" />
+                    <div className="w-2 h-2 rounded-full bg-[#eab308]" />
+                    <div className="w-2 h-2 rounded-full bg-[#22d3ee]" />
+                  </div>
+                  <span>PRIORIDADE NORMAL</span>
                 </div>
-              </div>
-
-              {/* Legenda de Prioridade */}
-              <div className="flex items-center gap-3 text-[9px] font-[800] text-[#9ca3af] uppercase tracking-widest mb-6 px-1">
-                <span>MÁXIMA</span>
-                <div className="flex gap-1.5">
-                  <div className="w-2 h-2 rounded-full bg-[#ef4444]" />
-                  <div className="w-2 h-2 rounded-full bg-[#f97316]" />
-                  <div className="w-2 h-2 rounded-full bg-[#eab308]" />
-                  <div className="w-2 h-2 rounded-full bg-[#22d3ee]" />
-                </div>
-                <span>NORMAL</span>
               </div>
 
               <div className="flex-1 overflow-visible">
