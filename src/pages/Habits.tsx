@@ -536,13 +536,13 @@ const HabitsPage = () => {
     return { pending, completed, all: [...pending, ...completed] };
   }, [habits, selectedDate]);
 
-  // Softer Thermometer Gradient for Progress Bar
+  // Thermometer color logic: Starts with Red
   const thermometerColor = useMemo(() => {
-    if (monthProgress < 20) return "from-[#ff4b4b]/40 to-[#ff4b4b]/60";
-    if (monthProgress < 40) return "from-[#ff4b4b]/40 to-[#ff9600]/60";
-    if (monthProgress < 60) return "from-[#ff9600]/40 to-[#facc15]/60";
-    if (monthProgress < 80) return "from-[#facc15]/40 to-[#58cc02]/60";
-    return "from-[#58cc02]/40 to-[#4ade80]/60";
+    if (monthProgress < 20) return "from-[#ff4b4b] to-[#ff4b4b]";
+    if (monthProgress < 40) return "from-[#ff4b4b] to-[#ff9600]";
+    if (monthProgress < 60) return "from-[#ff9600] to-[#facc15]";
+    if (monthProgress < 80) return "from-[#facc15] to-[#58cc02]";
+    return "from-[#58cc02] to-[#4ade80]";
   }, [monthProgress]);
 
   return (
@@ -690,7 +690,7 @@ const HabitsPage = () => {
                               "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
                               !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
                               day.isCurrentMonth && (day.isFuture || (day.isPast && day.level === 0)) && "bg-[#16222b] border-[#1e293b] text-[#e5e7eb]",
-                              // Soft Thermometer Levels (Transparent fills)
+                              // Soft Thermometer Levels (Red to Green)
                               day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#ff4b4b]/20 border-[#ff4b4b]/40 text-white",
                               day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#ff9600]/20 border-[#ff9600]/40 text-white",
                               day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#facc15]/20 border-[#facc15]/40 text-white",
@@ -722,10 +722,10 @@ const HabitsPage = () => {
                             <div className={cn(
                               "w-2.5 h-2.5 rounded-full border border-white/5",
                               l === 0 ? "bg-[#16222b]" :
-                              l === 1 ? "bg-[#ff4b4b]/40" :
-                              l === 2 ? "bg-[#ff9600]/40" :
-                              l === 3 ? "bg-[#facc15]/40" :
-                              l === 4 ? "bg-[#58cc02]/40" : "bg-[#4ade80]/40"
+                              l === 1 ? "bg-[#ff4b4b]/60" :
+                              l === 2 ? "bg-[#ff9600]/60" :
+                              l === 3 ? "bg-[#facc15]/60" :
+                              l === 4 ? "bg-[#58cc02]/60" : "bg-[#4ade80]/60"
                             )} />
                           </TooltipTrigger>
                           <TooltipContent className="bg-[#202f36] border-[#1e293b] text-white">
