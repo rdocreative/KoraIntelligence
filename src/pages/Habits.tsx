@@ -559,7 +559,7 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative w-full">
       
-      <div className="flex justify-center pt-4 pb-2">
+      <div className="flex justify-center pt-8 pb-0">
         <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-visible">
           <button
             onClick={() => setActiveTab('overview')}
@@ -616,7 +616,7 @@ const HabitsPage = () => {
       </div>
 
       {activeTab === 'overview' ? (
-        <div className="mt-[20px] flex flex-col lg:flex-row gap-6 p-4 md:p-0 items-start">
+        <div className="mt-8 flex flex-col lg:flex-row gap-6 p-4 md:p-0 items-start">
           <div className={cn("transition-all duration-500 shrink-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
             <div className="bg-[#202f36] border border-white/10 rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#020305]">
               <div className="flex items-center justify-between mb-6">
