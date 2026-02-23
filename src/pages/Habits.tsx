@@ -500,6 +500,13 @@ const HabitsPage = () => {
     });
   }, [currentDate, selectedDate, habits]);
 
+  const monthProgress = useMemo(() => {
+    const currentMonthDays = calendarDays.filter(day => day.isCurrentMonth);
+    const totalPossible = currentMonthDays.reduce((acc, day) => acc + (day.total || 0), 0);
+    const totalDone = currentMonthDays.reduce((acc, day) => acc + day.done, 0);
+    return totalPossible === 0 ? 0 : Math.round((totalDone / totalPossible) * 100);
+  }, [calendarDays]);
+
   const stats = useMemo(() => {
     const todayStr = format(new Date(), 'yyyy-MM-dd');
     const scheduledToday = habits.filter(h => h.active && h.weekDays.includes(getDay(new Date())));
@@ -507,9 +514,10 @@ const HabitsPage = () => {
     return {
       total: habits.length,
       today: `${completedToday}/${scheduledToday.length}`,
-      streak: `7d`
+      streak: `7d`,
+      rate: `${monthProgress}%`
     };
-  }, [habits]);
+  }, [habits, monthProgress]);
 
   const displayedHabitsData = useMemo(() => {
     const dateStr = format(selectedDate, 'yyyy-MM-dd');
@@ -551,31 +559,46 @@ const HabitsPage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-0 mt-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-0 mt-8 max-w-7xl mx-auto">
         {[
           { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, from: "#22D3EE", to: "#06B6D4", shadow: "#0891B2" },
           { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, from: "#FB923C", to: "#F97316", shadow: "#EA580C" },
-          { label: "HOJE", value: stats.today, icon: CheckCircle2, from: "#4ADE80", to: "#22C55E", shadow: "#16A34A" },
-          { label: "MÊS", value: `${format(currentDate, 'MMMM', { locale: ptBR })}`, icon: CalendarDays, from: "#A855F7", to: "#6366F1", shadow: "#7C3AED" }
+          { label: "COMPLETOS HOJE", value: stats.today, icon: CheckCircle2, from: "#4ADE80", to: "#22C55E", shadow: "#16A34A" },
+          { label: "PROGRESSO MÊS", value: stats.rate, icon: BarChart3, from: "#A855F7", to: "#6366F1", shadow: "#7C3AED" }
         ].map((s, i) => (
           <div
             key={i}
             className={cn(
-              "py-5 px-6 rounded-[28px] flex items-center gap-4 transition-all duration-300",
-              "text-white border border-white/10 cursor-default hover:translate-y-[-2px] active:translate-y-[4px] active:shadow-none"
+              "py-6 px-6 rounded-[28px] flex items-center gap-5 transition-all duration-300 relative overflow-hidden",
+              "text-white border-2 border-white/20 cursor-default hover:translate-y-[-4px] active:translate-y-[2px] active:shadow-none"
             )}
             style={{
               background: `linear-gradient(135deg, ${s.from}, ${s.to})`,
-              boxShadow: `0 6px 0 0 ${s.shadow}`
+              boxShadow: `0 8px 0 0 ${s.shadow}, 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)`
             }}
           >
-            <div className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-black/40 ring-1 ring-white/10 shadow-[0_0_15px_rgba(255,255,255,0.1)]">
-              <s.icon size={24} className="text-white fill-white/10" strokeWidth={3} />
+            <div className="w-16 h-16 rounded-full flex items-center justify-center shrink-0 bg-black/30 border-2 border-white/10 shadow-lg">
+              <s.icon size={28} className="text-white fill-white/10" strokeWidth={3} />
             </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] font-[900] text-white/80 uppercase tracking-[0.1em] leading-tight mb-1">{s.label}</span>
-              <span className={cn("font-[900] text-white leading-none tracking-tight", typeof s.value === 'string' && s.value.length > 5 ? "text-[18px]" : "text-[28px]")}>{s.value}</span>
+            <div className="flex flex-col justify-center">
+              <span 
+                className="text-[10px] font-[950] text-white uppercase tracking-[0.15em] leading-tight mb-1"
+                style={{ textShadow: "1px 1px 2px rgba(0,0,0,0.4)" }}
+              >
+                {s.label}
+              </span>
+              <span 
+                className={cn(
+                  "font-[950] text-white leading-none tracking-tighter", 
+                  typeof s.value === 'string' && s.value.length > 5 ? "text-[20px]" : "text-[32px]"
+                )}
+                style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.3)" }}
+              >
+                {s.value}
+              </span>
             </div>
+            {/* Glow effect */}
+            <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full blur-3xl -mr-12 -mt-12 pointer-events-none" />
           </div>
         ))}
       </div>
