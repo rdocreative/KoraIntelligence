@@ -108,7 +108,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
     }
   };
 
-  // Cálculo de sequências (Streak)
   const streakInfo = useMemo(() => {
     const today = startOfDay(new Date());
     let streak = 0;
@@ -535,6 +534,13 @@ const HabitsPage = () => {
     return { pending, completed, all: [...pending, ...completed] };
   }, [habits, selectedDate]);
 
+  // Thermometer color logic for Progress Bar
+  const thermometerColor = useMemo(() => {
+    if (monthProgress < 30) return "from-[#ff4b4b] to-[#ff9600]";
+    if (monthProgress < 75) return "from-[#ff9600] to-[#58cc02]";
+    return "from-[#58cc02] to-[#4ade80]";
+  }, [monthProgress]);
+
   return (
     <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative">
       
@@ -680,10 +686,11 @@ const HabitsPage = () => {
                               "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
                               !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
                               day.isCurrentMonth && (day.isFuture || (day.isPast && day.level === 0)) && "bg-[#16222b] border-[#1e293b] text-[#e5e7eb]",
-                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#0e3b4d] border-[#1a5e7a] text-white",
-                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#00779e] border-[#0096c7] text-white",
-                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#00CFFF] border-[#00CFFF] text-[#06090e]",
-                              day.isCurrentMonth && day.isToday && "border-[#00CFFF] bg-transparent text-[#00CFFF]",
+                              // Termômetro: Vermelho -> Laranja -> Verde Suave
+                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#4a1c1c] border-[#ff4b4b] text-white",
+                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#4a3a1c] border-[#ff9600] text-white",
+                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#1c4a1c] border-[#4ade80] text-white",
+                              day.isCurrentMonth && day.isToday && "border-white bg-transparent text-white",
                               day.isSelected && "ring-2 ring-white/50 ring-offset-2 ring-offset-background"
                             )}
                           >
@@ -709,8 +716,8 @@ const HabitsPage = () => {
                             <div className={cn(
                               "w-2.5 h-2.5 rounded-full border border-[#1e293b]",
                               l === 0 ? "bg-[#16222b]" :
-                              l === 1 ? "bg-[#0e3b4d]" :
-                              l === 2 ? "bg-[#00779e]" : "bg-[#00CFFF]"
+                              l === 1 ? "bg-[#ff4b4b]" :
+                              l === 2 ? "bg-[#ff9600]" : "bg-[#4ade80]"
                             )} />
                           </TooltipTrigger>
                           <TooltipContent className="bg-[#202f36] border-[#1e293b] text-white">
@@ -727,17 +734,20 @@ const HabitsPage = () => {
                   <div className="flex justify-between items-end">
                     <div className="flex flex-col">
                       <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.15em] mb-0.5">Progresso Mensal</span>
-                      <span className="text-[11px] font-[600] text-[#22d3ee]/70 uppercase tracking-tight">Consistência de {format(currentDate, 'MMMM', { locale: ptBR })}</span>
+                      <span className="text-[11px] font-[600] text-white/50 uppercase tracking-tight">Consistência de {format(currentDate, 'MMMM', { locale: ptBR })}</span>
                     </div>
                     <div className="flex items-baseline gap-1">
-                        <span className="text-[20px] font-[900] text-[#22d3ee] tabular-nums leading-none">{monthProgress}</span>
-                        <span className="text-[12px] font-[800] text-[#22d3ee]">%</span>
+                        <span className="text-[20px] font-[900] text-white tabular-nums leading-none">{monthProgress}</span>
+                        <span className="text-[12px] font-[800] text-white">%</span>
                       </div>
                     </div>
                     <Progress
                       value={monthProgress}
                       className="h-4 bg-[#0a0f14] border border-[#1e293b] p-[3px]"
-                      indicatorClassName="rounded-full bg-gradient-to-r from-[#22d3ee] to-[#06b6d4] shadow-[0_0_12px_rgba(34,211,238,0.4)]"
+                      indicatorClassName={cn(
+                        "rounded-full transition-all duration-1000 bg-gradient-to-r shadow-[0_0_12px_rgba(255,255,255,0.1)]",
+                        thermometerColor
+                      )}
                     />
                 </div>
               </>
