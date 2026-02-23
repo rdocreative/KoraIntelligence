@@ -536,13 +536,13 @@ const HabitsPage = () => {
     return { pending, completed, all: [...pending, ...completed] };
   }, [habits, selectedDate]);
 
-  // Smoother Thermometer Gradient for Progress Bar
+  // Softer Thermometer Gradient for Progress Bar
   const thermometerColor = useMemo(() => {
-    if (monthProgress < 20) return "from-[#ff4b4b] to-[#ff4b4b]";
-    if (monthProgress < 40) return "from-[#ff4b4b] to-[#ff9600]";
-    if (monthProgress < 60) return "from-[#ff9600] to-[#facc15]";
-    if (monthProgress < 80) return "from-[#facc15] to-[#58cc02]";
-    return "from-[#58cc02] to-[#4ade80]";
+    if (monthProgress < 20) return "from-[#ff4b4b]/40 to-[#ff4b4b]/60";
+    if (monthProgress < 40) return "from-[#ff4b4b]/40 to-[#ff9600]/60";
+    if (monthProgress < 60) return "from-[#ff9600]/40 to-[#facc15]/60";
+    if (monthProgress < 80) return "from-[#facc15]/40 to-[#58cc02]/60";
+    return "from-[#58cc02]/40 to-[#4ade80]/60";
   }, [monthProgress]);
 
   return (
@@ -690,12 +690,12 @@ const HabitsPage = () => {
                               "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
                               !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
                               day.isCurrentMonth && (day.isFuture || (day.isPast && day.level === 0)) && "bg-[#16222b] border-[#1e293b] text-[#e5e7eb]",
-                              // Granular Thermometer Levels
-                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-gradient-to-br from-[#4a1c1c] to-[#ff4b4b] border-[#ff4b4b] text-white shadow-[0_0_10px_rgba(255,75,75,0.2)]",
-                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-gradient-to-br from-[#4a301c] to-[#ff9600] border-[#ff9600] text-white shadow-[0_0_10px_rgba(255,150,0,0.2)]",
-                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-gradient-to-br from-[#4a4a1c] to-[#facc15] border-[#facc15] text-white shadow-[0_0_10px_rgba(250,204,21,0.2)]",
-                              day.isCurrentMonth && day.isPast && day.level === 4 && "bg-gradient-to-br from-[#2a4a1c] to-[#58cc02] border-[#58cc02] text-white shadow-[0_0_10px_rgba(88,204,2,0.2)]",
-                              day.isCurrentMonth && day.isPast && day.level === 5 && "bg-gradient-to-br from-[#1c4a2a] to-[#4ade80] border-[#4ade80] text-white shadow-[0_0_15px_rgba(74,222,128,0.3)]",
+                              // Soft Thermometer Levels (Transparent fills)
+                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#ff4b4b]/20 border-[#ff4b4b]/40 text-white",
+                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#ff9600]/20 border-[#ff9600]/40 text-white",
+                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#facc15]/20 border-[#facc15]/40 text-white",
+                              day.isCurrentMonth && day.isPast && day.level === 4 && "bg-[#58cc02]/20 border-[#58cc02]/40 text-white",
+                              day.isCurrentMonth && day.isPast && day.level === 5 && "bg-[#4ade80]/20 border-[#4ade80]/40 text-white",
                               day.isCurrentMonth && day.isToday && "border-white bg-transparent text-white",
                               day.isSelected && "ring-2 ring-white/50 ring-offset-2 ring-offset-background"
                             )}
@@ -720,12 +720,12 @@ const HabitsPage = () => {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <div className={cn(
-                              "w-2.5 h-2.5 rounded-full border border-[#1e293b]",
+                              "w-2.5 h-2.5 rounded-full border border-white/5",
                               l === 0 ? "bg-[#16222b]" :
-                              l === 1 ? "bg-[#ff4b4b]" :
-                              l === 2 ? "bg-[#ff9600]" :
-                              l === 3 ? "bg-[#facc15]" :
-                              l === 4 ? "bg-[#58cc02]" : "bg-[#4ade80]"
+                              l === 1 ? "bg-[#ff4b4b]/40" :
+                              l === 2 ? "bg-[#ff9600]/40" :
+                              l === 3 ? "bg-[#facc15]/40" :
+                              l === 4 ? "bg-[#58cc02]/40" : "bg-[#4ade80]/40"
                             )} />
                           </TooltipTrigger>
                           <TooltipContent className="bg-[#202f36] border-[#1e293b] text-white">
@@ -753,7 +753,7 @@ const HabitsPage = () => {
                       value={monthProgress}
                       className="h-4 bg-[#0a0f14] border border-[#1e293b] p-[3px]"
                       indicatorClassName={cn(
-                        "rounded-full transition-all duration-1000 bg-gradient-to-r shadow-[0_0_12px_rgba(255,255,255,0.1)]",
+                        "rounded-full transition-all duration-1000 bg-gradient-to-r shadow-[0_0_12px_rgba(255,255,255,0.05)]",
                         thermometerColor
                       )}
                     />
