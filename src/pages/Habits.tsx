@@ -99,7 +99,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
-    zIndex: isDragging ? 50 : 1,
+    zIndex: iDragging ? 50 : 1,
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
@@ -176,7 +176,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const target = 30;
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
-  // Lógica do Termômetro baseada na propriedade priority do hábito
   const priorityTheme = useMemo(() => {
     if (isCompleted) {
       return {
@@ -559,7 +558,8 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative w-full">
       
-      <div className="flex justify-center pt-8 pb-0">
+      {/* Tab Selector - Padding top increased from 8 to ~9 (35px) */}
+      <div className="flex justify-center pt-[35px] pb-0">
         <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-visible">
           <button
             onClick={() => setActiveTab('overview')}
@@ -586,7 +586,8 @@ const HabitsPage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-0 mt-8">
+      {/* Stats Cards - Margin top increased from 8 to ~9 (35px) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-0 mt-[35px]">
         {[
           { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, from: "#22D3EE", to: "#06B6D4", shadow: "#0891B2" },
           { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, from: "#FB923C", to: "#F97316", shadow: "#EA580C" },
@@ -616,7 +617,8 @@ const HabitsPage = () => {
       </div>
 
       {activeTab === 'overview' ? (
-        <div className="mt-8 flex flex-col lg:flex-row gap-6 p-4 md:p-0 items-start">
+        /* Main Content - Margin top increased from 8 to ~9 (35px) */
+        <div className="mt-[35px] flex flex-col lg:flex-row gap-6 p-4 md:p-0 items-start">
           <div className={cn("transition-all duration-500 shrink-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
             <div className="bg-[#202f36] border border-white/10 rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#020305]">
               <div className="flex items-center justify-between mb-6">
@@ -875,7 +877,7 @@ const HabitsPage = () => {
           )}
         </div>
       ) : (
-        <div className="mt-8">
+        <div className="mt-[35px]">
           <DashboardOverview />
         </div>
       )}
