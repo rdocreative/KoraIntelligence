@@ -15,20 +15,22 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { 
-  format, 
-  startOfMonth, 
-  endOfMonth, 
-  eachDayOfInterval, 
-  isSameMonth, 
-  isSameDay, 
-  addMonths, 
-  subMonths, 
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  isSameMonth,
+  isSameDay,
+  addMonths,
+  subMonths,
   getDay,
   startOfWeek,
   endOfWeek,
   addWeeks,
-  subWeeks
+  subWeeks,
+  isBefore,
+  startOfDay
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -365,15 +367,19 @@ const HabitsPage = () => {
       let level = 0;
       if (percent > 0) {
         if (percent <= 0.25) level = 1;
-        else if (percent <= 0.5) level = 2;
-        else if (percent <= 0.75) level = 3;
-        else level = 4;
+        else if (percent <= 0.75) level = 2;
+        else level = 3;
       }
+
+      const isPast = isBefore(startOfDay(day), startOfDay(new Date()));
+      const isToday = isSameDay(day, new Date());
 
       return {
         date: day,
         isCurrentMonth: isSameMonth(day, currentDate),
-        isToday: isSameDay(day, new Date()),
+        isToday,
+        isPast,
+        isFuture: !isPast && !isToday,
         isSelected: isSameDay(day, selectedDate),
         done,
         total,
@@ -545,25 +551,29 @@ const HabitsPage = () => {
                     {calendarDays.map((day, i) => (
                       <Tooltip key={i}>
                         <TooltipTrigger asChild>
-                          <div 
+                          <div
                             onClick={() => setSelectedDate(day.date)}
                             className={cn(
                               "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
-                              day.isCurrentMonth ? "bg-[#2a3f4a] border-[#374151] text-[#e5e7eb] hover:brightness-110 border-[1px] border-solid" : "text-[#37464f] border-transparent bg-transparent",
-                              day.isSelected ? "border-[#22d3ee] ring-1 ring-[#22d3ee]" : "",
-                              day.isToday && !day.isSelected ? "border-[#22d3ee] text-[#22d3ee]" : "",
-                              day.level === 4 && "bg-[#22d3ee] text-[#111b21]",
+                              // Estilo Base (fora do mês)
+                              !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
+                              
+                              // Dias Futuros ou Sem Dados (Cinza Escuro)
+                              day.isCurrentMonth && (day.isFuture || (day.isPast && day.level === 0)) && "bg-[#2a3f4a] border-[#374151] text-[#e5e7eb]",
+                              
+                              // Dias Passados com Progresso
+                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#0e3b4d] border-[#1a5e7a] text-white",
+                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#00779e] border-[#0096c7] text-white",
+                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#00CFFF] border-[#00CFFF] text-[#111b21]",
+                              
+                              // Dia Atual (Borda Ciano, Sem Preenchimento)
+                              day.isCurrentMonth && day.isToday && "border-[#00CFFF] bg-transparent text-[#00CFFF]",
+                              
+                              // Seleção
+                              day.isSelected && "ring-2 ring-white/50 ring-offset-2 ring-offset-[#111b21]"
                             )}
-                            style={{ border: day.isCurrentMonth ? '1px solid #374151' : undefined }}
                           >
-                            <span className="text-[13px] font-[600]">{format(day.date, 'd')}</span>
-                            {day.level > 0 && day.level < 4 && (
-                              <div className={cn(
-                                "w-1 h-1 rounded-full mt-1",
-                                day.level === 1 ? "bg-[#22d3ee]/30" : 
-                                day.level === 2 ? "bg-[#22d3ee]/60" : "bg-[#22d3ee]"
-                              )} />
-                            )}
+                            <span className="text-[13px] font-[700]">{format(day.date, 'd')}</span>
                           </div>
                         </TooltipTrigger>
                         <TooltipContent className="bg-[#202f36] border-[#374151] text-[#e5e7eb] rounded-[10px]">
@@ -578,20 +588,19 @@ const HabitsPage = () => {
                 <div className="mt-6 flex items-center justify-center gap-3 text-[10px] font-[700] text-[#9ca3af] uppercase tracking-widest">
                   <span>MENOS</span>
                   <div className="flex gap-1.5">
-                    {[0, 1, 2, 3, 4].map(l => (
+                    {[0, 1, 2, 3].map(l => (
                       <TooltipProvider key={l}>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <div className={cn(
                               "w-2.5 h-2.5 rounded-full border border-[#374151]",
-                              l === 0 ? "bg-[#2a3f4a]" : 
-                              l === 1 ? "bg-[#22d3ee]/30" : 
-                              l === 2 ? "bg-[#22d3ee]/60" : 
-                              l === 3 ? "bg-[#22d3ee]" : "bg-[#22d3ee]"
+                              l === 0 ? "bg-[#2a3f4a]" :
+                              l === 1 ? "bg-[#0e3b4d]" :
+                              l === 2 ? "bg-[#00779e]" : "bg-[#00CFFF]"
                             )} />
                           </TooltipTrigger>
                           <TooltipContent className="bg-[#202f36] border-[#374151] text-white">
-                            {l === 0 ? "0 hábitos" : l === 4 ? "Todos os hábitos" : `${l*25}% completado`}
+                            {l === 0 ? "0 hábitos" : l === 3 ? "76-100% completado" : l === 1 ? "1-25% completado" : "26-75% completado"}
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
