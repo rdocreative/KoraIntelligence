@@ -539,7 +539,7 @@ const HabitsPage = () => {
     <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative">
       
       <div className="flex justify-center pt-4 pb-2">
-        <div className="bg-[#202f36] border-2 border-[#1e293b] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-visible">
+        <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1.5 overflow-visible">
           <button
             onClick={() => setActiveTab('overview')}
             className={cn(
@@ -576,7 +576,7 @@ const HabitsPage = () => {
             key={i}
             className={cn(
               "py-5 px-6 rounded-[28px] flex items-center gap-4 transition-all duration-300",
-              "text-white border-none cursor-default hover:translate-y-[-2px] active:translate-y-[4px] active:shadow-none"
+              "text-white border border-white/10 cursor-default hover:translate-y-[-2px] active:translate-y-[4px] active:shadow-none"
             )}
             style={{
               background: `linear-gradient(135deg, ${s.from}, ${s.to})`,
@@ -596,9 +596,9 @@ const HabitsPage = () => {
 
       <div className="mt-[20px] flex flex-col lg:flex-row gap-4 p-4 md:p-0">
         <div className={cn("transition-all duration-500", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
-          <div className="bg-[#202f36] border-2 border-[#1e293b] rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#020305]">
+          <div className="bg-[#202f36] border border-white/10 rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#020305]">
             <div className="flex items-center justify-between mb-6">
-              <div className="bg-[#202f36] border-2 border-[#1e293b] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1 overflow-visible">
+              <div className="bg-[#202f36] border border-white/10 rounded-full p-1 pb-2 shadow-[0_4px_0_0_#020305] flex items-center gap-1 overflow-visible">
                 {[
                   { id: 'monthly', icon: LayoutGrid, label: 'Mês' },
                   { id: 'weekly', icon: CalendarDays, label: 'Sem' }
@@ -755,7 +755,7 @@ const HabitsPage = () => {
 
         {viewMode !== 'weekly' && (
           <div className="w-full lg:w-[40%] relative">
-            <div className="bg-[#202f36] border-2 border-[#1e293b] rounded-[24px] flex flex-col min-h-[480px] shadow-[0_4px_0_0_#020305] p-5 overflow-visible h-full">
+            <div className="bg-[#202f36] border border-white/10 rounded-[24px] flex flex-col min-h-[480px] shadow-[0_4px_0_0_#020305] p-5 overflow-visible h-full">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.05em]">HÁBITOS ATIVOS</h2>
                 <div className="bg-[#22d3ee]/10 text-[#22d3ee] text-[10px] font-[700] px-[10px] py-[3px] rounded-[999px] border border-[#22d3ee]/20">
