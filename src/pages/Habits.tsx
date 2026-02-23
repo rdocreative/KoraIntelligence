@@ -5,7 +5,7 @@ import {
   Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, Clock, Flame, 
   BarChart3, CheckCircle2, Pencil, Trash2, 
-  Play, Pause, CalendarDays, Target
+  Play, Pause, CalendarDays, Target, HelpCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -756,7 +756,37 @@ const HabitsPage = () => {
               {/* Header Integrado com Legenda Horizontal */}
               <div className="flex items-center justify-between mb-6 px-1">
                 <div className="flex items-center gap-3">
-                  <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-[#e5e7eb] font-[800] text-[13px] uppercase tracking-[0.1em]">HÁBITOS ATIVOS</h2>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button className="flex items-center justify-center w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 transition-all active:scale-95 group">
+                            <HelpCircle size={13} className="text-white group-hover:text-[#22d3ee] transition-colors" strokeWidth={3} />
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent className="bg-[#202f36] border-2 border-[#1e293b] p-4 max-w-[280px] text-white rounded-[18px] shadow-2xl">
+                          <div className="space-y-3">
+                            <p className="text-[11px] font-black text-[#22d3ee] uppercase tracking-[0.15em] border-b border-white/5 pb-2">Como usar os Hábitos?</p>
+                            <ul className="space-y-2.5 text-[10px] leading-relaxed text-white/70">
+                              <li className="flex gap-2">
+                                <span className="text-white font-black shrink-0">•</span>
+                                <span><strong className="text-white">ORDEM É PRIORIDADE:</strong> Arraste os cards. O topo é <span className="text-[#ef4444] font-bold">Máxima</span> e a base é <span className="text-[#22d3ee] font-bold">Normal</span>.</span>
+                              </li>
+                              <li className="flex gap-2">
+                                <span className="text-white font-black shrink-0">•</span>
+                                <span><strong className="text-white">CHECK:</strong> Clique no círculo colorido à esquerda para marcar como feito no dia.</span>
+                              </li>
+                              <li className="flex gap-2">
+                                <span className="text-white font-black shrink-0">•</span>
+                                <span><strong className="text-white">EDITAR:</strong> Use a seta na direita para ajustar o nome, horário ou excluir o hábito.</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
                   
                   <div className="flex items-center gap-2 text-[8.5px] font-[800] text-[#9ca3af] uppercase tracking-widest">
                     <span className="text-[#ef4444]/80">MÁXIMA</span>
