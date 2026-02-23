@@ -46,8 +46,8 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       
-      {/* Stats Cards - Removed padding to align with parent container */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Stats Cards - Moved from HabitsPage to here */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-0">
         {[
           { label: "TOTAL HÁBITOS", value: displayStats.total, icon: Target, from: "#22D3EE", to: "#06B6D4", shadow: "#0891B2" },
           { label: "SEQUÊNCIA", value: displayStats.streak, icon: Flame, from: "#FB923C", to: "#F97316", shadow: "#EA580C" },
