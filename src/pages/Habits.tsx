@@ -68,6 +68,16 @@ interface Habit {
   priority: number; // 0: Máxima, 1: Alta, 2: Média, 3: Normal
 }
 
+// --- Helper for Priority Colors ---
+const getPriorityColor = (priority: number) => {
+  switch (priority) {
+    case 0: return "#ef4444";
+    case 1: return "#f97316";
+    case 2: return "#eab308";
+    default: return "#4ade80";
+  }
+};
+
 // --- Sortable Item Component ---
 interface SortableItemProps {
   habit: Habit;
@@ -176,7 +186,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const target = 30;
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
-  // Lógica do Termômetro baseada na propriedade priority do hábito
   const priorityTheme = useMemo(() => {
     if (isCompleted) {
       return {
@@ -188,40 +197,16 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       };
     }
 
-    switch (habit.priority) {
-      case 0:
-        return {
-          main: "#ef4444",
-          darkBorder: "#991b1b",
-          bg: "rgba(239, 68, 68, 0.08)",
-          tag: "PRIORIDADE MÁXIMA",
-          tagColor: "#ef4444"
-        };
-      case 1:
-        return {
-          main: "#f97316",
-          darkBorder: "#9a3412",
-          bg: "rgba(249, 115, 22, 0.08)",
-          tag: "PRIORIDADE ALTA",
-          tagColor: "#f97316"
-        };
-      case 2:
-        return {
-          main: "#eab308",
-          darkBorder: "#854d0e",
-          bg: "rgba(234, 179, 8, 0.08)",
-          tag: "PRIORIDADE MÉDIA",
-          tagColor: "#eab308"
-        };
-      default:
-        return {
-          main: "#4ade80",
-          darkBorder: "#16a34a",
-          bg: "rgba(74, 222, 128, 0.08)",
-          tag: "PRIORIDADE NORMAL",
-          tagColor: "#4ade80"
-        };
-    }
+    const color = getPriorityColor(habit.priority);
+    const tags = ["PRIORIDADE MÁXIMA", "PRIORIDADE ALTA", "PRIORIDADE MÉDIA", "PRIORIDADE NORMAL"];
+
+    return {
+      main: color,
+      darkBorder: `${color}80`,
+      bg: `${color}10`,
+      tag: tags[habit.priority] || tags[3],
+      tagColor: color
+    };
   }, [habit.priority, isCompleted]);
 
   return (
@@ -497,7 +482,14 @@ const HabitsPage = () => {
     return days.map(day => {
       const dStr = format(day, 'yyyy-MM-dd');
       const habitsScheduledForDay = habits.filter(h => h.active && h.weekDays.includes(getDay(day)));
-      const done = habitsScheduledForDay.filter(h => h.completedDates.includes(dStr)).length;
+      
+      const dayHabitsData = habitsScheduledForDay.map(h => ({
+        id: h.id,
+        priority: h.priority,
+        isCompleted: h.completedDates.includes(dStr)
+      }));
+
+      const done = dayHabitsData.filter(h => h.isCompleted).length;
       
       let level = 0;
       if (done >= 1) {
@@ -514,6 +506,7 @@ const HabitsPage = () => {
         isPast,
         isFuture: !isPast && !isToday,
         isSelected: isSameDay(day, selectedDate),
+        dayHabitsData,
         done,
         total: habitsScheduledForDay.length,
         level
@@ -693,24 +686,66 @@ const HabitsPage = () => {
                             <div
                               onClick={() => setSelectedDate(day.date)}
                               className={cn(
-                                "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
+                                "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative overflow-hidden group/day",
                                 !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
                                 day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#16222b] border-[#1e293b] text-[#e5e7eb]",
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#ef4444]/30 border-[#ef4444]/50 text-white", 
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#f97316]/30 border-[#f97316]/50 text-white", 
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#eab308]/30 border-[#eab308]/50 text-white", 
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#84cc16]/30 border-[#84cc16]/50 text-white", 
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 5 && "bg-[#22c55e]/30 border-[#22c55e]/50 text-white", 
-                                day.isCurrentMonth && day.isToday && "border-white",
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level > 0 && "bg-[#16222b] border-[#1e293b] text-white",
+                                day.isCurrentMonth && day.isToday && "border-white shadow-[0_0_10px_rgba(255,255,255,0.1)]",
                                 day.isSelected && "ring-2 ring-white/50 ring-offset-2 ring-offset-background"
                               )}
                             >
-                              <span className="text-[13px] font-[700]">{format(day.date, 'd')}</span>
+                              <span className={cn(
+                                "text-[13px] font-[700] z-10 transition-transform group-hover/day:scale-110",
+                                day.isToday && "text-white"
+                              )}>
+                                {format(day.date, 'd')}
+                              </span>
+
+                              {/* Habit Indicators */}
+                              <div className="absolute bottom-1.5 left-0 right-0 flex flex-wrap justify-center gap-0.5 px-1">
+                                {day.dayHabitsData.slice(0, 4).map((h, idx) => (
+                                  <div 
+                                    key={idx}
+                                    className={cn(
+                                      "w-1 h-1 rounded-full transition-all duration-300",
+                                      h.isCompleted ? "scale-100" : "scale-75 opacity-40"
+                                    )}
+                                    style={{ 
+                                      backgroundColor: getPriorityColor(h.priority),
+                                      boxShadow: h.isCompleted ? `0 0 4px ${getPriorityColor(h.priority)}` : 'none'
+                                    }}
+                                  />
+                                ))}
+                                {day.dayHabitsData.length > 4 && (
+                                  <div className="w-1 h-1 rounded-full bg-white/20" />
+                                )}
+                              </div>
                             </div>
                           </TooltipTrigger>
-                          <TooltipContent className="bg-[#202f36] border-[#1e293b] text-[#e5e7eb] rounded-[10px]">
-                            <p className="text-xs font-bold">{format(day.date, 'dd/MM')}</p>
-                            <p className="text-[10px] text-[#9ca3af] font-bold uppercase">{day.done} de {day.total} feitos</p>
+                          <TooltipContent className="bg-[#202f36] border-[#1e293b] text-[#e5e7eb] rounded-[10px] p-3 min-w-[120px]">
+                            <p className="text-xs font-black mb-2 pb-1 border-b border-white/5">{format(day.date, 'dd/MM')}</p>
+                            <div className="space-y-1.5">
+                              {day.dayHabitsData.map((h, idx) => {
+                                const habit = habits.find(habit => habit.id === h.id);
+                                return (
+                                  <div key={idx} className="flex items-center gap-2">
+                                    <div 
+                                      className="w-1.5 h-1.5 rounded-full shrink-0" 
+                                      style={{ backgroundColor: getPriorityColor(h.priority) }} 
+                                    />
+                                    <span className={cn(
+                                      "text-[9px] font-bold truncate uppercase tracking-tight",
+                                      h.isCompleted ? "text-white/80 line-through" : "text-white/40"
+                                    )}>
+                                      {habit?.title}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                            {day.dayHabitsData.length === 0 && (
+                              <p className="text-[9px] font-bold text-white/20 uppercase tracking-widest">Nenhum hábito</p>
+                            )}
                           </TooltipContent>
                         </Tooltip>
                       ))}
@@ -719,30 +754,15 @@ const HabitsPage = () => {
 
                   <div className="mt-6 flex flex-col items-center gap-3">
                     <div className="flex items-center gap-3 text-[10px] font-[700] text-[#9ca3af] uppercase tracking-widest">
-                      <span>FRIO</span>
-                      <div className="flex gap-1.5">
-                        {[0, 1, 2, 3, 4, 5].map(l => (
-                          <TooltipProvider key={l}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <div className={cn(
-                                  "w-2.5 h-2.5 rounded-full border border-white/5",
-                                  l === 0 ? "bg-[#16222b]" :
-                                  l === 1 ? "bg-[#ef4444]/50" : 
-                                  l === 2 ? "bg-[#f97316]/50" : 
-                                  l === 3 ? "bg-[#eab308]/50" : 
-                                  l === 4 ? "bg-[#84cc16]/50" : 
-                                  "bg-[#22c55e]/50" 
-                                )} />
-                              </TooltipTrigger>
-                              <TooltipContent className="bg-[#202f36] border-[#1e293b] text-white">
-                                {l === 0 ? "0 hábitos" : l === 5 ? "5+ hábitos" : `${l} hábito(s)` }
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                      <span>PRIORIDADE</span>
+                      <div className="flex gap-2.5">
+                        {[0, 1, 2, 3].map(p => (
+                          <div key={p} className="flex items-center gap-1">
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getPriorityColor(p) }} />
+                            <span className="text-[8px]">{p === 0 ? 'MÁX' : p === 3 ? 'NORM' : ''}</span>
+                          </div>
                         ))}
                       </div>
-                      <span>QUENTE</span>
                     </div>
                   </div>
                 </>
