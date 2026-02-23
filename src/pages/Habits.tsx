@@ -5,8 +5,7 @@ import {
   Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, Clock, Flame, 
   BarChart3, CheckCircle2, Pencil, Trash2, 
-  Play, Pause, CalendarDays, Target, HelpCircle,
-  Sun, CloudSun, Moon, Coffee
+  Play, Pause, CalendarDays, Target, HelpCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -68,22 +67,6 @@ interface Habit {
   active: boolean;
   priority: number; // 0: Máxima, 1: Alta, 2: Média, 3: Normal
 }
-
-// --- Period Helper ---
-const getPeriod = (time: string) => {
-  const [hours] = time.split(':').map(Number);
-  if (hours >= 5 && hours < 12) return 'Manhã';
-  if (hours >= 12 && hours < 18) return 'Tarde';
-  if (hours >= 18 && hours <= 23) return 'Noite';
-  return 'Madrugada';
-};
-
-const PERIODS = [
-  { label: 'Manhã', icon: Sun, range: '05:00 - 12:00' },
-  { label: 'Tarde', icon: CloudSun, range: '12:00 - 18:00' },
-  { label: 'Noite', icon: Moon, range: '18:00 - 00:00' },
-  { label: 'Madrugada', icon: Coffee, range: '00:00 - 05:00' }
-];
 
 // --- Sortable Item Component ---
 interface SortableItemProps {
@@ -193,6 +176,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const target = 30;
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
+  // Lógica do Termômetro baseada na propriedade priority do hábito
   const priorityTheme = useMemo(() => {
     if (isCompleted) {
       return {
@@ -827,50 +811,23 @@ const HabitsPage = () => {
                   </div>
                 </div>
 
-                <div className="flex-1 overflow-visible space-y-8">
+                <div className="flex-1 overflow-visible">
                   <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                     <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
-                      
-                      {/* Agrupamento por Período do Dia */}
-                      {PERIODS.map((period) => {
-                        const habitsInPeriod = displayedHabitsData.pending.filter(h => getPeriod(h.time) === period.label);
-                        const isEmpty = habitsInPeriod.length === 0;
-
-                        return (
-                          <div key={period.label} className={cn("transition-opacity duration-300", isEmpty && "opacity-40")}>
-                            <div className="flex items-center gap-2 mb-3 px-1">
-                              <period.icon size={14} className="text-[#22d3ee]" />
-                              <span className="text-[11px] font-[900] text-white/60 uppercase tracking-widest">{period.label}</span>
-                              <span className="text-[9px] font-[800] text-white/20 ml-auto">{period.range}</span>
-                            </div>
-                            
-                            <div className="space-y-2">
-                              {isEmpty ? (
-                                <div className="py-4 px-4 border-2 border-dashed border-white/5 rounded-[16px] flex items-center justify-center">
-                                  <span className="text-[10px] font-[800] text-white/20 uppercase tracking-wider">
-                                    Nenhum hábito ativo pra esse horário
-                                  </span>
-                                </div>
-                              ) : (
-                                habitsInPeriod.map((habit) => (
-                                  <SortableHabitItem 
-                                    key={habit.id}
-                                    habit={habit}
-                                    isCompleted={false}
-                                    onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
-                                    onToggle={(id) => toggleHabit(id)}
-                                    currentDate={currentDate}
-                                  />
-                                ))
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
+                      {displayedHabitsData.pending.map((habit) => (
+                        <SortableHabitItem 
+                          key={habit.id}
+                          habit={habit}
+                          isCompleted={false}
+                          onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
+                          onToggle={(id) => toggleHabit(id)}
+                          currentDate={currentDate}
+                        />
+                      ))}
                       
                       {displayedHabitsData.completed.length > 0 && (
                         <>
-                          <div className="mt-6 mb-3 pt-6 border-t-2 border-white/5">
+                          <div className="mt-6 mb-3 pt-3 border-t-2 border-white/5">
                             <span className="text-[10px] font-[800] text-[#9ca3af] uppercase tracking-[0.08em]">
                               CONCLUÍDOS HOJE
                             </span>
@@ -889,6 +846,13 @@ const HabitsPage = () => {
                       )}
                     </SortableContext>
                   </DndContext>
+                  
+                  {displayedHabitsData.all.length === 0 && (
+                    <div className="h-full flex flex-col items-center justify-center p-10 text-center opacity-40">
+                      <Clock size={28} className="text-[#9ca3af] mb-3" />
+                      <p className="text-[10px] font-[700] uppercase text-[#9ca3af] tracking-[0.1em]">Nada planejado</p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="mt-auto pt-6 border-t-2 border-white/5">
