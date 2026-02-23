@@ -502,7 +502,7 @@ const HabitsPage = () => {
       
       let level = 0;
       if (totalCount > 0 && doneCount > 0) {
-        const percentage = (doneCount / totalCount) * 100;
+        const percentage = Math.round((doneCount / totalCount) * 100);
         
         if (percentage >= 100) level = 5;       // VERDE (Tudo feito)
         else if (percentage >= 75) level = 4;   // VERDE CLARO
