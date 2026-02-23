@@ -476,18 +476,16 @@ const HabitsPage = () => {
 
     return days.map(day => {
       const dStr = format(day, 'yyyy-MM-dd');
-      const habitsForDay = habits.filter(h => h.active && h.weekDays.includes(getDay(day)));
-      const done = habitsForDay.filter(h => h.completedDates.includes(dStr)).length;
-      const total = habitsForDay.length;
-      const percent = total === 0 ? 0 : done / total;
+      // Filtramos apenas hábitos ativos configurados para este dia da semana
+      const habitsScheduledForDay = habits.filter(h => h.active && h.weekDays.includes(getDay(day)));
+      // Contamos quantos desses foram concluídos na data dStr
+      const done = habitsScheduledForDay.filter(h => h.completedDates.includes(dStr)).length;
       
+      // NOVA LÓGICA: Nível baseado na contagem absoluta (done)
+      // 1 = Vermelho, 2 = Laranja, 3 = Amarelo, 4 = Lima, 5+ = Verde
       let level = 0;
-      if (percent > 0) {
-        if (percent <= 0.2) level = 1;
-        else if (percent <= 0.4) level = 2;
-        else if (percent <= 0.6) level = 3;
-        else if (percent <= 0.8) level = 4;
-        else level = 5;
+      if (done >= 1) {
+        level = Math.min(done, 5); 
       }
 
       const isPast = isBefore(startOfDay(day), startOfDay(new Date()));
@@ -501,7 +499,7 @@ const HabitsPage = () => {
         isFuture: !isPast && !isToday,
         isSelected: isSameDay(day, selectedDate),
         done,
-        total,
+        total: habitsScheduledForDay.length,
         level
       };
     });
@@ -536,13 +534,13 @@ const HabitsPage = () => {
     return { pending, completed, all: [...pending, ...completed] };
   }, [habits, selectedDate]);
 
-  // STRICT Red to Green Thermometer
+  // PROGRESS BAR: Começa no vermelho (baixo %) e termina no verde (alto %)
   const thermometerColor = useMemo(() => {
-    if (monthProgress < 20) return "from-[#ef4444] to-[#ef4444]"; // Red
-    if (monthProgress < 40) return "from-[#ef4444] to-[#f97316]"; // Red to Orange
-    if (monthProgress < 60) return "from-[#f97316] to-[#eab308]"; // Orange to Yellow
-    if (monthProgress < 80) return "from-[#eab308] to-[#84cc16]"; // Yellow to Lime
-    return "from-[#84cc16] to-[#22c55e]"; // Lime to Green
+    if (monthProgress < 20) return "from-[#ef4444] to-[#ef4444]"; // Vermelho
+    if (monthProgress < 40) return "from-[#ef4444] to-[#f97316]"; // Vermelho -> Laranja
+    if (monthProgress < 60) return "from-[#f97316] to-[#eab308]"; // Laranja -> Amarelo
+    if (monthProgress < 80) return "from-[#eab308] to-[#84cc16]"; // Amarelo -> Lima
+    return "from-[#84cc16] to-[#22c55e]"; // Lima -> Verde (Sem azul)
   }, [monthProgress]);
 
   return (
@@ -690,13 +688,12 @@ const HabitsPage = () => {
                               "min-h-[44px] aspect-square rounded-[10px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300",
                               !day.isCurrentMonth && "text-[#37464f] border-transparent bg-transparent opacity-30",
                               day.isCurrentMonth && (day.isFuture || (day.isPast && day.level === 0)) && "bg-[#16222b] border-[#1e293b] text-[#e5e7eb]",
-                              // Soft Thermometer Levels (Strict Red -> Green)
-                              // Uses slightly more vivid base colors but soft opacity
-                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#ef4444]/30 border-[#ef4444]/50 text-white", // Red
-                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#f97316]/30 border-[#f97316]/50 text-white", // Orange
-                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#eab308]/30 border-[#eab308]/50 text-white", // Yellow
-                              day.isCurrentMonth && day.isPast && day.level === 4 && "bg-[#84cc16]/30 border-[#84cc16]/50 text-white", // Lime
-                              day.isCurrentMonth && day.isPast && day.level === 5 && "bg-[#22c55e]/30 border-[#22c55e]/50 text-white", // Green
+                              // Lógica absoluta:
+                              day.isCurrentMonth && day.isPast && day.level === 1 && "bg-[#ef4444]/30 border-[#ef4444]/50 text-white", // 1 hábito = Vermelho
+                              day.isCurrentMonth && day.isPast && day.level === 2 && "bg-[#f97316]/30 border-[#f97316]/50 text-white", // 2 hábitos = Laranja
+                              day.isCurrentMonth && day.isPast && day.level === 3 && "bg-[#eab308]/30 border-[#eab308]/50 text-white", // 3 hábitos = Amarelo
+                              day.isCurrentMonth && day.isPast && day.level === 4 && "bg-[#84cc16]/30 border-[#84cc16]/50 text-white", // 4 hábitos = Lima
+                              day.isCurrentMonth && day.isPast && day.level === 5 && "bg-[#22c55e]/30 border-[#22c55e]/50 text-white", // 5+ hábitos = Verde
                               day.isCurrentMonth && day.isToday && "border-white bg-transparent text-white",
                               day.isSelected && "ring-2 ring-white/50 ring-offset-2 ring-offset-background"
                             )}
@@ -713,31 +710,35 @@ const HabitsPage = () => {
                   </TooltipProvider>
                 </div>
 
-                <div className="mt-6 flex items-center justify-center gap-3 text-[10px] font-[700] text-[#9ca3af] uppercase tracking-widest">
-                  <span>FRIO</span>
-                  <div className="flex gap-1.5">
-                    {[0, 1, 2, 3, 4, 5].map(l => (
-                      <TooltipProvider key={l}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div className={cn(
-                              "w-2.5 h-2.5 rounded-full border border-white/5",
-                              l === 0 ? "bg-[#16222b]" :
-                              l === 1 ? "bg-[#ef4444]/50" : // Red
-                              l === 2 ? "bg-[#f97316]/50" : // Orange
-                              l === 3 ? "bg-[#eab308]/50" : // Yellow
-                              l === 4 ? "bg-[#84cc16]/50" : // Lime
-                              "bg-[#22c55e]/50" // Green
-                            )} />
-                          </TooltipTrigger>
-                          <TooltipContent className="bg-[#202f36] border-[#1e293b] text-white">
-                            {l === 0 ? "0%" : `${l*20}%` }
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    ))}
+                {/* Legenda de hábitos absolutos */}
+                <div className="mt-6 flex flex-col items-center gap-3">
+                  <div className="flex items-center gap-3 text-[10px] font-[700] text-[#9ca3af] uppercase tracking-widest">
+                    <span>FRIO</span>
+                    <div className="flex gap-1.5">
+                      {[0, 1, 2, 3, 4, 5].map(l => (
+                        <TooltipProvider key={l}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className={cn(
+                                "w-2.5 h-2.5 rounded-full border border-white/5",
+                                l === 0 ? "bg-[#16222b]" :
+                                l === 1 ? "bg-[#ef4444]/50" : // Red
+                                l === 2 ? "bg-[#f97316]/50" : // Orange
+                                l === 3 ? "bg-[#eab308]/50" : // Yellow
+                                l === 4 ? "bg-[#84cc16]/50" : // Lime
+                                "bg-[#22c55e]/50" // Green
+                              )} />
+                            </TooltipTrigger>
+                            <TooltipContent className="bg-[#202f36] border-[#1e293b] text-white">
+                              {l === 0 ? "0 hábitos" : l === 5 ? "5+ hábitos" : `${l} hábito(s)` }
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ))}
+                    </div>
+                    <span>QUENTE</span>
                   </div>
-                  <span>QUENTE</span>
+                  <p className="text-[9px] font-[800] text-white/30 uppercase tracking-tighter">1=Vermelho, 2=Laranja, 3=Amarelo, 4=Lima, 5+=Verde</p>
                 </div>
 
                 <div className="mt-6 space-y-3 px-2">
