@@ -565,30 +565,30 @@ const HabitsPage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-0 mt-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-0 mt-8">
         {[
-          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, bg: "#1A8FA8", shadow: "#0E8FC7" },
-          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, bg: "#C47A2A", shadow: "#CC7700" },
-          { label: "HOJE", value: stats.today, icon: CheckCircle2, bg: "#2A9E55", shadow: "#46A302" },
-          { label: "MÊS", value: stats.rate, icon: BarChart3, bg: "#7A52B8", shadow: "#6B35A0" }
+          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, from: "#22D3EE", to: "#06B6D4", shadow: "#0891B2" },
+          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, from: "#FB923C", to: "#F97316", shadow: "#EA580C" },
+          { label: "HOJE", value: stats.today, icon: CheckCircle2, from: "#4ADE80", to: "#22C55E", shadow: "#16A34A" },
+          { label: "MÊS", value: stats.rate, icon: BarChart3, from: "#A855F7", to: "#6366F1", shadow: "#7C3AED" }
         ].map((s, i) => (
           <div
             key={i}
             className={cn(
-              "py-[10px] px-[18px] rounded-[16px] flex items-center gap-3 transition-all duration-300 stat-card",
-              "text-white border-none"
+              "py-5 px-6 rounded-[28px] flex items-center gap-4 transition-all duration-300",
+              "text-white border-none cursor-default hover:translate-y-[-2px] active:translate-y-[4px] active:shadow-none"
             )}
-            style={{ 
-              background: `linear-gradient(135deg, ${s.bg}, ${s.bg}EE)`, 
-              boxShadow: `0 4px 0 0 ${s.shadow}`
+            style={{
+              background: `linear-gradient(135deg, ${s.from}, ${s.to})`,
+              boxShadow: `0 8px 0 0 ${s.shadow}`
             }}
           >
-            <div className={cn("w-12 h-12 rounded-[12px] flex items-center justify-center shrink-0 bg-black/20")}>
-              <s.icon size={20} className="text-white" strokeWidth={2.5} />
+            <div className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-white/20">
+              <s.icon size={24} className="text-white fill-white/10" strokeWidth={3} />
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] font-[700] text-white/80 uppercase tracking-[0.1em] leading-none mb-1">{s.label}</span>
-              <span className="text-[24px] font-[800] text-white leading-[1.1]">{s.value}</span>
+              <span className="text-[10px] font-[900] text-white/80 uppercase tracking-[0.1em] leading-tight mb-1">{s.label}</span>
+              <span className="text-[28px] font-[900] text-white leading-none tracking-tight">{s.value}</span>
             </div>
           </div>
         ))}
