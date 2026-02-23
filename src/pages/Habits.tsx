@@ -484,7 +484,30 @@ const HabitsPage = () => {
       <div className="mt-[20px] flex flex-col lg:flex-row gap-4 p-4 md:p-0">
         <div className={cn("transition-all duration-500", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
           <div className="bg-[#202f36] border-2 border-[#374151] rounded-[24px] py-[16px] px-[20px] shadow-[0_4px_0_0_#0b1116]">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            {/* Header Reorganizado */}
+            <div className="flex items-center justify-between mb-6">
+              {/* Esquerda: Mes/Sem */}
+              <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1 overflow-visible">
+                {[
+                  { id: 'monthly', icon: LayoutGrid, label: 'Mês' },
+                  { id: 'weekly', icon: CalendarDays, label: 'Sem' }
+                ].map(mode => (
+                  <button
+                    key={mode.id}
+                    onClick={() => setViewMode(mode.id as any)}
+                    className={cn(
+                      "flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-[800] uppercase tracking-wider transition-all border-none shrink-0 whitespace-nowrap",
+                      viewMode === mode.id 
+                        ? "bg-[#22d3ee] text-[#111b21] shadow-[0_4px_0_0_#06b6d4]" 
+                        : "bg-transparent text-[#9ca3af] hover:text-white"
+                    )}
+                  >
+                    <mode.icon size={12} strokeWidth={3} /> {mode.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Centro: Nome do Mes com Setas */}
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => {
@@ -497,7 +520,7 @@ const HabitsPage = () => {
                 </button>
                 <button
                   onClick={() => setIsDateSelectorOpen(true)}
-                  className="flex items-center gap-2 text-[13px] font-[700] text-[#e5e7eb] uppercase tracking-[0.02em] px-2 py-1 rounded-lg hover:bg-white/5 transition-colors group"
+                  className="flex items-center gap-2 text-[14px] font-[800] text-[#e5e7eb] uppercase tracking-[0.05em] px-3 py-1.5 rounded-xl hover:bg-white/5 transition-colors group"
                 >
                   {viewMode === 'weekly'
                     ? `Semana de ${format(startOfWeek(currentDate), 'dd/MM')}`
@@ -516,32 +539,13 @@ const HabitsPage = () => {
                 </button>
               </div>
 
-              <div className="bg-[#202f36] border-2 border-[#374151] rounded-full p-1 pb-2 shadow-[0_4px_0_0_#0b1116] flex items-center gap-1 overflow-visible">
-                {[
-                  { id: 'monthly', icon: LayoutGrid, label: 'Mês' },
-                  { id: 'weekly', icon: CalendarDays, label: 'Sem' }
-                ].map(mode => (
-                  <button
-                    key={mode.id}
-                    onClick={() => setViewMode(mode.id as any)}
-                    className={cn(
-                      "flex items-center gap-2 px-4 py-1.5 rounded-full text-[11px] font-[800] uppercase tracking-wider transition-all border-none shrink-0 whitespace-nowrap",
-                      viewMode === mode.id 
-                        ? "bg-[#22d3ee] text-[#111b21] shadow-[0_4px_0_0_#06b6d4]" 
-                        : "bg-transparent text-[#9ca3af] hover:text-white"
-                    )}
-                  >
-                    <mode.icon size={12} strokeWidth={3} /> {mode.label}
-                  </button>
-                ))}
-              </div>
-
+              {/* Direita: Hoje */}
               <div className="flex items-center">
                 <Button 
                   variant="ghost" 
                   size="sm" 
                   onClick={() => { setCurrentDate(new Date()); setSelectedDate(new Date()); }}
-                  className="text-[10px] font-[700] text-[#22d3ee] bg-[#22d3ee]/10 border border-[#22d3ee]/30 uppercase rounded-[999px] h-auto px-[10px] py-[3px] hover:bg-[#22d3ee] hover:text-[#111b21]"
+                  className="text-[11px] font-[800] text-[#22d3ee] bg-[#22d3ee]/10 border border-[#22d3ee]/30 uppercase rounded-[999px] h-auto px-[14px] py-[6px] hover:bg-[#22d3ee] hover:text-[#111b21] transition-all"
                 >
                   Hoje
                 </Button>
@@ -665,7 +669,6 @@ const HabitsPage = () => {
                 </div>
               </div>
 
-              {/* flex-1 para expandir e ocupar o espaço disponível */}
               <div className="flex-1 overflow-visible">
                 <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                   <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
@@ -708,7 +711,6 @@ const HabitsPage = () => {
                 )}
               </div>
 
-              {/* Botão com mt-auto garantindo que fique no rodapé do flex container */}
               <div className="mt-auto pt-4 border-t-2 border-[#374151]">
                 <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                   <DialogTrigger asChild>
