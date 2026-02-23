@@ -99,7 +99,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
-    zIndex: iDragging ? 50 : 1,
+    zIndex: isDragging ? 50 : 1,
   };
 
   const handleEditClick = (e: React.MouseEvent) => {
