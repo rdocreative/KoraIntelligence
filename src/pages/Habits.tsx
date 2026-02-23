@@ -497,11 +497,18 @@ const HabitsPage = () => {
     return days.map(day => {
       const dStr = format(day, 'yyyy-MM-dd');
       const habitsScheduledForDay = habits.filter(h => h.active && h.weekDays.includes(getDay(day)));
-      const done = habitsScheduledForDay.filter(h => h.completedDates.includes(dStr)).length;
+      const doneCount = habitsScheduledForDay.filter(h => h.completedDates.includes(dStr)).length;
+      const totalCount = habitsScheduledForDay.length;
       
       let level = 0;
-      if (done >= 1) {
-        level = Math.min(done, 5); 
+      if (totalCount > 0 && doneCount > 0) {
+        const percentage = (doneCount / totalCount) * 100;
+        
+        if (percentage >= 100) level = 5;       // VERDE (Tudo feito)
+        else if (percentage >= 75) level = 4;   // VERDE CLARO
+        else if (percentage >= 50) level = 3;   // AMARELO
+        else if (percentage >= 25) level = 2;   // LARANJA
+        else level = 1;                         // VERMELHO
       }
 
       const isPast = isBefore(startOfDay(day), startOfDay(new Date()));
@@ -514,8 +521,8 @@ const HabitsPage = () => {
         isPast,
         isFuture: !isPast && !isToday,
         isSelected: isSameDay(day, selectedDate),
-        done,
-        total: habitsScheduledForDay.length,
+        done: doneCount,
+        total: totalCount,
         level
       };
     });
@@ -711,7 +718,7 @@ const HabitsPage = () => {
                           </TooltipTrigger>
                           <TooltipContent className="bg-[#202f36] border-[#1e293b] text-[#e5e7eb] rounded-[10px]">
                             <p className="text-xs font-bold">{format(day.date, 'dd/MM')}</p>
-                            <p className="text-[10px] text-[#9ca3af] font-bold uppercase">{day.done} de {day.total} feitos</p>
+                            <p className="text-[10px] text-[#9ca3af] font-bold uppercase">{day.done} de {day.total} feitos ({day.total > 0 ? Math.round((day.done/day.total)*100) : 0}%)</p>
                           </TooltipContent>
                         </Tooltip>
                       ))}
@@ -737,7 +744,7 @@ const HabitsPage = () => {
                                 )} />
                               </TooltipTrigger>
                               <TooltipContent className="bg-[#202f36] border-[#1e293b] text-white">
-                                {l === 0 ? "0 hábitos" : l === 5 ? "5+ hábitos" : `${l} hábito(s)` }
+                                {l === 0 ? "0%" : l === 5 ? "100%" : `${l * 20}%+` }
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
