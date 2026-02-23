@@ -561,21 +561,20 @@ const HabitsPage = () => {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-0 mt-8">
         {[
-          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, from: "#22D3EE", to: "#06B6D4", border: "rgba(255,255,255,0.2)" },
-          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, from: "#FB923C", to: "#F97316", border: "rgba(255,255,255,0.2)" },
-          { label: "COMPLETOS HOJE", value: stats.today, icon: CheckCircle2, from: "#4ADE80", to: "#22C55E", border: "rgba(255,255,255,0.2)" },
-          { label: "MES", value: stats.progress, icon: CalendarDays, from: "#A855F7", to: "#6366F1", border: "rgba(255,255,255,0.2)" }
+          { label: "TOTAL HÁBITOS", value: stats.total, icon: Target, from: "#22D3EE", to: "#06B6D4", shadow: "#0891B2" },
+          { label: "SEQUÊNCIA", value: stats.streak, icon: Flame, from: "#FB923C", to: "#F97316", shadow: "#EA580C" },
+          { label: "COMPLETOS HOJE", value: stats.today, icon: CheckCircle2, from: "#4ADE80", to: "#22C55E", shadow: "#16A34A" },
+          { label: "MES", value: stats.progress, icon: CalendarDays, from: "#A855F7", to: "#6366F1", shadow: "#7C3AED" }
         ].map((s, i) => (
           <div
             key={i}
             className={cn(
               "py-6 px-7 rounded-[28px] flex items-center gap-5 transition-all duration-300",
-              "text-white cursor-default hover:translate-y-[-2px] border-[1.5px]"
+              "text-white cursor-default hover:translate-y-[-2px] border-[1.5px] border-white/20"
             )}
             style={{
               background: `linear-gradient(135deg, ${s.from}, ${s.to})`,
-              borderColor: s.border,
-              boxShadow: 'none'
+              boxShadow: `0 8px 0 0 ${s.shadow}`
             }}
           >
             <div className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-black/30 ring-1 ring-white/10">
