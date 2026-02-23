@@ -35,10 +35,10 @@ const InfoTooltip = ({ text }: { text: string }) => (
     <Tooltip delayDuration={300}>
       <TooltipTrigger asChild>
         <button className="outline-none ml-2">
-            <HelpCircle className="w-[14px] h-[14px] text-[#555] hover:text-[#E8251A] transition-colors" />
+            <HelpCircle className="w-[14px] h-[14px] text-muted-foreground hover:text-primary transition-colors" />
         </button>
       </TooltipTrigger>
-      <TooltipContent side="top" className="bg-[#1A1A1A] border-[#333] text-[#AAAAAA] max-w-[220px] rounded-lg p-3 text-xs leading-relaxed">
+      <TooltipContent side="top" className="bg-popover border-border text-popover-foreground max-w-[220px] rounded-lg p-3 text-xs leading-relaxed">
         <p>{text}</p>
       </TooltipContent>
     </Tooltip>
@@ -49,8 +49,8 @@ const InfoTooltip = ({ text }: { text: string }) => (
 const CustomChartTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-[#1A1A1A] border border-[#333] p-3 rounded-lg shadow-xl">
-        <p className="text-xs font-bold text-white mb-1">{label}</p>
+      <div className="bg-popover border border-border p-3 rounded-lg shadow-xl">
+        <p className="text-xs font-bold text-popover-foreground mb-1">{label}</p>
         {payload.map((entry: any, index: number) => (
           <p key={index} className="text-xs" style={{ color: entry.color }}>
             {entry.name}: {entry.value}%
@@ -186,9 +186,9 @@ export const AnnualTab = ({
       
       {/* Analytics Hero */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-[#111111] border-white/5 md:col-span-2">
+          <Card className="bg-card border-border md:col-span-2">
               <CardHeader>
-                  <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
+                  <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                       <BarChart3 className="w-4 h-4 mr-2" /> Status Geral do Ano
                       <InfoTooltip text="Porcentagem das suas metas anuais concluídas até agora." />
                   </CardTitle>
@@ -197,48 +197,48 @@ export const AnnualTab = ({
                   <div className="flex flex-col gap-6">
                       <div className="flex items-baseline justify-between">
                           <div>
-                              <div className="text-4xl font-black text-white tracking-tighter mb-1">{analytics.yearProgress.toFixed(1)}%</div>
-                              <div className="text-xs text-neutral-500 font-mono">do ano concluído</div>
+                              <div className="text-4xl font-black text-foreground tracking-tighter mb-1">{analytics.yearProgress.toFixed(1)}%</div>
+                              <div className="text-xs text-muted-foreground font-mono">do ano concluído</div>
                           </div>
                           <div className="text-right">
                               <div className={`text-xl font-bold ${analytics.statusColor}`}>{analytics.yearStatus}</div>
-                              <div className="text-xs text-neutral-500">{analytics.statusMessage}</div>
+                              <div className="text-xs text-muted-foreground">{analytics.statusMessage}</div>
                           </div>
                       </div>
                       
                       <div className="space-y-2">
-                          <div className="flex justify-between text-xs text-neutral-400 font-bold uppercase tracking-wider">
+                          <div className="flex justify-between text-xs text-muted-foreground font-bold uppercase tracking-wider">
                               <span>Progresso Meta Anual</span>
                               <span>{data.annual.progress}%</span>
                           </div>
-                          <div className="h-2 w-full bg-neutral-900 rounded-full overflow-hidden">
-                              <div className="h-full bg-[#E8251A] transition-all duration-1000" style={{ width: `${data.annual.progress}%` }} />
+                          <div className="h-2 w-full bg-secondary rounded-full overflow-hidden border border-border">
+                              <div className="h-full bg-primary transition-all duration-1000" style={{ width: `${data.annual.progress}%` }} />
                           </div>
                       </div>
                   </div>
               </CardContent>
           </Card>
 
-          <Card className="bg-[#111111] border-white/5">
+          <Card className="bg-card border-border">
               <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
+                  <CardTitle className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                       <TrendingUp className="w-4 h-4" /> Estatísticas
                   </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                   <div>
-                      <div className="text-xs text-neutral-500 mb-1">Taxa de Execução</div>
-                      <div className="text-2xl font-bold text-white">{analytics.executionRate}%</div>
+                      <div className="text-xs text-muted-foreground mb-1">Taxa de Execução</div>
+                      <div className="text-2xl font-bold text-foreground">{analytics.executionRate}%</div>
                   </div>
                   <div>
-                      <div className="text-xs text-neutral-500 mb-1">Área Mais Forte</div>
+                      <div className="text-xs text-muted-foreground mb-1">Área Mais Forte</div>
                       <div className="text-sm font-bold text-green-500 uppercase tracking-wide">
                           {analytics.strongestArea?.label || "-"} ({Math.round(analytics.strongestArea?.percentage || 0)}%)
                       </div>
                   </div>
                   <div>
-                      <div className="text-xs text-neutral-500 mb-1">Ponto de Atenção</div>
-                      <div className="text-sm font-bold text-[#E8251A] uppercase tracking-wide">
+                      <div className="text-xs text-muted-foreground mb-1">Ponto de Atenção</div>
+                      <div className="text-sm font-bold text-destructive uppercase tracking-wide">
                           {analytics.weakestArea?.label || "-"} ({Math.round(analytics.weakestArea?.percentage || 0)}%)
                       </div>
                   </div>
@@ -250,9 +250,9 @@ export const AnnualTab = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
         {/* GRAPH 1: PIE CHART (Distribution) */}
-        <Card className="bg-[#111111] border-white/5">
+        <Card className="bg-card border-border">
             <CardHeader>
-                <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
+                <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                     DISTRIBUIÇÃO DE ESFORÇO
                 </CardTitle>
             </CardHeader>
@@ -281,9 +281,9 @@ export const AnnualTab = ({
                                             if (active && payload && payload.length) {
                                                 const data = payload[0].payload;
                                                 return (
-                                                    <div className="bg-[#1A1A1A] border border-[#333] p-2 rounded shadow-xl text-xs">
+                                                    <div className="bg-popover border border-border p-2 rounded shadow-xl text-xs">
                                                         <span style={{ color: data.color }} className="font-bold">{data.name}</span>
-                                                        <span className="text-white ml-2">{data.value} metas</span>
+                                                        <span className="text-popover-foreground ml-2">{data.value} metas</span>
                                                     </div>
                                                 );
                                             }
@@ -294,14 +294,14 @@ export const AnnualTab = ({
                             </ResponsiveContainer>
                             {/* Center Label */}
                             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                <span className="text-3xl font-bold text-white">{totalCompletedGoals}</span>
-                                <span className="text-[10px] uppercase text-neutral-500 tracking-widest">Concluídas</span>
+                                <span className="text-3xl font-bold text-foreground">{totalCompletedGoals}</span>
+                                <span className="text-[10px] uppercase text-muted-foreground tracking-widest">Concluídas</span>
                             </div>
                         </>
                     ) : (
                         <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
-                             <div className="w-24 h-24 rounded-full border-4 border-neutral-800 mb-4" />
-                             <p className="text-xs text-neutral-500 max-w-[180px]">Conclua metas para ver sua distribuição de esforço.</p>
+                             <div className="w-24 h-24 rounded-full border-4 border-muted-foreground mb-4" />
+                             <p className="text-xs text-muted-foreground max-w-[180px]">Conclua metas para ver sua distribuição de esforço.</p>
                         </div>
                     )}
                 </div>
@@ -312,8 +312,8 @@ export const AnnualTab = ({
                         {distributionData.map((item, index) => (
                             <div key={index} className="flex items-center gap-1.5">
                                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
-                                <span className="text-[10px] font-bold text-neutral-400 uppercase">{item.name}</span>
-                                <span className="text-[10px] text-neutral-600 font-mono">
+                                <span className="text-[10px] font-bold text-muted-foreground uppercase">{item.name}</span>
+                                <span className="text-[10px] text-muted-foreground/80 font-mono">
                                     {Math.round((item.value / totalCompletedGoals) * 100)}%
                                 </span>
                             </div>
@@ -324,40 +324,40 @@ export const AnnualTab = ({
         </Card>
 
         {/* GRAPH 2: LINE CHART (Evolution) */}
-        <Card className="bg-[#111111] border-white/5">
+        <Card className="bg-card border-border">
             <CardHeader>
-                <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-neutral-500">
+                <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                     EVOLUÇÃO AO LONGO DO ANO
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="h-[250px] w-full bg-[#0D0D0D] rounded-lg p-2 border border-white/5 relative">
+                <div className="h-[250px] w-full bg-secondary rounded-lg p-2 border border-border relative">
                      <ResponsiveContainer width="100%" height="100%">
                         <LineChart data={evolutionData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="#1A1A1A" vertical={false} />
+                            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                             <XAxis 
                                 dataKey="name" 
-                                stroke="#444" 
+                                stroke="hsl(var(--muted-foreground))" 
                                 fontSize={10} 
                                 tickLine={false} 
                                 axisLine={false}
                                 dy={10}
                             />
                             <YAxis 
-                                stroke="#444" 
+                                stroke="hsl(var(--muted-foreground))" 
                                 fontSize={10} 
                                 tickLine={false} 
                                 axisLine={false}
                                 tickFormatter={(value) => `${value}%`}
                             />
-                            <RechartsTooltip content={<CustomChartTooltip />} cursor={{ stroke: '#333', strokeWidth: 1 }} />
+                            <RechartsTooltip content={<CustomChartTooltip />} cursor={{ stroke: 'hsl(var(--border))', strokeWidth: 1 }} />
                             
                             {/* Reference Line (Time Elapsed / Ideal) */}
                             <Line 
                                 type="monotone" 
                                 dataKey="ideal" 
                                 name="Tempo Decorrido"
-                                stroke="#444" 
+                                stroke="hsl(var(--muted-foreground))" 
                                 strokeWidth={2} 
                                 strokeDasharray="4 4" 
                                 dot={false}
@@ -369,10 +369,10 @@ export const AnnualTab = ({
                                 type="monotone" 
                                 dataKey="real" 
                                 name="Progresso Real"
-                                stroke="#E8251A" 
+                                stroke="hsl(var(--primary))" 
                                 strokeWidth={2} 
-                                dot={{ r: 3, fill: '#E8251A', strokeWidth: 0 }}
-                                activeDot={{ r: 5, fill: '#fff', stroke: '#E8251A', strokeWidth: 2 }}
+                                dot={{ r: 3, fill: 'hsl(var(--primary))', strokeWidth: 0 }}
+                                activeDot={{ r: 5, fill: 'hsl(var(--background))', stroke: 'hsl(var(--primary))', strokeWidth: 2 }}
                                 connectNulls={true}
                             />
                             <Legend 
@@ -380,7 +380,7 @@ export const AnnualTab = ({
                                 height={36} 
                                 iconType="circle"
                                 iconSize={8}
-                                wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }}
+                                wrapperStyle={{ fontSize: '10px', paddingTop: '10px', color: 'hsl(var(--muted-foreground))' }}
                             />
                         </LineChart>
                      </ResponsiveContainer>
@@ -391,28 +391,28 @@ export const AnnualTab = ({
       </div>
 
       {/* Main Annual Goal Editor */}
-      <Card className="bg-[#111111] border-white/5">
+      <Card className="bg-card border-border">
           <CardHeader>
-               <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-[#E8251A]">
+               <CardTitle className="flex items-center text-[11px] font-black uppercase tracking-[0.2em] text-primary">
                    <Target className="w-4 h-4 mr-2" /> Objetivo Principal
                    <InfoTooltip text="É a sua grande meta do ano. Tudo que você faz aqui deve servir a esse objetivo." />
                </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
               <div className="space-y-2">
-                  <label className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Definição do Alvo</label>
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Definição do Alvo</label>
                   <Input 
                       value={data.annual.objective}
                       onChange={(e) => updateAnnual({ objective: e.target.value })}
-                      className="bg-[#0A0A0A] border-white/10 h-12 text-lg font-bold text-white"
+                      className="bg-input border-border h-12 text-lg font-bold text-foreground"
                   />
               </div>
               <div className="space-y-2">
-                  <label className="text-xs font-bold text-neutral-500 uppercase tracking-widest">Critério de Sucesso (KPIs)</label>
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Critério de Sucesso (KPIs)</label>
                   <Textarea 
                       value={data.annual.successCriteria}
                       onChange={(e) => updateAnnual({ successCriteria: e.target.value })}
-                      className="bg-[#0A0A0A] border-white/10 min-h-[100px] text-neutral-300"
+                      className="bg-input border-border min-h-[100px] text-foreground"
                   />
               </div>
           </CardContent>
@@ -432,12 +432,12 @@ export const AnnualTab = ({
                               "flex items-center gap-3 p-4 rounded-xl border transition-all min-w-[140px] md:min-w-0",
                               isActive 
                                   ? "shadow-lg" 
-                                  : "bg-[#111111] border-white/5 text-neutral-500 hover:text-white"
+                                  : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"
                           )}
                           style={{
                               borderColor: isActive ? area.color : undefined,
                               borderWidth: isActive ? '2px' : '1px',
-                              backgroundColor: isActive ? area.bg : undefined,
+                              backgroundColor: isActive ? 'hsl(var(--secondary))' : undefined,
                           }}
                       >
                           <area.icon 
@@ -451,7 +451,7 @@ export const AnnualTab = ({
                               >
                                 {area.label}
                               </div>
-                              <div className="text-[10px] opacity-70 text-neutral-400">{area.items.length} metas</div>
+                              <div className="text-[10px] opacity-70 text-muted-foreground">{area.items.length} metas</div>
                           </div>
                       </button>
                   );
@@ -461,11 +461,11 @@ export const AnnualTab = ({
           {/* Content */}
           <div className="md:col-span-3">
               <Card 
-                className="bg-[#111111] min-h-[400px] transition-all duration-500"
+                className="bg-card min-h-[400px] transition-all duration-500"
                 style={{ 
                     borderColor: currentArea.color, 
                     borderWidth: '2px',
-                    backgroundColor: currentArea.bg 
+                    // backgroundColor: currentArea.bg 
                 }}
               >
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -476,13 +476,13 @@ export const AnnualTab = ({
                            {currentArea.label}
                            <InfoTooltip text="São as 4 áreas da sua vida. Cada pilar tem metas próprias que contribuem pro seu objetivo anual." />
                       </CardTitle>
-                      <div className="text-xs text-neutral-500 font-mono">
+                      <div className="text-xs text-muted-foreground font-mono">
                           {currentArea.items.filter((i:any) => i.completed).length}/{currentArea.items.length} Concluídas
                       </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
                       {/* Progress Bar specific to area */}
-                      <div className="h-1.5 w-full bg-black/40 rounded-full overflow-hidden mb-6">
+                      <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden mb-6">
                           <div 
                             className="h-full transition-all duration-700" 
                             style={{ 
@@ -498,23 +498,23 @@ export const AnnualTab = ({
                               value={newItemText}
                               onChange={(e) => setNewItemText(e.target.value)}
                               onKeyDown={(e) => e.key === 'Enter' && handleAddItem()}
-                              className="bg-black/40 border-white/10"
+                              className="bg-input border-border"
                           />
-                          <Button onClick={handleAddItem} className="bg-[#E8251A] hover:bg-[#c91e14] shrink-0">
+                          <Button onClick={handleAddItem} className="bg-primary hover:bg-primary/90 text-primary-foreground shrink-0">
                               <Plus className="w-4 h-4" />
                           </Button>
                       </div>
 
                       <div className="space-y-2 mt-4">
                           {currentArea.items.map((item: any) => (
-                              <div key={item.id} className="flex items-center gap-3 p-3 rounded-lg bg-black/20 border border-white/5 hover:border-white/10 transition-colors group">
+                              <div key={item.id} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30 border border-border hover:border-primary/30 transition-colors group">
                                   <button 
                                       onClick={() => toggleAreaItem(currentArea.id, item.id)}
                                       className={cn(
                                           "w-5 h-5 rounded border flex items-center justify-center transition-colors",
                                           item.completed 
                                               ? "text-white" 
-                                              : "border-neutral-700 text-transparent hover:border-white"
+                                              : "border-muted-foreground text-transparent hover:border-foreground"
                                       )}
                                       style={{
                                           backgroundColor: item.completed ? currentArea.color : 'transparent',
@@ -525,20 +525,20 @@ export const AnnualTab = ({
                                   </button>
                                   <span className={cn(
                                       "flex-1 text-sm font-medium",
-                                      item.completed ? "text-neutral-600 line-through" : "text-neutral-200"
+                                      item.completed ? "text-muted-foreground line-through" : "text-foreground"
                                   )}>
                                       {item.text}
                                   </span>
                                   <button 
                                       onClick={() => deleteAreaItem(currentArea.id, item.id)}
-                                      className="text-neutral-700 hover:text-[#E8251A] opacity-0 group-hover:opacity-100 transition-opacity"
+                                      className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
                                   >
                                       <X className="w-4 h-4" />
                                   </button>
                               </div>
                           ))}
                           {currentArea.items.length === 0 && (
-                              <div className="text-center py-12 text-neutral-600 text-sm italic font-mono">
+                              <div className="text-center py-12 text-muted-foreground text-sm italic font-mono">
                                   Nenhuma meta definida para esta área.
                               </div>
                           )}
