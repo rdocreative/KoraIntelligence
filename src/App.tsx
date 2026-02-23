@@ -36,7 +36,7 @@ const ProtectedRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-    return <div className="h-screen w-full flex items-center justify-center bg-transparent"><div className="w-8 h-8 border-4 border-[#22d3ee] border-t-transparent rounded-full animate-spin"></div></div>;
+    return <div className="h-screen w-full flex items-center justify-center bg-[#161c2a]"><div className="w-8 h-8 border-4 border-[#22d3ee] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (!session) {
@@ -44,7 +44,7 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-transparent">
+    <div className="flex min-h-screen bg-[#0d111a]">
       <SideNav />
       {/* pl aumentado para 85px para acomodar a SideNav maior */}
       <div className="flex-1 flex flex-col min-h-screen pl-[85px]">
@@ -63,7 +63,7 @@ const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-transparent"><div className="w-8 h-8 border-4 border-[#22d3ee] border-t-transparent rounded-full animate-spin"></div></div>;
+     return <div className="h-screen w-full flex items-center justify-center bg-[#161c2a]"><div className="w-8 h-8 border-4 border-[#22d3ee] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (session) {
@@ -88,7 +88,7 @@ const App = () => (
               <TooltipProvider>
                 <Sonner theme="dark" />
                 <BrowserRouter>
-                  <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden bg-transparent">
+                  <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden bg-[#161c2a]">
                     <Routes>
                       {/* Rotas Públicas */}
                       <Route element={<PublicRoute />}>

@@ -12,8 +12,8 @@
 
   :root {
     /* Theme Palette - Deep Navy Blue (Updated to rgb(22, 28, 42)) */
-    --background: #161c2a;
-    --panel: #1c2436;
+    --background: #0d111a;
+    --panel: #161c2a;
     --sidebar: #0f1420;
     
     /* Card Colors */
@@ -59,8 +59,7 @@
   }
 
   body, #root {
-    background: radial-gradient(circle at top right, #1e293b, #161c2a 60%);
-    background-attachment: fixed;
+    background-color: var(--background);
     color: var(--foreground);
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
