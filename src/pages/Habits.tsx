@@ -894,7 +894,7 @@ const HabitsPage = () => {
         </div>
       ) : (
         <div className="mt-8">
-          <DashboardOverview habits={habits} />
+          <DashboardOverview />
         </div>
       )}
 
