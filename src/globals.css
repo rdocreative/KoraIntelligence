@@ -22,9 +22,10 @@
     --foreground: #0A0C0F;
     --muted-foreground: #6B7280;
     
-    /* Updated Primary: Sage/Teal #539EA2 */
-    --primary: #539EA2;
-    --primary-dark: #35717A;
+    /* Updated Primary: Light Mint #C5E7E3 */
+    --primary: #C5E7E3;
+    --primary-dark: #8DBFBA;
+    --primary-foreground: #1A2E2D;
     
     --radius: 1rem;
   }
@@ -68,7 +69,7 @@
     background-color: var(--primary);
     box-shadow: 0 4px 0 0 var(--primary-dark);
     border-radius: 16px;
-    color: #FFFFFF;
+    color: var(--primary-foreground);
     transition: all 0.15s ease;
   }
   .btn-primary:active {

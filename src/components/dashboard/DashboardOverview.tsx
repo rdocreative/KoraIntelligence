@@ -19,7 +19,7 @@ const DATA_EVOLUTION = [
 ];
 
 const DATA_DISTRIBUTION = [
-  { name: 'Saúde', value: 400, color: '#539EA2' },
+  { name: 'Saúde', value: 400, color: '#C5E7E3' },
   { name: 'Foco', value: 300, color: '#FF9600' },
   { name: 'Rotina', value: 300, color: '#58CC02' },
   { name: 'Mente', value: 200, color: '#CE82FF' },
@@ -47,10 +47,10 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
       
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "TOTAL HÁBITOS", value: displayStats.total, icon: Target, color: "#539EA2", shadow: "#35717A" },
-          { label: "SEQUÊNCIA", value: displayStats.streak, icon: Flame, color: "#FF9600", shadow: "#E58700" },
-          { label: "HOJE", value: displayStats.today, icon: CheckCircle2, color: "#58CC02", shadow: "#46A302" },
-          { label: "MÊS", value: displayStats.progress, icon: CalendarDays, color: "#CE82FF", shadow: "#A855F7" }
+          { label: "TOTAL HÁBITOS", value: displayStats.total, icon: Target, color: "#C5E7E3", shadow: "#8DBFBA", textColor: "#1A2E2D" },
+          { label: "SEQUÊNCIA", value: displayStats.streak, icon: Flame, color: "#FF9600", shadow: "#E58700", textColor: "white" },
+          { label: "HOJE", value: displayStats.today, icon: CheckCircle2, color: "#58CC02", shadow: "#46A302", textColor: "white" },
+          { label: "MÊS", value: displayStats.progress, icon: CalendarDays, color: "#CE82FF", shadow: "#A855F7", textColor: "white" }
         ].map((s, i) => (
           <div
             key={i}
@@ -59,15 +59,15 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
               backgroundColor: s.color,
               borderColor: 'transparent',
               boxShadow: `0 4px 0 0 ${s.shadow}`,
-              color: 'white'
+              color: s.textColor
             }}
           >
             <div className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-black/10">
-              <s.icon size={28} className="text-white fill-white/10" strokeWidth={3} />
+              <s.icon size={28} style={{ color: s.textColor }} strokeWidth={3} />
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] font-[900] uppercase tracking-widest leading-tight mb-1 opacity-80">{s.label}</span>
-              <span className="text-[28px] font-[950] leading-none tracking-tight">{s.value}</span>
+              <span className="text-[10px] font-[900] uppercase tracking-widest leading-tight mb-1 opacity-70" style={{ color: s.textColor }}>{s.label}</span>
+              <span className="text-[28px] font-[950] leading-none tracking-tight" style={{ color: s.textColor }}>{s.value}</span>
             </div>
           </div>
         ))}
@@ -80,10 +80,10 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
         
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
           <div className="relative">
-            <div className="w-28 h-28 rounded-full border-[6px] border-[#539EA2] flex items-center justify-center bg-[var(--background)] shadow-xl">
-              <span className="text-[36px] font-[950] text-[#539EA2]">12</span>
+            <div className="w-28 h-28 rounded-full border-[6px] border-[#C5E7E3] flex items-center justify-center bg-[var(--background)] shadow-xl">
+              <span className="text-[36px] font-[950] text-[#8DBFBA]">12</span>
             </div>
-            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#539EA2] text-white text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-lg">
+            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#C5E7E3] text-[#1A2E2D] text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-lg">
               NÍVEL
             </div>
           </div>
@@ -95,14 +95,14 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                 <p className="text-[var(--muted-foreground)] text-sm font-bold uppercase tracking-widest mt-1">Você superou 95% dos guerreiros este mês!</p>
               </div>
               <div className="text-right">
-                <span className="text-[#539EA2] font-black text-xl">2.450 / 3.000</span>
+                <span className="text-[#8DBFBA] font-black text-xl">2.450 / 3.000</span>
                 <span className="text-[var(--muted-foreground)] font-black text-sm ml-1 uppercase">XP</span>
               </div>
             </div>
             
             <div className="h-5 w-full bg-[var(--border-ui)] rounded-full overflow-hidden p-1 shadow-inner">
               <div 
-                className="h-full bg-gradient-to-r from-[#539EA2] to-[#35717A] rounded-full transition-all duration-1000" 
+                className="h-full bg-gradient-to-r from-[#C5E7E3] to-[#8DBFBA] rounded-full transition-all duration-1000" 
                 style={{ width: '75%' }}
               />
             </div>
@@ -113,7 +113,7 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                 <span className="text-[12px] font-[800] text-[var(--foreground)]">Streak: 15 Dias</span>
               </div>
               <div className="flex items-center gap-2.5 bg-[var(--card)] px-4 py-2 rounded-2xl border-2 border-[var(--border-ui)] shadow-sm">
-                <Zap size={16} className="text-[#539EA2] fill-[#539EA2]" />
+                <Zap size={16} className="text-[#8DBFBA] fill-[#8DBFBA]" />
                 <span className="text-[12px] font-[800] text-[var(--foreground)]">Combo: x1.5 XP</span>
               </div>
             </div>
@@ -124,7 +124,7 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[32px] p-8 shadow-[var(--shadow-ui)]">
           <div className="flex items-center gap-3 mb-10">
-            <div className="p-2.5 bg-[#539EA2]/10 rounded-xl text-[#539EA2]">
+            <div className="p-2.5 bg-[#C5E7E3]/30 rounded-xl text-[#8DBFBA]">
               <TrendingUp size={20} />
             </div>
             <h3 className="text-[var(--foreground)] font-[900] text-sm uppercase tracking-widest">Evolução Semanal</h3>
@@ -135,8 +135,8 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
               <AreaChart data={DATA_EVOLUTION}>
                 <defs>
                   <linearGradient id="colorHabit" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#539EA2" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#539EA2" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#C5E7E3" stopOpacity={0.6}/>
+                    <stop offset="95%" stopColor="#C5E7E3" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-ui)" />
@@ -149,12 +149,12 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                 <YAxis hide />
                 <Tooltip 
                   contentStyle={{ backgroundColor: 'var(--card)', border: '2px solid var(--border-ui)', borderRadius: '16px', fontSize: '11px', fontWeight: 'bold', color: 'var(--foreground)' }}
-                  itemStyle={{ color: '#539EA2' }}
+                  itemStyle={{ color: '#8DBFBA' }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="habitos" 
-                  stroke="#539EA2" 
+                  stroke="#8DBFBA" 
                   strokeWidth={4}
                   fillOpacity={1} 
                   fill="url(#colorHabit)" 
