@@ -10,9 +10,7 @@ const RemindersPage = () => {
   ];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      
-      {/* Header removido pois agora temos o TopBar global */}
+    <div className="space-y-8 animate-in fade-in duration-500 w-full">
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {reminders.map((reminder) => (

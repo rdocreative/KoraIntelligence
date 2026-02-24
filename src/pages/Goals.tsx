@@ -1,6 +1,6 @@
 const GoalsPage = () => {
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-6">
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-6 w-full">
       
       {/* Stats Cards (Movidos do Header antigo) */}
       <div className="grid grid-cols-3 gap-4">

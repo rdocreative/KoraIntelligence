@@ -1,6 +1,6 @@
 const MissionsPage = () => {
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-6">
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 space-y-6 w-full">
       
       {/* Abas (Movidas do Header antigo) */}
       <div className="flex gap-2 pb-2 border-b border-[#2a2a35]">

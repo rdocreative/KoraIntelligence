@@ -127,7 +127,7 @@ const Settings = () => {
   const hasAnyChanges = nameHasChanges || colorHasChanges;
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 w-full">
       <div className="flex justify-between items-center">
          <h2 className="text-2xl font-bold text-white">Configurações</h2>
          <div className="flex gap-2">
@@ -158,7 +158,7 @@ const Settings = () => {
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label className="text-xs font-black uppercase text-neutral-400">Email</Label>
-                <Input value={user?.email || ""} disabled className="bg-[#0a0a0a] border-white/10 opacity-60" />
+                <Input value={user?.email || ""} disabled className="bg-[#0a0a0b] border-white/10 opacity-60" />
               </div>
               <div className="space-y-2">
                 <Label className="text-xs font-black uppercase text-neutral-400">Nome</Label>
