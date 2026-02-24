@@ -4,8 +4,8 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { 
   Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, Clock, Flame, 
-  BarChart3, CheckCircle2, Pencil, Trash2, 
-  Play, Pause, CalendarDays, Target, HelpCircle
+  BarChart3, Pencil, Trash2, 
+  Play, Pause, CalendarDays, HelpCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,7 +39,10 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent
+  DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
+  defaultDropAnimationSideEffects
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -48,6 +51,7 @@ import {
   verticalListSortingStrategy,
   useSortable
 } from '@dnd-kit/sortable';
+import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
 import { CSS } from '@dnd-kit/utilities';
 import WeeklyView from "@/components/habits/WeeklyView";
 import DateSelectorModal from "@/components/habits/DateSelectorModal";
@@ -75,46 +79,25 @@ const PRIORITY_CONFIG = [
   { id: 3, label: "NORMAL", bg: "#34C759", text: "#FFFFFF", dark: "#2A9F47" },
 ];
 
-// --- Sortable Item Component ---
-interface SortableItemProps {
-  habit: Habit;
-  isCompleted: boolean;
-  onEdit: (habit: Habit, rect: DOMRect) => void;
-  onToggle: (id: string) => void;
-  currentDate: Date;
-}
-
-const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }: SortableItemProps) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging
-  } = useSortable({ 
-    id: habit.id,
-    transition: {
-      duration: 200, 
-      easing: 'ease-in-out',
-    },
-    disabled: isCompleted 
-  });
-
+// --- Habit Card UI Component (Pure Presentational) ---
+const HabitCardUI = ({ 
+  habit, 
+  isCompleted, 
+  onEdit, 
+  onToggle, 
+  currentDate, 
+  isPlaceholder = false,
+  isOverlay = false 
+}: { 
+  habit: Habit, 
+  isCompleted: boolean, 
+  onEdit?: (habit: Habit, rect: DOMRect) => void, 
+  onToggle?: (id: string) => void,
+  currentDate: Date,
+  isPlaceholder?: boolean,
+  isOverlay?: boolean
+}) => {
   const cardRef = useRef<HTMLDivElement>(null);
-
-  const style = {
-    transform: CSS.Translate.toString(transform),
-    transition,
-    zIndex: isDragging ? 50 : 1,
-  };
-
-  const handleEditClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (cardRef.current) {
-      onEdit(habit, cardRef.current.getBoundingClientRect());
-    }
-  };
 
   const streakInfo = useMemo(() => {
     const today = startOfDay(new Date());
@@ -136,7 +119,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
     if (lastScheduledDate) {
       const lastDateStr = format(lastScheduledDate, 'yyyy-MM-dd');
       const wasLastCompleted = habit.completedDates.includes(lastDateStr);
-      
       let historicalStreak = 0;
       let prevDate = wasLastCompleted ? subDays(lastScheduledDate, 1) : lastScheduledDate;
       let foundGap = false;
@@ -153,7 +135,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         prevDate = subDays(prevDate, 1);
         if (historicalStreak > 365) break;
       }
-
       if (!wasLastCompleted) {
         if (historicalStreak > 0) isLost = true;
         streak = 0;
@@ -171,7 +152,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         streak = 1;
       }
     }
-
     return { streak, isLost };
   }, [habit.completedDates, habit.weekDays]);
 
@@ -185,7 +165,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
 
   const priorityTheme = useMemo(() => {
     const config = PRIORITY_CONFIG.find(c => c.id === habit.priority) || PRIORITY_CONFIG[3];
-    
     if (isCompleted) {
       return {
         main: "var(--accent-color)",
@@ -196,7 +175,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
         tagColor: "white"
       };
     }
-
     return {
       main: config.bg,
       dark: config.dark,
@@ -207,39 +185,38 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
     };
   }, [habit.priority, isCompleted]);
 
+  if (isPlaceholder) {
+    return (
+      <div 
+        className="rounded-[20px] border-2 border-dashed border-[var(--border-ui)] bg-[var(--input-bg)]/30 h-[140px] mb-[16px] animate-pulse"
+      />
+    );
+  }
+
   return (
     <div 
-      ref={(node) => {
-        setNodeRef(node);
-        cardRef.current = node as HTMLDivElement;
-      }}
+      ref={cardRef}
       style={{
         backgroundColor: priorityTheme.bg,
         borderColor: isCompleted ? "var(--border-ui)" : priorityTheme.main,
-        boxShadow: isCompleted ? 'none' : `0 4px 0 0 ${priorityTheme.dark}88`,
-        ...style
+        boxShadow: isCompleted || isOverlay ? 'none' : `0 4px 0 0 ${priorityTheme.dark}88`,
       }}
-      {...attributes}
-      {...listeners}
       className={cn(
-        "group rounded-[20px] border-2 p-[16px] mb-[16px] cursor-grab active:cursor-grabbing select-none transition-all duration-200",
-        isDragging && "scale-[1.02] opacity-90",
-        isCompleted && !isDragging && "opacity-50"
+        "group rounded-[20px] border-2 p-[16px] mb-[16px] select-none transition-all duration-200",
+        isOverlay ? "cursor-grabbing scale-[1.02] shadow-2xl opacity-90" : "cursor-grab active:cursor-grabbing",
+        isCompleted && "opacity-50"
       )}
     >
       <div className="flex items-center gap-4">
         <button 
-          onClick={(e) => { e.stopPropagation(); onToggle(habit.id); }}
-          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => { e.stopPropagation(); onToggle?.(habit.id); }}
           className={cn(
             "h-7 w-7 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
             isCompleted 
               ? "bg-primary border-primary" 
               : "bg-white/50"
           )}
-          style={{
-            borderColor: priorityTheme.main,
-          }}
+          style={{ borderColor: priorityTheme.main }}
         >
           {isCompleted && (
             <Check 
@@ -282,11 +259,9 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
               <span className="text-[12px] font-black">{streakInfo.streak}</span>
             </div>
           )}
-          
-          {!isCompleted && (
+          {!isCompleted && onEdit && (
             <button 
-              onClick={handleEditClick}
-              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => { e.stopPropagation(); onEdit(habit, cardRef.current!.getBoundingClientRect()); }}
               className="p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors z-10"
             >
               <ChevronRight size={22} />
@@ -312,6 +287,52 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
           />
         </div>
       </div>
+    </div>
+  );
+};
+
+// --- Sortable Item Component ---
+interface SortableItemProps {
+  habit: Habit;
+  isCompleted: boolean;
+  onEdit: (habit: Habit, rect: DOMRect) => void;
+  onToggle: (id: string) => void;
+  currentDate: Date;
+}
+
+const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }: SortableItemProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({ 
+    id: habit.id,
+    disabled: isCompleted 
+  });
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+    transition,
+  };
+
+  return (
+    <div 
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
+      <HabitCardUI 
+        habit={habit}
+        isCompleted={isCompleted}
+        onEdit={onEdit}
+        onToggle={onToggle}
+        currentDate={currentDate}
+        isPlaceholder={isDragging}
+      />
     </div>
   );
 };
@@ -455,14 +476,21 @@ const HabitsPage = () => {
   const [isDateSelectorOpen, setIsDateSelectorOpen] = useState(false);
   const [editingHabit, setEditingHabit] = useState<{habit: Habit, rect: DOMRect} | null>(null);
   
+  // Drag and Drop state
+  const [activeDragId, setActiveDragId] = useState<string | null>(null);
+
   // New habit state
   const [newHabitTitle, setNewHabitTitle] = useState("");
   const [newHabitPriority, setNewHabitPriority] = useState(3);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 1 } }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveDragId(event.active.id as string);
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -470,10 +498,10 @@ const HabitsPage = () => {
       setHabits((items) => {
         const oldIndex = items.findIndex((i) => i.id === active.id);
         const newIndex = items.findIndex((i) => i.id === over?.id);
-        const reordered = arrayMove(items, oldIndex, newIndex);
-        return reordered;
+        return arrayMove(items, oldIndex, newIndex);
       });
     }
+    setActiveDragId(null);
   };
 
   const toggleHabit = (id: string, date: Date = selectedDate) => {
@@ -573,6 +601,10 @@ const HabitsPage = () => {
       setIsModalOpen(false);
     }
   };
+
+  const activeDraggingHabit = useMemo(() => 
+    habits.find(h => h.id === activeDragId), 
+  [habits, activeDragId]);
 
   return (
     <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative w-full">
@@ -725,7 +757,13 @@ const HabitsPage = () => {
                 </div>
 
                 <div className="flex-1 overflow-y-auto px-6 py-2 scrollbar-thin scrollbar-thumb-[var(--border-ui)] scrollbar-track-transparent">
-                  <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                  <DndContext 
+                    sensors={sensors} 
+                    collisionDetection={closestCenter} 
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                    modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+                  >
                     <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
                       {displayedHabitsData.pending.map((habit) => (
                         <SortableHabitItem 
@@ -744,18 +782,38 @@ const HabitsPage = () => {
                             <span className="text-[10px] font-[900] text-[var(--muted-foreground)] uppercase tracking-[0.1em]">CONCLUÍDOS</span>
                           </div>
                           {displayedHabitsData.completed.map((habit) => (
-                            <SortableHabitItem 
-                              key={habit.id}
-                              habit={habit}
-                              isCompleted={true}
-                              onEdit={(habit, rect) => setEditingHabit({ habit, rect })}
-                              onToggle={(id) => toggleHabit(id)}
-                              currentDate={currentDate}
+                            <HabitCardUI 
+                                key={habit.id}
+                                habit={habit}
+                                isCompleted={true}
+                                onToggle={(id) => toggleHabit(id)}
+                                currentDate={currentDate}
                             />
                           ))}
                         </>
                       )}
                     </SortableContext>
+                    
+                    <DragOverlay dropAnimation={{
+                        sideEffects: defaultDropAnimationSideEffects({
+                            styles: {
+                                active: {
+                                    opacity: '0.5',
+                                },
+                            },
+                        }),
+                    }}>
+                      {activeDraggingHabit ? (
+                        <div className="w-full">
+                          <HabitCardUI 
+                            habit={activeDraggingHabit} 
+                            isCompleted={false} 
+                            currentDate={currentDate} 
+                            isOverlay={true}
+                          />
+                        </div>
+                      ) : null}
+                    </DragOverlay>
                   </DndContext>
                   
                   {displayedHabitsData.all.length === 0 && (
