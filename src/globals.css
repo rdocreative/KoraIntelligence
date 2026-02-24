@@ -10,28 +10,28 @@
   }
 
   :root {
-    /* Light Theme Palette */
-    --background: #FFFFFF;
-    --topbar: #FFFFFF;
-    --sidebar: #FFFFFF;
-    --panel: #FFFFFF;
-    --card: #FFFFFF;
-    --input-bg: #F4F6F9;
-    --border-ui: #E2E6ED;
-    --shadow-ui: rgba(0, 0, 0, 0.06);
+    /* Light Theme Palette - Warm Gray/Red Scheme */
+    --background: #D1C5C5;
+    --topbar: #DDD0D0;
+    --sidebar: #DDD0D0;
+    --panel: #DDD0D0;
+    --card: #DDD0D0;
+    --input-bg: #E5DADA;
+    --border-ui: #BFB0B0;
+    --shadow-ui: rgba(0, 0, 0, 0.08);
     --foreground: #0A0C0F;
-    --muted-foreground: #6B7280;
+    --muted-foreground: #5A606B;
     
-    /* Updated Primary: Deep Purple #3F3047 */
-    --primary: #3F3047;
-    --primary-dark: #261D2E;
+    /* Updated Primary: Deep Red #A50104 */
+    --primary: #A50104;
+    --primary-dark: #6A0002;
     --primary-foreground: #FFFFFF;
     
     --radius: 1rem;
   }
 
   .dark {
-    /* Dark Theme Palette */
+    /* Dark Theme Palette - Keeping deep dark tones but matching the red accent */
     --background: #0B0D14;
     --topbar: #1A1D27;
     --sidebar: #1A1D27;
@@ -44,6 +44,9 @@
     --shadow-ui: transparent;
     --foreground: #F0F2F5;
     --muted-foreground: #8892AA;
+    
+    --primary: #A50104;
+    --primary-dark: #6A0002;
   }
 
   body, #root {
