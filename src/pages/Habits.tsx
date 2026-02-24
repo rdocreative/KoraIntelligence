@@ -179,7 +179,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const priorityTheme = useMemo(() => {
     if (isCompleted) {
       return {
-        main: "#FF784F",
+        main: "#3F3047",
         darkBorder: "var(--border-ui)",
         bg: "var(--input-bg)",
         tag: "CONCLUÍDO",
@@ -250,7 +250,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
           className={cn(
             "h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
             isCompleted 
-              ? "bg-[#FF784F] border-[#FF784F]" 
+              ? "bg-[#3F3047] border-[#3F3047]" 
               : ""
           )}
           style={{
@@ -381,7 +381,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
           <Input 
             value={form.title} 
             onChange={(e) => setForm({...form, title: e.target.value})}
-            className="h-10 bg-[var(--input-bg)] border-[var(--border-ui)] text-[14px] font-[700] text-[var(--foreground)] focus-visible:ring-[#FF784F] rounded-[12px]" 
+            className="h-10 bg-[var(--input-bg)] border-[var(--border-ui)] text-[14px] font-[700] text-[var(--foreground)] focus-visible:ring-[#3F3047] rounded-[12px]" 
           />
         </div>
 
@@ -391,7 +391,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
             type="time"
             value={form.time} 
             onChange={(e) => setForm({...form, time: e.target.value})}
-            className="h-10 bg-[var(--input-bg)] border-[var(--border-ui)] text-[14px] font-[700] text-[var(--foreground)] focus-visible:ring-[#FF784F] rounded-[12px]" 
+            className="h-10 bg-[var(--input-bg)] border-[var(--border-ui)] text-[14px] font-[700] text-[var(--foreground)] focus-visible:ring-[#3F3047] rounded-[12px]" 
           />
         </div>
 
@@ -403,7 +403,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
             onClick={() => setForm({...form, active: !form.active})}
             className={cn(
               "p-2 rounded-[8px] transition-all",
-              form.active ? "text-[#FF784F] bg-[#FF784F]/10" : "text-[var(--muted-foreground)] bg-[var(--border-ui)]"
+              form.active ? "text-[#3F3047] bg-[#3F3047]/10" : "text-[var(--muted-foreground)] bg-[var(--border-ui)]"
             )}
           >
             {form.active ? <Play size={14} fill="currentColor" /> : <Pause size={14} fill="currentColor" />}
@@ -422,7 +422,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
           <Button 
             size="sm"
             onClick={() => { onSave(form); onClose(); }}
-            className="flex-[2] h-10 bg-[#FF784F] hover:bg-[#C94E28] text-white font-[900] text-[10px] uppercase tracking-wider rounded-[12px] shadow-[0_4px_0_0_#C94E28] active:translate-y-[2px] active:shadow-none"
+            className="flex-[2] h-10 bg-[#3F3047] hover:bg-[#261D2E] text-white font-[900] text-[10px] uppercase tracking-wider rounded-[12px] shadow-[0_4px_0_0_#261D2E] active:translate-y-[2px] active:shadow-none"
           >
             Salvar
           </Button>
@@ -562,7 +562,7 @@ const HabitsPage = () => {
             className={cn(
               "flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0",
               activeTab === 'overview'
-                ? "bg-[#FF784F] text-white shadow-[0_4px_0_0_#C94E28]"
+                ? "bg-[#3F3047] text-white shadow-[0_4px_0_0_#261D2E]"
                 : "bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
             )}
           >
@@ -573,7 +573,7 @@ const HabitsPage = () => {
             className={cn(
               "flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0",
               activeTab === 'charts'
-                ? "bg-[#FF784F] text-white shadow-[0_4px_0_0_#C94E28]"
+                ? "bg-[#3F3047] text-white shadow-[0_4px_0_0_#261D2E]"
                 : "bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
             )}
           >
@@ -598,7 +598,7 @@ const HabitsPage = () => {
                       className={cn(
                         "flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-[800] uppercase tracking-wider transition-all border-none shrink-0",
                         viewMode === mode.id 
-                          ? "bg-[#FF784F] text-white shadow-[0_3px_0_0_#C94E28]" 
+                          ? "bg-[#3F3047] text-white shadow-[0_3px_0_0_#261D2E]" 
                           : "bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                       )}
                     >
@@ -608,19 +608,19 @@ const HabitsPage = () => {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button onClick={() => setCurrentDate(viewMode === 'weekly' ? subWeeks(currentDate, 1) : subMonths(currentDate, 1))} className="p-1 text-[var(--muted-foreground)] hover:text-[#FF784F]">
+                  <button onClick={() => setCurrentDate(viewMode === 'weekly' ? subWeeks(currentDate, 1) : subMonths(currentDate, 1))} className="p-1 text-[var(--muted-foreground)] hover:text-[#3F3047]">
                     <ChevronLeft size={22} />
                   </button>
                   <button onClick={() => setIsDateSelectorOpen(true)} className="flex items-center gap-2 text-[15px] font-[800] text-[var(--foreground)] uppercase tracking-[0.05em] px-3 py-1.5 rounded-xl hover:bg-[var(--border-ui)] transition-colors group">
                     {viewMode === 'weekly' ? `Semana de ${format(startOfWeek(currentDate), 'dd/MM')}` : format(currentDate, 'MMMM yyyy', { locale: ptBR })}
-                    <Pencil size={12} className="opacity-0 group-hover:opacity-50 text-[#FF784F]" />
+                    <Pencil size={12} className="opacity-0 group-hover:opacity-50 text-[#3F3047]" />
                   </button>
-                  <button onClick={() => setCurrentDate(viewMode === 'weekly' ? addWeeks(currentDate, 1) : addMonths(currentDate, 1))} className="p-1 text-[var(--muted-foreground)] hover:text-[#FF784F]">
+                  <button onClick={() => setCurrentDate(viewMode === 'weekly' ? addWeeks(currentDate, 1) : addMonths(currentDate, 1))} className="p-1 text-[var(--muted-foreground)] hover:text-[#3F3047]">
                     <ChevronRight size={22} />
                   </button>
                 </div>
 
-                <button onClick={() => { setCurrentDate(new Date()); setSelectedDate(new Date()); }} className="text-[11px] font-[800] text-[#FF784F] bg-[#FF784F]/10 border-2 border-[#FF784F]/20 uppercase rounded-full px-4 py-1.5 hover:bg-[#FF784F] hover:text-white transition-all shadow-[0_2px_0_0_#FF784F22]">
+                <button onClick={() => { setCurrentDate(new Date()); setSelectedDate(new Date()); }} className="text-[11px] font-[800] text-[#3F3047] bg-[#3F3047]/10 border-2 border-[#3F3047]/20 uppercase rounded-full px-4 py-1.5 hover:bg-[#3F3047] hover:text-white transition-all shadow-[0_2px_0_0_#3F304722]">
                   Hoje
                 </button>
               </div>
@@ -629,7 +629,7 @@ const HabitsPage = () => {
                 <>
                   <div className="grid grid-cols-7 mb-4">
                     {['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].map(d => (
-                      <div key={d} className="text-center text-[10px] font-[800] text-[#FF784F] uppercase tracking-[0.08em] opacity-80">{d}</div>
+                      <div key={d} className="text-center text-[10px] font-[800] text-[#3F3047] uppercase tracking-[0.08em] opacity-80">{d}</div>
                     ))}
                   </div>
 
@@ -648,13 +648,13 @@ const HabitsPage = () => {
                                 day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#FF960015] border-[#FF960044] text-[#FF9600]", 
                                 day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#EAB30815] border-[#EAB30844] text-[#EAB308]", 
                                 day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#58CC0215] border-[#58CC0244] text-[#58CC02]", 
-                                day.isToday && !day.isSelected && "border-[#FF784F]/40",
+                                day.isToday && !day.isSelected && "border-[#3F3047]/40",
                                 day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.05)]"
                               )}
                             >
                               <span className="text-[14px] font-[800]">{format(day.date, 'd')}</span>
                               {day.isToday && !day.isSelected && (
-                                <div className="absolute bottom-1 w-1.5 h-1.5 bg-[#FF784F] rounded-full" />
+                                <div className="absolute bottom-1 w-1.5 h-1.5 bg-[#3F3047] rounded-full" />
                               )}
                             </div>
                           </TooltipTrigger>
@@ -684,7 +684,7 @@ const HabitsPage = () => {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <button className="flex items-center justify-center w-5 h-5 rounded-full bg-[#FF784F] text-white transition-all active:scale-90">
+                          <button className="flex items-center justify-center w-5 h-5 rounded-full bg-[#3F3047] text-white transition-all active:scale-90">
                             <HelpCircle size={13} strokeWidth={4} />
                           </button>
                         </TooltipTrigger>
@@ -697,7 +697,7 @@ const HabitsPage = () => {
                       </Tooltip>
                     </TooltipProvider>
                   </div>
-                  <div className="bg-[#FF784F]/10 text-[#FF784F] text-[11px] font-[800] px-3 py-1 rounded-full border-2 border-[#FF784F]/10">
+                  <div className="bg-[#3F3047]/10 text-[#3F3047] text-[11px] font-[800] px-3 py-1 rounded-full border-2 border-[#3F3047]/10">
                     {displayedHabitsData.completed.length}/{displayedHabitsData.all.length}
                   </div>
                 </div>
@@ -747,7 +747,7 @@ const HabitsPage = () => {
                 <div className="mt-auto pt-8 border-t-2 border-[var(--border-ui)]">
                   <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                     <DialogTrigger asChild>
-                      <Button className="w-full bg-[#FF784F] hover:bg-[#C94E28] text-white font-[900] text-[12px] uppercase tracking-[0.1em] h-12 rounded-[20px] shadow-[0_4px_0_0_#C94E28] transition-all active:translate-y-[2px] active:shadow-none">
+                      <Button className="w-full bg-[#3F3047] hover:bg-[#261D2E] text-white font-[900] text-[12px] uppercase tracking-[0.1em] h-12 rounded-[20px] shadow-[0_4px_0_0_#261D2E] transition-all active:translate-y-[2px] active:shadow-none">
                         <Plus className="mr-2" size={18} strokeWidth={4} /> NOVO HÁBITO
                       </Button>
                     </DialogTrigger>
@@ -780,7 +780,7 @@ const HabitsPage = () => {
                             }}
                           />
                         </div>
-                        <Button className="w-full bg-[#FF784F] hover:bg-[#C94E28] text-white h-12 rounded-[16px] font-black uppercase tracking-widest shadow-[0_4px_0_0_#C94E28]">CRIAR AGORA</Button>
+                        <Button className="w-full bg-[#3F3047] hover:bg-[#261D2E] text-white h-12 rounded-[16px] font-black uppercase tracking-widest shadow-[0_4px_0_0_#261D2E]">CRIAR AGORA</Button>
                       </div>
                     </DialogContent>
                   </Dialog>
