@@ -79,7 +79,6 @@ const PRIORITY_CONFIG = [
   { id: 3, label: "NORMAL", bg: "#34C759", text: "#FFFFFF", dark: "#2A9F47" },
 ];
 
-// --- Habit Card UI Component (Pure Presentational) ---
 const HabitCardUI = ({ 
   habit, 
   isCompleted, 
@@ -291,7 +290,6 @@ const HabitCardUI = ({
   );
 };
 
-// --- Sortable Item Component ---
 interface SortableItemProps {
   habit: Habit;
   isCompleted: boolean;
@@ -337,7 +335,6 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   );
 };
 
-// --- Floating Edit Popup ---
 interface EditPopupProps {
   habit: Habit;
   rect: DOMRect | null;
@@ -476,10 +473,8 @@ const HabitsPage = () => {
   const [isDateSelectorOpen, setIsDateSelectorOpen] = useState(false);
   const [editingHabit, setEditingHabit] = useState<{habit: Habit, rect: DOMRect} | null>(null);
   
-  // Drag and Drop state
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
 
-  // New habit state
   const [newHabitTitle, setNewHabitTitle] = useState("");
   const [newHabitPriority, setNewHabitPriority] = useState(3);
 
@@ -637,7 +632,7 @@ const HabitsPage = () => {
       </div>
 
       {activeTab === 'overview' ? (
-        <div className="mt-[35px] flex flex-col lg:flex-row gap-8 p-4 md:p-0 items-start max-w-7xl mx-auto">
+        <div className="mt-[35px] flex flex-col lg:flex-row gap-8 items-start w-full">
           <div className={cn("transition-all duration-500 shrink-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
             <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[24px] shadow-[0_4px_0_0_var(--border-ui)] p-6 py-[24px] flex flex-col">
               <div className="flex items-center justify-between mb-8 shrink-0">
@@ -889,7 +884,7 @@ const HabitsPage = () => {
           )}
         </div>
       ) : (
-        <div className="mt-[35px] max-w-5xl mx-auto w-full">
+        <div className="mt-[35px] w-full">
           <DashboardOverview stats={stats} />
         </div>
       )}
