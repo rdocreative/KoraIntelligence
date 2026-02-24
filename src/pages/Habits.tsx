@@ -637,9 +637,9 @@ const HabitsPage = () => {
       </div>
 
       {activeTab === 'overview' ? (
-        <div className="mt-[35px] flex flex-col lg:flex-row gap-8 px-6 md:px-12 lg:px-20 items-start max-w-7xl mx-auto overflow-visible">
+        <div className="mt-[35px] flex flex-col lg:flex-row gap-8 p-4 md:p-0 items-start max-w-7xl mx-auto">
           <div className={cn("transition-all duration-500 shrink-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
-            <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[24px] shadow-[0_4px_0_0_var(--border-ui)] p-6 py-[24px] flex flex-col overflow-visible">
+            <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[24px] shadow-[0_4px_0_0_var(--border-ui)] p-6 py-[24px] flex flex-col">
               <div className="flex items-center justify-between mb-8 shrink-0">
                 <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-full p-1 shadow-[0_3px_0_0_var(--border-ui)] flex items-center gap-1">
                   {[
@@ -681,7 +681,7 @@ const HabitsPage = () => {
 
               <div className="flex-1 overflow-hidden">
                 {viewMode === 'monthly' && (
-                  <div className="flex flex-col overflow-visible">
+                  <div className="flex flex-col">
                     <div className="grid grid-cols-7 mb-2 shrink-0">
                       {['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].map(d => (
                         <div key={d} className="text-center text-[12px] font-[800] text-primary uppercase tracking-[0.08em]">{d}</div>
