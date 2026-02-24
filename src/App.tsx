@@ -9,6 +9,7 @@ import { SettingsProvider } from "./hooks/useSettings";
 import { HabitProvider } from "./hooks/useHabitTracker";
 import { MasterplanProvider } from "./hooks/useMasterplan";
 import { AuthProvider, useAuth } from "./components/providers/AuthProvider";
+import { ColorProvider } from "./components/providers/ColorProvider";
 import { SideNav } from "./components/layout/SideNav";
 import { TopBar } from "./components/layout/TopBar"; 
 
@@ -80,45 +81,47 @@ const App = () => (
       storageKey="kora-theme"
     >
       <AuthProvider>
-        <SettingsProvider>
-          <HabitProvider>
-            <MasterplanProvider>
-              <TooltipProvider>
-                <Sonner theme="light" />
-                <BrowserRouter>
-                  <div className="min-h-screen text-foreground font-sans flex flex-col relative overflow-x-hidden bg-background">
-                    <Routes>
-                      {/* Rotas Públicas */}
-                      <Route element={<PublicRoute />}>
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/cadastro" element={<SignUp />} />
-                        <Route path="/recuperar-senha" element={<ForgotPassword />} />
-                      </Route>
+        <ColorProvider>
+          <SettingsProvider>
+            <HabitProvider>
+              <MasterplanProvider>
+                <TooltipProvider>
+                  <Sonner theme="light" />
+                  <BrowserRouter>
+                    <div className="min-h-screen text-foreground font-sans flex flex-col relative overflow-x-hidden bg-background">
+                      <Routes>
+                        {/* Rotas Públicas */}
+                        <Route element={<PublicRoute />}>
+                          <Route path="/login" element={<Login />} />
+                          <Route path="/cadastro" element={<SignUp />} />
+                          <Route path="/recuperar-senha" element={<ForgotPassword />} />
+                        </Route>
 
-                      {/* Rotas Protegidas */}
-                      <Route element={<ProtectedRoute />}>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/masterplan" element={<MasterplanPage />} />
-                        <Route path="/habitos" element={<HabitsPage />} />
-                        <Route path="/tarefas" element={<HabitsPage />} />
-                        <Route path="/metas" element={<GoalsPage />} />
-                        <Route path="/lembretes" element={<RemindersPage />} />
-                        <Route path="/missoes" element={<MissionsPage />} />
-                        <Route path="/comunidade" element={<CommunityPage />} />
-                        <Route path="/financa" element={<StorePage />} />
-                        <Route path="/loja" element={<StorePage />} />
-                        <Route path="/inventario" element={<StorePage />} />
-                        <Route path="/configuracoes" element={<SettingsPage />} />
-                      </Route>
+                        {/* Rotas Protegidas */}
+                        <Route element={<ProtectedRoute />}>
+                          <Route path="/" element={<Index />} />
+                          <Route path="/masterplan" element={<MasterplanPage />} />
+                          <Route path="/habitos" element={<HabitsPage />} />
+                          <Route path="/tarefas" element={<HabitsPage />} />
+                          <Route path="/metas" element={<GoalsPage />} />
+                          <Route path="/lembretes" element={<RemindersPage />} />
+                          <Route path="/missoes" element={<MissionsPage />} />
+                          <Route path="/comunidade" element={<CommunityPage />} />
+                          <Route path="/financa" element={<StorePage />} />
+                          <Route path="/loja" element={<StorePage />} />
+                          <Route path="/inventario" element={<StorePage />} />
+                          <Route path="/configuracoes" element={<SettingsPage />} />
+                        </Route>
 
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </div>
-                </BrowserRouter>
-              </TooltipProvider>
-            </MasterplanProvider>
-          </HabitProvider>
-        </SettingsProvider>
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </div>
+                  </BrowserRouter>
+                </TooltipProvider>
+              </MasterplanProvider>
+            </HabitProvider>
+          </SettingsProvider>
+        </ColorProvider>
       </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>

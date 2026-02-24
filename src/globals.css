@@ -10,7 +10,7 @@
   }
 
   :root {
-    /* Light Theme Palette - Updated as requested */
+    /* Light Theme Palette */
     --background: #E8DADA;
     --topbar: #F5EEEE;
     --sidebar: #F5EEEE;
@@ -22,9 +22,13 @@
     --foreground: #0A0C0F;
     --muted-foreground: #5A606B;
     
-    /* Updated Primary: Vibrant Red #CB0104 */
-    --primary: #CB0104;
-    --primary-dark: #8A0002;
+    /* Dynamic Accent Colors */
+    --accent-color: #CB0104;
+    --accent-dark: #8A0002;
+    
+    /* Primary mapped to Accent */
+    --primary: var(--accent-color);
+    --primary-dark: var(--accent-dark);
     --primary-foreground: #FFFFFF;
     
     --radius: 1rem;
@@ -45,8 +49,9 @@
     --foreground: #F0F2F5;
     --muted-foreground: #8892AA;
     
-    --primary: #CB0104;
-    --primary-dark: #8A0002;
+    /* Primary mapped to Accent (Dark mode uses same accent usually, or we can adjust if needed) */
+    --primary: var(--accent-color);
+    --primary-dark: var(--accent-dark);
   }
 
   body, #root {

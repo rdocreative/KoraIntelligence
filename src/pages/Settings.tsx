@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSettings } from "@/hooks/useSettings";
 import { useHabitTracker } from "@/hooks/useHabitTracker";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { useAppColor } from "@/components/providers/ColorProvider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -11,19 +12,28 @@ import {
   Trash2, 
   ShieldAlert,
   Save,
-  LogOut
+  LogOut,
+  Palette
 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { HexColorPicker } from "react-colorful";
 
 const Settings = () => {
   const { settings, updateSettings } = useSettings();
   const { resetAllData } = useHabitTracker();
   const { signOut, user } = useAuth();
+  const { color, setColor, presets } = useAppColor();
   const navigate = useNavigate();
   
   const [localName, setLocalName] = useState(settings.userName);
   const [hasChanges, setHasChanges] = useState(false);
+  const [tempColor, setTempColor] = useState(color);
+
+  // Sync temp color with global color when it changes
+  useEffect(() => {
+    setTempColor(color);
+  }, [color]);
 
   // Sincronizar nome com Supabase se disponível
   useEffect(() => {
@@ -49,6 +59,11 @@ const Settings = () => {
     toast.success("Configurações salvas!", { description: "Suas preferências foram atualizadas." });
   };
 
+  const handleColorChange = (newColor: string) => {
+    setTempColor(newColor);
+    setColor(newColor);
+  };
+
   const handleReset = () => {
     if (confirm("ATENÇÃO: Isso apagará TODOS os seus hábitos, histórico de XP e progresso permanentemente. Deseja continuar?")) {
       resetAllData();
@@ -66,7 +81,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
       
       {/* Header Actions */}
       <div className="flex justify-between items-center">
@@ -108,6 +123,52 @@ const Settings = () => {
               <div className="space-y-2">
                 <Label className="text-xs font-black uppercase text-neutral-400">Nome de Exibição</Label>
                 <Input value={localName} onChange={handleNameChange} className="bg-[#0a0a0a] border-white/10" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* App Color Section */}
+        <Card className="glass-card border-none bg-[#121212]">
+          <CardHeader className="border-b border-white/5 pb-4">
+            <div className="flex items-center gap-2">
+              <Palette className="w-5 h-5" style={{ color: tempColor }} />
+              <CardTitle className="text-lg font-bold text-white">App Color</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="flex flex-col md:flex-row gap-8">
+              <div className="flex-1 flex flex-col items-center gap-4">
+                <div 
+                  className="w-24 h-24 rounded-full shadow-lg border-4 border-[#1a1a1a]"
+                  style={{ backgroundColor: tempColor }}
+                />
+                <Input 
+                  value={tempColor} 
+                  onChange={(e) => handleColorChange(e.target.value)} 
+                  className="text-center font-mono w-32 bg-[#0a0a0a] border-white/10"
+                />
+              </div>
+              
+              <div className="flex-[2] flex flex-col gap-6">
+                <div className="custom-color-picker">
+                  <HexColorPicker color={tempColor} onChange={handleColorChange} style={{ width: '100%' }} />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-xs font-black uppercase text-neutral-400">Cores Predefinidas</Label>
+                  <div className="flex flex-wrap gap-3">
+                    {presets.map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => handleColorChange(p)}
+                        className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${tempColor === p ? 'border-white scale-110 shadow-[0_0_10px_rgba(255,255,255,0.3)]' : 'border-transparent'}`}
+                        style={{ backgroundColor: p }}
+                        aria-label={`Select color ${p}`}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
