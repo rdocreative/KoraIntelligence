@@ -1,14 +1,14 @@
 "use client";
 
 import React from 'react';
-import { useHabitTracker } from "../hooks/useHabitTracker";
-import HabitStats from "../components/habits/HabitStats";
-import HabitList from "../components/habits/HabitList";
-import HabitForm from "../components/habits/HabitForm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import { useHabitTracker } from "@/hooks/useHabitTracker";
+import HabitStats from "@/components/habits/HabitStats";
+import HabitList from "@/components/habits/HabitList";
+import HabitForm from "@/components/habits/HabitForm";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
-import { Button } from "../components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const HabitsPage = () => {
   const { habits, addHabit, toggleHabit, deleteHabit } = useHabitTracker();
@@ -53,6 +53,7 @@ const HabitsPage = () => {
         <TabsContent value="all" className="mt-0">
           <HabitList habits={habits} onToggle={toggleHabit} onDelete={deleteHabit} />
         </TabsContent>
+        {/* Outras tabs... */}
       </Tabs>
     </div>
   );
