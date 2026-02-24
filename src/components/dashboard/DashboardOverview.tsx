@@ -73,14 +73,14 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
         ))}
       </div>
 
-      <div className="bg-[#F4F6F9] border-2 border-[#E2E6ED] rounded-[40px] p-10 shadow-[0_6px_0_0_#D1D5DB] relative overflow-hidden">
+      <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[40px] p-10 shadow-[0_6px_0_0_var(--shadow-ui)] relative overflow-hidden">
         <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
-          <Trophy size={140} className="text-[#0A0C0F]" />
+          <Trophy size={140} className="text-[var(--foreground)]" />
         </div>
         
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
           <div className="relative">
-            <div className="w-28 h-28 rounded-full border-[6px] border-[#1CB0F6] flex items-center justify-center bg-white shadow-xl">
+            <div className="w-28 h-28 rounded-full border-[6px] border-[#1CB0F6] flex items-center justify-center bg-[var(--background)] shadow-xl">
               <span className="text-[36px] font-[950] text-[#1CB0F6]">12</span>
             </div>
             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#1CB0F6] text-white text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-lg">
@@ -91,16 +91,16 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
           <div className="flex-1 w-full space-y-6">
             <div className="flex justify-between items-end">
               <div>
-                <h2 className="text-[#0A0C0F] font-[950] text-2xl uppercase tracking-tight">Mestre da Rotina</h2>
-                <p className="text-[#6B7280] text-sm font-bold uppercase tracking-widest mt-1">Você superou 95% dos guerreiros este mês!</p>
+                <h2 className="text-[var(--foreground)] font-[950] text-2xl uppercase tracking-tight">Mestre da Rotina</h2>
+                <p className="text-[var(--muted-foreground)] text-sm font-bold uppercase tracking-widest mt-1">Você superou 95% dos guerreiros este mês!</p>
               </div>
               <div className="text-right">
                 <span className="text-[#1CB0F6] font-black text-xl">2.450 / 3.000</span>
-                <span className="text-[#6B7280] font-black text-sm ml-1 uppercase">XP</span>
+                <span className="text-[var(--muted-foreground)] font-black text-sm ml-1 uppercase">XP</span>
               </div>
             </div>
             
-            <div className="h-5 w-full bg-[#E2E6ED] rounded-full overflow-hidden p-1 shadow-inner">
+            <div className="h-5 w-full bg-[var(--border-ui)] rounded-full overflow-hidden p-1 shadow-inner">
               <div 
                 className="h-full bg-gradient-to-r from-[#1CB0F6] to-[#1899D6] rounded-full transition-all duration-1000" 
                 style={{ width: '75%' }}
@@ -108,13 +108,13 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
             </div>
             
             <div className="flex gap-4">
-              <div className="flex items-center gap-2.5 bg-white px-4 py-2 rounded-2xl border-2 border-[#E2E6ED] shadow-sm">
+              <div className="flex items-center gap-2.5 bg-[var(--background)] px-4 py-2 rounded-2xl border-2 border-[var(--border-ui)] shadow-sm">
                 <Star size={16} className="text-[#FF9600] fill-[#FF9600]" />
-                <span className="text-[12px] font-[800] text-[#0A0C0F]">Streak: 15 Dias</span>
+                <span className="text-[12px] font-[800] text-[var(--foreground)]">Streak: 15 Dias</span>
               </div>
-              <div className="flex items-center gap-2.5 bg-white px-4 py-2 rounded-2xl border-2 border-[#E2E6ED] shadow-sm">
+              <div className="flex items-center gap-2.5 bg-[var(--background)] px-4 py-2 rounded-2xl border-2 border-[var(--border-ui)] shadow-sm">
                 <Zap size={16} className="text-[#1CB0F6] fill-[#1CB0F6]" />
-                <span className="text-[12px] font-[800] text-[#0A0C0F]">Combo: x1.5 XP</span>
+                <span className="text-[12px] font-[800] text-[var(--foreground)]">Combo: x1.5 XP</span>
               </div>
             </div>
           </div>
@@ -122,12 +122,12 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white border-2 border-[#E2E6ED] rounded-[32px] p-8 shadow-[0_4px_0_0_#D1D5DB]">
+        <div className="bg-[var(--background)] border-2 border-[var(--border-ui)] rounded-[32px] p-8 shadow-[0_4px_0_0_var(--shadow-ui)]">
           <div className="flex items-center gap-3 mb-10">
             <div className="p-2.5 bg-[#1CB0F6]/10 rounded-xl text-[#1CB0F6]">
               <TrendingUp size={20} />
             </div>
-            <h3 className="text-[#0A0C0F] font-[900] text-sm uppercase tracking-widest">Evolução Semanal</h3>
+            <h3 className="text-[var(--foreground)] font-[900] text-sm uppercase tracking-widest">Evolução Semanal</h3>
           </div>
           
           <div className="h-[280px] w-full">
@@ -139,16 +139,16 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                     <stop offset="95%" stopColor="#1CB0F6" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E6ED" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-ui)" />
                 <XAxis 
                   dataKey="name" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: '#6B7280', fontSize: 11, fontWeight: 800 }} 
+                  tick={{ fill: 'var(--muted-foreground)', fontSize: 11, fontWeight: 800 }} 
                 />
                 <YAxis hide />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: 'white', border: '2px solid #E2E6ED', borderRadius: '16px', fontSize: '11px', fontWeight: 'bold' }}
+                  contentStyle={{ backgroundColor: 'var(--background)', border: '2px solid var(--border-ui)', borderRadius: '16px', fontSize: '11px', fontWeight: 'bold', color: 'var(--foreground)' }}
                   itemStyle={{ color: '#1CB0F6' }}
                 />
                 <Area 
@@ -164,12 +164,12 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
           </div>
         </div>
 
-        <div className="bg-white border-2 border-[#E2E6ED] rounded-[32px] p-8 shadow-[0_4px_0_0_#D1D5DB]">
+        <div className="bg-[var(--background)] border-2 border-[var(--border-ui)] rounded-[32px] p-8 shadow-[0_4px_0_0_var(--shadow-ui)]">
           <div className="flex items-center gap-3 mb-10">
             <div className="p-2.5 bg-[#FF9600]/10 rounded-xl text-[#FF9600]">
               <Target size={20} />
             </div>
-            <h3 className="text-[#0A0C0F] font-[900] text-sm uppercase tracking-widest">Distribuição de Foco</h3>
+            <h3 className="text-[var(--foreground)] font-[900] text-sm uppercase tracking-widest">Distribuição de Foco</h3>
           </div>
 
           <div className="flex items-center flex-col md:flex-row h-full">
@@ -190,7 +190,7 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'white', border: '2px solid #E2E6ED', borderRadius: '16px' }}
+                    contentStyle={{ backgroundColor: 'var(--background)', border: '2px solid var(--border-ui)', borderRadius: '16px', color: 'var(--foreground)' }}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -201,9 +201,9 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                 <div key={i} className="flex items-center justify-between group">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: item.color }} />
-                    <span className="text-[12px] font-[800] text-[#6B7280] uppercase tracking-tighter">{item.name}</span>
+                    <span className="text-[12px] font-[800] text-[var(--muted-foreground)] uppercase tracking-tighter">{item.name}</span>
                   </div>
-                  <span className="text-[14px] font-[950] text-[#0A0C0F]">{Math.round(item.value / 12)}%</span>
+                  <span className="text-[14px] font-[950] text-[var(--foreground)]">{Math.round(item.value / 12)}%</span>
                 </div>
               ))}
             </div>

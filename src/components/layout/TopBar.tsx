@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useProfile } from '@/hooks/useProfile';
+import { useTheme } from 'next-themes';
 import { 
   Home,
   ClipboardList,
@@ -17,7 +18,9 @@ import {
   Trophy,
   UserCircle,
   Award,
-  Coins
+  Coins,
+  Sun,
+  Moon
 } from 'lucide-react';
 import {
   Dialog,
@@ -45,6 +48,7 @@ const pageConfigs: Record<string, PageConfig> = {
 
 export const TopBar = () => {
   const location = useLocation();
+  const { theme, setTheme } = useTheme();
   const currentPath = location.pathname;
   const config = pageConfigs[currentPath] || pageConfigs['/'];
   const { title, subtitle, color, icon: Icon } = config;
@@ -61,69 +65,76 @@ export const TopBar = () => {
     nextLevelXp: (profile?.nivel || 1) * 1000 
   };
 
-  const commonShadow = "shadow-[0_4px_0_0_#D1D5DB]";
-  const commonBg = "bg-[#F4F6F9]";
-  const commonBorder = "border-[#E2E6ED]";
-
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none">
       <div className="flex items-center justify-center sm:justify-between w-full max-w-[100rem] pointer-events-auto py-4 px-5 overflow-visible">
         
         <div 
-          className={`hidden sm:flex items-center gap-3 px-5 py-3 rounded-full ${commonBg} border-2 ${commonBorder} ${commonShadow} transition-all duration-300 flex-shrink-0`}
+          className="hidden sm:flex items-center gap-3 px-5 py-3 rounded-full bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] transition-all duration-300 flex-shrink-0"
         >
           <div className="flex items-center gap-2.5">
             <Icon 
               size={18} 
               style={{ color: color }}
             />
-            <h1 className="text-[14px] font-[800] text-[#0A0C0F] tracking-tight leading-none whitespace-nowrap uppercase">
+            <h1 className="text-[14px] font-[800] text-[var(--foreground)] tracking-tight leading-none whitespace-nowrap uppercase">
               {title}
             </h1>
           </div>
 
-          <div className="w-px h-[14px] bg-[#E2E6ED] mx-1" />
+          <div className="w-px h-[14px] bg-[var(--border-ui)] mx-1" />
           
-          <span className="text-[12px] font-[500] text-[#6B7280] tracking-wide leading-none whitespace-nowrap overflow-visible">
+          <span className="text-[12px] font-[500] text-[var(--muted-foreground)] tracking-wide leading-none whitespace-nowrap overflow-visible">
             {subtitle}
           </span>
         </div>
 
         <div className="flex items-center gap-3 flex-shrink-0">
-          <button className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border-2 ${commonBorder} ${commonShadow} group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none`}>
+          <button 
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="h-[40px] md:h-[48px] w-[40px] md:w-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none"
+          >
+            {theme === 'dark' ? (
+              <Sun size={18} className="text-[#FF9600]" />
+            ) : (
+              <Moon size={18} className="text-[#1CB0F6]" />
+            )}
+          </button>
+
+          <button className="h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
             <Coins size={15} className="text-[#FF9600]" />
             <span className="text-[14px] font-[700] text-[#FF9600] tracking-tight">{userStats.coins}</span>
           </button>
 
-          <button onClick={() => setActiveModal('profile')} className={`h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] ${commonBg} border-2 ${commonBorder} ${commonShadow} group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none`}>
+          <button onClick={() => setActiveModal('profile')} className="h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
             <Zap size={15} className="text-[#1CB0F6]" />
             <span className="text-[14px] font-[700] text-[#1CB0F6] tracking-tight">{userStats.xp}</span>
           </button>
 
-          <button onClick={() => setActiveModal('achievements')} className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border-2 ${commonBorder} ${commonShadow} group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none`}>
+          <button onClick={() => setActiveModal('achievements')} className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
             <Trophy size={17} className="text-[#FF9600]" />
           </button>
 
-          <button onClick={() => setActiveModal('profile')} className={`w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] ${commonBg} border-2 ${commonBorder} ${commonShadow} group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none`}>
+          <button onClick={() => setActiveModal('profile')} className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
             <UserCircle size={22} className="text-[#1CB0F6]" />
           </button>
         </div>
       </div>
 
       <Dialog open={activeModal !== null} onOpenChange={() => setActiveModal(null)}>
-        <DialogContent className={`${commonBg} border-2 ${commonBorder} text-[#0A0C0F] w-[90vw] sm:max-w-[400px] rounded-[32px] p-0 overflow-hidden shadow-2xl outline-none mx-auto`}>
+        <DialogContent className="bg-[var(--topbar)] border-2 border-[var(--border-ui)] text-[var(--foreground)] w-[90vw] sm:max-w-[400px] rounded-[32px] p-0 overflow-hidden shadow-2xl outline-none mx-auto">
           {activeModal === 'achievements' && (
             <div className="p-8 flex flex-col items-center text-center">
               <div className="w-16 h-16 rounded-[22px] bg-[#FF9600]/10 border border-[#FF9600]/20 flex items-center justify-center mb-4">
                 <Trophy size={32} className="text-[#FF9600]" />
               </div>
               <h2 className="text-xl font-bold mb-1">Conquistas</h2>
-              <p className="text-sm text-[#6B7280] mb-6">Você desbloqueou {userStats.titles} títulos épicos.</p>
+              <p className="text-sm text-[var(--muted-foreground)] mb-6">Você desbloqueou {userStats.titles} títulos épicos.</p>
               <div className="grid grid-cols-2 gap-3 w-full">
                 {['Mestre do Foco', 'Persistente', 'Explorador', 'Visionário'].map((title) => (
-                  <div key={title} className={`p-4 rounded-2xl ${commonBg} border-2 ${commonBorder} flex flex-col items-center gap-2 group hover:border-[#FF9600]/40 transition-colors`}>
+                  <div key={title} className="p-4 rounded-2xl bg-[var(--topbar)] border-2 border-[var(--border-ui)] flex flex-col items-center gap-2 group hover:border-[#FF9600]/40 transition-colors">
                     <Award size={20} className="text-[#FF9600]" />
-                    <span className="text-[0.7rem] font-medium text-[#0A0C0F]">{title}</span>
+                    <span className="text-[0.7rem] font-medium text-[var(--foreground)]">{title}</span>
                   </div>
                 ))}
               </div>
@@ -141,14 +152,14 @@ export const TopBar = () => {
                 </div>
               </div>
               <h2 className="text-xl font-bold mb-1">{userStats.name}</h2>
-              <p className="text-sm text-[#6B7280] mb-6">Membro da Comunidade</p>
+              <p className="text-sm text-[var(--muted-foreground)] mb-6">Membro da Comunidade</p>
               
-              <div className={`w-full ${commonBg} rounded-2xl p-5 border-2 ${commonBorder}`}>
-                <div className="flex justify-between text-[0.7rem] mb-2.5 text-[#6B7280] font-medium">
+              <div className="w-full bg-[var(--topbar)] rounded-2xl p-5 border-2 border-[var(--border-ui)]">
+                <div className="flex justify-between text-[0.7rem] mb-2.5 text-[var(--muted-foreground)] font-medium">
                   <span>Progresso de XP</span>
                   <span>{userStats.xp} / {userStats.nextLevelXp}</span>
                 </div>
-                <div className="w-full h-2.5 bg-[#E2E6ED] rounded-full overflow-hidden border border-[#D1D5DB]">
+                <div className="w-full h-2.5 bg-[var(--border-ui)] rounded-full overflow-hidden border border-[var(--shadow-ui)]">
                   <div 
                     className="h-full bg-[#1CB0F6] transition-all duration-700"
                     style={{ width: `${(userStats.xp / userStats.nextLevelXp) * 100}%` }}

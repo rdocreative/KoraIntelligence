@@ -68,28 +68,28 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
   };
 
   return (
-    <div className="w-full rounded-[32px] overflow-hidden border-2 border-[#E2E6ED] bg-white h-auto shadow-md">
+    <div className="w-full rounded-[32px] overflow-hidden border-2 border-[var(--border-ui)] bg-[var(--background)] h-auto shadow-md">
       <div className="w-full overflow-x-auto">
         <div className="grid grid-cols-[80px_repeat(7,1fr)] w-full min-w-[800px]">
           
-          <div className="bg-[#F4F6F9] border-b-2 border-r-2 border-[#E2E6ED]" />
+          <div className="bg-[var(--sidebar)] border-b-2 border-r-2 border-[var(--border-ui)]" />
 
           {weekDays.map((day, idx) => {
             const isToday = isSameDay(day, new Date());
             return (
               <div key={day.toString()} className={cn(
-                "text-center py-5 border-b-2 border-[#E2E6ED] flex flex-col justify-center",
-                idx !== 6 && "border-r border-[#E2E6ED]"
+                "text-center py-5 border-b-2 border-[var(--border-ui)] flex flex-col justify-center",
+                idx !== 6 && "border-r border-[var(--border-ui)]"
               )}>
                 <div className={cn(
                   "text-[12px] font-[800] uppercase tracking-[0.05em]",
-                  isToday ? "text-[#1CB0F6]" : "text-[#6B7280]"
+                  isToday ? "text-[#1CB0F6]" : "text-[var(--muted-foreground)]"
                 )}>
                   {format(day, 'EEE', { locale: ptBR }).replace('.', '')}
                 </div>
                 <div className={cn(
                   "text-[22px] font-[900] leading-none mt-1.5",
-                  isToday ? "text-[#1CB0F6]" : "text-[#0A0C0F]"
+                  isToday ? "text-[#1CB0F6]" : "text-[var(--foreground)]"
                 )}>
                   {format(day, 'd')}
                 </div>
@@ -101,11 +101,11 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
             return (
               <React.Fragment key={period.label}>
                 <div className={cn(
-                  "flex flex-col items-center justify-center gap-2 bg-[#F4F6F9] border-r-2 border-[#E2E6ED] py-8",
-                  pIdx !== 0 && "border-t border-[#E2E6ED]"
+                  "flex flex-col items-center justify-center gap-2 bg-[var(--sidebar)] border-r-2 border-[var(--border-ui)] py-8",
+                  pIdx !== 0 && "border-t border-[var(--border-ui)]"
                 )}>
-                  <period.icon size={22} className="text-[#6B7280]" />
-                  <span className="text-[10px] font-[900] text-[#6B7280] uppercase tracking-widest">
+                  <period.icon size={22} className="text-[var(--muted-foreground)]" />
+                  <span className="text-[10px] font-[900] text-[var(--muted-foreground)] uppercase tracking-widest">
                     {period.label}
                   </span>
                 </div>
@@ -123,8 +123,8 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                       key={day.toString() + period.label} 
                       className={cn(
                         "p-3 min-h-[100px] flex flex-col gap-2 justify-center",
-                        dIdx !== 6 && "border-r border-[#E2E6ED]",
-                        pIdx !== 0 && "border-t border-[#E2E6ED]"
+                        dIdx !== 6 && "border-r border-[var(--border-ui)]",
+                        pIdx !== 0 && "border-t border-[var(--border-ui)]"
                       )}
                     >
                       {habitsInPeriod.length > 0 ? (
@@ -151,13 +151,13 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                                   {isDone && <Check size={12} className="text-white stroke-[4px]" />}
                                 </div>
                                 <span className={cn(
-                                  "text-[12px] font-[800] text-[#0A0C0F] truncate",
+                                  "text-[12px] font-[800] text-[var(--foreground)] truncate",
                                   isDone && "line-through opacity-50"
                                 )}>
                                   {habit.title}
                                 </span>
                               </div>
-                              <span className="text-[10px] font-[700] text-[#6B7280] ml-[28px] mt-1 uppercase tracking-tighter">
+                              <span className="text-[10px] font-[700] text-[var(--muted-foreground)] ml-[28px] mt-1 uppercase tracking-tighter">
                                 {habit.time}
                               </span>
                             </button>
@@ -165,7 +165,7 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                         })
                       ) : (
                         <div className="flex-1 flex items-center justify-center opacity-10">
-                           <div className="w-2 h-2 rounded-full bg-[#6B7280]" />
+                           <div className="w-2 h-2 rounded-full bg-[var(--muted-foreground)]" />
                         </div>
                       )}
                     </div>

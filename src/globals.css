@@ -10,45 +10,38 @@
   }
 
   :root {
-    /* Main Theme Palette - Light Mode Requested */
+    /* Light Theme Palette (Current) */
     --background: #FFFFFF;
-    --panel: #F4F6F9;
+    --topbar: #F4F6F9;
     --sidebar: #FAFAFA;
+    --panel: #F4F6F9;
+    --input-bg: #F4F6F9;
     --border-ui: #E2E6ED;
     --shadow-ui: #D1D5DB;
-    
     --foreground: #0A0C0F;
     --muted-foreground: #6B7280;
     
-    /* Primary / Accent (Kept) */
     --primary: #1CB0F6;
     --primary-dark: #1899D6;
-
-    /* Card States (Duolingo Style Colors) */
-    --card-blue: #1CB0F6;
-    --card-orange: #FF9600;
-    --card-green: #58CC02;
-    --card-purple: #CE82FF;
-    --card-red: #FF4B4B;
     
-    /* Shadcn Mappings */
-    --card: #F4F6F9;
-    --card-foreground: #0A0C0F;
-    --popover: #FFFFFF;
-    --popover-foreground: #0A0C0F;
-    --primary-foreground: #FFFFFF;
-    --secondary: #E2E6ED;
-    --secondary-foreground: #6B7280;
-    --muted: #F4F6F9;
-    --muted-foreground: #6B7280;
-    --accent: #F4F6F9;
-    --accent-foreground: #0A0C0F;
-    --destructive: #FF4B4B;
-    --destructive-foreground: #FFFFFF;
-    --border: #E2E6ED;
-    --input: #E2E6ED;
-    --ring: #1CB0F6;
     --radius: 1rem;
+  }
+
+  .dark {
+    /* Dark Theme Palette (Requested) */
+    --background: #0B0D14;
+    --topbar: #0E1020;
+    --sidebar: #0E1020;
+    --panel: #161A20;
+    --input-bg: #1C2028;
+    --border-ui: #252B38;
+    --shadow-ui: rgba(0, 0, 0, 0.4);
+    --foreground: #F0F2F5;
+    --muted-foreground: #8892AA;
+
+    --card: #161A20;
+    --popover: #161A20;
+    --secondary: #1C2028;
   }
 
   body, #root {
@@ -57,6 +50,7 @@
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
     min-height: 100vh;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 
@@ -79,15 +73,5 @@
   .btn-primary:active {
     transform: translateY(1px);
     box-shadow: none;
-  }
-
-  .stat-card {
-    padding-top: 22px !important;
-    padding-bottom: 22px !important;
-  }
-
-  .habit-card {
-    padding-top: 18px !important;
-    padding-bottom: 18px !important;
   }
 }

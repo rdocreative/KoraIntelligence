@@ -46,10 +46,8 @@ const ProtectedRoute = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <SideNav />
-      {/* pl aumentado para 85px para acomodar a SideNav maior */}
       <div className="flex-1 flex flex-col min-h-screen pl-[85px]">
         <TopBar />
-        {/* max-w aumentado para 100rem para expandir para as laterais */}
         <main className="flex-1 p-5 max-w-[100rem] mx-auto w-full overflow-visible">
           <Outlet />
         </main>
@@ -79,7 +77,7 @@ const App = () => (
       attribute="class" 
       defaultTheme="light" 
       enableSystem={false}
-      storageKey="app-theme"
+      storageKey="kora-theme"
     >
       <AuthProvider>
         <SettingsProvider>
