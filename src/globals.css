@@ -10,7 +10,7 @@
   }
 
   :root {
-    /* Light Theme Palette (Current) */
+    /* Light Theme Palette */
     --background: #FFFFFF;
     --topbar: #F4F6F9;
     --sidebar: #FAFAFA;
@@ -21,14 +21,15 @@
     --foreground: #0A0C0F;
     --muted-foreground: #6B7280;
     
-    --primary: #1CB0F6;
-    --primary-dark: #1899D6;
+    /* Updated Primary: Purple */
+    --primary: #987EC9;
+    --primary-dark: #6B54A0;
     
     --radius: 1rem;
   }
 
   .dark {
-    /* Dark Theme Palette (Requested) */
+    /* Dark Theme Palette */
     --background: #0B0D14;
     --topbar: #0E1020;
     --sidebar: #0E1020;
