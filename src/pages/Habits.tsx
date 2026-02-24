@@ -583,9 +583,9 @@ const HabitsPage = () => {
       </div>
 
       {activeTab === 'overview' ? (
-        <div className="mt-[35px] flex flex-col lg:flex-row gap-8 p-4 md:p-0 items-start">
+        <div className="mt-[35px] flex flex-col lg:flex-row gap-8 p-4 md:p-0 items-stretch">
           <div className={cn("transition-all duration-500 shrink-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
-            <div className="bg-transparent py-[20px] px-[24px]">
+            <div className="h-full bg-white dark:bg-[#161A20] border border-[#E2E6ED] dark:border-[#252B38] rounded-[16px] shadow-[0px_2px_12px_rgba(0,0,0,0.06)] dark:shadow-none p-6 py-[24px]">
               <div className="flex items-center justify-between mb-8">
                 <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-full p-1 shadow-[0_3px_0_0_var(--shadow-ui)] flex items-center gap-1">
                   {[
@@ -677,7 +677,7 @@ const HabitsPage = () => {
 
           {viewMode !== 'weekly' && (
             <div className="w-full lg:w-[40%]">
-              <div className="flex flex-col min-h-[520px] px-2 h-full">
+              <div className="flex flex-col min-h-[520px] h-full bg-white dark:bg-[#161A20] border border-[#E2E6ED] dark:border-[#252B38] rounded-[16px] shadow-[0px_2px_12px_rgba(0,0,0,0.06)] dark:shadow-none p-6">
                 <div className="flex items-center justify-between mb-8 px-1">
                   <div className="flex items-center gap-3">
                     <h2 className="text-[var(--foreground)] font-[900] text-[15px] uppercase tracking-[0.05em]">HÁBITOS DE HOJE</h2>
@@ -702,7 +702,7 @@ const HabitsPage = () => {
                   </div>
                 </div>
 
-                <div className="flex-1">
+                <div className="flex-1 overflow-y-auto pr-1">
                   <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                     <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
                       {displayedHabitsData.pending.map((habit) => (
