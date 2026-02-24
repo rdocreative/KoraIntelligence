@@ -25,7 +25,39 @@ const PRESETS = [
   "#FFFFFF", // White
 ];
 
-// Utility to darken a hex color for the 3D effect/shadows
+// Converte Hex para string de canais HSL (ex: "0 100% 50%")
+const hexToHSLChannels = (hex: string): string => {
+  let r = 0, g = 0, b = 0;
+  // Trata hex curto (#000) e longo (#000000)
+  if (hex.length === 4) {
+    r = parseInt(hex[1] + hex[1], 16);
+    g = parseInt(hex[2] + hex[2], 16);
+    b = parseInt(hex[3] + hex[3], 16);
+  } else if (hex.length === 7) {
+    r = parseInt(hex.substring(1, 3), 16);
+    g = parseInt(hex.substring(3, 5), 16);
+    b = parseInt(hex.substring(5, 7), 16);
+  }
+
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0, l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+
+  return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+};
+
+// Utilitário para escurecer hex (para sombras 3D)
 const darkenColor = (hex: string, percent: number) => {
   let r = parseInt(hex.substring(1, 3), 16);
   let g = parseInt(hex.substring(3, 5), 16);
@@ -35,57 +67,57 @@ const darkenColor = (hex: string, percent: number) => {
   g = Math.floor(g * (100 - percent) / 100);
   b = Math.floor(b * (100 - percent) / 100);
 
-  r = (r < 255) ? r : 255;
-  g = (g < 255) ? g : 255;
-  b = (b < 255) ? b : 255;
-
-  const RR = ((r.toString(16).length === 1) ? "0" + r.toString(16) : r.toString(16));
-  const GG = ((g.toString(16).length === 1) ? "0" + g.toString(16) : g.toString(16));
-  const BB = ((b.toString(16).length === 1) ? "0" + b.toString(16) : b.toString(16));
+  const RR = (r.toString(16).length === 1) ? "0" + r.toString(16) : r.toString(16);
+  const GG = (g.toString(16).length === 1) ? "0" + g.toString(16) : g.toString(16);
+  const BB = (b.toString(16).length === 1) ? "0" + b.toString(16) : b.toString(16);
 
   return "#" + RR + GG + BB;
 };
 
 export const ColorProvider = ({ children }: { children: React.ReactNode }) => {
   const [color, setColorState] = useState("#CB0104");
-  // Keep track of the saved color to revert if needed
   const [savedColorState, setSavedColorState] = useState("#CB0104");
 
   const applyColorToCSS = (hex: string) => {
     const root = document.documentElement;
-    root.style.setProperty('--accent-color', hex);
+    const hslChannels = hexToHSLChannels(hex);
     
-    // Calculate dark variant for shadows/borders (approx 30% darker)
-    const darkColor = hex.toLowerCase() === '#ffffff' ? '#CCCCCC' : darkenColor(hex, 30);
-    root.style.setProperty('--accent-dark', darkColor);
+    // Injeta canais HSL na variável que o Tailwind usa: hsl(var(--primary))
+    root.style.setProperty('--primary', hslChannels);
+    root.style.setProperty('--ring', hslChannels);
+    
+    // Mantém o Hex para variáveis legadas/costumizadas
+    root.style.setProperty('--accent-color', hex);
+    const darkHex = hex.toLowerCase() === '#ffffff' ? '#CCCCCC' : darkenColor(hex, 30);
+    root.style.setProperty('--accent-dark', darkHex);
+    root.style.setProperty('--primary-dark', darkHex);
+
+    // Ajusta contraste do texto (foreground)
+    const lightness = parseInt(hslChannels.split(' ')[2]);
+    root.style.setProperty('--primary-foreground', lightness > 60 ? '0 0% 0%' : '0 0% 100%');
   };
 
   useEffect(() => {
-    // Load from local storage on mount
     const storedColor = localStorage.getItem("kora-accent-color");
     if (storedColor) {
       setColorState(storedColor);
       setSavedColorState(storedColor);
       applyColorToCSS(storedColor);
     } else {
-      // Default
       applyColorToCSS("#CB0104");
     }
   }, []);
 
-  // Update visual state and CSS but DO NOT save to localStorage yet
   const setColor = (newColor: string) => {
     setColorState(newColor);
     applyColorToCSS(newColor);
   };
 
-  // Persist the current color state to localStorage
   const saveColor = () => {
     localStorage.setItem("kora-accent-color", color);
     setSavedColorState(color);
   };
 
-  // Revert to the last saved color (from localStorage/state)
   const cancelColor = () => {
     setColorState(savedColorState);
     applyColorToCSS(savedColorState);

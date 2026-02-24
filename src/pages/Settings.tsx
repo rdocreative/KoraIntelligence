@@ -31,11 +31,19 @@ const Settings = () => {
   const [colorHasChanges, setColorHasChanges] = useState(false);
   const [justSaved, setJustSaved] = useState(false);
 
-  // We need to know if we really saved to decide on unmount
-  // Using a ref to track "should revert" status across renders/closures
+  // Estado local para o input hex permitir digitação livre
+  const [localHex, setLocalHex] = useState(color.replace('#', ''));
+
   const shouldRevertRef = useRef(true);
 
-  // Sincronizar nome com Supabase se disponível
+  // Sincroniza o input local quando a cor muda externamente (picker ou presets)
+  useEffect(() => {
+    const cleanColor = color.replace('#', '');
+    if (cleanColor.toUpperCase() !== localHex.toUpperCase()) {
+      setLocalHex(cleanColor);
+    }
+  }, [color]);
+
   useEffect(() => {
     if (user?.user_metadata?.name && settings.userName === "Marcos Eduardo") {
        setLocalName(user.user_metadata.name);
@@ -47,11 +55,8 @@ const Settings = () => {
     setLocalName(settings.userName);
   }, [settings.userName]);
 
-  // Handle unmount / navigation away
   useEffect(() => {
     return () => {
-      // If we are unmounting and haven't explicitly saved (or if we canceled),
-      // we should revert the color to the last saved state.
       if (shouldRevertRef.current) {
         cancelColor();
       }
@@ -64,27 +69,21 @@ const Settings = () => {
   };
 
   const handleSave = () => {
-    // Save Name
     if (nameHasChanges) {
       updateSettings({ userName: localName });
       setNameHasChanges(false);
     }
 
-    // Save Color
     if (colorHasChanges) {
       saveColor();
-      // We saved, so for this interaction we don't need to revert
-      // BUT we set it to true again immediately so future changes are tracked
-      // Actually, saveColor updates the "saved state" in provider.
-      // So cancelColor() will revert to the NEW saved state, which is fine.
       setColorHasChanges(false);
+      shouldRevertRef.current = false;
+      setTimeout(() => { shouldRevertRef.current = true; }, 100);
     }
     
-    // Show feedback
     setJustSaved(true);
     setTimeout(() => setJustSaved(false), 2000);
-    
-    toast.success("Configurações salvas!", { description: "Suas preferências foram atualizadas." });
+    toast.success("Configurações salvas!");
   };
 
   const handleColorChange = (newColor: string) => {
@@ -93,8 +92,24 @@ const Settings = () => {
     shouldRevertRef.current = true;
   };
 
+  const handleHexInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.replace(/[^0-9A-Fa-f]/g, '');
+    if (val.length <= 6) {
+      setLocalHex(val);
+      // Aplica a cor se for um hex válido (3 ou 6 caracteres)
+      if (val.length === 3 || val.length === 6) {
+        handleColorChange(`#${val}`);
+      }
+    }
+  };
+
+  const handleHexBlur = () => {
+    // Ao sair do campo, restaura o hex completo se estiver incompleto
+    setLocalHex(color.replace('#', ''));
+  };
+
   const handleReset = () => {
-    if (confirm("ATENÇÃO: Isso apagará TODOS os seus hábitos, histórico de XP e progresso permanentemente. Deseja continuar?")) {
+    if (confirm("ATENÇÃO: Isso apagará TODOS os seus dados permanentemente.")) {
       resetAllData();
     }
   };
@@ -105,7 +120,7 @@ const Settings = () => {
       navigate("/login");
       toast.success("Você saiu da conta.");
     } catch (error) {
-      toast.error("Erro ao sair da conta.");
+      toast.error("Erro ao sair.");
     }
   };
 
@@ -113,8 +128,6 @@ const Settings = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20">
-      
-      {/* Header Actions */}
       <div className="flex justify-between items-center">
          <h2 className="text-2xl font-bold text-white">Configurações</h2>
          <div className="flex gap-2">
@@ -127,12 +140,7 @@ const Settings = () => {
                 <Save className="w-3.5 h-3.5 mr-2" /> 
                 {justSaved ? "Salvo!" : "Salvar"}
             </Button>
-            <Button 
-                onClick={handleLogout}
-                size="sm"
-                variant="outline"
-                className="border-neutral-700 text-neutral-300 hover:text-white hover:bg-white/5"
-            >
+            <Button onClick={handleLogout} size="sm" variant="outline" className="border-neutral-700 text-neutral-300 hover:text-white">
                 <LogOut className="w-3.5 h-3.5 mr-2" /> Sair
             </Button>
          </div>
@@ -149,58 +157,54 @@ const Settings = () => {
           <CardContent className="pt-6">
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-xs font-black uppercase text-neutral-400">Email (Conta)</Label>
+                <Label className="text-xs font-black uppercase text-neutral-400">Email</Label>
                 <Input value={user?.email || ""} disabled className="bg-[#0a0a0a] border-white/10 opacity-60" />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs font-black uppercase text-neutral-400">Nome de Exibição</Label>
+                <Label className="text-xs font-black uppercase text-neutral-400">Nome</Label>
                 <Input value={localName} onChange={handleNameChange} className="bg-[#0a0a0a] border-white/10" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* App Color Section */}
         <Card className="glass-card border-none bg-[#121212]">
           <CardHeader className="border-b border-white/5 pb-4">
             <div className="flex items-center gap-2">
               <Palette className="w-5 h-5" style={{ color: color }} />
-              <CardTitle className="text-lg font-bold text-white">App Color</CardTitle>
+              <CardTitle className="text-lg font-bold text-white">Cor do App</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1 flex flex-col items-center gap-4">
                 <div 
-                  className="w-24 h-24 rounded-full shadow-lg border-4 border-[#1a1a1a] transition-colors duration-0"
+                  className="w-24 h-24 rounded-full shadow-lg border-4 border-[#1a1a1a]"
                   style={{ backgroundColor: color }}
                 />
                 <div className="flex items-center relative">
-                   <span className="absolute left-3 text-neutral-500 select-none">#</span>
+                   <span className="absolute left-3 text-neutral-500">#</span>
                    <Input 
-                    value={color.replace('#', '')} 
-                    onChange={(e) => handleColorChange(`#${e.target.value}`)} 
-                    className="text-center font-mono w-32 bg-[#0a0a0a] border-white/10 pl-4"
-                    maxLength={7}
+                    value={localHex}
+                    onChange={handleHexInputChange}
+                    onBlur={handleHexBlur}
+                    className="text-center font-mono w-32 bg-[#0a0a0a] border-white/10 pl-4 uppercase"
+                    maxLength={6}
                   />
                 </div>
               </div>
               
               <div className="flex-[2] flex flex-col gap-6">
-                <div className="custom-color-picker">
-                  <HexColorPicker color={color} onChange={handleColorChange} style={{ width: '100%' }} />
-                </div>
-                
+                <HexColorPicker color={color} onChange={handleColorChange} style={{ width: '100%' }} />
                 <div className="space-y-2">
-                  <Label className="text-xs font-black uppercase text-neutral-400">Cores Predefinidas</Label>
+                  <Label className="text-xs font-black uppercase text-neutral-400">Presets</Label>
                   <div className="flex flex-wrap gap-3">
                     {presets.map((p) => (
                       <button
                         key={p}
                         onClick={() => handleColorChange(p)}
-                        className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${color.toLowerCase() === p.toLowerCase() ? 'border-white scale-110 shadow-[0_0_10px_rgba(255,255,255,0.3)]' : 'border-transparent'}`}
+                        className={`w-8 h-8 rounded-full border-2 transition-all ${color.toLowerCase() === p.toLowerCase() ? 'border-white scale-110' : 'border-transparent'}`}
                         style={{ backgroundColor: p }}
-                        aria-label={`Select color ${p}`}
                       />
                     ))}
                   </div>
@@ -220,10 +224,10 @@ const Settings = () => {
           <CardContent>
             <div className="flex items-center justify-between p-4 bg-[#0a0a0a]/50 rounded-2xl border border-red-900/10">
               <div>
-                <p className="text-sm font-bold text-white">Resetar Dados Locais</p>
-                <p className="text-xs text-neutral-500">Apaga hábitos, XP e histórico salvos neste navegador.</p>
+                <p className="text-sm font-bold text-white">Resetar Dados</p>
+                <p className="text-xs text-neutral-500">Apaga tudo o que está salvo localmente.</p>
               </div>
-              <Button variant="destructive" size="sm" onClick={handleReset} className="bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white border border-red-600/20">
+              <Button variant="destructive" size="sm" onClick={handleReset} className="bg-red-600/10 hover:bg-red-600 text-red-500 hover:text-white">
                 <Trash2 className="w-4 h-4 mr-2" /> Resetar
               </Button>
             </div>

@@ -10,53 +10,72 @@
   }
 
   :root {
-    /* Light Theme Palette */
-    --background: #E8DADA;
-    --topbar: #F5EEEE;
-    --sidebar: #F5EEEE;
-    --panel: #F5EEEE;
-    --card: #F5EEEE;
+    /* Cores em HSL puro (canais) para o Tailwind funcionar com opacidade */
+    --background: 0 20% 88%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 20% 95%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 20% 95%;
+    --popover-foreground: 222.2 84% 4.9%;
+    
+    /* Primária (será sobrescrita pelo ColorProvider) */
+    --primary: 359 99% 40%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 0 20% 92%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 0 20% 92%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 0 20% 92%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 0 20% 79%;
+    --input: 0 20% 79%;
+    --ring: 359 99% 40%;
+    
+    /* Legado/Custom */
+    --accent-color: #CB0104;
+    --accent-dark: #8A0002;
+    --primary-dark: #8A0002;
     --input-bg: #F0E4E4;
     --border-ui: #D4C0C0;
     --shadow-ui: rgba(0, 0, 0, 0.08);
-    --foreground: #0A0C0F;
-    --muted-foreground: #5A606B;
-    
-    /* Dynamic Accent Colors */
-    --accent-color: #CB0104;
-    --accent-dark: #8A0002;
-    
-    /* Primary mapped to Accent */
-    --primary: var(--accent-color);
-    --primary-dark: var(--accent-dark);
-    --primary-foreground: #FFFFFF;
+    --panel: #F5EEEE;
+    --topbar: #F5EEEE;
     
     --radius: 1rem;
   }
 
   .dark {
-    /* Dark Theme Palette */
-    --background: #0B0D14;
-    --topbar: #1A1D27;
-    --sidebar: #1A1D27;
-    --panel: #1A1D27;
-    --card: #1A1D27;
-    --popover: #1A1D27;
-    --secondary: #1A1D27;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    
     --input-bg: #11141B;
     --border-ui: #252B38;
     --shadow-ui: transparent;
-    --foreground: #F0F2F5;
-    --muted-foreground: #8892AA;
-    
-    /* Primary mapped to Accent (Dark mode uses same accent usually, or we can adjust if needed) */
-    --primary: var(--accent-color);
-    --primary-dark: var(--accent-dark);
+    --panel: #1A1D27;
+    --topbar: #1A1D27;
   }
 
   body, #root {
-    background-color: var(--background);
-    color: var(--foreground);
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
     min-height: 100vh;
@@ -70,14 +89,14 @@
     border: 1px solid var(--border-ui);
     box-shadow: 0 2px 12px 0 var(--shadow-ui);
     border-radius: 16px;
-    color: var(--foreground);
+    color: hsl(var(--foreground));
   }
 
   .btn-primary {
-    background-color: var(--primary);
+    background-color: hsl(var(--primary));
     box-shadow: 0 4px 0 0 var(--primary-dark);
     border-radius: 16px;
-    color: var(--primary-foreground);
+    color: hsl(var(--primary-foreground));
     transition: all 0.15s ease;
   }
   .btn-primary:active {
