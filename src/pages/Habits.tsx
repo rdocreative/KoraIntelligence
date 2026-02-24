@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import {
@@ -67,6 +67,13 @@ interface Habit {
   active: boolean;
   priority: number; 
 }
+
+const PRIORITY_CONFIG = [
+  { id: 0, label: "MÁXIMA", bg: "#FF3B30", text: "#FFFFFF", dark: "#C22D25" },
+  { id: 1, label: "ALTA", bg: "#FF9500", text: "#FFFFFF", dark: "#CC7800" },
+  { id: 2, label: "MÉDIA", bg: "#FFD60A", text: "#7A5C00", dark: "#CCAB08" },
+  { id: 3, label: "NORMAL", bg: "#34C759", text: "#FFFFFF", dark: "#2A9F47" },
+];
 
 // --- Sortable Item Component ---
 interface SortableItemProps {
@@ -177,50 +184,27 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
   const priorityTheme = useMemo(() => {
+    const config = PRIORITY_CONFIG.find(c => c.id === habit.priority) || PRIORITY_CONFIG[3];
+    
     if (isCompleted) {
       return {
         main: "#CB0104",
         dark: "#8A0002",
         bg: "var(--input-bg)",
         tag: "CONCLUÍDO",
-        tagColor: "var(--muted-foreground)"
+        tagBg: "var(--muted-foreground)",
+        tagColor: "white"
       };
     }
 
-    switch (habit.priority) {
-      case 0: // MÁXIMA
-        return {
-          main: "#FF4B4B",
-          dark: "#D13A3A",
-          bg: "#FF4B4B25",
-          tag: "MÁXIMA",
-          tagColor: "#FF4B4B"
-        };
-      case 1: // ALTA
-        return {
-          main: "#FF9600",
-          dark: "#D67E00",
-          bg: "#FF960025",
-          tag: "ALTA",
-          tagColor: "#FF9600"
-        };
-      case 2: // MÉDIA
-        return {
-          main: "#EAB308",
-          dark: "#C69806",
-          bg: "#EAB30825",
-          tag: "MÉDIA",
-          tagColor: "#EAB308"
-        };
-      default: // NORMAL
-        return {
-          main: "#58CC02",
-          dark: "#46A302",
-          bg: "#58CC0225",
-          tag: "NORMAL",
-          tagColor: "#58CC02"
-        };
-    }
+    return {
+      main: config.bg,
+      dark: config.dark,
+      bg: `${config.bg}22`,
+      tag: config.label,
+      tagBg: config.bg,
+      tagColor: config.text
+    };
   }, [habit.priority, isCompleted]);
 
   return (
@@ -232,7 +216,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
       style={{
         backgroundColor: priorityTheme.bg,
         borderColor: isCompleted ? "var(--border-ui)" : priorityTheme.main,
-        boxShadow: isCompleted ? 'none' : `0 4px 0 0 ${priorityTheme.dark}66`,
+        boxShadow: isCompleted ? 'none' : `0 4px 0 0 ${priorityTheme.dark}88`,
         ...style
       }}
       {...attributes}
@@ -275,11 +259,10 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
               {habit.title}
             </h3>
             <span 
-              className="text-[10px] font-[900] px-2.5 py-0.5 rounded-full border shrink-0 uppercase tracking-widest"
+              className="text-[9px] font-[950] px-2.5 py-0.5 rounded-full border-none shrink-0 uppercase tracking-widest"
               style={{ 
-                color: priorityTheme.tagColor, 
-                borderColor: `${priorityTheme.tagColor}66`,
-                backgroundColor: `${priorityTheme.tagColor}22`
+                backgroundColor: priorityTheme.tagBg,
+                color: priorityTheme.tagColor
               }}
             >
               {priorityTheme.tag}
@@ -367,7 +350,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
   if (!rect) return null;
 
   const top = rect.bottom + window.scrollY + 8;
-  const left = rect.left + window.scrollX;
+  const left = Math.max(16, Math.min(window.innerWidth - 300, rect.left + window.scrollX));
 
   return (
     <div 
@@ -383,6 +366,31 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
             onChange={(e) => setForm({...form, title: e.target.value})}
             className="h-10 bg-[var(--input-bg)] border-2 border-[var(--border-ui)] text-[14px] font-[700] text-[var(--foreground)] focus-visible:ring-[#CB0104] rounded-[12px]" 
           />
+        </div>
+
+        <div className="space-y-1.5">
+          <Label className="text-[10px] font-[800] uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Prioridade</Label>
+          <div className="flex gap-1.5">
+            {PRIORITY_CONFIG.map((config) => (
+              <button
+                key={config.id}
+                onClick={() => setForm({...form, priority: config.id})}
+                className={cn(
+                  "flex-1 h-8 rounded-lg text-[8px] font-black transition-all border-2",
+                  form.priority === config.id 
+                    ? "scale-105" 
+                    : "opacity-40 hover:opacity-100"
+                )}
+                style={{
+                  backgroundColor: config.bg,
+                  color: config.text,
+                  borderColor: form.priority === config.id ? 'var(--foreground)' : 'transparent'
+                }}
+              >
+                {config.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="space-y-1.5">
@@ -447,6 +455,10 @@ const HabitsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDateSelectorOpen, setIsDateSelectorOpen] = useState(false);
   const [editingHabit, setEditingHabit] = useState<{habit: Habit, rect: DOMRect} | null>(null);
+  
+  // New habit state
+  const [newHabitTitle, setNewHabitTitle] = useState("");
+  const [newHabitPriority, setNewHabitPriority] = useState(3);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 1 } }),
@@ -460,15 +472,7 @@ const HabitsPage = () => {
         const oldIndex = items.findIndex((i) => i.id === active.id);
         const newIndex = items.findIndex((i) => i.id === over?.id);
         const reordered = arrayMove(items, oldIndex, newIndex);
-        
-        return reordered.map((item, idx) => {
-          const relativePos = idx / Math.max(1, reordered.length - 1);
-          let p = 3;
-          if (relativePos <= 0.25) p = 0;
-          else if (relativePos <= 0.5) p = 1;
-          else if (relativePos <= 0.75) p = 2;
-          return { ...item, priority: p };
-        });
+        return reordered;
       });
     }
   };
@@ -551,6 +555,25 @@ const HabitsPage = () => {
     const completed = filtered.filter(h => h.completedDates.includes(dateStr));
     return { pending, completed, all: [...pending, ...completed] };
   }, [habits, selectedDate]);
+
+  const handleCreateHabit = () => {
+    if (newHabitTitle) {
+      setHabits(prev => [...prev, {
+        id: Math.random().toString(36).substr(2, 9),
+        title: newHabitTitle,
+        emoji: '✨',
+        frequency: 'daily',
+        weekDays: [0,1,2,3,4,5,6],
+        time: format(new Date(), 'HH:mm'),
+        completedDates: [],
+        active: true,
+        priority: newHabitPriority
+      }]);
+      setNewHabitTitle("");
+      setNewHabitPriority(3);
+      setIsModalOpen(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative w-full">
@@ -644,10 +667,10 @@ const HabitsPage = () => {
                                 "min-h-[48px] aspect-square rounded-[16px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative",
                                 !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-30",
                                 day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[var(--background)] border-[var(--border-ui)] text-[var(--foreground)]",
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#FF4B4B15] border-[#FF4B4B44] text-[#FF4B4B]", 
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#FF960015] border-[#FF960044] text-[#FF9600]", 
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#EAB30815] border-[#EAB30844] text-[#EAB308]", 
-                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#58CC0215] border-[#58CC0244] text-[#58CC02]", 
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#FF3B3015] border-[#FF3B3044] text-[#FF3B30]", 
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#FF950015] border-[#FF950044] text-[#FF9500]", 
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#FFD60A15] border-[#FFD60A44] text-[#FFD60A]", 
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#34C75915] border-[#34C75944] text-[#34C759]", 
                                 day.isToday && !day.isSelected && "border-[#CB0104]/40",
                                 day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.05)]"
                               )}
@@ -751,36 +774,51 @@ const HabitsPage = () => {
                         <Plus className="mr-2" size={18} strokeWidth={4} /> NOVO HÁBITO
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-[var(--card)] border-2 border-[var(--border-ui)] text-[var(--foreground)] rounded-[32px] p-8">
+                    <DialogContent className="bg-[var(--card)] border-2 border-[var(--border-ui)] text-[var(--foreground)] rounded-[32px] p-8 max-w-md w-full">
                       <DialogHeader><DialogTitle className="uppercase tracking-[0.2em] text-[12px] text-[var(--muted-foreground)] font-black text-center mb-4">Criar Novo Hábito</DialogTitle></DialogHeader>
                       <div className="space-y-6">
                         <div className="space-y-2">
-                          <Label className="text-[11px] uppercase font-[900] tracking-[0.1em] text-[var(--muted-foreground)]">Qual o nome do hábito?</Label>
+                          <Label className="text-[11px] uppercase font-[900] tracking-[0.1em] text-[var(--muted-foreground)]">Nome do hábito</Label>
                           <Input 
+                            value={newHabitTitle}
+                            onChange={(e) => setNewHabitTitle(e.target.value)}
                             placeholder="Ex: Beber 2L de água..." 
                             className="bg-[var(--input-bg)] border-2 border-[var(--border-ui)] h-12 rounded-[16px] text-[var(--foreground)] font-bold" 
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                const val = (e.target as HTMLInputElement).value;
-                                if (val) {
-                                  setHabits(prev => [...prev, {
-                                    id: Math.random().toString(36).substr(2, 9),
-                                    title: val,
-                                    emoji: '✨',
-                                    frequency: 'daily',
-                                    weekDays: [0,1,2,3,4,5,6],
-                                    time: format(new Date(), 'HH:mm'),
-                                    completedDates: [],
-                                    active: true,
-                                    priority: 3
-                                  }]);
-                                  setIsModalOpen(false);
-                                }
-                              }
-                            }}
+                            onKeyDown={(e) => e.key === 'Enter' && handleCreateHabit()}
                           />
                         </div>
-                        <Button className="w-full bg-[#CB0104] hover:bg-[#8A0002] text-white h-12 rounded-[16px] font-black uppercase tracking-widest shadow-[0_4px_0_0_#8A0002]">CRIAR AGORA</Button>
+
+                        <div className="space-y-2">
+                          <Label className="text-[11px] uppercase font-[900] tracking-[0.1em] text-[var(--muted-foreground)]">Prioridade</Label>
+                          <div className="flex gap-2">
+                            {PRIORITY_CONFIG.map((config) => (
+                              <button
+                                key={config.id}
+                                onClick={() => setNewHabitPriority(config.id)}
+                                className={cn(
+                                  "flex-1 h-10 rounded-xl text-[10px] font-black transition-all border-2",
+                                  newHabitPriority === config.id 
+                                    ? "scale-105" 
+                                    : "opacity-40 hover:opacity-100"
+                                )}
+                                style={{
+                                  backgroundColor: config.bg,
+                                  color: config.text,
+                                  borderColor: newHabitPriority === config.id ? 'var(--foreground)' : 'transparent'
+                                }}
+                              >
+                                {config.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <Button 
+                          onClick={handleCreateHabit}
+                          className="w-full bg-[#CB0104] hover:bg-[#8A0002] text-white h-12 rounded-[16px] font-black uppercase tracking-widest shadow-[0_4px_0_0_#8A0002] active:translate-y-[1px] active:shadow-none transition-all"
+                        >
+                          CRIAR AGORA
+                        </Button>
                       </div>
                     </DialogContent>
                   </Dialog>
