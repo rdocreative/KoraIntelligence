@@ -12,18 +12,19 @@
   :root {
     /* Light Theme Palette */
     --background: #FFFFFF;
-    --topbar: #F4F6F9;
-    --sidebar: #FAFAFA;
-    --panel: #F4F6F9;
+    --topbar: #FFFFFF;
+    --sidebar: #FFFFFF;
+    --panel: #FFFFFF;
+    --card: #FFFFFF;
     --input-bg: #F4F6F9;
     --border-ui: #E2E6ED;
-    --shadow-ui: #D1D5DB;
+    --shadow-ui: rgba(0, 0, 0, 0.06);
     --foreground: #0A0C0F;
     --muted-foreground: #6B7280;
     
-    /* Updated Primary: Deep Purple */
-    --primary: #7652B7;
-    --primary-dark: #5A3D8F;
+    /* Updated Primary: Sage Green */
+    --primary: #81B29A;
+    --primary-dark: #5A8A74;
     
     --radius: 1rem;
   }
@@ -31,18 +32,17 @@
   .dark {
     /* Dark Theme Palette */
     --background: #0B0D14;
-    --topbar: #0E1020;
-    --sidebar: #0E1020;
-    --panel: #161A20;
-    --input-bg: #1C2028;
+    --topbar: #1A1D27;
+    --sidebar: #1A1D27;
+    --panel: #1A1D27;
+    --card: #1A1D27;
+    --popover: #1A1D27;
+    --secondary: #1A1D27;
+    --input-bg: #11141B;
     --border-ui: #252B38;
-    --shadow-ui: rgba(0, 0, 0, 0.4);
+    --shadow-ui: transparent;
     --foreground: #F0F2F5;
     --muted-foreground: #8892AA;
-
-    --card: #161A20;
-    --popover: #161A20;
-    --secondary: #1C2028;
   }
 
   body, #root {
@@ -58,9 +58,9 @@
 @layer components {
   .card-glass {
     background-color: var(--panel);
-    border: 2px solid var(--border-ui);
-    box-shadow: 0 4px 0 0 var(--shadow-ui);
-    border-radius: 24px;
+    border: 1px solid var(--border-ui);
+    box-shadow: 0 2px 12px 0 var(--shadow-ui);
+    border-radius: 16px;
     color: var(--foreground);
   }
 

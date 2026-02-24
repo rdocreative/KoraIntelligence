@@ -19,7 +19,7 @@ const DATA_EVOLUTION = [
 ];
 
 const DATA_DISTRIBUTION = [
-  { name: 'Saúde', value: 400, color: '#7652B7' },
+  { name: 'Saúde', value: 400, color: '#81B29A' },
   { name: 'Foco', value: 300, color: '#FF9600' },
   { name: 'Rotina', value: 300, color: '#58CC02' },
   { name: 'Mente', value: 200, color: '#CE82FF' },
@@ -47,7 +47,7 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
       
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "TOTAL HÁBITOS", value: displayStats.total, icon: Target, color: "#7652B7", shadow: "#5A3D8F" },
+          { label: "TOTAL HÁBITOS", value: displayStats.total, icon: Target, color: "#81B29A", shadow: "#5A8A74" },
           { label: "SEQUÊNCIA", value: displayStats.streak, icon: Flame, color: "#FF9600", shadow: "#E58700" },
           { label: "HOJE", value: displayStats.today, icon: CheckCircle2, color: "#58CC02", shadow: "#46A302" },
           { label: "MÊS", value: displayStats.progress, icon: CalendarDays, color: "#CE82FF", shadow: "#A855F7" }
@@ -73,17 +73,17 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
         ))}
       </div>
 
-      <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[40px] p-10 shadow-[0_6px_0_0_var(--shadow-ui)] relative overflow-hidden">
+      <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[40px] p-10 shadow-[var(--shadow-ui)] relative overflow-hidden">
         <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
           <Trophy size={140} className="text-[var(--foreground)]" />
         </div>
         
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
           <div className="relative">
-            <div className="w-28 h-28 rounded-full border-[6px] border-[#7652B7] flex items-center justify-center bg-[var(--background)] shadow-xl">
-              <span className="text-[36px] font-[950] text-[#7652B7]">12</span>
+            <div className="w-28 h-28 rounded-full border-[6px] border-[#81B29A] flex items-center justify-center bg-[var(--background)] shadow-xl">
+              <span className="text-[36px] font-[950] text-[#81B29A]">12</span>
             </div>
-            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#7652B7] text-white text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-lg">
+            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#81B29A] text-white text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-lg">
               NÍVEL
             </div>
           </div>
@@ -95,25 +95,25 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                 <p className="text-[var(--muted-foreground)] text-sm font-bold uppercase tracking-widest mt-1">Você superou 95% dos guerreiros este mês!</p>
               </div>
               <div className="text-right">
-                <span className="text-[#7652B7] font-black text-xl">2.450 / 3.000</span>
+                <span className="text-[#81B29A] font-black text-xl">2.450 / 3.000</span>
                 <span className="text-[var(--muted-foreground)] font-black text-sm ml-1 uppercase">XP</span>
               </div>
             </div>
             
             <div className="h-5 w-full bg-[var(--border-ui)] rounded-full overflow-hidden p-1 shadow-inner">
               <div 
-                className="h-full bg-gradient-to-r from-[#7652B7] to-[#5A3D8F] rounded-full transition-all duration-1000" 
+                className="h-full bg-gradient-to-r from-[#81B29A] to-[#5A8A74] rounded-full transition-all duration-1000" 
                 style={{ width: '75%' }}
               />
             </div>
             
             <div className="flex gap-4">
-              <div className="flex items-center gap-2.5 bg-[var(--background)] px-4 py-2 rounded-2xl border-2 border-[var(--border-ui)] shadow-sm">
+              <div className="flex items-center gap-2.5 bg-[var(--card)] px-4 py-2 rounded-2xl border-2 border-[var(--border-ui)] shadow-sm">
                 <Star size={16} className="text-[#FF9600] fill-[#FF9600]" />
                 <span className="text-[12px] font-[800] text-[var(--foreground)]">Streak: 15 Dias</span>
               </div>
-              <div className="flex items-center gap-2.5 bg-[var(--background)] px-4 py-2 rounded-2xl border-2 border-[var(--border-ui)] shadow-sm">
-                <Zap size={16} className="text-[#7652B7] fill-[#7652B7]" />
+              <div className="flex items-center gap-2.5 bg-[var(--card)] px-4 py-2 rounded-2xl border-2 border-[var(--border-ui)] shadow-sm">
+                <Zap size={16} className="text-[#81B29A] fill-[#81B29A]" />
                 <span className="text-[12px] font-[800] text-[var(--foreground)]">Combo: x1.5 XP</span>
               </div>
             </div>
@@ -122,9 +122,9 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-[var(--background)] border-2 border-[var(--border-ui)] rounded-[32px] p-8 shadow-[0_4px_0_0_var(--shadow-ui)]">
+        <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[32px] p-8 shadow-[var(--shadow-ui)]">
           <div className="flex items-center gap-3 mb-10">
-            <div className="p-2.5 bg-[#7652B7]/10 rounded-xl text-[#7652B7]">
+            <div className="p-2.5 bg-[#81B29A]/10 rounded-xl text-[#81B29A]">
               <TrendingUp size={20} />
             </div>
             <h3 className="text-[var(--foreground)] font-[900] text-sm uppercase tracking-widest">Evolução Semanal</h3>
@@ -135,8 +135,8 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
               <AreaChart data={DATA_EVOLUTION}>
                 <defs>
                   <linearGradient id="colorHabit" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#7652B7" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#7652B7" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#81B29A" stopOpacity={0.4}/>
+                    <stop offset="95%" stopColor="#81B29A" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-ui)" />
@@ -148,13 +148,13 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                 />
                 <YAxis hide />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: 'var(--background)', border: '2px solid var(--border-ui)', borderRadius: '16px', fontSize: '11px', fontWeight: 'bold', color: 'var(--foreground)' }}
-                  itemStyle={{ color: '#7652B7' }}
+                  contentStyle={{ backgroundColor: 'var(--card)', border: '2px solid var(--border-ui)', borderRadius: '16px', fontSize: '11px', fontWeight: 'bold', color: 'var(--foreground)' }}
+                  itemStyle={{ color: '#81B29A' }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="habitos" 
-                  stroke="#7652B7" 
+                  stroke="#81B29A" 
                   strokeWidth={4}
                   fillOpacity={1} 
                   fill="url(#colorHabit)" 
@@ -164,7 +164,7 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
           </div>
         </div>
 
-        <div className="bg-[var(--background)] border-2 border-[var(--border-ui)] rounded-[32px] p-8 shadow-[0_4px_0_0_var(--shadow-ui)]">
+        <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[32px] p-8 shadow-[var(--shadow-ui)]">
           <div className="flex items-center gap-3 mb-10">
             <div className="p-2.5 bg-[#FF9600]/10 rounded-xl text-[#FF9600]">
               <Target size={20} />
@@ -190,7 +190,7 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'var(--background)', border: '2px solid var(--border-ui)', borderRadius: '16px', color: 'var(--foreground)' }}
+                    contentStyle={{ backgroundColor: 'var(--card)', border: '2px solid var(--border-ui)', borderRadius: '16px', color: 'var(--foreground)' }}
                   />
                 </PieChart>
               </ResponsiveContainer>

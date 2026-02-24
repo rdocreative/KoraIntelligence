@@ -41,10 +41,10 @@ export const SideNav = () => {
               !isSpecial && "w-[44px] h-[44px]",
               isSpecial && "w-[56px] h-[56px] my-2",
               
-              isActive && !isSpecial && "bg-[#7652B7] shadow-[0_4px_0_0_#5A3D8F]",
+              isActive && !isSpecial && "bg-[#81B29A] shadow-[0_4px_0_0_#5A8A74]",
               !isActive && !isSpecial && "bg-transparent hover:bg-[var(--panel)]",
               
-              isSpecial && "bg-[#7652B7] shadow-[0_4px_0_0_#5A3D8F]",
+              isSpecial && "bg-[#81B29A] shadow-[0_4px_0_0_#5A8A74]",
               !isActive && isSpecial && "brightness-95 hover:brightness-100"
             )}
           >

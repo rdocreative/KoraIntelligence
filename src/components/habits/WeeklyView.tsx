@@ -68,11 +68,11 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
   };
 
   return (
-    <div className="w-full rounded-[32px] overflow-hidden border-2 border-[var(--border-ui)] bg-[var(--background)] h-auto shadow-md">
+    <div className="w-full rounded-[16px] overflow-hidden border-2 border-[var(--border-ui)] bg-[var(--card)] h-auto shadow-md">
       <div className="w-full overflow-x-auto">
         <div className="grid grid-cols-[80px_repeat(7,1fr)] w-full min-w-[800px]">
           
-          <div className="bg-[var(--sidebar)] border-b-2 border-r-2 border-[var(--border-ui)]" />
+          <div className="bg-[var(--input-bg)] border-b-2 border-r-2 border-[var(--border-ui)]" />
 
           {weekDays.map((day, idx) => {
             const isToday = isSameDay(day, new Date());
@@ -83,13 +83,13 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
               )}>
                 <div className={cn(
                   "text-[12px] font-[800] uppercase tracking-[0.05em]",
-                  isToday ? "text-[#7652B7]" : "text-[var(--muted-foreground)]"
+                  isToday ? "text-[#81B29A]" : "text-[var(--muted-foreground)]"
                 )}>
                   {format(day, 'EEE', { locale: ptBR }).replace('.', '')}
                 </div>
                 <div className={cn(
                   "text-[22px] font-[900] leading-none mt-1.5",
-                  isToday ? "text-[#7652B7]" : "text-[var(--foreground)]"
+                  isToday ? "text-[#81B29A]" : "text-[var(--foreground)]"
                 )}>
                   {format(day, 'd')}
                 </div>
@@ -101,7 +101,7 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
             return (
               <React.Fragment key={period.label}>
                 <div className={cn(
-                  "flex flex-col items-center justify-center gap-2 bg-[var(--sidebar)] border-r-2 border-[var(--border-ui)] py-8",
+                  "flex flex-col items-center justify-center gap-2 bg-[var(--input-bg)] border-r-2 border-[var(--border-ui)] py-8",
                   pIdx !== 0 && "border-t border-[var(--border-ui)]"
                 )}>
                   <period.icon size={22} className="text-[var(--muted-foreground)]" />
@@ -146,7 +146,7 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                               <div className="flex items-center gap-2.5 w-full">
                                 <div className={cn(
                                   "h-[18px] w-[18px] rounded-full border-2 flex items-center justify-center shrink-0",
-                                  isDone ? "bg-[#7652B7] border-[#7652B7]" : styles.checkbox
+                                  isDone ? "bg-[#81B29A] border-[#81B29A]" : styles.checkbox
                                 )}>
                                   {isDone && <Check size={12} className="text-white stroke-[4px]" />}
                                 </div>
