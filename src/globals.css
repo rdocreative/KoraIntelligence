@@ -31,16 +31,16 @@
   }
 
   .dark {
-    /* Dark Theme Palette - Deep Red Dark Tones */
-    --background: #140000;
-    --topbar: #1A0000;
-    --sidebar: #1A0000;
-    --panel: #290000;
-    --card: #290000;
-    --popover: #290000;
-    --secondary: #1A0000;
-    --input-bg: #2F0000;
-    --border-ui: #3D0000;
+    /* Dark Theme Palette - Keeping deep dark tones but matching the red accent */
+    --background: #0B0D14;
+    --topbar: #1A1D27;
+    --sidebar: #1A1D27;
+    --panel: #1A1D27;
+    --card: #1A1D27;
+    --popover: #1A1D27;
+    --secondary: #1A1D27;
+    --input-bg: #11141B;
+    --border-ui: #252B38;
     --shadow-ui: transparent;
     --foreground: #F0F2F5;
     --muted-foreground: #8892AA;
