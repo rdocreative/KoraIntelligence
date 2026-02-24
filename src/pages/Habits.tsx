@@ -688,7 +688,7 @@ const HabitsPage = () => {
                       ))}
                     </div>
 
-                    <div className="grid grid-cols-7 gap-3 flex-1 content-start p-1">
+                    <div className="grid grid-cols-7 gap-3 flex-1 content-start">
                       <TooltipProvider>
                         {calendarDays.map((day, i) => (
                           <Tooltip key={i}>
