@@ -5,6 +5,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 type ColorContextType = {
   color: string;
   setColor: (color: string) => void;
+  saveColor: () => void;
+  cancelColor: () => void;
   presets: string[];
 };
 
@@ -46,31 +48,51 @@ const darkenColor = (hex: string, percent: number) => {
 
 export const ColorProvider = ({ children }: { children: React.ReactNode }) => {
   const [color, setColorState] = useState("#CB0104");
+  // Keep track of the saved color to revert if needed
+  const [savedColorState, setSavedColorState] = useState("#CB0104");
 
-  useEffect(() => {
-    // Load from local storage on mount
-    const savedColor = localStorage.getItem("kora-accent-color");
-    if (savedColor) {
-      updateColor(savedColor);
-    }
-  }, []);
-
-  const updateColor = (newColor: string) => {
-    setColorState(newColor);
-    localStorage.setItem("kora-accent-color", newColor);
-    
-    // Update CSS variables on root
+  const applyColorToCSS = (hex: string) => {
     const root = document.documentElement;
-    root.style.setProperty('--accent-color', newColor);
+    root.style.setProperty('--accent-color', hex);
     
     // Calculate dark variant for shadows/borders (approx 30% darker)
-    // If white, we handle it differently or just let it be grey
-    const darkColor = newColor.toLowerCase() === '#ffffff' ? '#CCCCCC' : darkenColor(newColor, 30);
+    const darkColor = hex.toLowerCase() === '#ffffff' ? '#CCCCCC' : darkenColor(hex, 30);
     root.style.setProperty('--accent-dark', darkColor);
   };
 
+  useEffect(() => {
+    // Load from local storage on mount
+    const storedColor = localStorage.getItem("kora-accent-color");
+    if (storedColor) {
+      setColorState(storedColor);
+      setSavedColorState(storedColor);
+      applyColorToCSS(storedColor);
+    } else {
+      // Default
+      applyColorToCSS("#CB0104");
+    }
+  }, []);
+
+  // Update visual state and CSS but DO NOT save to localStorage yet
+  const setColor = (newColor: string) => {
+    setColorState(newColor);
+    applyColorToCSS(newColor);
+  };
+
+  // Persist the current color state to localStorage
+  const saveColor = () => {
+    localStorage.setItem("kora-accent-color", color);
+    setSavedColorState(color);
+  };
+
+  // Revert to the last saved color (from localStorage/state)
+  const cancelColor = () => {
+    setColorState(savedColorState);
+    applyColorToCSS(savedColorState);
+  };
+
   return (
-    <ColorContext.Provider value={{ color, setColor: updateColor, presets: PRESETS }}>
+    <ColorContext.Provider value={{ color, setColor, saveColor, cancelColor, presets: PRESETS }}>
       {children}
     </ColorContext.Provider>
   );
