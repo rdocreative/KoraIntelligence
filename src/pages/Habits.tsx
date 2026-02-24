@@ -703,14 +703,11 @@ const HabitsPage = () => {
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#FF950015] border-[#FF950044] text-[#FF9500]", 
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#FFD60A15] border-[#FFD60A44] text-[#FFD60A]", 
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#34C75915] border-[#34C75944] text-[#34C759]", 
-                                  day.isToday && !day.isSelected && "border-primary/40",
+                                  day.isToday && !day.isSelected && "border-white border-2",
                                   day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.05)]"
                                 )}
                               >
                                 <span className="text-[14px] font-[800]">{format(day.date, 'd')}</span>
-                                {day.isToday && !day.isSelected && (
-                                  <div className="absolute bottom-1 w-1.5 h-1.5 bg-primary rounded-full" />
-                                )}
                               </div>
                             </TooltipTrigger>
                             <TooltipContent className="bg-[var(--card)] border-2 border-[var(--border-ui)] text-[var(--foreground)] rounded-[16px] shadow-xl p-3">
