@@ -11,12 +11,12 @@
   }
 
   :root {
-    /* Theme Palette - Deep Navy Blue (Darkened by an additional 20%) */
-    --background: #020406;
-    --panel: #111b21;
-    --sidebar: #0a0f14;
+    /* Theme Palette - Light Theme */
+    --background: #FFFFFF;
+    --panel: #F4F6F9;
+    --sidebar: #FAFAFA;
     
-    /* Card Colors */
+    /* Card Colors (Maintained) */
     --card-blue: #1cb0f6;
     --card-blue-shadow: #1899d6;
     --card-orange: #ff9600;
@@ -29,32 +29,32 @@
     --card-red-shadow: #cc0000;
     
     /* Primary / Accent */
-    --primary: #22d3ee;
-    --primary-dark: #06b6d4;
+    --primary: #1cb0f6;
+    --primary-dark: #1899d6;
     
     /* Text / UI */
-    --duo-gray: #37464f;
-    --border-ui: #202f36;
-    --shadow-ui: #020305;
+    --duo-gray: #6B7280;
+    --border-ui: #E2E6ED;
+    --shadow-ui: #d1d5db;
     
-    /* Shadcn Mappings */
-    --foreground: #e5e7eb;
-    --card: #111b21;
-    --card-foreground: #e5e7eb;
-    --popover: #111b21;
-    --popover-foreground: #e5e7eb;
-    --primary-foreground: #06090e;
-    --secondary: #202f36;
-    --secondary-foreground: #e5e7eb;
-    --muted: #202f36;
-    --muted-foreground: #9ca3af;
-    --accent: #22d3ee;
-    --accent-foreground: #06090e;
+    /* Shadcn Mappings for Light Mode */
+    --foreground: #0A0C0F;
+    --card: #F4F6F9;
+    --card-foreground: #0A0C0F;
+    --popover: #FFFFFF;
+    --popover-foreground: #0A0C0F;
+    --primary-foreground: #FFFFFF;
+    --secondary: #E2E6ED;
+    --secondary-foreground: #0A0C0F;
+    --muted: #F4F6F9;
+    --muted-foreground: #6B7280;
+    --accent: #1cb0f6;
+    --accent-foreground: #FFFFFF;
     --destructive: #ff4b4b;
     --destructive-foreground: #ffffff;
-    --border: #202f36;
-    --input: #202f36;
-    --ring: #22d3ee;
+    --border: #E2E6ED;
+    --input: #E2E6ED;
+    --ring: #1cb0f6;
     --radius: 1rem;
   }
 
@@ -81,7 +81,7 @@
     background-color: var(--primary);
     box-shadow: 0 4px 0 0 var(--primary-dark);
     border-radius: 16px;
-    color: #06090e;
+    color: #FFFFFF;
     transition: all 0.15s ease;
   }
   .btn-primary:active {
