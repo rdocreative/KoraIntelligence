@@ -119,7 +119,7 @@ const HabitCardUI = ({
     if (lastScheduledDate) {
       const lastDateStr = format(lastScheduledDate, 'yyyy-MM-dd');
       const wasLastCompleted = habit.completedDates.includes(lastDateStr);
-      let historicalStreak = 0;
+      let historicalDailyStreak = 0;
       let prevDate = wasLastCompleted ? subDays(lastScheduledDate, 1) : lastScheduledDate;
       let foundGap = false;
       while (!foundGap) {
@@ -127,19 +127,19 @@ const HabitCardUI = ({
         if (habit.weekDays.includes(dOfWeek)) {
           const dStr = format(prevDate, 'yyyy-MM-dd');
           if (habit.completedDates.includes(dStr)) {
-            historicalStreak++;
+            historicalDailyStreak++;
           } else {
             foundGap = true;
           }
         }
         prevDate = subDays(prevDate, 1);
-        if (historicalStreak > 365) break;
+        if (historicalDailyStreak > 365) break;
       }
       if (!wasLastCompleted) {
-        if (historicalStreak > 0) isLost = true;
+        if (historicalDailyStreak > 0) isLost = true;
         streak = 0;
       } else {
-        streak = historicalStreak + 1;
+        streak = historicalDailyStreak + 1;
       }
     }
 
@@ -696,21 +696,18 @@ const HabitsPage = () => {
                               <div
                                 onClick={() => setSelectedDate(day.date)}
                                 className={cn(
-                                  "aspect-square rounded-[16px] border-2 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative",
+                                  "aspect-square rounded-[16px] border-[3px] flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative",
                                   !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-30",
                                   day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[var(--background)] border-[var(--border-ui)] text-[var(--foreground)]",
-                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#FF3B3015] border-[#FF3B3044] text-[#FF3B30]", 
-                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#FF950015] border-[#FF950044] text-[#FF9500]", 
-                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#FFD60A15] border-[#FFD60A44] text-[#FFD60A]", 
-                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#34C75915] border-[#34C75944] text-[#34C759]", 
+                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#FF3B3015] border-[#FF3B30] text-[#FF3B30]", 
+                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#FF950015] border-[#FF9500] text-[#FF9500]", 
+                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#FFD60A15] border-[#FFD60A] text-[#FFD60A]", 
+                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#34C75915] border-[#34C759] text-[#34C759]", 
                                   day.isToday && !day.isSelected && "border-primary/40",
                                   day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.05)]"
                                 )}
                               >
                                 <span className="text-[14px] font-[800]">{format(day.date, 'd')}</span>
-                                {day.isToday && !day.isSelected && (
-                                  <div className="absolute bottom-1 w-1.5 h-1.5 bg-primary rounded-full" />
-                                )}
                               </div>
                             </TooltipTrigger>
                             <TooltipContent className="bg-[var(--card)] border-2 border-[var(--border-ui)] text-[var(--foreground)] rounded-[16px] shadow-xl p-3">
