@@ -24,80 +24,74 @@ const Index = () => {
       label: "Hábitos Ativos",
       value: activeHabits,
       icon: CheckCircle2,
-      color: "#2dd4bf",
-      gradient: "from-[#2dd4bf]/20 to-[#2dd4bf]/5",
-      border: "border-[#2dd4bf]/30",
+      color: "#1CB0F6",
+      shadowColor: "#1899D6",
       link: "/habitos"
     },
     {
       label: "Metas em Foco",
       value: activeGoals,
       icon: Target,
-      color: "#f472b6",
-      gradient: "from-[#f472b6]/20 to-[#f472b6]/5",
-      border: "border-[#f472b6]/30",
+      color: "#58CC02",
+      shadowColor: "#46A302",
       link: "/metas"
     },
     {
       label: "Tarefas Pendentes",
       value: pendingTasks,
       icon: ListTodo,
-      color: "#facc15",
-      gradient: "from-[#facc15]/20 to-[#facc15]/5",
-      border: "border-[#facc15]/30",
+      color: "#FF9600",
+      shadowColor: "#E58700",
       link: "/masterplan"
     },
   ];
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full max-w-6xl mx-auto px-4 pt-4">
       
-      {/* Welcome Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 mb-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-5 mb-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-1">
-            Olá, <span className="text-[#4adbc8]">{firstName}</span>
+          <h1 className="text-[32px] md:text-[42px] font-[950] text-[#0A0C0F] uppercase tracking-tight mb-1.5">
+            Olá, <span className="text-[#1CB0F6]">{firstName}</span>
           </h1>
-          <p className="text-neutral-400 font-medium text-sm">
-            Seu sistema está ativo e operante. Vamos progredir hoje?
+          <p className="text-[#6B7280] font-[700] text-[15px] tracking-wide">
+            Seu sistema está pronto. Vamos dominar o dia?
           </p>
         </div>
-        <div className="flex items-center gap-2 text-[10px] font-bold text-neutral-500 bg-[#111] px-4 py-2 rounded-full border border-white/5 uppercase tracking-wider">
-          <TrendingUp className="w-3.5 h-3.5 text-[#4adbc8]" />
-          <span>Status do Sistema: <span className="text-[#4adbc8]">ONLINE</span></span>
+        <div className="flex items-center gap-3 text-[11px] font-[900] text-[#6B7280] bg-[#F4F6F9] px-6 py-2.5 rounded-full border-2 border-[#E2E6ED] uppercase tracking-widest shadow-sm">
+          <TrendingUp className="w-4 h-4 text-[#1CB0F6]" />
+          <span>Status do Sistema: <span className="text-[#1CB0F6]">ONLINE</span></span>
         </div>
       </div>
 
-      {/* 3D Colorful Stats Cards - Gap reduzido para 12px (gap-3) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {statsCards.map((stat, i) => (
           <Link 
             key={i} 
             to={stat.link}
-            className={cn(
-              "relative group py-[14px] px-[20px] rounded-3xl border transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl overflow-hidden stat-card",
-              "bg-gradient-to-br bg-opacity-10 backdrop-blur-md",
-              stat.gradient,
-              stat.border
-            )}
+            className="group relative py-7 px-8 rounded-[32px] border-2 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+            style={{
+              backgroundColor: stat.color,
+              borderColor: 'transparent',
+              boxShadow: `0 5px 0 0 ${stat.shadowColor}`,
+              color: 'white'
+            }}
           >
-            <div className="absolute top-0 right-0 p-20 bg-white/5 blur-3xl rounded-full -mr-10 -mt-10 group-hover:bg-white/10 transition-colors" />
-            
-            <div className="relative z-10 flex flex-col h-full justify-between gap-2">
+            <div className="relative z-10 flex flex-col h-full justify-between gap-5">
               <div className="flex justify-between items-start">
-                <div className={cn("p-2.5 rounded-2xl bg-black/40 border border-white/10")}>
-                  <stat.icon size={20} style={{ color: stat.color }} />
+                <div className="p-3.5 rounded-2xl bg-black/10">
+                  <stat.icon size={26} className="text-white" strokeWidth={3} />
                 </div>
-                <div className="p-1 rounded-full bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <ArrowRight size={14} className="text-white" />
+                <div className="p-1.5 rounded-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ArrowRight size={16} className="text-white" />
                 </div>
               </div>
               
               <div>
-                <div className="text-3xl font-black text-white mb-0 tracking-tighter">
+                <div className="text-[36px] font-[950] text-white mb-0 tracking-tighter">
                   {stat.value}
                 </div>
-                <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/60">
+                <div className="text-[11px] font-[900] uppercase tracking-widest text-white/80">
                   {stat.label}
                 </div>
               </div>
@@ -106,63 +100,49 @@ const Index = () => {
         ))}
       </div>
 
-      {/* Main Content Area */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        
-        {/* Daily Focus Panel */}
-        <div className="p-6 rounded-3xl bg-[#0f2220] border border-[#2d5550] shadow-2xl relative overflow-hidden group task-card">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#4adbc8]/5 to-transparent pointer-events-none" />
-          
-          <h3 className="text-sm font-bold text-white uppercase tracking-widest mb-4 flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#4adbc8] shadow-[0_0_10px_#4adbc8]"></span>
-            Foco Rápido
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="p-8 rounded-[40px] bg-[#F4F6F9] border-2 border-[#E2E6ED] shadow-[0_5px_0_0_#D1D5DB] relative overflow-hidden group">
+          <h3 className="text-[13px] font-[900] text-[#0A0C0F] uppercase tracking-[0.15em] mb-6 flex items-center gap-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#1CB0F6] shadow-[0_0_10px_#1CB0F6]"></span>
+            Ações Rápidas
           </h3>
 
-          <div className="space-y-3 relative z-10">
-            <div className="p-3.5 rounded-2xl bg-[#0d1e1c] border border-[#1e3a36] flex items-center gap-4 group/item hover:border-[#4adbc8]/30 transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-[#071412] flex items-center justify-center text-lg">
+          <div className="space-y-4 relative z-10">
+            <Link to="/masterplan" className="p-5 rounded-[24px] bg-white border-2 border-[#E2E6ED] flex items-center gap-5 hover:border-[#1CB0F6] transition-all group/item shadow-sm">
+              <div className="w-12 h-12 rounded-2xl bg-[#F4F6F9] flex items-center justify-center text-2xl">
                 🚀
               </div>
               <div className="flex-1">
-                <h4 className="text-sm font-bold text-white">Acessar Masterplan</h4>
-                <p className="text-[11px] text-neutral-500">Revise suas metas anuais</p>
+                <h4 className="text-[15px] font-[900] text-[#0A0C0F]">Acessar Masterplan</h4>
+                <p className="text-[12px] text-[#6B7280] font-bold">Gerencie seus grandes objetivos</p>
               </div>
-              <Link to="/masterplan" className="px-3 py-1.5 rounded-lg bg-[#4adbc8] text-[#071412] text-[10px] font-bold uppercase hover:bg-[#3bc7b6] transition-colors">
-                Abrir
-              </Link>
-            </div>
+              <ArrowRight className="w-5 h-5 text-[#E2E6ED] group-hover/item:text-[#1CB0F6] transition-colors" />
+            </Link>
 
-            <div className="p-3.5 rounded-2xl bg-[#0d1e1c] border border-[#1e3a36] flex items-center gap-4 group/item hover:border-[#4adbc8]/30 transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-[#071412] flex items-center justify-center text-lg">
+            <Link to="/habitos" className="p-5 rounded-[24px] bg-white border-2 border-[#E2E6ED] flex items-center gap-5 hover:border-[#1CB0F6] transition-all group/item shadow-sm">
+              <div className="w-12 h-12 rounded-2xl bg-[#F4F6F9] flex items-center justify-center text-2xl">
                 ⚡
               </div>
               <div className="flex-1">
-                <h4 className="text-sm font-bold text-white">Ver Hábitos</h4>
-                <p className="text-[11px] text-neutral-500">Checklist diário</p>
+                <h4 className="text-[15px] font-[900] text-[#0A0C0F]">Lista de Hábitos</h4>
+                <p className="text-[12px] text-[#6B7280] font-bold">Confira sua rotina diária</p>
               </div>
-              <Link to="/habitos" className="px-3 py-1.5 rounded-lg bg-[#1e3a36] text-[#4adbc8] text-[10px] font-bold uppercase hover:bg-[#254641] transition-colors">
-                Ver
-              </Link>
-            </div>
+              <ArrowRight className="w-5 h-5 text-[#E2E6ED] group-hover/item:text-[#1CB0F6] transition-colors" />
+            </Link>
           </div>
         </div>
 
-        {/* Quote / Motivation Panel */}
-        <div className="p-6 rounded-3xl bg-[#1a1a1a] border border-white/5 shadow-2xl flex flex-col justify-center relative overflow-hidden mission-card">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl -mr-10 -mt-10" />
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -ml-10 -mb-10" />
-          
-          <div className="relative z-10 text-center space-y-3">
-             <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
-               Lembrete Diário
+        <div className="p-8 rounded-[40px] bg-white border-2 border-[#E2E6ED] shadow-[0_5px_0_0_#D1D5DB] flex flex-col justify-center relative overflow-hidden text-center">
+          <div className="relative z-10 space-y-4">
+             <p className="text-[11px] font-[900] text-[#6B7280] uppercase tracking-[0.2em]">
+               Mentalidade do Dia
              </p>
-             <blockquote className="text-lg font-medium text-white leading-relaxed font-serif italic">
-               "Não é sobre ter tempo, é sobre ter prioridades. O que você faz hoje define quem você será amanhã."
+             <blockquote className="text-[20px] font-[800] text-[#0A0C0F] leading-snug italic px-4">
+               "Sua rotina é o sistema operacional que executa o seu futuro. Configure-o com sabedoria."
              </blockquote>
-             <div className="w-10 h-1 bg-[#4adbc8] rounded-full mx-auto mt-2" />
+             <div className="w-12 h-1.5 bg-[#1CB0F6] rounded-full mx-auto mt-4" />
           </div>
         </div>
-
       </div>
     </div>
   );

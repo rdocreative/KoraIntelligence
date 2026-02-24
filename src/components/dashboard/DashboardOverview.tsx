@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   PieChart, Pie, Cell, AreaChart, Area 
 } from 'recharts';
 import { Trophy, Star, Zap, TrendingUp, Target, Award, Flame, CheckCircle2, CalendarDays } from "lucide-react";
@@ -19,10 +19,10 @@ const DATA_EVOLUTION = [
 ];
 
 const DATA_DISTRIBUTION = [
-  { name: 'Saúde', value: 400, color: '#22d3ee' },
-  { name: 'Foco', value: 300, color: '#f97316' },
-  { name: 'Rotina', value: 300, color: '#4ade80' },
-  { name: 'Mente', value: 200, color: '#a855f7' },
+  { name: 'Saúde', value: 400, color: '#1CB0F6' },
+  { name: 'Foco', value: 300, color: '#FF9600' },
+  { name: 'Rotina', value: 300, color: '#58CC02' },
+  { name: 'Mente', value: 200, color: '#CE82FF' },
 ];
 
 interface DashboardOverviewProps {
@@ -35,7 +35,6 @@ interface DashboardOverviewProps {
 }
 
 const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
-  // Fallback stats if not provided
   const displayStats = stats || {
     total: 4,
     today: "0/4",
@@ -44,125 +43,119 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full max-w-6xl mx-auto px-4">
       
-      {/* Stats Cards - Moved from HabitsPage to here */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-0">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "TOTAL HÁBITOS", value: displayStats.total, icon: Target, from: "#22D3EE", to: "#06B6D4", shadow: "#0891B2" },
-          { label: "SEQUÊNCIA", value: displayStats.streak, icon: Flame, from: "#FB923C", to: "#F97316", shadow: "#EA580C" },
-          { label: "COMPLETOS HOJE", value: displayStats.today, icon: CheckCircle2, from: "#4ADE80", to: "#22C55E", shadow: "#16A34A" },
-          { label: "MES", value: displayStats.progress, icon: CalendarDays, from: "#A855F7", to: "#6366F1", shadow: "#7C3AED" }
+          { label: "TOTAL HÁBITOS", value: displayStats.total, icon: Target, color: "#1CB0F6", shadow: "#1899D6" },
+          { label: "SEQUÊNCIA", value: displayStats.streak, icon: Flame, color: "#FF9600", shadow: "#E58700" },
+          { label: "HOJE", value: displayStats.today, icon: CheckCircle2, color: "#58CC02", shadow: "#46A302" },
+          { label: "MÊS", value: displayStats.progress, icon: CalendarDays, color: "#CE82FF", shadow: "#A855F7" }
         ].map((s, i) => (
           <div
             key={i}
-            className={cn(
-              "py-6 px-7 rounded-[28px] flex items-center gap-5 transition-all duration-300",
-              "text-white cursor-default hover:translate-y-[-2px] border-[1.5px] border-white/20"
-            )}
+            className="py-6 px-7 rounded-[32px] flex items-center gap-5 border-2 transition-all hover:scale-[1.02]"
             style={{
-              background: `linear-gradient(135deg, ${s.from}, ${s.to})`,
-              boxShadow: `0 8px 0 0 ${s.shadow}`
+              backgroundColor: s.color,
+              borderColor: 'transparent',
+              boxShadow: `0 4px 0 0 ${s.shadow}`,
+              color: 'white'
             }}
           >
-            <div className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-black/30 ring-1 ring-white/10">
-              <s.icon size={26} className="text-white fill-white/10" strokeWidth={3} />
+            <div className="w-14 h-14 rounded-full flex items-center justify-center shrink-0 bg-black/10">
+              <s.icon size={28} className="text-white fill-white/10" strokeWidth={3} />
             </div>
             <div className="flex flex-col">
-              <span className="text-[11px] font-[900] text-white uppercase tracking-[0.12em] leading-tight mb-1 drop-shadow-sm">{s.label}</span>
-              <span className="text-[31px] font-[950] text-white leading-none tracking-tight drop-shadow-sm">{s.value}</span>
+              <span className="text-[10px] font-[900] uppercase tracking-widest leading-tight mb-1 opacity-80">{s.label}</span>
+              <span className="text-[28px] font-[950] leading-none tracking-tight">{s.value}</span>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Sistema de Gamificação / XP */}
-      <div className="bg-[#202f36] border border-white/10 rounded-[32px] p-6 shadow-[0_6px_0_0_#020305] relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-          <Trophy size={120} className="text-[#22d3ee]" />
+      <div className="bg-[#F4F6F9] border-2 border-[#E2E6ED] rounded-[40px] p-10 shadow-[0_6px_0_0_#D1D5DB] relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+          <Trophy size={140} className="text-[#0A0C0F]" />
         </div>
         
-        <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
+        <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
           <div className="relative">
-            <div className="w-24 h-24 rounded-full border-[4px] border-[#22d3ee] flex items-center justify-center bg-[#0a0f14] shadow-[0_0_20px_rgba(34,211,238,0.2)]">
-              <span className="text-[32px] font-[950] text-[#22d3ee]">12</span>
+            <div className="w-28 h-28 rounded-full border-[6px] border-[#1CB0F6] flex items-center justify-center bg-white shadow-xl">
+              <span className="text-[36px] font-[950] text-[#1CB0F6]">12</span>
             </div>
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-[#22d3ee] text-[#06090e] text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-lg">
+            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#1CB0F6] text-white text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-lg">
               NÍVEL
             </div>
           </div>
 
-          <div className="flex-1 w-full space-y-4">
+          <div className="flex-1 w-full space-y-6">
             <div className="flex justify-between items-end">
               <div>
-                <h2 className="text-white font-[900] text-xl uppercase tracking-tight">Mestre da Rotina</h2>
-                <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Você está no top 5% este mês!</p>
+                <h2 className="text-[#0A0C0F] font-[950] text-2xl uppercase tracking-tight">Mestre da Rotina</h2>
+                <p className="text-[#6B7280] text-sm font-bold uppercase tracking-widest mt-1">Você superou 95% dos guerreiros este mês!</p>
               </div>
               <div className="text-right">
-                <span className="text-[#22d3ee] font-black text-lg">2.450 / 3.000</span>
-                <span className="text-white/20 font-black text-sm ml-1">XP</span>
+                <span className="text-[#1CB0F6] font-black text-xl">2.450 / 3.000</span>
+                <span className="text-[#6B7280] font-black text-sm ml-1 uppercase">XP</span>
               </div>
             </div>
             
-            <div className="h-4 w-full bg-black/40 rounded-full overflow-hidden border border-white/5 p-1">
+            <div className="h-5 w-full bg-[#E2E6ED] rounded-full overflow-hidden p-1 shadow-inner">
               <div 
-                className="h-full bg-gradient-to-r from-[#22d3ee] to-[#06b6d4] rounded-full transition-all duration-1000" 
+                className="h-full bg-gradient-to-r from-[#1CB0F6] to-[#1899D6] rounded-full transition-all duration-1000" 
                 style={{ width: '75%' }}
               />
             </div>
             
             <div className="flex gap-4">
-              <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-xl border border-white/5">
-                <Star size={14} className="text-yellow-400 fill-yellow-400" />
-                <span className="text-[11px] font-bold text-white/70">Streak: 15 Dias</span>
+              <div className="flex items-center gap-2.5 bg-white px-4 py-2 rounded-2xl border-2 border-[#E2E6ED] shadow-sm">
+                <Star size={16} className="text-[#FF9600] fill-[#FF9600]" />
+                <span className="text-[12px] font-[800] text-[#0A0C0F]">Streak: 15 Dias</span>
               </div>
-              <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-xl border border-white/5">
-                <Zap size={14} className="text-orange-400 fill-orange-400" />
-                <span className="text-[11px] font-bold text-white/70">Combo: x1.5 XP</span>
+              <div className="flex items-center gap-2.5 bg-white px-4 py-2 rounded-2xl border-2 border-[#E2E6ED] shadow-sm">
+                <Zap size={16} className="text-[#1CB0F6] fill-[#1CB0F6]" />
+                <span className="text-[12px] font-[800] text-[#0A0C0F]">Combo: x1.5 XP</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Gráfico de Evolução Semanal */}
-        <div className="bg-[#202f36] border border-white/10 rounded-[24px] p-6 shadow-[0_4px_0_0_#020305]">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-[#22d3ee]/10 rounded-lg text-[#22d3ee]">
-                <TrendingUp size={18} />
-              </div>
-              <h3 className="text-white font-[800] text-sm uppercase tracking-widest">Evolução Semanal</h3>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="bg-white border-2 border-[#E2E6ED] rounded-[32px] p-8 shadow-[0_4px_0_0_#D1D5DB]">
+          <div className="flex items-center gap-3 mb-10">
+            <div className="p-2.5 bg-[#1CB0F6]/10 rounded-xl text-[#1CB0F6]">
+              <TrendingUp size={20} />
             </div>
+            <h3 className="text-[#0A0C0F] font-[900] text-sm uppercase tracking-widest">Evolução Semanal</h3>
           </div>
           
-          <div className="h-[250px] w-full">
+          <div className="h-[280px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={DATA_EVOLUTION}>
                 <defs>
                   <linearGradient id="colorHabit" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#22d3ee" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#22d3ee" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#1CB0F6" stopOpacity={0.4}/>
+                    <stop offset="95%" stopColor="#1CB0F6" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E6ED" />
                 <XAxis 
                   dataKey="name" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 10, fontWeight: 700 }} 
+                  tick={{ fill: '#6B7280', fontSize: 11, fontWeight: 800 }} 
                 />
                 <YAxis hide />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#16222b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '10px', fontWeight: 'bold' }}
-                  itemStyle={{ color: '#22d3ee' }}
+                  contentStyle={{ backgroundColor: 'white', border: '2px solid #E2E6ED', borderRadius: '16px', fontSize: '11px', fontWeight: 'bold' }}
+                  itemStyle={{ color: '#1CB0F6' }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="habitos" 
-                  stroke="#22d3ee" 
-                  strokeWidth={3}
+                  stroke="#1CB0F6" 
+                  strokeWidth={4}
                   fillOpacity={1} 
                   fill="url(#colorHabit)" 
                 />
@@ -171,27 +164,24 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
           </div>
         </div>
 
-        {/* Gráfico de Pizza - Distribuição de Foco */}
-        <div className="bg-[#202f36] border border-white/10 rounded-[24px] p-6 shadow-[0_4px_0_0_#020305]">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-[#f97316]/10 rounded-lg text-[#f97316]">
-                <Target size={18} />
-              </div>
-              <h3 className="text-white font-[800] text-sm uppercase tracking-widest">Distribuição de Foco</h3>
+        <div className="bg-white border-2 border-[#E2E6ED] rounded-[32px] p-8 shadow-[0_4px_0_0_#D1D5DB]">
+          <div className="flex items-center gap-3 mb-10">
+            <div className="p-2.5 bg-[#FF9600]/10 rounded-xl text-[#FF9600]">
+              <Target size={20} />
             </div>
+            <h3 className="text-[#0A0C0F] font-[900] text-sm uppercase tracking-widest">Distribuição de Foco</h3>
           </div>
 
-          <div className="flex items-center flex-col md:flex-row">
-            <div className="h-[200px] w-full md:w-1/2">
+          <div className="flex items-center flex-col md:flex-row h-full">
+            <div className="h-[220px] w-full md:w-1/2">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={DATA_DISTRIBUTION}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
+                    innerRadius={70}
+                    outerRadius={95}
                     paddingAngle={8}
                     dataKey="value"
                   >
@@ -200,48 +190,24 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#16222b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                    contentStyle={{ backgroundColor: 'white', border: '2px solid #E2E6ED', borderRadius: '16px' }}
                   />
                 </PieChart>
               </ResponsiveContainer>
             </div>
             
-            <div className="w-full md:w-1/2 space-y-3 mt-4 md:mt-0">
+            <div className="w-full md:w-1/2 space-y-4 mt-6 md:mt-0 px-4">
               {DATA_DISTRIBUTION.map((item, i) => (
                 <div key={i} className="flex items-center justify-between group">
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: item.color }} />
-                    <span className="text-[11px] font-bold text-white/60 uppercase tracking-tighter">{item.name}</span>
+                    <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: item.color }} />
+                    <span className="text-[12px] font-[800] text-[#6B7280] uppercase tracking-tighter">{item.name}</span>
                   </div>
-                  <span className="text-[12px] font-black text-white">{Math.round(item.value / 12)}%</span>
+                  <span className="text-[14px] font-[950] text-[#0A0C0F]">{Math.round(item.value / 12)}%</span>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Grid de Conquistas */}
-      <div className="bg-[#202f36] border border-white/10 rounded-[24px] p-6 shadow-[0_4px_0_0_#020305]">
-        <div className="flex items-center gap-3 mb-6">
-          <Award size={20} className="text-[#a855f7]" />
-          <h3 className="text-white font-[800] text-sm uppercase tracking-widest">Conquistas Recentes</h3>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { title: "Madrugador", desc: "5 dias às 6h", color: "#22d3ee" },
-            { title: "Foco Total", desc: "10h de leitura", color: "#f97316" },
-            { title: "Atleta", desc: "3 treinos seguidos", color: "#4ade80" },
-            { title: "Mente Sã", desc: "7 dias meditando", color: "#a855f7" }
-          ].map((badge, i) => (
-            <div key={i} className="bg-black/20 border border-white/5 p-4 rounded-2xl flex flex-col items-center text-center group hover:border-white/20 transition-all cursor-default">
-              <div className="w-12 h-12 rounded-full mb-3 flex items-center justify-center" style={{ backgroundColor: `${badge.color}15`, border: `2px solid ${badge.color}30` }}>
-                <Trophy size={20} style={{ color: badge.color }} />
-              </div>
-              <span className="text-[10px] font-black text-white uppercase mb-1">{badge.title}</span>
-              <span className="text-[8px] font-bold text-white/30 uppercase leading-tight">{badge.desc}</span>
-            </div>
-          ))}
         </div>
       </div>
     </div>

@@ -29,8 +29,8 @@ const navItems = [
 
 export const SideNav = () => {
   return (
-    <div className="fixed left-[18px] top-1/2 -translate-y-1/2 z-[100] flex opacity-100 visible">
-      <nav className="flex flex-col items-center gap-3 bg-[#202f36] p-2 rounded-[32px] border-2 border-[#374151] shadow-[0_4px_0_0_#0b1116] w-[56px]">
+    <div className="fixed left-[18px] top-1/2 -translate-y-1/2 z-[100] flex">
+      <nav className="flex flex-col items-center gap-3 bg-[#FAFAFA] p-2 rounded-[32px] border-2 border-[#E2E6ED] shadow-[0_4px_0_0_#D1D5DB] w-[56px]">
         {navItems.map(({ icon: Icon, path, label, isSpecial }) => (
           <NavLink
             key={path}
@@ -41,15 +41,11 @@ export const SideNav = () => {
               !isSpecial && "w-[44px] h-[44px]",
               isSpecial && "w-[56px] h-[56px] my-2",
               
-              // Active State (Normal items)
-              isActive && !isSpecial && "bg-[#1cb0f6] shadow-[0_4px_0_0_#1899d6]",
+              isActive && !isSpecial && "bg-[#1CB0F6] shadow-[0_4px_0_0_#1899D6]",
+              !isActive && !isSpecial && "bg-transparent hover:bg-[#F4F6F9]",
               
-              // Inactive State (Normal items)
-              !isActive && !isSpecial && "bg-transparent hover:bg-[#2a3f4a]",
-              
-              // Special Item States (Brain) - Always highlighted with app color
-              isSpecial && "bg-[#1cb0f6] shadow-[0_4px_0_0_#1899d6]",
-              !isActive && isSpecial && "brightness-90 hover:brightness-100"
+              isSpecial && "bg-[#1CB0F6] shadow-[0_4px_0_0_#1899D6]",
+              !isActive && isSpecial && "brightness-95 hover:brightness-100"
             )}
           >
             {({ isActive }) => (
@@ -58,7 +54,7 @@ export const SideNav = () => {
                 strokeWidth={isSpecial ? 2.5 : 2} 
                 className={cn(
                   "transition-colors",
-                  (isActive || isSpecial) ? "text-white" : "text-[#9ca3af] group-hover:text-white"
+                  (isActive || isSpecial) ? "text-white" : "text-[#6B7280] group-hover:text-[#0A0C0F]"
                 )}
               />
             )}
