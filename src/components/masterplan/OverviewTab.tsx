@@ -48,7 +48,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       case 'studies': return { color: 'text-violet-500', bg: 'bg-violet-500', icon: GraduationCap, label: 'Estudos' };
       case 'health': return { color: 'text-emerald-500', bg: 'bg-emerald-500', icon: Heart, label: 'Saúde' };
       case 'personal': return { color: 'text-amber-500', bg: 'bg-amber-500', icon: User, label: 'Pessoal' };
-      default: return { color: 'text-white', bg: 'bg-white', icon: Target, label: 'Geral' };
+      default: return { color: 'text-primary', bg: 'bg-primary', icon: Target, label: 'Geral' };
     }
   };
 
@@ -71,12 +71,12 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
       
       {/* 1. CARD OBJETIVO ANUAL */}
       <Card className={`${cardBaseStyle} relative overflow-hidden group goal-card`}>
-        <div className="absolute top-0 right-0 p-32 bg-red-600/5 rounded-full blur-3xl group-hover:bg-red-600/10 transition-colors duration-500" />
+        <div className="absolute top-0 right-0 p-32 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors duration-500" />
         
         <CardContent className="p-8 relative z-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-red-500 mb-1">
+              <div className="flex items-center gap-2 text-primary mb-1">
                 <Target size={16} />
                 <span className="text-xs font-bold tracking-widest uppercase">Objetivo Anual</span>
               </div>
@@ -91,7 +91,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
           {/* Barra de Progresso Principal */}
           <div className="h-4 bg-neutral-800 rounded-full overflow-hidden mb-6 border border-white/5">
             <div 
-              className="h-full bg-gradient-to-r from-red-600 to-red-500 transition-all duration-1000 ease-out relative"
+              className="h-full bg-gradient-to-r from-primary to-primary/80 transition-all duration-1000 ease-out relative"
               style={{ width: `${annualData.progress}%` }}
             >
               <div className="absolute inset-0 bg-white/20 animate-[shimmer_2s_infinite]" style={{ backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)', transform: 'skewX(-20deg)' }}></div>
@@ -122,51 +122,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </CardContent>
       </Card>
 
-      {/* 2. GRID DE PILARES (4 CARDS) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {analytics.areaStats.map((area: any) => {
-          const config = getAreaConfig(area.id);
-          const Icon = config.icon;
-          const areaItems = areas[area.id] || [];
-          const firstItem = areaItems.find((i: any) => !i.completed) || areaItems[0];
-          const hasItem = !!firstItem;
-
-          return (
-            <Card key={area.id} className={`${cardBaseStyle} hover:border-white/20 transition-all duration-300 group goal-card`}>
-              <CardContent className="p-5 flex flex-col h-full justify-between gap-4">
-                <div>
-                  <div className="flex justify-between items-start mb-4">
-                    <div className={`p-2.5 rounded-xl bg-[#0A0A0A] border border-white/5 ${config.color} group-hover:scale-110 transition-transform`}>
-                      <Icon size={20} />
-                    </div>
-                    <Badge variant="outline" className="border-white/5 bg-[#0A0A0A] text-neutral-400">
-                      {area.completed}/{area.total}
-                    </Badge>
-                  </div>
-                  
-                  <h3 className={`font-bold text-lg mb-1 ${config.color}`}>{config.label}</h3>
-                  <Progress value={area.percentage} className="h-1.5 bg-neutral-800 mb-4" indicatorClassName={config.bg} />
-                  
-                  <div className="min-h-[3rem]">
-                    {hasItem ? (
-                      <p className="text-sm text-neutral-300 line-clamp-2 leading-relaxed">
-                        <span className="text-neutral-500 mr-1">Próximo:</span> 
-                        {firstItem.title}
-                      </p>
-                    ) : (
-                       <p className="text-sm text-[#444] italic mt-1 font-light">
-                        Sem meta definida
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )
-        })}
-      </div>
-
-      {/* 3. GRID DE TEMPO (MÊS, SEMANA, HOJE) */}
+      {/* 2. GRID DE TEMPO (MÊS, SEMANA, HOJE) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         
         {/* Card Mês */}
@@ -208,7 +164,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               </Button>
             ) : (
               <Button 
-                className="w-full mt-4 bg-[#E8251A] hover:bg-[#c91e14] text-white border-0"
+                className="w-full mt-4 bg-primary hover:bg-primary/90 text-primary-foreground border-0"
                 onClick={onNavigateToWeekly}
               >
                 + Definir metas do mês
@@ -254,7 +210,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
               </>
             ) : (
               <Button 
-                className="w-full bg-[#E8251A] hover:bg-[#c91e14] text-white border-0 mt-4"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-0 mt-4"
                 onClick={onNavigateToWeekly}
               >
                 + Criar Semana
@@ -264,13 +220,13 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
         </Card>
 
         {/* Card Hoje (Foco) */}
-        <Card className={`${cardBaseStyle} ring-1 ring-red-500/20 flex flex-col task-card`}>
+        <Card className={`${cardBaseStyle} ring-1 ring-primary/20 flex flex-col task-card`}>
           <CardHeader className="pb-2">
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle className="text-base font-bold text-red-500 uppercase tracking-wider flex items-center gap-2">
+                <CardTitle className="text-base font-bold text-primary uppercase tracking-wider flex items-center gap-2">
                    <Target size={16} /> Foco de Hoje
-                </CardTitle>
+                </Target>
                 <p className="text-xs text-neutral-400 capitalize mt-1">{formattedDate}</p>
               </div>
             </div>
@@ -279,8 +235,8 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             <div className="space-y-3 mt-2 flex-1">
               {currentWeek?.tasks.filter((t:any) => !t.completed).slice(0, 2).map((task: any, idx: number) => (
                 <div key={idx} className="flex gap-3 items-start group">
-                  <div className="mt-1 w-4 h-4 rounded border border-neutral-600 group-hover:border-red-500 transition-colors flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-[1px] bg-transparent group-hover:bg-red-500/50 transition-colors" />
+                  <div className="mt-1 w-4 h-4 rounded border border-neutral-600 group-hover:border-primary transition-colors flex items-center justify-center">
+                    <div className="w-2 h-2 rounded-[1px] bg-transparent group-hover:bg-primary/50 transition-colors" />
                   </div>
                   <span className="text-sm text-white font-medium line-clamp-2 leading-relaxed">
                     {task.title}
@@ -297,7 +253,7 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
             </div>
 
             <Button 
-              className="w-full mt-4 bg-red-600 hover:bg-red-700 text-white border-0 shadow-lg shadow-red-900/20 group"
+              className="w-full mt-4 bg-primary hover:bg-primary/90 text-primary-foreground border-0 shadow-lg shadow-primary/20 group"
               onClick={onNavigateToWeekly}
             >
               Ir para Execução <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
@@ -307,7 +263,6 @@ export const OverviewTab: React.FC<OverviewTabProps> = ({
 
       </div>
 
-      {/* Footer Discreto com Reset */}
       <div className="flex justify-center pt-8 pb-4 opacity-0 hover:opacity-100 transition-opacity duration-500">
         <button 
           onClick={onResetTutorial}

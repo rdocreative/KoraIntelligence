@@ -35,15 +35,15 @@ interface PageConfig {
 }
 
 const pageConfigs: Record<string, PageConfig> = {
-  '/': { title: 'Início', subtitle: 'Visão total do seu progresso', color: '#3F3047', icon: Home },
-  '/habitos': { title: 'Hábitos', subtitle: 'Seus hábitos de hoje', color: '#3F3047', icon: ClipboardList },
+  '/': { title: 'Início', subtitle: 'Visão total do seu progresso', color: 'var(--accent-color)', icon: Home },
+  '/habitos': { title: 'Hábitos', subtitle: 'Seus hábitos de hoje', color: 'var(--accent-color)', icon: ClipboardList },
   '/metas': { title: 'Metas', subtitle: 'Foco nos grandes objetivos', color: '#58CC02', icon: Target },
   '/missoes': { title: 'Missões', subtitle: 'Desafios e conquistas épicas', color: '#FF9600', icon: Zap },
   '/lembretes': { title: 'Lembretes', subtitle: 'Alertas e compromissos', color: '#FF4B4B', icon: Bell },
-  '/comunidade': { title: 'Comunidade', subtitle: 'Conexão e troca de ideias', color: '#3F3047', icon: Users },
+  '/comunidade': { title: 'Comunidade', subtitle: 'Conexão e troca de ideias', color: 'var(--accent-color)', icon: Users },
   '/loja': { title: 'Loja', subtitle: 'Resgate suas recompensas', color: '#FF9600', icon: ShoppingBag },
   '/configuracoes': { title: 'Ajustes', subtitle: 'Personalize sua experiênia', color: '#6B7280', icon: Settings },
-  '/masterplan': { title: 'Master Plan', subtitle: 'Sua visão estratégica futura', color: '#3F3047', icon: Eye }
+  '/masterplan': { title: 'Master Plan', subtitle: 'Sua visão estratégica futura', color: 'var(--accent-color)', icon: Eye }
 };
 
 export const TopBar = () => {
@@ -107,8 +107,8 @@ export const TopBar = () => {
           </button>
 
           <button onClick={() => setActiveModal('profile')} className="h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
-            <Zap size={15} className="text-[#3F3047]" />
-            <span className="text-[14px] font-[700] text-[#3F3047] tracking-tight">{userStats.xp}</span>
+            <Zap size={15} className="text-primary" />
+            <span className="text-primary text-[14px] font-[700] tracking-tight">{userStats.xp}</span>
           </button>
 
           <button onClick={() => setActiveModal('achievements')} className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
@@ -116,7 +116,7 @@ export const TopBar = () => {
           </button>
 
           <button onClick={() => setActiveModal('profile')} className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
-            <UserCircle size={22} className="text-[#3F3047]" />
+            <UserCircle size={22} className="text-primary" />
           </button>
         </div>
       </div>
@@ -144,10 +144,10 @@ export const TopBar = () => {
           {activeModal === 'profile' && (
             <div className="p-8 flex flex-col items-center text-center">
               <div className="relative mb-4">
-                <div className="w-20 h-20 rounded-full bg-[#3F3047]/10 flex items-center justify-center border-2 border-[#3F3047]/20 shadow-md">
-                  <UserCircle size={48} className="text-[#3F3047]" />
+                <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20 shadow-md">
+                  <UserCircle size={48} className="text-primary" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 bg-[#3F3047] text-white text-[0.65rem] font-black px-2.5 py-1 rounded-full shadow-lg">
+                <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground text-[0.65rem] font-black px-2.5 py-1 rounded-full shadow-lg">
                   LVL {userStats.level}
                 </div>
               </div>
@@ -161,7 +161,7 @@ export const TopBar = () => {
                 </div>
                 <div className="w-full h-2.5 bg-[var(--border-ui)] rounded-full overflow-hidden border border-[var(--shadow-ui)]">
                   <div 
-                    className="h-full bg-[#3F3047] transition-all duration-700"
+                    className="h-full bg-primary transition-all duration-700"
                     style={{ width: `${(userStats.xp / userStats.nextLevelXp) * 100}%` }}
                   />
                 </div>

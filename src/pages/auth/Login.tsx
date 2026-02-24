@@ -42,7 +42,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0a0a0b] p-4 relative overflow-hidden">
       {/* Background Effects */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-red-600/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
       
       <Card className="w-full max-w-md bg-[#121214] border-white/10 shadow-2xl relative z-10">
         <CardHeader className="space-y-1">
@@ -62,7 +62,7 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-[#0a0a0b] border-white/10 focus-visible:ring-red-500/50"
+                className="bg-[#0a0a0b] border-white/10 focus-visible:ring-primary/50"
               />
             </div>
             <div className="space-y-2">
@@ -70,7 +70,7 @@ export default function Login() {
                 <Label htmlFor="password">Senha</Label>
                 <Link
                   to="/recuperar-senha"
-                  className="text-xs text-red-500 hover:text-red-400 transition-colors"
+                  className="text-xs text-primary hover:opacity-80 transition-colors"
                 >
                   Esqueceu a senha?
                 </Link>
@@ -81,12 +81,12 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-[#0a0a0b] border-white/10 focus-visible:ring-red-500/50"
+                className="bg-[#0a0a0b] border-white/10 focus-visible:ring-primary/50"
               />
             </div>
             <Button
               type="submit"
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold"
               disabled={loading}
             >
               {loading ? (
@@ -101,7 +101,7 @@ export default function Login() {
         <CardFooter className="flex justify-center border-t border-white/5 pt-6">
           <p className="text-sm text-neutral-400">
             Não tem uma conta?{" "}
-            <Link to="/cadastro" className="text-red-500 hover:text-red-400 font-bold transition-colors">
+            <Link to="/cadastro" className="text-primary hover:opacity-80 font-bold transition-colors">
               Criar conta
             </Link>
           </p>

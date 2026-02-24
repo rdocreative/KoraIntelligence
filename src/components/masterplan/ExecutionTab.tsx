@@ -27,27 +27,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-interface ExecutionTabProps {
-  currentMonth: any;
-  currentMonthIndex: number;
-  addMonthGoal: (monthIndex: number, text: string) => void;
-  toggleMonthGoal: (monthIndex: number, goalId: string) => void;
-  updateMonth: (monthIndex: number, data: any) => void;
-  weeks: any[];
-  addWeek: (weekData: any) => void;
-  deleteWeek: (weekId: string) => void;
-  addWeekTask: (weekId: string, text: string) => void;
-  toggleWeekTask: (weekId: string, taskId: string) => void;
-  updateWeekReview: (weekId: string, field: "worked" | "didntWork" | "improve", value: string) => void;
-}
-
 // Reusable Helper Component for the Tooltip
 const InfoTooltip = ({ text }: { text: string }) => (
   <TooltipProvider>
     <Tooltip delayDuration={300}>
       <TooltipTrigger asChild>
         <button className="outline-none ml-2">
-            <HelpCircle className="w-[14px] h-[14px] text-[#555] hover:text-[#E8251A] transition-colors" />
+            <HelpCircle className="w-[14px] h-[14px] text-[#555] hover:text-primary transition-colors" />
         </button>
       </TooltipTrigger>
       <TooltipContent side="top" className="bg-[#1A1A1A] border-[#333] text-[#AAAAAA] max-w-[220px] rounded-lg p-3 text-xs leading-relaxed">
@@ -69,7 +55,7 @@ export const ExecutionTab = ({
   addWeekTask,
   toggleWeekTask,
   updateWeekReview
-}: ExecutionTabProps) => {
+}: any) => {
 
   const [newMonthGoal, setNewMonthGoal] = useState("");
   const [newWeekTask, setNewWeekTask] = useState("");
@@ -80,15 +66,14 @@ export const ExecutionTab = ({
   React.useEffect(() => {
     if (weeks && weeks.length > 0 && !activeWeekId) {
       const now = new Date();
-      const current = weeks.find(w => new Date(w.endDate) >= now);
+      const current = weeks.find((w: any) => new Date(w.endDate) >= now);
       if (current) setActiveWeekId(current.id);
-      else setActiveWeekId(weeks[0].id); // Fallback to first week if none is active
+      else setActiveWeekId(weeks[0].id); 
     }
   }, [weeks, activeWeekId]);
 
-  const activeWeek = weeks.find(w => w.id === activeWeekId);
+  const activeWeek = weeks.find((w: any) => w.id === activeWeekId);
 
-  // LIMITS
   const MAX_WEEKS = 4;
   const MAX_TASKS = 7;
   const canCreateWeek = weeks.length < MAX_WEEKS;
@@ -141,7 +126,7 @@ export const ExecutionTab = ({
             <Card className="bg-[#111111] border-white/5 shadow-xl">
                 <CardHeader className="border-b border-white/5 pb-4">
                     <CardTitle className="flex items-center justify-between">
-                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#E8251A] flex items-center gap-2">
+                        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
                            <Target className="w-4 h-4" /> Estratégia Mensal
                         </span>
                         <div className="flex items-center gap-2">
@@ -153,11 +138,11 @@ export const ExecutionTab = ({
                 <CardContent className="pt-6 space-y-6">
                     <div className="space-y-3">
                         {currentMonth?.goals.map((goal: any) => (
-                            <div key={goal.id} className="group flex items-start gap-3 p-3 rounded-lg bg-[#0A0A0A] border border-white/5 hover:border-[#E8251A]/30 transition-all">
+                            <div key={goal.id} className="group flex items-start gap-3 p-3 rounded-lg bg-[#0A0A0A] border border-white/5 hover:border-primary/30 transition-all">
                                 <Checkbox 
                                     checked={goal.completed}
                                     onCheckedChange={() => toggleMonthGoal(currentMonthIndex, goal.id)}
-                                    className="mt-0.5 border-neutral-600 data-[state=checked]:bg-[#E8251A] data-[state=checked]:border-[#E8251A]"
+                                    className="mt-0.5 border-neutral-600 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                 />
                                 <span className={cn(
                                     "text-sm font-medium leading-relaxed transition-colors",
@@ -180,17 +165,17 @@ export const ExecutionTab = ({
                             value={newMonthGoal}
                             onChange={(e) => setNewMonthGoal(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleAddMonthGoal()}
-                            className="bg-[#0A0A0A] border-white/10 text-xs h-10 focus-visible:ring-[#E8251A]/50"
+                            className="bg-[#0A0A0A] border-white/10 text-xs h-10 focus-visible:ring-primary/50"
                         />
-                        <Button size="icon" onClick={handleAddMonthGoal} className="h-10 w-10 bg-[#E8251A] hover:bg-[#c91e14] text-white rounded-md shrink-0">
+                        <Button size="icon" onClick={handleAddMonthGoal} className="h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground rounded-md shrink-0">
                             <Plus className="w-4 h-4" />
                         </Button>
                     </div>
                 </CardContent>
             </Card>
 
-            <div className="p-4 rounded-xl bg-[#E8251A]/5 border border-[#E8251A]/10">
-                <h4 className="text-[10px] font-bold text-[#E8251A] uppercase tracking-widest mb-2 flex items-center gap-2">
+            <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
+                <h4 className="text-[10px] font-bold text-primary uppercase tracking-widest mb-2 flex items-center gap-2">
                     <AlertCircle className="w-3 h-3" /> Lembrete Tático
                 </h4>
                 <p className="text-xs text-neutral-400 leading-relaxed">
@@ -205,20 +190,19 @@ export const ExecutionTab = ({
         
         {/* Week Selector */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar">
-            {weeks.map((week) => (
+            {weeks.map((week: any) => (
                 <div key={week.id} className="relative group/week">
                     <button
                         onClick={() => setActiveWeekId(week.id)}
                         className={cn(
                             "flex items-center gap-2 px-4 py-2.5 rounded-lg border text-xs font-bold uppercase tracking-wide transition-all whitespace-nowrap pr-8",
                             activeWeekId === week.id 
-                                ? "bg-[#E8251A] text-white border-[#E8251A] shadow-[0_4px_20px_rgba(232,37,26,0.3)]" 
+                                ? "bg-primary text-primary-foreground border-primary shadow-[0_4px_20px_rgba(var(--primary),0.3)]" 
                                 : "bg-[#111111] text-neutral-500 border-white/5 hover:border-white/20 hover:text-neutral-300"
                         )}
                     >
                         {week.title}
                     </button>
-                    {/* Delete Week Button */}
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -226,7 +210,7 @@ export const ExecutionTab = ({
                         }}
                         className={cn(
                             "absolute right-1 top-1 bottom-1 w-6 flex items-center justify-center rounded hover:bg-black/20 transition-all opacity-0 group-hover/week:opacity-100",
-                            activeWeekId === week.id ? "text-white/80 hover:text-white" : "text-neutral-500 hover:text-[#E8251A]"
+                            activeWeekId === week.id ? "text-primary-foreground/80 hover:text-primary-foreground" : "text-neutral-500 hover:text-primary"
                         )}
                     >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -269,7 +253,7 @@ export const ExecutionTab = ({
                     <div>
                         <div className="flex items-center gap-2">
                             <h2 className="text-xl font-black text-white uppercase tracking-tight flex items-center gap-3">
-                                <Zap className="w-5 h-5 text-[#E8251A] fill-current" />
+                                <Zap className="w-5 h-5 text-primary fill-current" />
                                 Foco de Hoje
                             </h2>
                             <InfoTooltip text="Suas tarefas de hoje. Devem estar conectadas ao foco da semana." />
@@ -299,7 +283,7 @@ export const ExecutionTab = ({
                                         "group flex items-center gap-4 p-4 rounded-xl border transition-all duration-300",
                                         task.completed 
                                             ? "bg-[#0A0A0A]/50 border-white/5 opacity-60" 
-                                            : "bg-[#161616] border-white/10 hover:border-[#E8251A]/50 hover:shadow-[0_0_20px_rgba(232,37,26,0.1)] hover:-translate-y-0.5"
+                                            : "bg-[#161616] border-white/10 hover:border-primary/50 hover:shadow-[0_0_20px_rgba(var(--primary),0.1)] hover:-translate-y-0.5"
                                     )}
                                 >
                                     <button 
@@ -307,8 +291,8 @@ export const ExecutionTab = ({
                                         className={cn(
                                             "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
                                             task.completed 
-                                                ? "bg-[#E8251A] border-[#E8251A] text-white" 
-                                                : "border-neutral-600 group-hover:border-[#E8251A]"
+                                                ? "bg-primary border-primary text-primary-foreground" 
+                                                : "border-neutral-600 group-hover:border-primary"
                                         )}
                                     >
                                         {task.completed && <CheckCircle2 className="w-3.5 h-3.5" />}
@@ -324,10 +308,7 @@ export const ExecutionTab = ({
                             ))}
                         </div>
                     ) : (
-                        // EMPTY STATE
                         <div className="flex flex-col items-center justify-center py-16 px-4 border border-dashed border-neutral-800 rounded-xl bg-[#0A0A0A] relative overflow-hidden group">
-                            <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(232,37,26,0.03)_50%,transparent_75%,transparent_100%)] bg-[length:20px_20px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
-                            
                             <div className="relative z-10 text-center space-y-6 max-w-sm">
                                 <div className="space-y-2">
                                     <h3 className="text-lg font-bold text-neutral-300 uppercase tracking-widest">
@@ -339,10 +320,10 @@ export const ExecutionTab = ({
                                 </div>
                                 
                                 <div className="flex flex-col items-center gap-2 animate-bounce pt-4 opacity-60">
-                                    <span className="text-[9px] font-bold text-[#E8251A] uppercase tracking-[0.2em]">
+                                    <span className="text-[9px] font-bold text-primary uppercase tracking-[0.2em]">
                                         Iniciar Protocolo
                                     </span>
-                                    <ArrowDown className="w-4 h-4 text-[#E8251A]" />
+                                    <ArrowDown className="w-4 h-4 text-primary" />
                                 </div>
                             </div>
                         </div>
@@ -354,19 +335,19 @@ export const ExecutionTab = ({
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent -z-10" />
                     <div className={cn(
                         "flex gap-0 group rounded-xl transition-all shadow-2xl",
-                        canAddTask ? "focus-within:ring-2 focus-within:ring-[#E8251A]/30" : "opacity-70 cursor-not-allowed"
+                        canAddTask ? "focus-within:ring-2 focus-within:ring-primary/30" : "opacity-70 cursor-not-allowed"
                     )}>
-                        <div className="bg-[#1A1A1A] flex items-center justify-center pl-4 rounded-l-xl border-y border-l border-white/10 group-focus-within:border-[#E8251A]/50 transition-colors">
-                            <Terminal className="w-5 h-5 text-neutral-500 group-focus-within:text-[#E8251A] transition-colors" />
+                        <div className="bg-[#1A1A1A] flex items-center justify-center pl-4 rounded-l-xl border-y border-l border-white/10 group-focus-within:border-primary/50 transition-colors">
+                            <Terminal className="w-5 h-5 text-neutral-500 group-focus-within:text-primary transition-colors" />
                         </div>
                         <Input 
                             value={newWeekTask}
                             disabled={!canAddTask}
                             onChange={(e) => setNewWeekTask(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleAddWeekTask()}
-                            placeholder={canAddTask ? "Comando: Adicionar tarefa tática..." : "7 batalhas por dia é o limite. Foco é sobre escolher, não acumular."}
+                            placeholder={canAddTask ? "Comando: Adicionar tarefa tática..." : "7 batalhas por dia é o limite."}
                             className={cn(
-                                "h-14 bg-[#1A1A1A] border-y border-r border-l-0 border-white/10 rounded-l-none rounded-r-xl focus-visible:ring-0 focus-visible:border-[#E8251A]/50 text-base font-medium shadow-none transition-all",
+                                "h-14 bg-[#1A1A1A] border-y border-r border-l-0 border-white/10 rounded-l-none rounded-r-xl focus-visible:ring-0 focus-visible:border-primary/50 text-base font-medium shadow-none transition-all",
                                 canAddTask ? "text-white placeholder:text-neutral-600" : "text-red-500 placeholder:text-red-500/60 cursor-not-allowed"
                             )}
                         />
@@ -374,9 +355,9 @@ export const ExecutionTab = ({
                             onClick={handleAddWeekTask}
                             disabled={!canAddTask}
                             className={cn(
-                                "absolute right-2 top-2 bottom-2 px-6 font-bold text-xs uppercase tracking-widest rounded-lg shadow-[0_0_15px_rgba(232,37,26,0.3)] transition-all",
+                                "absolute right-2 top-2 bottom-2 px-6 font-bold text-xs uppercase tracking-widest rounded-lg shadow-[0_0_15px_rgba(var(--primary),0.3)] transition-all",
                                 canAddTask 
-                                    ? "bg-[#E8251A] hover:bg-[#c91e14] text-white transform active:scale-95" 
+                                    ? "bg-primary hover:bg-primary/90 text-primary-foreground transform active:scale-95" 
                                     : "bg-neutral-800 text-neutral-500 cursor-not-allowed shadow-none"
                             )}
                         >
@@ -390,8 +371,8 @@ export const ExecutionTab = ({
             <div className="flex flex-col items-center justify-center h-[400px] border border-dashed border-neutral-800 rounded-xl bg-[#0A0A0A]">
                 <Calendar className="w-12 h-12 text-neutral-800 mb-4" />
                 <h3 className="text-lg font-bold text-neutral-400 uppercase tracking-widest mb-2">Semana Inativa</h3>
-                <p className="text-xs text-neutral-600 max-w-xs text-center mb-6">Você não tem um ciclo semanal ativo. Inicie uma nova semana para começar a operar.</p>
-                <Button onClick={handleCreateWeek} variant="outline" className="border-[#E8251A] text-[#E8251A] hover:bg-[#E8251A] hover:text-white uppercase text-xs font-bold tracking-widest">
+                <p className="text-xs text-neutral-600 max-w-xs text-center mb-6">Inicie uma nova semana para começar a operar.</p>
+                <Button onClick={handleCreateWeek} variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground uppercase text-xs font-bold tracking-widest">
                     Iniciar Ciclo Semanal
                 </Button>
             </div>
@@ -405,12 +386,12 @@ export const ExecutionTab = ({
             <AlertDialogHeader>
                 <AlertDialogTitle className="text-white font-bold">Tem certeza?</AlertDialogTitle>
                 <AlertDialogDescription className="text-neutral-400">
-                    Excluir a semana selecionada vai apagar todas as tarefas vinculadas a ela. Essa ação não pode ser desfeita.
+                    Essa ação não pode ser desfeita.
                 </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
                 <AlertDialogCancel className="bg-transparent border-white/10 text-white hover:bg-white/5 hover:text-white">Cancelar</AlertDialogCancel>
-                <AlertDialogAction onClick={confirmDeleteWeek} className="bg-[#E8251A] hover:bg-[#c91e14] text-white border-0">Confirmar Exclusão</AlertDialogAction>
+                <AlertDialogAction onClick={confirmDeleteWeek} className="bg-primary hover:bg-primary/90 text-primary-foreground border-0">Confirmar Exclusão</AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
