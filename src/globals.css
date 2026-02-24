@@ -11,7 +11,7 @@
 
   :root {
     /* Light Theme Palette - Warm Gray/Red Scheme */
-    --background: #131313;
+    --background: #D1C5C5;
     --topbar: #DDD0D0;
     --sidebar: #DDD0D0;
     --panel: #DDD0D0;
@@ -32,7 +32,7 @@
 
   .dark {
     /* Dark Theme Palette - Keeping deep dark tones but matching the red accent */
-    --background: #131313;
+    --background: #0B0D14;
     --topbar: #1A1D27;
     --sidebar: #1A1D27;
     --panel: #1A1D27;
