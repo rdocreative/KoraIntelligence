@@ -22,9 +22,9 @@
     --foreground: #0A0C0F;
     --muted-foreground: #6B7280;
     
-    /* Updated Primary: Bright Blue */
-    --primary: #33C5FF;
-    --primary-dark: #1A9FD4;
+    /* Updated Primary: Sage/Teal #539EA2 */
+    --primary: #539EA2;
+    --primary-dark: #35717A;
     
     --radius: 1rem;
   }

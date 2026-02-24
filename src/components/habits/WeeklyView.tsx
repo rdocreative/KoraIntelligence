@@ -83,13 +83,13 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
               )}>
                 <div className={cn(
                   "text-[12px] font-[800] uppercase tracking-[0.05em]",
-                  isToday ? "text-[#33C5FF]" : "text-[var(--muted-foreground)]"
+                  isToday ? "text-[#539EA2]" : "text-[var(--muted-foreground)]"
                 )}>
                   {format(day, 'EEE', { locale: ptBR }).replace('.', '')}
                 </div>
                 <div className={cn(
                   "text-[22px] font-[900] leading-none mt-1.5",
-                  isToday ? "text-[#33C5FF]" : "text-[var(--foreground)]"
+                  isToday ? "text-[#539EA2]" : "text-[var(--foreground)]"
                 )}>
                   {format(day, 'd')}
                 </div>
@@ -146,7 +146,7 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                               <div className="flex items-center gap-2.5 w-full">
                                 <div className={cn(
                                   "h-[18px] w-[18px] rounded-full border-2 flex items-center justify-center shrink-0",
-                                  isDone ? "bg-[#33C5FF] border-[#33C5FF]" : styles.checkbox
+                                  isDone ? "bg-[#539EA2] border-[#539EA2]" : styles.checkbox
                                 )}>
                                   {isDone && <Check size={12} className="text-white stroke-[4px]" />}
                                 </div>
