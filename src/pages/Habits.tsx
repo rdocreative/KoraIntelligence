@@ -637,7 +637,7 @@ const HabitsPage = () => {
       </div>
 
       {activeTab === 'overview' ? (
-        <div className="mt-[35px] flex flex-col lg:flex-row gap-8 p-4 md:p-0 items-start max-w-7xl mx-auto">
+        <div className="mt-[35px] flex flex-col lg:flex-row gap-8 p-4 md:p-0 items-start w-full mx-auto">
           <div className={cn("transition-all duration-500 shrink-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
             <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[24px] shadow-[0_4px_0_0_var(--border-ui)] p-6 py-[24px] flex flex-col">
               <div className="flex items-center justify-between mb-8 shrink-0">
@@ -889,7 +889,7 @@ const HabitsPage = () => {
           )}
         </div>
       ) : (
-        <div className="mt-[35px] max-w-5xl mx-auto w-full">
+        <div className="mt-[35px] mx-auto w-full">
           <DashboardOverview stats={stats} />
         </div>
       )}
