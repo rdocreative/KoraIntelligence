@@ -167,8 +167,8 @@ const HabitCardUI = ({
     const config = PRIORITY_CONFIG.find(c => c.id === habit.priority) || PRIORITY_CONFIG[3];
     if (isCompleted) {
       return {
-        main: "var(--accent-color)",
-        dark: "var(--primary-dark)",
+        main: config.bg,
+        dark: config.dark,
         bg: "var(--input-bg)",
         tag: "CONCLUÍDO",
         tagBg: "var(--muted-foreground)",
@@ -188,7 +188,7 @@ const HabitCardUI = ({
   if (isPlaceholder) {
     return (
       <div 
-        className="rounded-[20px] border-2 border-dashed border-[var(--border-ui)] bg-[var(--input-bg)]/30 h-[140px] mb-[16px] animate-pulse"
+        className="rounded-[20px] border-[1.5px] border-dashed border-[var(--border-ui)] bg-[var(--input-bg)]/30 h-[140px] mb-[16px] animate-pulse"
       />
     );
   }
@@ -198,11 +198,11 @@ const HabitCardUI = ({
       ref={cardRef}
       style={{
         backgroundColor: priorityTheme.bg,
-        borderColor: isCompleted ? "var(--border-ui)" : priorityTheme.main,
+        borderColor: priorityTheme.main,
         boxShadow: isCompleted || isOverlay ? 'none' : `0 4px 0 0 ${priorityTheme.dark}88`,
       }}
       className={cn(
-        "group rounded-[20px] border-2 p-[16px] mb-[16px] select-none transition-all duration-200",
+        "group rounded-[20px] border-[1.5px] p-[16px] mb-[16px] select-none transition-all duration-200",
         isOverlay ? "cursor-grabbing scale-[1.02] shadow-2xl opacity-90" : "cursor-grab active:cursor-grabbing",
         isCompleted && "opacity-50"
       )}
