@@ -298,7 +298,7 @@ const SortableHabitItem = ({ habit, isCompleted, onEdit, onToggle, currentDate }
 
       <div className="mt-4 pt-3 border-t-2 border-[var(--border-ui)]/30">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-[10px] font-[900] text-[var(--muted-foreground)] uppercase tracking-[0.2em]">Meta Mensal</span>
+          <span className="text-[11px] font-[700] text-[#8892AA] uppercase tracking-[0.2em]">Meta Mensal</span>
           <span className="text-[12px] font-[900] tabular-nums" style={{ color: priorityTheme.main }}>
             {completionsThisMonth}/{target}
           </span>
@@ -650,9 +650,9 @@ const HabitsPage = () => {
 
               {viewMode === 'monthly' && (
                 <>
-                  <div className="grid grid-cols-7 mb-4">
+                  <div className="grid grid-cols-7 mb-2">
                     {['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].map(d => (
-                      <div key={d} className="text-center text-[10px] font-[800] text-[#CB0104] uppercase tracking-[0.08em] opacity-80">{d}</div>
+                      <div key={d} className="text-center text-[12px] font-[800] text-[#CB0104] uppercase tracking-[0.08em]">{d}</div>
                     ))}
                   </div>
 
@@ -699,9 +699,9 @@ const HabitsPage = () => {
           </div>
 
           {viewMode !== 'weekly' && (
-            <div className="w-full lg:w-[40%]">
-              <div className="flex flex-col min-h-[520px] h-full bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[24px] shadow-[0_4px_0_0_var(--border-ui)] p-6">
-                <div className="flex items-center justify-between mb-8 px-1">
+            <div className="w-full lg:w-[40%] h-full">
+              <div className="flex flex-col max-h-[calc(100vh-180px)] h-full bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[24px] shadow-[0_4px_0_0_var(--border-ui)] overflow-hidden">
+                <div className="flex items-center justify-between p-6 pb-4 shrink-0">
                   <div className="flex items-center gap-3">
                     <h2 className="text-[var(--foreground)] font-[900] text-[15px] uppercase tracking-[0.05em]">HÁBITOS DE HOJE</h2>
                     <TooltipProvider>
@@ -725,7 +725,7 @@ const HabitsPage = () => {
                   </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto pr-1">
+                <div className="flex-1 overflow-y-auto px-6 py-2 scrollbar-thin scrollbar-thumb-[var(--border-ui)] scrollbar-track-transparent">
                   <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                     <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
                       {displayedHabitsData.pending.map((habit) => (
@@ -741,7 +741,7 @@ const HabitsPage = () => {
                       
                       {displayedHabitsData.completed.length > 0 && (
                         <>
-                          <div className="mt-8 mb-4 pt-4 border-t-2 border-[var(--border-ui)]">
+                          <div className="mt-4 mb-4 pt-4 border-t-2 border-[var(--border-ui)]">
                             <span className="text-[10px] font-[900] text-[var(--muted-foreground)] uppercase tracking-[0.1em]">CONCLUÍDOS</span>
                           </div>
                           {displayedHabitsData.completed.map((habit) => (
@@ -760,14 +760,14 @@ const HabitsPage = () => {
                   </DndContext>
                   
                   {displayedHabitsData.all.length === 0 && (
-                    <div className="h-full flex flex-col items-center justify-center p-12 text-center">
+                    <div className="flex flex-col items-center justify-center py-12 text-center">
                       <Clock size={32} className="text-[var(--border-ui)] mb-4" />
                       <p className="text-[12px] font-[800] uppercase text-[var(--muted-foreground)] tracking-widest">Nada planejado</p>
                     </div>
                   )}
                 </div>
 
-                <div className="mt-auto pt-8 border-t-2 border-[var(--border-ui)]">
+                <div className="p-6 pt-4 border-t-2 border-[var(--border-ui)] bg-[var(--panel)] shrink-0">
                   <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                     <DialogTrigger asChild>
                       <Button className="w-full bg-[#CB0104] hover:bg-[#8A0002] text-white font-[900] text-[12px] uppercase tracking-[0.1em] h-12 rounded-[20px] shadow-[0_4px_0_0_#8A0002] transition-all active:translate-y-[2px] active:shadow-none">
