@@ -22,10 +22,10 @@
     --foreground: #0A0C0F;
     --muted-foreground: #6B7280;
     
-    /* Updated Primary: Light Mint #C5E7E3 */
-    --primary: #C5E7E3;
-    --primary-dark: #8DBFBA;
-    --primary-foreground: #1A2E2D;
+    /* Updated Primary: Vibrant Orange #FF784F */
+    --primary: #FF784F;
+    --primary-dark: #C94E28;
+    --primary-foreground: #FFFFFF;
     
     --radius: 1rem;
   }

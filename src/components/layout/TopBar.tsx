@@ -35,15 +35,15 @@ interface PageConfig {
 }
 
 const pageConfigs: Record<string, PageConfig> = {
-  '/': { title: 'Início', subtitle: 'Visão total do seu progresso', color: '#C5E7E3', icon: Home },
-  '/habitos': { title: 'Hábitos', subtitle: 'Seus hábitos de hoje', color: '#C5E7E3', icon: ClipboardList },
+  '/': { title: 'Início', subtitle: 'Visão total do seu progresso', color: '#FF784F', icon: Home },
+  '/habitos': { title: 'Hábitos', subtitle: 'Seus hábitos de hoje', color: '#FF784F', icon: ClipboardList },
   '/metas': { title: 'Metas', subtitle: 'Foco nos grandes objetivos', color: '#58CC02', icon: Target },
   '/missoes': { title: 'Missões', subtitle: 'Desafios e conquistas épicas', color: '#FF9600', icon: Zap },
   '/lembretes': { title: 'Lembretes', subtitle: 'Alertas e compromissos', color: '#FF4B4B', icon: Bell },
-  '/comunidade': { title: 'Comunidade', subtitle: 'Conexão e troca de ideias', color: '#C5E7E3', icon: Users },
+  '/comunidade': { title: 'Comunidade', subtitle: 'Conexão e troca de ideias', color: '#FF784F', icon: Users },
   '/loja': { title: 'Loja', subtitle: 'Resgate suas recompensas', color: '#FF9600', icon: ShoppingBag },
   '/configuracoes': { title: 'Ajustes', subtitle: 'Personalize sua experiênia', color: '#6B7280', icon: Settings },
-  '/masterplan': { title: 'Master Plan', subtitle: 'Sua visão estratégica futura', color: '#C5E7E3', icon: Eye }
+  '/masterplan': { title: 'Master Plan', subtitle: 'Sua visão estratégica futura', color: '#FF784F', icon: Eye }
 };
 
 export const TopBar = () => {
@@ -97,7 +97,7 @@ export const TopBar = () => {
             {theme === 'dark' ? (
               <Sun size={18} className="text-[#FF9600]" />
             ) : (
-              <Moon size={18} className="text-[#8DBFBA]" />
+              <Moon size={18} className="text-[#FF784F]" />
             )}
           </button>
 
@@ -107,8 +107,8 @@ export const TopBar = () => {
           </button>
 
           <button onClick={() => setActiveModal('profile')} className="h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
-            <Zap size={15} className="text-[#8DBFBA]" />
-            <span className="text-[14px] font-[700] text-[#8DBFBA] tracking-tight">{userStats.xp}</span>
+            <Zap size={15} className="text-[#FF784F]" />
+            <span className="text-[14px] font-[700] text-[#FF784F] tracking-tight">{userStats.xp}</span>
           </button>
 
           <button onClick={() => setActiveModal('achievements')} className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
@@ -116,7 +116,7 @@ export const TopBar = () => {
           </button>
 
           <button onClick={() => setActiveModal('profile')} className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
-            <UserCircle size={22} className="text-[#8DBFBA]" />
+            <UserCircle size={22} className="text-[#FF784F]" />
           </button>
         </div>
       </div>
@@ -144,10 +144,10 @@ export const TopBar = () => {
           {activeModal === 'profile' && (
             <div className="p-8 flex flex-col items-center text-center">
               <div className="relative mb-4">
-                <div className="w-20 h-20 rounded-full bg-[#C5E7E3]/10 flex items-center justify-center border-2 border-[#C5E7E3]/20 shadow-md">
-                  <UserCircle size={48} className="text-[#8DBFBA]" />
+                <div className="w-20 h-20 rounded-full bg-[#FF784F]/10 flex items-center justify-center border-2 border-[#FF784F]/20 shadow-md">
+                  <UserCircle size={48} className="text-[#FF784F]" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 bg-[#C5E7E3] text-[#1A2E2D] text-[0.65rem] font-black px-2.5 py-1 rounded-full shadow-lg">
+                <div className="absolute -bottom-1 -right-1 bg-[#FF784F] text-white text-[0.65rem] font-black px-2.5 py-1 rounded-full shadow-lg">
                   LVL {userStats.level}
                 </div>
               </div>
@@ -161,7 +161,7 @@ export const TopBar = () => {
                 </div>
                 <div className="w-full h-2.5 bg-[var(--border-ui)] rounded-full overflow-hidden border border-[var(--shadow-ui)]">
                   <div 
-                    className="h-full bg-[#C5E7E3] transition-all duration-700"
+                    className="h-full bg-[#FF784F] transition-all duration-700"
                     style={{ width: `${(userStats.xp / userStats.nextLevelXp) * 100}%` }}
                   />
                 </div>

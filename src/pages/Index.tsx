@@ -24,9 +24,9 @@ const Index = () => {
       label: "Hábitos Ativos",
       value: activeHabits,
       icon: CheckCircle2,
-      color: "#C5E7E3",
-      shadowColor: "#8DBFBA",
-      textColor: "#1A2E2D",
+      color: "#FF784F",
+      shadowColor: "#C94E28",
+      textColor: "white",
       link: "/habitos"
     },
     {
@@ -55,15 +55,15 @@ const Index = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-5 mb-4">
         <div>
           <h1 className="text-[32px] md:text-[42px] font-[950] text-[var(--foreground)] uppercase tracking-tight mb-1.5">
-            Olá, <span className="text-[#8DBFBA]">{firstName}</span>
+            Olá, <span className="text-[#FF784F]">{firstName}</span>
           </h1>
           <p className="text-[var(--muted-foreground)] font-[700] text-[15px] tracking-wide">
             Seu sistema está pronto. Vamos dominar o dia?
           </p>
         </div>
         <div className="flex items-center gap-3 text-[11px] font-[900] text-[var(--muted-foreground)] bg-[var(--topbar)] px-6 py-2.5 rounded-full border-2 border-[var(--border-ui)] uppercase tracking-widest shadow-sm">
-          <TrendingUp className="w-4 h-4 text-[#8DBFBA]" />
-          <span>Status do Sistema: <span className="text-[#8DBFBA]">ONLINE</span></span>
+          <TrendingUp className="w-4 h-4 text-[#FF784F]" />
+          <span>Status do Sistema: <span className="text-[#FF784F]">ONLINE</span></span>
         </div>
       </div>
 
@@ -106,12 +106,12 @@ const Index = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="p-8 rounded-[40px] bg-[var(--panel)] border-2 border-[var(--border-ui)] shadow-[0_5px_0_0_var(--shadow-ui)] relative overflow-hidden group">
           <h3 className="text-[13px] font-[900] text-[var(--foreground)] uppercase tracking-[0.15em] mb-6 flex items-center gap-2.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#C5E7E3] shadow-[0_0_10px_#C5E7E3]"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#FF784F] shadow-[0_0_10px_#FF784F]"></span>
             Ações Rápidas
           </h3>
 
           <div className="space-y-4 relative z-10">
-            <Link to="/masterplan" className="p-5 rounded-[24px] bg-[var(--background)] border-2 border-[var(--border-ui)] flex items-center gap-5 hover:border-[#C5E7E3] transition-all group/item shadow-sm">
+            <Link to="/masterplan" className="p-5 rounded-[24px] bg-[var(--background)] border-2 border-[var(--border-ui)] flex items-center gap-5 hover:border-[#FF784F] transition-all group/item shadow-sm">
               <div className="w-12 h-12 rounded-2xl bg-[var(--panel)] flex items-center justify-center text-2xl">
                 🚀
               </div>
@@ -119,10 +119,10 @@ const Index = () => {
                 <h4 className="text-[15px] font-[900] text-[var(--foreground)]">Acessar Masterplan</h4>
                 <p className="text-[12px] text-[var(--muted-foreground)] font-bold">Gerencie seus grandes objetivos</p>
               </div>
-              <ArrowRight className="w-5 h-5 text-[var(--border-ui)] group-hover/item:text-[#8DBFBA] transition-colors" />
+              <ArrowRight className="w-5 h-5 text-[var(--border-ui)] group-hover/item:text-[#FF784F] transition-colors" />
             </Link>
 
-            <Link to="/habitos" className="p-5 rounded-[24px] bg-[var(--background)] border-2 border-[var(--border-ui)] flex items-center gap-5 hover:border-[#C5E7E3] transition-all group/item shadow-sm">
+            <Link to="/habitos" className="p-5 rounded-[24px] bg-[var(--background)] border-2 border-[var(--border-ui)] flex items-center gap-5 hover:border-[#FF784F] transition-all group/item shadow-sm">
               <div className="w-12 h-12 rounded-2xl bg-[var(--panel)] flex items-center justify-center text-2xl">
                 ⚡
               </div>
@@ -130,7 +130,7 @@ const Index = () => {
                 <h4 className="text-[15px] font-[900] text-[var(--foreground)]">Lista de Hábitos</h4>
                 <p className="text-[12px] text-[var(--muted-foreground)] font-bold">Confira sua rotina diária</p>
               </div>
-              <ArrowRight className="w-5 h-5 text-[var(--border-ui)] group-hover/item:text-[#8DBFBA] transition-colors" />
+              <ArrowRight className="w-5 h-5 text-[var(--border-ui)] group-hover/item:text-[#FF784F] transition-colors" />
             </Link>
           </div>
         </div>
@@ -143,7 +143,7 @@ const Index = () => {
              <blockquote className="text-[20px] font-[800] text-[var(--foreground)] leading-snug italic px-4">
                "Sua rotina é o sistema operacional que executa o seu futuro. Configure-o com sabedoria."
              </blockquote>
-             <div className="w-12 h-1.5 bg-[#C5E7E3] rounded-full mx-auto mt-4" />
+             <div className="w-12 h-1.5 bg-[#FF784F] rounded-full mx-auto mt-4" />
           </div>
         </div>
       </div>

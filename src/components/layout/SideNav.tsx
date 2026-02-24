@@ -41,10 +41,10 @@ export const SideNav = () => {
               !isSpecial && "w-[44px] h-[44px]",
               isSpecial && "w-[56px] h-[56px] my-2",
               
-              isActive && !isSpecial && "bg-[#C5E7E3] shadow-[0_4px_0_0_#8DBFBA]",
+              isActive && !isSpecial && "bg-[#FF784F] shadow-[0_4px_0_0_#C94E28]",
               !isActive && !isSpecial && "bg-transparent hover:bg-[var(--panel)]",
               
-              isSpecial && "bg-[#C5E7E3] shadow-[0_4px_0_0_#8DBFBA]",
+              isSpecial && "bg-[#FF784F] shadow-[0_4px_0_0_#C94E28]",
               !isActive && isSpecial && "brightness-95 hover:brightness-100"
             )}
           >
@@ -54,7 +54,7 @@ export const SideNav = () => {
                 strokeWidth={isSpecial ? 2.5 : 2} 
                 className={cn(
                   "transition-colors",
-                  (isActive || isSpecial) ? "text-[#1A2E2D]" : "text-[var(--muted-foreground)] group-hover:text-[var(--foreground)]"
+                  (isActive || isSpecial) ? "text-white" : "text-[var(--muted-foreground)] group-hover:text-[var(--foreground)]"
                 )}
               />
             )}
