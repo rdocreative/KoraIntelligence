@@ -36,7 +36,7 @@ const ProtectedRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-    return <div className="h-screen w-full flex items-center justify-center bg-[#0A0C0F]"><div className="w-8 h-8 border-4 border-[#1CB0F6] border-t-transparent rounded-full animate-spin"></div></div>;
+    return <div className="h-screen w-full flex items-center justify-center bg-[#111b21]"><div className="w-8 h-8 border-4 border-[#22d3ee] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (!session) {
@@ -44,10 +44,12 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#0A0C0F]">
+    <div className="flex min-h-screen bg-[#111b21]">
       <SideNav />
+      {/* pl aumentado para 85px para acomodar a SideNav maior */}
       <div className="flex-1 flex flex-col min-h-screen pl-[85px]">
         <TopBar />
+        {/* max-w aumentado para 100rem para expandir para as laterais */}
         <main className="flex-1 p-5 max-w-[100rem] mx-auto w-full overflow-visible">
           <Outlet />
         </main>
@@ -61,7 +63,7 @@ const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-[#0A0C0F]"><div className="w-8 h-8 border-4 border-[#1CB0F6] border-t-transparent rounded-full animate-spin"></div></div>;
+     return <div className="h-screen w-full flex items-center justify-center bg-[#111b21]"><div className="w-8 h-8 border-4 border-[#22d3ee] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (session) {
@@ -86,7 +88,7 @@ const App = () => (
               <TooltipProvider>
                 <Sonner theme="dark" />
                 <BrowserRouter>
-                  <div className="min-h-screen text-[#F0F2F5] font-sans flex flex-col relative overflow-x-hidden bg-[#0A0C0F]">
+                  <div className="min-h-screen text-[#f0f0f2] font-sans flex flex-col relative overflow-x-hidden bg-[#111b21]">
                     <Routes>
                       {/* Rotas Públicas */}
                       <Route element={<PublicRoute />}>
