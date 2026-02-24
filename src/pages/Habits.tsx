@@ -679,7 +679,7 @@ const HabitsPage = () => {
                 </button>
               </div>
 
-              <div className="flex-1 overflow-hidden">
+              <div className="flex-1 overflow-visible">
                 {viewMode === 'monthly' && (
                   <div className="flex flex-col">
                     <div className="grid grid-cols-7 mb-2 shrink-0">
@@ -688,7 +688,7 @@ const HabitsPage = () => {
                       ))}
                     </div>
 
-                    <div className="grid grid-cols-7 gap-3 flex-1 content-start">
+                    <div className="grid grid-cols-7 gap-3 flex-1 content-start p-1">
                       <TooltipProvider>
                         {calendarDays.map((day, i) => (
                           <Tooltip key={i}>
