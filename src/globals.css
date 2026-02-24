@@ -10,14 +10,14 @@
   }
 
   :root {
-    /* Light Theme Palette - Warm Gray/Red Scheme */
-    --background: #D1C5C5;
-    --topbar: #DDD0D0;
-    --sidebar: #DDD0D0;
-    --panel: #DDD0D0;
-    --card: #DDD0D0;
-    --input-bg: #E5DADA;
-    --border-ui: #BFB0B0;
+    /* Light Theme Palette - Updated as requested */
+    --background: #E8DADA;
+    --topbar: #F5EEEE;
+    --sidebar: #F5EEEE;
+    --panel: #F5EEEE;
+    --card: #F5EEEE;
+    --input-bg: #F0E4E4;
+    --border-ui: #D4C0C0;
     --shadow-ui: rgba(0, 0, 0, 0.08);
     --foreground: #0A0C0F;
     --muted-foreground: #5A606B;

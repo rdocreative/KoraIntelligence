@@ -61,7 +61,7 @@ const Index = () => {
             Seu sistema está pronto. Vamos dominar o dia?
           </p>
         </div>
-        <div className="flex items-center gap-3 text-[11px] font-[900] text-[var(--muted-foreground)] bg-[var(--topbar)] px-6 py-2.5 rounded-full border-2 border-[var(--border-ui)] uppercase tracking-widest shadow-sm">
+        <div className="flex items-center gap-3 text-[11px] font-[900] text-[var(--muted-foreground)] bg-[var(--topbar)] px-6 py-2.5 rounded-full border-2 border-[var(--border-ui)] uppercase tracking-widest shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
           <TrendingUp className="w-4 h-4 text-[#CB0104]" />
           <span>Status do Sistema: <span className="text-[#CB0104]">ONLINE</span></span>
         </div>
@@ -104,14 +104,14 @@ const Index = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="p-8 rounded-[40px] bg-[var(--panel)] border-2 border-[var(--border-ui)] shadow-[0_5px_0_0_var(--shadow-ui)] relative overflow-hidden group">
+        <div className="p-8 rounded-[40px] bg-[var(--panel)] border-2 border-[var(--border-ui)] shadow-[0_2px_12px_rgba(0,0,0,0.08)] relative overflow-hidden group">
           <h3 className="text-[13px] font-[900] text-[var(--foreground)] uppercase tracking-[0.15em] mb-6 flex items-center gap-2.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#CB0104] shadow-[0_0_10px_#CB0104]"></span>
             Ações Rápidas
           </h3>
 
           <div className="space-y-4 relative z-10">
-            <Link to="/masterplan" className="p-5 rounded-[24px] bg-[var(--background)] border-2 border-[var(--border-ui)] flex items-center gap-5 hover:border-[#CB0104] transition-all group/item shadow-sm">
+            <Link to="/masterplan" className="p-5 rounded-[24px] bg-[var(--background)] border-2 border-[var(--border-ui)] flex items-center gap-5 hover:border-[#CB0104] transition-all group/item shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
               <div className="w-12 h-12 rounded-2xl bg-[var(--panel)] flex items-center justify-center text-2xl">
                 🚀
               </div>
@@ -122,7 +122,7 @@ const Index = () => {
               <ArrowRight className="w-5 h-5 text-[var(--border-ui)] group-hover/item:text-[#CB0104] transition-colors" />
             </Link>
 
-            <Link to="/habitos" className="p-5 rounded-[24px] bg-[var(--background)] border-2 border-[var(--border-ui)] flex items-center gap-5 hover:border-[#CB0104] transition-all group/item shadow-sm">
+            <Link to="/habitos" className="p-5 rounded-[24px] bg-[var(--background)] border-2 border-[var(--border-ui)] flex items-center gap-5 hover:border-[#CB0104] transition-all group/item shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
               <div className="w-12 h-12 rounded-2xl bg-[var(--panel)] flex items-center justify-center text-2xl">
                 ⚡
               </div>
@@ -135,7 +135,7 @@ const Index = () => {
           </div>
         </div>
 
-        <div className="p-8 rounded-[40px] bg-[var(--background)] border-2 border-[var(--border-ui)] shadow-[0_5px_0_0_var(--shadow-ui)] flex flex-col justify-center relative overflow-hidden text-center">
+        <div className="p-8 rounded-[40px] bg-[var(--panel)] border-2 border-[var(--border-ui)] shadow-[0_2px_12px_rgba(0,0,0,0.08)] flex flex-col justify-center relative overflow-hidden text-center">
           <div className="relative z-10 space-y-4">
              <p className="text-[11px] font-[900] text-[var(--muted-foreground)] uppercase tracking-[0.2em]">
                Mentalidade do Dia
