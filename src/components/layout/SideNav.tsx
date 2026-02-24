@@ -29,31 +29,42 @@ const navItems = [
 
 export const SideNav = () => {
   return (
-    <div className="fixed left-0 top-0 bottom-0 z-[100] flex flex-col bg-[#0D0F13] border-r border-[#252B38] w-[70px] py-6 items-center">
-      <div className="flex flex-col items-center gap-4 w-full">
+    <div className="fixed left-[18px] top-1/2 -translate-y-1/2 z-[100] flex opacity-100 visible">
+      <nav className="flex flex-col items-center gap-3 bg-[#202f36] p-2 rounded-[32px] border-2 border-[#374151] shadow-[0_4px_0_0_#0b1116] w-[56px]">
         {navItems.map(({ icon: Icon, path, label, isSpecial }) => (
           <NavLink
             key={path}
             to={path}
             title={label}
             className={({ isActive }) => cn(
-              "group relative flex items-center justify-center transition-all duration-200 w-full py-3",
-              isActive && "bg-[#1CB0F614] border-l-[3px] border-[#1CB0F6]",
-              !isActive && "border-l-[3px] border-transparent"
+              "group relative flex items-center justify-center rounded-full transition-all duration-200 shrink-0",
+              !isSpecial && "w-[44px] h-[44px]",
+              isSpecial && "w-[56px] h-[56px] my-2",
+              
+              // Active State (Normal items)
+              isActive && !isSpecial && "bg-[#1cb0f6] shadow-[0_4px_0_0_#1899d6]",
+              
+              // Inactive State (Normal items)
+              !isActive && !isSpecial && "bg-transparent hover:bg-[#2a3f4a]",
+              
+              // Special Item States (Brain) - Always highlighted with app color
+              isSpecial && "bg-[#1cb0f6] shadow-[0_4px_0_0_#1899d6]",
+              !isActive && isSpecial && "brightness-90 hover:brightness-100"
             )}
           >
             {({ isActive }) => (
               <Icon 
-                size={isSpecial ? 26 : 22}
+                size={isSpecial ? 24 : 20}
+                strokeWidth={isSpecial ? 2.5 : 2} 
                 className={cn(
                   "transition-colors",
-                  isActive ? "text-[#1CB0F6]" : "text-[#3D4560] group-hover:text-[#F0F2F5]"
+                  (isActive || isSpecial) ? "text-white" : "text-[#9ca3af] group-hover:text-white"
                 )}
               />
             )}
           </NavLink>
         ))}
-      </div>
+      </nav>
     </div>
   );
 };

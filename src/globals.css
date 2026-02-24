@@ -11,45 +11,50 @@
   }
 
   :root {
-    /* Base Colors */
-    --background: #0A0C0F;
-    --sidebar: #0D0F13;
-    --card: #161A20;
-    --card-border: #2A3040;
-    --input: #1C2028;
-    --input-border: #2A3040;
-    --hover: #1E2330;
-    --border-default: #252B38;
+    /* Theme Palette - Deep Navy Blue (Darkened by an additional 20%) */
+    --background: #020406;
+    --panel: #111b21;
+    --sidebar: #0a0f14;
     
-    /* Text */
-    --foreground: #F0F2F5;
-    --text-secondary: #8892AA;
-    --text-disabled: #3D4560;
-    --text-placeholder: #4A5270;
+    /* Card Colors */
+    --card-blue: #1cb0f6;
+    --card-blue-shadow: #1899d6;
+    --card-orange: #ff9600;
+    --card-orange-shadow: #e58700;
+    --card-green: #58cc02;
+    --card-green-shadow: #46a302;
+    --card-purple: #ce82ff;
+    --card-purple-shadow: #a855f7;
+    --card-red: #ff4b4b;
+    --card-red-shadow: #cc0000;
     
-    /* Accent (Cyan) */
-    --primary: #1CB0F6;
-    --primary-hover: #0E9AD6;
-    --primary-shadow: #0A7AB0;
-    --accent-soft-bg: #1CB0F614;
-    --accent-soft-border: #1CB0F633;
-    --accent-shadow: #1CB0F622;
-
+    /* Primary / Accent */
+    --primary: #22d3ee;
+    --primary-dark: #06b6d4;
+    
+    /* Text / UI */
+    --duo-gray: #37464f;
+    --border-ui: #202f36;
+    --shadow-ui: #020305;
+    
     /* Shadcn Mappings */
-    --card-foreground: #F0F2F5;
-    --popover: #161A20;
-    --popover-foreground: #F0F2F5;
-    --primary-foreground: #0A0C0F;
-    --secondary: #1C2028;
-    --secondary-foreground: #F0F2F5;
-    --muted: #1C2028;
-    --muted-foreground: #8892AA;
-    --accent: #1CB0F614;
-    --accent-foreground: #1CB0F6;
+    --foreground: #e5e7eb;
+    --card: #111b21;
+    --card-foreground: #e5e7eb;
+    --popover: #111b21;
+    --popover-foreground: #e5e7eb;
+    --primary-foreground: #06090e;
+    --secondary: #202f36;
+    --secondary-foreground: #e5e7eb;
+    --muted: #202f36;
+    --muted-foreground: #9ca3af;
+    --accent: #22d3ee;
+    --accent-foreground: #06090e;
     --destructive: #ff4b4b;
     --destructive-foreground: #ffffff;
-    --border: #252B38;
-    --ring: #1CB0F6;
+    --border: #202f36;
+    --input: #202f36;
+    --ring: #22d3ee;
     --radius: 1rem;
   }
 
@@ -60,73 +65,38 @@
     font-weight: 600;
     min-height: 100vh;
   }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--card-border);
-    border-radius: 4px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--border-default);
-  }
 }
 
 @layer components {
-  /* Cards */
   .card-glass {
-    background-color: var(--card);
-    border: 1px solid var(--card-border);
+    /* Standardized Panel Style */
+    background-color: var(--panel);
+    border: 2px solid var(--border-ui);
+    box-shadow: 0 4px 0 0 var(--shadow-ui);
     border-radius: 24px;
   }
 
-  /* Buttons */
+  /* Global Button Primary */
   .btn-primary {
     background-color: var(--primary);
-    box-shadow: 0 4px 0 0 var(--primary-shadow);
+    box-shadow: 0 4px 0 0 var(--primary-dark);
     border-radius: 16px;
-    color: #0A0C0F;
+    color: #06090e;
     transition: all 0.15s ease;
-    font-weight: 700;
-  }
-  .btn-primary:hover {
-    background-color: var(--primary-hover);
   }
   .btn-primary:active {
     transform: translateY(1px);
     box-shadow: none;
   }
 
-  .btn-secondary {
-    background-color: var(--secondary);
-    border: 1px solid var(--card-border);
-    color: var(--foreground);
-    border-radius: 16px;
-    transition: all 0.15s ease;
-  }
-  .btn-secondary:hover {
-    background-color: var(--hover);
+  /* Custom vertical padding for specific cards */
+  .stat-card {
+    padding-top: 22px !important;
+    padding-bottom: 22px !important;
   }
 
-  /* Sidebar Items */
-  .sidebar-item-active {
-    background-color: var(--accent-soft-bg);
-    border-left: 3px solid var(--primary);
-    color: var(--primary);
-  }
-  .sidebar-item-inactive {
-    color: var(--text-disabled);
-  }
-
-  /* Badges */
-  .badge-custom {
-    background-color: var(--secondary);
-    color: var(--text-secondary);
+  .habit-card {
+    padding-top: 18px !important;
+    padding-bottom: 18px !important;
   }
 }
