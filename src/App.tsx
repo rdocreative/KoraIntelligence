@@ -45,10 +45,10 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#f5eeee] dark:bg-[#212121] overflow-hidden">
+    <div className="flex h-screen w-full bg-[#f5eeee] dark:bg-[#212121] overflow-hidden">
       <SideNav />
-      {/* Container Principal "Floating Card" */}
-      <div className="flex-1 flex flex-col my-[10px] mr-[10px] ml-0 bg-background rounded-[16px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all duration-300 ease-in-out border border-black/[0.03] dark:border-white/[0.03]">
+      {/* Container Principal "Floating Card" com 5px de margem e 16px de radius */}
+      <div className="flex-1 flex flex-col mt-[5px] mb-[5px] mr-[5px] ml-0 bg-background rounded-[16px] overflow-hidden shadow-[0_4px_20px_rgb(0,0,0,0.03)] dark:shadow-[0_4px_20px_rgb(0,0,0,0.2)] transition-all duration-300 ease-in-out border border-black/[0.02] dark:border-white/[0.02] relative">
         <TopBar />
         <main className="flex-1 px-8 py-5 w-full max-w-[100rem] mx-auto overflow-y-auto scrollbar-none">
           <Outlet />
