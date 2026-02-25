@@ -30,16 +30,12 @@ const navItems = [
 
 export const SideNav = () => {
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-[240px] z-[100] flex flex-col bg-[#f5eeee] dark:bg-[#212121] rounded-r-[40px] shadow-2xl border-r border-[var(--border-ui)]/50">
-      {/* Header Estilizado */}
+    <aside className="fixed left-0 top-0 bottom-0 w-[240px] z-[100] flex flex-col bg-[#f5eeee] dark:bg-[#212121] rounded-r-[40px] shadow-2xl">
+      {/* Header com apenas o ícone */}
       <div className="px-6 pt-8 pb-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-[14px] bg-primary flex items-center justify-center shadow-lg shadow-primary/25">
             <Sparkles className="text-primary-foreground w-5 h-5" />
-          </div>
-          <div className="flex flex-col">
-            <h1 className="text-lg font-bold leading-none tracking-tight">App Name</h1>
-            <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mt-1">Productivity</span>
           </div>
         </div>
       </div>
