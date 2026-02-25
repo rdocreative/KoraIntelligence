@@ -1,4 +1,3 @@
-Ice/Gray, Leisure -> Burnt Orange).">
 "use client";
 
 import React, { useState, useMemo, useRef, useEffect } from "react";
