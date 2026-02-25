@@ -31,7 +31,6 @@ const navItems = [
 const DEFAULT_WIDTH = 240;
 const COLLAPSED_WIDTH = 0;
 const MIN_WIDTH = DEFAULT_WIDTH * 0.9;
-const MAX_WIDTH = DEFAULT_WIDTH * 1.85;
 
 export const SideNav = () => {
   const [expandedWidth, setExpandedWidth] = useState(() => {
@@ -59,7 +58,10 @@ export const SideNav = () => {
   const resize = useCallback((e: MouseEvent) => {
     if (isResizing) {
       const newWidth = e.clientX;
-      if (newWidth >= MIN_WIDTH && newWidth <= MAX_WIDTH) {
+      // Limita a 35% da largura da janela
+      const maxPossibleWidth = window.innerWidth * 0.35;
+      
+      if (newWidth >= MIN_WIDTH && newWidth <= maxPossibleWidth) {
         setExpandedWidth(newWidth);
       }
     }
@@ -113,6 +115,7 @@ export const SideNav = () => {
         ref={sidebarRef}
         style={{ 
           width: `${currentWidth}px`,
+          maxWidth: '35vw',
           transition: isResizing ? 'none' : 'width 300ms ease-in-out'
         }}
         className={cn(
