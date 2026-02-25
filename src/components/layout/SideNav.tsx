@@ -144,27 +144,28 @@ export const SideNav = () => {
         )}
 
         {/* Top Header Section */}
-        <div className="px-6 pt-10 pb-6 flex items-center justify-between gap-3">
-          {/* Left Icon */}
+        <div className="px-6 pt-10 pb-6 flex items-center justify-between">
+          {/* Logo / Left Icon */}
           {!isCollapsed && expandedWidth >= 120 && (
-            <div className="text-primary animate-pulse">
-              <Sparkles size={20} strokeWidth={2.5} />
+            <div className="text-primary animate-pulse shrink-0">
+              <Sparkles size={22} strokeWidth={2.5} />
             </div>
           )}
 
-          <div className="flex items-center gap-1.5">
+          {/* Right Section: Notifications + Level + Profile */}
+          <div className="flex items-center gap-1.5 ml-auto">
             {/* Notifications */}
             <div className="relative">
               <button 
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors relative"
+                className="p-1.5 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors relative"
               >
-                <Bell size={20} strokeWidth={2.5} />
-                <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#f5eeee] dark:border-[#212121]" />
+                <Bell size={18} strokeWidth={2.5} />
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full border-2 border-[#f5eeee] dark:border-[#212121]" />
               </button>
 
               {showNotifications && (
-                <div className="absolute left-full top-0 ml-2 w-64 bg-white dark:bg-[#1e1e1e] rounded-xl shadow-xl border border-border p-3 z-[70]">
+                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#1e1e1e] rounded-xl shadow-xl border border-border p-3 z-[70] animate-in fade-in slide-in-from-top-2">
                   <div className="flex items-center justify-between mb-2 pb-2 border-b">
                     <span className="font-bold text-sm">Notificações</span>
                     <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded-full">3 novas</span>
@@ -177,19 +178,17 @@ export const SideNav = () => {
               )}
             </div>
 
-            {/* Profile & Level */}
+            {/* Level Badge & Profile */}
             {!isCollapsed && expandedWidth >= 160 && (
-              <div className="flex items-center gap-2.5 pl-2">
-                <div className="flex flex-col items-end">
-                  <span className="text-[9px] font-black text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full tracking-tighter uppercase">
-                    LVL 42
-                  </span>
-                </div>
+              <div className="flex items-center gap-2 pl-1">
+                <span className="text-[8px] font-black text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full tracking-tighter uppercase shrink-0">
+                  LVL 42
+                </span>
                 <NavLink 
                   to="/perfil"
-                  className="w-10 h-10 rounded-[14px] bg-white dark:bg-white/5 border-2 border-black/5 dark:border-white/10 flex items-center justify-center hover:border-primary/50 hover:scale-105 transition-all active:scale-95 group overflow-hidden"
+                  className="w-8 h-8 rounded-xl bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 flex items-center justify-center hover:border-primary/50 hover:scale-105 transition-all active:scale-95 group overflow-hidden shrink-0"
                 >
-                  <User size={18} strokeWidth={2.5} className="text-muted-foreground group-hover:text-primary transition-colors" />
+                  <User size={14} strokeWidth={2.5} className="text-muted-foreground group-hover:text-primary transition-colors" />
                 </NavLink>
               </div>
             )}
@@ -227,7 +226,6 @@ export const SideNav = () => {
         </nav>
 
         <div className="p-4 mt-auto mb-4">
-           {/* Footer minimalista ou apenas espaçamento */}
            {!isCollapsed && expandedWidth >= 180 && (
               <NavLink 
                 to="/configuracoes" 
