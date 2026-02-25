@@ -609,12 +609,28 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-background pb-4 animate-in fade-in duration-500 relative flex-1 min-w-0">
       
-      <div className="flex justify-start px-4 md:px-8 pt-[35px] pb-0 shrink-0">
+      <div className="flex justify-center px-4 md:px-8 pt-[35px] pb-0 shrink-0">
         <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-full p-1 shadow-[0_4px_0_0_var(--border-ui)] flex items-center gap-1.5 overflow-visible">
-          <button onClick={() => setActiveTab('overview')} className={cn("flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0", activeTab === 'overview' ? "bg-gradient-to-r from-red-600 to-red-500 text-white shadow-[0_0_15px_rgba(220,38,38,0.5)] border border-red-400/20" : "bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]")}>
+          <button 
+            onClick={() => setActiveTab('overview')} 
+            className={cn(
+              "flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0", 
+              activeTab === 'overview' 
+                ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.5)]" 
+                : "bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+            )}
+          >
             <LayoutGrid size={14} strokeWidth={3} /> Visão Geral
           </button>
-          <button onClick={() => setActiveTab('charts')} className={cn("flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0", activeTab === 'charts' ? "bg-gradient-to-r from-red-600 to-red-500 text-white shadow-[0_0_15px_rgba(220,38,38,0.5)] border border-red-400/20" : "bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]")}>
+          <button 
+            onClick={() => setActiveTab('charts')} 
+            className={cn(
+              "flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0", 
+              activeTab === 'charts' 
+                ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.5)]" 
+                : "bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+            )}
+          >
             <BarChart3 size={14} strokeWidth={3} /> Dashboard
           </button>
         </div>
@@ -682,13 +698,13 @@ const HabitsPage = () => {
                 )}
                 {viewMode === 'weekly' && (
                   <div className="overflow-y-auto custom-scrollbar">
-                    <WeeklyView
-                      currentDate={currentDate}
+                    <WeeklyView 
+                      currentDate={currentDate} 
                       habits={habits.map(h => ({
                         ...h,
                         priority: h.priority <= 1 ? 'high' : h.priority === 2 ? 'medium' : 'low'
-                      }))}
-                      onToggleHabit={toggleHabit}
+                      }))} 
+                      onToggleHabit={toggleHabit} 
                     />
                   </div>
                 )}
