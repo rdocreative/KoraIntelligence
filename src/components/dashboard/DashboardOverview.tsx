@@ -43,7 +43,7 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full max-w-6xl mx-auto px-4">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full">
       
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[

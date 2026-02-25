@@ -29,7 +29,8 @@ import {
   subWeeks,
   isBefore,
   startOfDay,
-  subDays
+  subDays,
+  getDaysInMonth
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import {
@@ -160,7 +161,8 @@ const HabitCardUI = ({
     return habit.completedDates.filter(date => date.startsWith(monthStr)).length;
   }, [habit.completedDates, currentDate]);
 
-  const target = 30;
+  // Meta dinâmica baseada nos dias do mês exibido
+  const target = useMemo(() => getDaysInMonth(currentDate), [currentDate]);
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
   const priorityTheme = useMemo(() => {
@@ -886,7 +888,7 @@ const HabitsPage = () => {
           )}
         </div>
       ) : (
-        <div className="mt-[35px] w-full">
+        <div className="mt-[35px] w-full px-4 md:px-0">
           <DashboardOverview stats={stats} />
         </div>
       )}
