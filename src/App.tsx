@@ -1,130 +1,135 @@
 "use client";
 
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { ThemeProvider } from "./components/providers/ThemeProvider";
-import { SettingsProvider } from "./hooks/useSettings"; 
-import { HabitProvider } from "./hooks/useHabitTracker";
-import { MasterplanProvider } from "./hooks/useMasterplan";
-import { AuthProvider, useAuth } from "./components/providers/AuthProvider";
-import { ColorProvider } from "./components/providers/ColorProvider";
-import { SideNav } from "./components/layout/SideNav";
-import { TopBar } from "./components/layout/TopBar"; 
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { 
+  LayoutDashboard, 
+  Calendar, 
+  Settings, 
+  Bell, 
+  Search,
+  User,
+  ChevronRight,
+  LogOut,
+  Sparkles
+} from 'lucide-react';
+import { cn } from "@/lib/utils";
+import Index from './pages/Index';
+import Habits from './pages/Habits';
 
-// Pages
-import Index from "./pages/Index";
-import MasterplanPage from "./pages/Masterplan";
-import SettingsPage from "./pages/Settings";
-import NotFound from "./pages/NotFound";
-import HabitsPage from "./pages/Habits";
-import GoalsPage from "./pages/Goals";
-import MissionsPage from "./pages/Missions";
-import CommunityPage from "./pages/Community";
-import StorePage from "./pages/Store";
-import RemindersPage from "./pages/Reminders";
+const SidebarItem = ({ icon: Icon, label, path, active, collapsed }: any) => (
+  <Link
+    to={path}
+    className={cn(
+      "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 group relative mb-1",
+      active 
+        ? "bg-primary text-primary-foreground shadow-[0_4px_0_0_var(--primary-dark)]" 
+        : "text-[var(--muted-foreground)] hover:bg-[var(--border-ui)]/30 hover:text-[var(--foreground)]"
+    )}
+  >
+    <Icon size={20} strokeWidth={active ? 3 : 2} className="shrink-0" />
+    {!collapsed && (
+      <span className={cn(
+        "text-sm font-black uppercase tracking-wider",
+        active ? "opacity-100" : "opacity-80"
+      )}>
+        {label}
+      </span>
+    )}
+    {active && !collapsed && (
+      <div className="absolute right-4">
+        <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+      </div>
+    )}
+  </Link>
+);
 
-// Auth Pages
-import Login from "./pages/auth/Login";
-import SignUp from "./pages/auth/SignUp";
-import ForgotPassword from "./pages/auth/ForgotPassword";
+const Sidebar = () => {
+  const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
 
-const queryClient = new QueryClient();
-
-// Componente para proteger rotas privadas
-const ProtectedRoute = () => {
-  const { session, loading } = useAuth();
-
-  if (loading) {
-    return <div className="h-screen w-full flex items-center justify-center bg-background"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>;
-  }
-
-  if (!session) {
-    return <Navigate to="/login" replace />;
-  }
+  const menuItems = [
+    { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+    { icon: Calendar, label: 'Hábitos', path: '/habits' },
+    { icon: Bell, label: 'Alertas', path: '/alerts' },
+    { icon: Search, label: 'Explorar', path: '/explore' },
+  ];
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <SideNav />
-      <div className="flex-1 flex flex-col min-h-screen pl-[85px]">
-        <TopBar />
-        <main className="flex-1 px-10 py-5 w-full max-w-[100rem] mx-auto overflow-visible">
-          <Outlet />
-        </main>
+    <aside 
+      className={cn(
+        "h-screen sticky top-0 border-r-2 border-[var(--border-ui)] flex flex-col transition-all duration-300 z-50",
+        collapsed ? "w-[80px]" : "w-[260px]",
+        "bg-[var(--panel)]" // Vinculado à variável global
+      )}
+    >
+      <div className="p-6 mb-4 flex items-center justify-between">
+        {!collapsed && (
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-xl flex items-center justify-center shadow-[0_3px_0_0_var(--primary-dark)]">
+              <Sparkles className="text-white" size={18} fill="currentColor" />
+            </div>
+            <span className="text-xl font-black tracking-tighter text-[var(--foreground)]">DYAD</span>
+          </div>
+        )}
+        <button 
+          onClick={() => setCollapsed(!collapsed)}
+          className="p-2 rounded-xl hover:bg-[var(--border-ui)]/50 text-[var(--muted-foreground)] transition-colors"
+        >
+          <ChevronRight className={cn("transition-transform", !collapsed && "rotate-180")} size={20} />
+        </button>
       </div>
-    </div>
+
+      <nav className="flex-1 px-4">
+        {menuItems.map((item) => (
+          <SidebarItem
+            key={item.path}
+            {...item}
+            active={location.pathname === item.path}
+            collapsed={collapsed}
+          />
+        ))}
+      </nav>
+
+      <div className="p-4 border-t-2 border-[var(--border-ui)]">
+        <div className={cn(
+          "flex items-center gap-3 p-3 rounded-2xl bg-[var(--input-bg)]/50 border-2 border-[var(--border-ui)]",
+          collapsed && "justify-center px-0"
+        )}>
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white font-bold shrink-0">
+            JD
+          </div>
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-black text-[var(--foreground)] truncate uppercase tracking-tighter">John Doe</p>
+              <p className="text-[10px] text-[var(--muted-foreground)] font-bold truncate">PRO ACCOUNT</p>
+            </div>
+          )}
+          {!collapsed && (
+            <button className="text-[var(--muted-foreground)] hover:text-destructive transition-colors">
+              <LogOut size={16} />
+            </button>
+          )}
+        </div>
+      </div>
+    </aside>
   );
 };
 
-// Componente para rotas públicas (Login/Cadastro)
-const PublicRoute = () => {
-  const { session, loading } = useAuth();
-
-  if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-background"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>;
-  }
-
-  if (session) {
-    return <Navigate to="/" replace />;
-  }
-
-  return <Outlet />;
-};
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider 
-      attribute="class" 
-      defaultTheme="light" 
-      enableSystem={false}
-      storageKey="kora-theme"
-    >
-      <AuthProvider>
-        <ColorProvider>
-          <SettingsProvider>
-            <HabitProvider>
-              <MasterplanProvider>
-                <TooltipProvider>
-                  <Sonner theme="light" />
-                  <BrowserRouter>
-                    <div className="min-h-screen text-foreground font-sans flex flex-col relative overflow-x-hidden bg-background">
-                      <Routes>
-                        {/* Rotas Públicas */}
-                        <Route element={<PublicRoute />}>
-                          <Route path="/login" element={<Login />} />
-                          <Route path="/cadastro" element={<SignUp />} />
-                          <Route path="/recuperar-senha" element={<ForgotPassword />} />
-                        </Route>
-
-                        {/* Rotas Protegidas */}
-                        <Route element={<ProtectedRoute />}>
-                          <Route path="/" element={<Index />} />
-                          <Route path="/masterplan" element={<MasterplanPage />} />
-                          <Route path="/habitos" element={<HabitsPage />} />
-                          <Route path="/tarefas" element={<HabitsPage />} />
-                          <Route path="/metas" element={<GoalsPage />} />
-                          <Route path="/lembretes" element={<RemindersPage />} />
-                          <Route path="/missoes" element={<MissionsPage />} />
-                          <Route path="/comunidade" element={<CommunityPage />} />
-                          <Route path="/financa" element={<StorePage />} />
-                          <Route path="/loja" element={<StorePage />} />
-                          <Route path="/inventario" element={<StorePage />} />
-                          <Route path="/configuracoes" element={<SettingsPage />} />
-                        </Route>
-
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </div>
-                  </BrowserRouter>
-                </TooltipProvider>
-              </MasterplanProvider>
-            </HabitProvider>
-          </SettingsProvider>
-        </ColorProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <Router>
+      <div className="flex min-h-screen bg-[var(--background)]">
+        <Sidebar />
+        <main className="flex-1 overflow-x-hidden">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/habits" element={<Habits />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
+  );
+}
 
 export default App;
