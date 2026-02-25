@@ -72,10 +72,12 @@ export const SideNav = () => {
       window.addEventListener("mousemove", resize);
       window.addEventListener("mouseup", stopResizing);
       document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
     } else {
       window.removeEventListener("mousemove", resize);
       window.removeEventListener("mouseup", stopResizing);
       document.body.style.cursor = "default";
+      document.body.style.userSelect = "auto";
       if (!isCollapsed) {
         localStorage.setItem("kora-sidebar-width", expandedWidth.toString());
       }
@@ -96,7 +98,8 @@ export const SideNav = () => {
       ref={sidebarRef}
       style={{ 
         width: `${currentWidth}px`,
-        transition: isResizing ? 'none' : 'width 500ms cubic-bezier(0.4, 0, 0.2, 1)'
+        // Transição snappier e rápida para máxima fluidez
+        transition: isResizing ? 'none' : 'width 300ms cubic-bezier(0.16, 1, 0.3, 1)'
       }}
       className={cn(
         "relative sticky top-0 h-screen z-[50] flex flex-col shrink-0 will-change-[width]",
@@ -107,15 +110,15 @@ export const SideNav = () => {
       <button 
         onClick={toggleCollapse}
         className={cn(
-          "absolute top-8 z-[60] flex items-center justify-center transition-all duration-500 ease-in-out cursor-pointer hover:scale-110",
+          "absolute top-8 z-[60] flex items-center justify-center transition-all duration-300 ease-out cursor-pointer hover:scale-110",
           isCollapsed 
-            ? "left-6 text-primary p-2 bg-white/80 dark:bg-white/10 backdrop-blur-md rounded-xl shadow-lg border border-black/5 dark:border-white/10" 
+            ? "left-6 text-primary p-2 bg-white/90 dark:bg-white/10 backdrop-blur-xl rounded-xl shadow-lg border border-black/5 dark:border-white/10" 
             : "right-6 p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full"
         )}
         title={isCollapsed ? "Expandir Menu" : "Recolher Menu"}
       >
         {isCollapsed ? (
-          <PanelLeftOpen size={24} strokeWidth={2} />
+          <PanelLeftOpen size={24} strokeWidth={2} className="animate-in fade-in zoom-in duration-300" />
         ) : (
           <PanelLeftClose size={20} />
         )}
@@ -123,8 +126,10 @@ export const SideNav = () => {
 
       {/* Conteúdo Interno */}
       <div className={cn(
-        "flex flex-col h-full w-full overflow-hidden transition-all duration-500",
-        isCollapsed ? "opacity-0 pointer-events-none translate-x-[-20px]" : "opacity-100 translate-x-0"
+        "flex flex-col h-full w-full overflow-hidden transition-all duration-300 ease-out",
+        isCollapsed 
+          ? "opacity-0 pointer-events-none translate-x-[-15px] scale-95" 
+          : "opacity-100 translate-x-0 scale-100"
       )}>
         {/* Resizer Handle */}
         {!isCollapsed && (
@@ -181,7 +186,7 @@ export const SideNav = () => {
               key={path}
               to={path}
               className={({ isActive }) => cn(
-                "group relative flex items-center gap-4 py-3.5 px-4 rounded-[20px] transition-all duration-300 ease-out",
+                "group relative flex items-center gap-4 py-3.5 px-4 rounded-[20px] transition-all duration-200 ease-out",
                 isActive 
                   ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]" 
                   : "text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)]"
