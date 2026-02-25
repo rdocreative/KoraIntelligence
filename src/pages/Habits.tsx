@@ -82,12 +82,13 @@ const PRIORITY_CONFIG = [
   { id: 3, label: "NORMAL", color: "#34C759" },
 ];
 
+// Cores Saturadas/Neon para melhor contraste em Dark Mode
 const CATEGORY_CONFIG = [
-  { id: 'health', label: 'Saúde', color: '#3B82F6', icon: HeartPulse },
-  { id: 'study', label: 'Estudos', color: '#A855F7', icon: GraduationCap },
-  { id: 'work', label: 'Trabalho', color: '#F97316', icon: Briefcase },
-  { id: 'leisure', label: 'Lazer', color: '#EAB308', icon: Coffee },
-  { id: 'other', label: 'Outros', color: '#64748B', icon: Sparkles },
+  { id: 'health', label: 'Saúde', color: '#00D1FF', icon: HeartPulse },    // Ciano Elétrico
+  { id: 'study', label: 'Estudos', color: '#BF5AF2', icon: GraduationCap }, // Roxo Vibrante
+  { id: 'work', label: 'Trabalho', color: '#FF9F0A', icon: Briefcase },    // Laranja Neon
+  { id: 'leisure', label: 'Lazer', color: '#FFD60A', icon: Coffee },       // Amarelo Limão
+  { id: 'other', label: 'Outros', color: '#ACACAC', icon: Sparkles },      // Prata/Cinza Claro
 ];
 
 // --- Habit Card UI Component ---
@@ -214,35 +215,38 @@ const HabitCardUI = ({
         boxShadow: isCompleted || isOverlay ? 'none' : `0 4px 0 0 ${category.color}22`,
       }}
       className={cn(
-        "group rounded-[20px] border-2 p-[16px] mb-[16px] select-none transition-all duration-200",
+        "group rounded-[20px] border-2 p-[16px] mb-[16px] select-none transition-all duration-300",
         isOverlay ? "cursor-grabbing scale-[1.02] shadow-2xl opacity-90" : "cursor-grab active:cursor-grabbing",
-        isCompleted && "opacity-50"
+        isCompleted && "opacity-50 grayscale-[0.5]"
       )}
     >
       <div className="flex items-center gap-4">
+        {/* Check-in Button Interativo */}
         <button 
           onClick={(e) => { e.stopPropagation(); onToggle?.(habit.id); }}
           className={cn(
-            "h-7 w-7 rounded-full border-2 flex items-center justify-center transition-all shrink-0 z-10",
+            "h-8 w-8 rounded-full border-2 flex items-center justify-center transition-all duration-300 transform active:scale-90 shrink-0 z-10",
             isCompleted 
-              ? "bg-primary border-primary" 
-              : "bg-white/50"
+              ? "bg-primary border-primary rotate-[360deg]" 
+              : "bg-white/50 border-gray-300 hover:border-gray-400"
           )}
           style={{ borderColor: isCompleted ? "var(--primary)" : category.color }}
         >
-          {isCompleted && (
+          {isCompleted ? (
             <Check 
-              size={14} 
-              className="stroke-[4px] text-primary-foreground" 
+              size={16} 
+              className="stroke-[4px] text-primary-foreground animate-in zoom-in duration-200" 
             />
+          ) : (
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all group-hover:bg-primary/50" />
           )}
         </button>
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <h3 className={cn(
-              "text-[15px] font-[950] truncate leading-tight transition-all",
-              isCompleted ? "line-through text-[var(--muted-foreground)]" : "text-[var(--foreground)]"
+              "text-[15px] font-[950] truncate leading-tight transition-all duration-300",
+              isCompleted ? "line-through text-[var(--muted-foreground)] opacity-70" : "text-[var(--foreground)]"
             )}>
               {habit.title}
             </h3>
@@ -257,17 +261,17 @@ const HabitCardUI = ({
               {priority.label}
             </span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <category.icon size={11} style={{ color: category.color }} />
-              <span className="text-[10px] font-bold uppercase tracking-tight" style={{ color: category.color }}>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <category.icon size={12} style={{ color: category.color }} />
+              <span className="text-[10px] font-black uppercase tracking-tight" style={{ color: category.color }}>
                 {category.label}
               </span>
             </div>
-            <span className="text-[var(--muted-foreground)] opacity-30">•</span>
-            <div className="flex items-center gap-1">
-              <Clock size={11} className="text-[var(--muted-foreground)]" />
-              <span className="text-[10px] font-bold text-[var(--muted-foreground)]">
+            <span className="text-[var(--muted-foreground)] opacity-30 font-bold">•</span>
+            <div className="flex items-center gap-1.5">
+              <Clock size={12} className="text-[var(--muted-foreground)]" />
+              <span className="text-[11px] font-black text-[var(--muted-foreground)]/90">
                 {habit.time}
               </span>
             </div>
@@ -276,15 +280,15 @@ const HabitCardUI = ({
 
         <div className="flex items-center shrink-0 gap-3">
           {streakInfo.streak > 0 && (
-            <div className="flex items-center gap-1.5 bg-[var(--input-bg)]/50 border border-[var(--border-ui)] px-2.5 py-1 rounded-lg text-[var(--foreground)]">
-              <Flame size={12} className="text-[#FF9600] fill-[#FF9600]" />
-              <span className="text-[11px] font-black">{streakInfo.streak}</span>
+            <div className="flex items-center gap-1.5 bg-[var(--input-bg)]/50 border border-[var(--border-ui)] px-2.5 py-1.5 rounded-xl text-[var(--foreground)] shadow-sm">
+              <Flame size={14} className="text-[#FF9600] fill-[#FF9600]" />
+              <span className="text-[12px] font-black">{streakInfo.streak}</span>
             </div>
           )}
           {!isCompleted && onEdit && (
             <button 
               onClick={(e) => { e.stopPropagation(); onEdit(habit, cardRef.current!.getBoundingClientRect()); }}
-              className="p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors z-10"
+              className="p-1.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors z-10"
             >
               <ChevronRight size={22} />
             </button>
@@ -292,13 +296,21 @@ const HabitCardUI = ({
         </div>
       </div>
 
-      <div className="mt-3 pt-3 border-t border-[var(--border-ui)]/20">
-        <div className="h-[5px] w-full bg-[var(--border-ui)]/30 rounded-full overflow-hidden">
+      {/* Meta Mensal - Reativada e com melhor contraste */}
+      <div className="mt-5 pt-4 border-t border-[var(--border-ui)]/20">
+        <div className="flex justify-between items-center mb-2.5 px-1.5">
+          <span className="text-[10px] font-black text-[var(--muted-foreground)] uppercase tracking-[0.2em] opacity-80">Meta Mensal</span>
+          <span className="text-[14px] font-black tabular-nums" style={{ color: isCompleted ? "var(--muted-foreground)" : category.color }}>
+            {completionsThisMonth}<span className="opacity-40 font-bold ml-0.5">/{target}</span>
+          </span>
+        </div>
+        <div className="h-[8px] w-full bg-[var(--border-ui)]/40 rounded-full overflow-hidden p-[1px]">
           <div 
-            className="h-full transition-all duration-700 ease-out rounded-full" 
+            className="h-full transition-all duration-1000 ease-out rounded-full shadow-[0_0_10px_rgba(0,0,0,0.1)]" 
             style={{ 
               width: `${progressPercent}%`,
-              backgroundColor: isCompleted ? "var(--muted-foreground)" : category.color
+              backgroundColor: isCompleted ? "var(--muted-foreground)" : category.color,
+              boxShadow: isCompleted ? "none" : `0 0 12px ${category.color}44`
             }}
           />
         </div>
