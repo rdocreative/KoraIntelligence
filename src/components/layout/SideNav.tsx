@@ -153,12 +153,13 @@ export const SideNav = () => {
           )}
 
           {/* Right Section: Notifications + Level + Profile */}
-          <div className="flex items-center gap-1.5 ml-auto">
+          <div className="flex items-center gap-2 ml-auto">
             {/* Notifications */}
             <div className="relative">
               <button 
                 onClick={() => setShowNotifications(!showNotifications)}
                 className="p-1.5 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors relative"
+                title="Notificações"
               >
                 <Bell size={18} strokeWidth={2.5} />
                 <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full border-2 border-[#f5eeee] dark:border-[#212121]" />
@@ -180,13 +181,14 @@ export const SideNav = () => {
 
             {/* Level Badge & Profile */}
             {!isCollapsed && expandedWidth >= 160 && (
-              <div className="flex items-center gap-2 pl-1">
-                <span className="text-[8px] font-black text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full tracking-tighter uppercase shrink-0">
+              <div className="flex items-center gap-2 pl-1 border-l border-black/5 dark:border-white/5">
+                <span className="ml-2 text-[9px] font-black text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full tracking-tighter uppercase shrink-0 cursor-help" title="Nível Atual">
                   LVL 42
                 </span>
                 <NavLink 
                   to="/perfil"
-                  className="w-8 h-8 rounded-xl bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 flex items-center justify-center hover:border-primary/50 hover:scale-105 transition-all active:scale-95 group overflow-hidden shrink-0"
+                  className="w-8 h-8 rounded-full bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 flex items-center justify-center hover:border-primary/50 hover:scale-105 transition-all active:scale-95 group overflow-hidden shrink-0"
+                  title="Meu Perfil"
                 >
                   <User size={14} strokeWidth={2.5} className="text-muted-foreground group-hover:text-primary transition-colors" />
                 </NavLink>
