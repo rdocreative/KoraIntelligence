@@ -227,7 +227,7 @@ export const SideNav = () => {
                       {label}
                     </span>
                     {isActive && expandedWidth >= 180 && (
-                      <div className="absolute right-6 w-1.5 h-1.5 rounded-full bg-white/80" />
+                      <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-white/80" />
                     )}
                   </>
                 )}
