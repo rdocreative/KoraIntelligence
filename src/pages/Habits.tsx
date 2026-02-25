@@ -82,13 +82,12 @@ const PRIORITY_CONFIG = [
   { id: 3, label: "NORMAL", color: "#34C759" },
 ];
 
-// Cores Saturadas/Neon para melhor contraste em Dark Mode
 const CATEGORY_CONFIG = [
-  { id: 'health', label: 'Saúde', color: '#00D1FF', icon: HeartPulse },    // Ciano Elétrico
-  { id: 'study', label: 'Estudos', color: '#BF5AF2', icon: GraduationCap }, // Roxo Vibrante
-  { id: 'work', label: 'Trabalho', color: '#FF9F0A', icon: Briefcase },    // Laranja Neon
-  { id: 'leisure', label: 'Lazer', color: '#FFD60A', icon: Coffee },       // Amarelo Limão
-  { id: 'other', label: 'Outros', color: '#ACACAC', icon: Sparkles },      // Prata/Cinza Claro
+  { id: 'health', label: 'Saúde', color: '#00D1FF', icon: HeartPulse },
+  { id: 'study', label: 'Estudos', color: '#BF5AF2', icon: GraduationCap },
+  { id: 'work', label: 'Trabalho', color: '#FF9F0A', icon: Briefcase },
+  { id: 'leisure', label: 'Lazer', color: '#FFD60A', icon: Coffee },
+  { id: 'other', label: 'Outros', color: '#ACACAC', icon: Sparkles },
 ];
 
 // --- Habit Card UI Component ---
@@ -296,21 +295,21 @@ const HabitCardUI = ({
         </div>
       </div>
 
-      {/* Meta Mensal - Reativada e com melhor contraste */}
-      <div className="mt-5 pt-4 border-t border-[var(--border-ui)]/20">
-        <div className="flex justify-between items-center mb-2.5 px-1.5">
-          <span className="text-[10px] font-black text-[var(--muted-foreground)] uppercase tracking-[0.2em] opacity-80">Meta Mensal</span>
-          <span className="text-[14px] font-black tabular-nums" style={{ color: isCompleted ? "var(--muted-foreground)" : category.color }}>
-            {completionsThisMonth}<span className="opacity-40 font-bold ml-0.5">/{target}</span>
+      {/* Meta Mensal - Minimalista e Sutil */}
+      <div className="mt-5 pt-3 border-t border-[var(--border-ui)]/10">
+        <div className="flex justify-between items-end mb-1.5 px-0.5">
+          <span className="text-[9px] font-black text-[var(--muted-foreground)]/60 uppercase tracking-[0.2em]">Meta Mensal</span>
+          <span className="text-[11px] font-black tabular-nums opacity-80" style={{ color: isCompleted ? "var(--muted-foreground)" : category.color }}>
+            {completionsThisMonth}<span className="opacity-30 mx-0.5">/</span>{target}
           </span>
         </div>
-        <div className="h-[8px] w-full bg-[var(--border-ui)]/40 rounded-full overflow-hidden p-[1px]">
+        <div className="h-[4px] w-full bg-[var(--border-ui)]/20 rounded-full overflow-hidden">
           <div 
-            className="h-full transition-all duration-1000 ease-out rounded-full shadow-[0_0_10px_rgba(0,0,0,0.1)]" 
+            className="h-full transition-all duration-1000 ease-out rounded-full" 
             style={{ 
               width: `${progressPercent}%`,
               backgroundColor: isCompleted ? "var(--muted-foreground)" : category.color,
-              boxShadow: isCompleted ? "none" : `0 0 12px ${category.color}44`
+              opacity: isCompleted ? 0.3 : 1
             }}
           />
         </div>
@@ -816,7 +815,7 @@ const HabitsPage = () => {
                       {displayedHabitsData.completed.length > 0 && (
                         <>
                           <div className="mt-4 mb-4 pt-4 border-t-2 border-[var(--border-ui)]">
-                            <span className="text-[10px] font-[900] text-[var(--muted-foreground)] uppercase tracking-[0.1em]">CONCLUÍDOS</span>
+                            <span className="text-[10px] font-black text-[var(--muted-foreground)] uppercase tracking-[0.1em]">CONCLUÍDOS</span>
                           </div>
                           {displayedHabitsData.completed.map((habit) => (
                             <HabitCardUI 
