@@ -58,7 +58,6 @@ export const SideNav = () => {
   const resize = useCallback((e: MouseEvent) => {
     if (isResizing) {
       const newWidth = e.clientX;
-      // Limita a 35% da largura da janela
       const maxPossibleWidth = window.innerWidth * 0.35;
       
       if (newWidth >= MIN_WIDTH && newWidth <= maxPossibleWidth) {
@@ -95,7 +94,6 @@ export const SideNav = () => {
 
   return (
     <>
-      {/* Botão Flutuante de Abrir */}
       <div 
         className={cn(
           "fixed top-8 left-0 z-[60] transition-all duration-300",
@@ -125,7 +123,6 @@ export const SideNav = () => {
       >
         <div className="flex flex-col h-full w-full min-w-[240px]">
           
-          {/* Resizer Handle */}
           {!isCollapsed && (
             <div 
               onMouseDown={startResizing}
@@ -141,10 +138,7 @@ export const SideNav = () => {
             </div>
           )}
 
-          {/* Top Header Section */}
           <div className="px-5 pt-8 pb-6 flex items-center justify-between">
-            
-            {/* Coluna Esquerda: Avatar + Nível */}
             <div className="flex items-center gap-3">
               <NavLink to="/perfil" className="block relative group shrink-0">
                 <div className="relative p-[2px] rounded-full ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all shadow-sm">
@@ -157,7 +151,6 @@ export const SideNav = () => {
                 </div>
               </NavLink>
 
-              {/* Nível */}
               <div className={cn(
                  "transition-opacity duration-200",
                  expandedWidth < 180 ? "opacity-0 w-0 overflow-hidden" : "opacity-100 w-auto"
@@ -168,10 +161,7 @@ export const SideNav = () => {
               </div>
             </div>
 
-            {/* Coluna Direita: Notificações + Botão Recolher */}
             <div className="flex items-center gap-2">
-              
-              {/* Notificações */}
               <div className="relative">
                 <button 
                   onClick={() => setShowNotifications(!showNotifications)}
@@ -196,7 +186,6 @@ export const SideNav = () => {
                 )}
               </div>
 
-              {/* Botão Recolher */}
               <button 
                 onClick={toggleCollapse}
                 className="p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
@@ -204,7 +193,6 @@ export const SideNav = () => {
               >
                 <PanelLeftClose size={20} strokeWidth={2.5} />
               </button>
-
             </div>
           </div>
 
@@ -216,7 +204,7 @@ export const SideNav = () => {
                 className={({ isActive }) => cn(
                   "group relative flex items-center gap-4 py-3.5 px-4 rounded-[20px] transition-all duration-200",
                   isActive 
-                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]" 
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
                     : "text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)]"
                 )}
               >
