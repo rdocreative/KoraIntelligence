@@ -30,7 +30,7 @@ const navItems = [
 
 export const SideNav = () => {
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-[240px] z-[100] flex flex-col bg-[#f5eeee] dark:bg-[#212121] rounded-r-[40px] shadow-2xl">
+    <aside className="h-screen w-[240px] sticky top-0 flex flex-col bg-[#f5eeee] dark:bg-[#212121] rounded-r-[40px] shadow-2xl shrink-0">
       {/* Header com apenas o ícone */}
       <div className="px-6 pt-8 pb-6">
         <div className="flex items-center gap-3">
