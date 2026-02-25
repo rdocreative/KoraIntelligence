@@ -103,10 +103,10 @@ export const SideNav = () => {
       }}
       className={cn(
         "relative sticky top-0 h-screen z-[50] flex flex-col shrink-0 will-change-[width,transform]",
-        "bg-[#f5eeee] dark:bg-[#212121] rounded-r-[40px] shadow-2xl"
+        "bg-[#f5eeee] dark:bg-[#212121] shadow-2xl"
       )}
     >
-      {/* Botão de Toggle - Posicionado para ficar visível mesmo quando a barra desliza */}
+      {/* Botão de Toggle */}
       <button 
         onClick={toggleCollapse}
         style={{
@@ -128,7 +128,6 @@ export const SideNav = () => {
         )}
       </button>
 
-      {/* Conteúdo Interno - Sem Opacity, apenas cortado pelo overflow do pai */}
       <div className="flex flex-col h-full w-full overflow-hidden">
         {/* Resizer Handle */}
         {!isCollapsed && (
