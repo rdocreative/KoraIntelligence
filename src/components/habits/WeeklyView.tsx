@@ -36,31 +36,31 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
   }, [currentDate]);
 
   const allPeriods = [
-    { label: 'Manhã', range: [5, 12], icon: Sunrise, color: "#FFCC00" },
-    { label: 'Tarde', range: [12, 18], icon: Sun, color: "#FF9500" },
-    { label: 'Noite', range: [18, 24], icon: Moon, color: "#5856D6" }
+    { label: 'Manhã', range: [5, 12], icon: Sunrise },
+    { label: 'Tarde', range: [12, 18], icon: Sun },
+    { label: 'Noite', range: [18, 24], icon: Moon }
   ];
 
   const getHabitStyles = (priority: string) => {
     switch (priority) {
       case 'high':
         return {
-          bg: "bg-[#FF4B4B10]",
-          border: "border-[#FF4B4B33]",
+          bg: "bg-[#FF4B4B15]",
+          border: "border-[#FF4B4B44]",
           checkbox: "border-[#FF4B4B]",
           text: "text-[#FF4B4B]"
         };
       case 'medium':
         return {
-          bg: "bg-[#FF960010]",
-          border: "border-[#FF960033]",
+          bg: "bg-[#FF960015]",
+          border: "border-[#FF960044]",
           checkbox: "border-[#FF9600]",
           text: "text-[#FF9600]"
         };
       default:
         return {
-          bg: "bg-[#58CC0210]",
-          border: "border-[#58CC0233]",
+          bg: "bg-[#58CC0215]",
+          border: "border-[#58CC0244]",
           checkbox: "border-[#58CC02]",
           text: "text-[#58CC02]"
         };
@@ -68,9 +68,9 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
   };
 
   return (
-    <div className="w-full rounded-[24px] overflow-hidden border-2 border-[var(--border-ui)] bg-[var(--card)] h-auto shadow-lg">
+    <div className="w-full rounded-[16px] overflow-hidden border-2 border-[var(--border-ui)] bg-[var(--card)] h-auto shadow-md">
       <div className="w-full overflow-x-auto">
-        <div className="grid grid-cols-[100px_repeat(7,1fr)] w-full min-w-[900px] gap-x-1">
+        <div className="grid grid-cols-[80px_repeat(7,1fr)] w-full min-w-[800px]">
           
           <div className="bg-[var(--input-bg)] border-b-2 border-r-2 border-[var(--border-ui)]" />
 
@@ -78,18 +78,18 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
             const isToday = isSameDay(day, new Date());
             return (
               <div key={day.toString()} className={cn(
-                "text-center py-6 border-b-2 border-[var(--border-ui)] flex flex-col justify-center transition-all",
-                isToday && "bg-[#FF3B30] text-white border-b-[#FF3B30]"
+                "text-center py-5 border-b-2 border-[var(--border-ui)] flex flex-col justify-center",
+                idx !== 6 && "border-r border-[var(--border-ui)]"
               )}>
                 <div className={cn(
-                  "text-[11px] font-[900] uppercase tracking-[0.1em]",
-                  isToday ? "text-white/80" : "text-[var(--muted-foreground)]"
+                  "text-[12px] font-[800] uppercase tracking-[0.05em]",
+                  isToday ? "text-[#3F3047]" : "text-[var(--muted-foreground)]"
                 )}>
                   {format(day, 'EEE', { locale: ptBR }).replace('.', '')}
                 </div>
                 <div className={cn(
-                  "text-[24px] font-[950] leading-none mt-1",
-                  isToday ? "text-white" : "text-[var(--foreground)]"
+                  "text-[22px] font-[900] leading-none mt-1.5",
+                  isToday ? "text-[#3F3047]" : "text-[var(--foreground)]"
                 )}>
                   {format(day, 'd')}
                 </div>
@@ -98,21 +98,14 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
           })}
 
           {allPeriods.map((period, pIdx) => {
-            // Verifica se há hábitos neste período em qualquer dia da semana
-            const hasHabitsInPeriod = habits.some(h => {
-              const hour = parseInt(h.time.split(':')[0]);
-              return h.active && hour >= period.range[0] && hour < period.range[1];
-            });
-
             return (
               <React.Fragment key={period.label}>
                 <div className={cn(
-                  "flex flex-col items-center justify-center gap-2 bg-[var(--input-bg)] border-r-2 border-[var(--border-ui)] py-6 transition-all",
-                  pIdx !== 0 && "border-t border-[var(--border-ui)]",
-                  !hasHabitsInPeriod && "opacity-40 grayscale"
+                  "flex flex-col items-center justify-center gap-2 bg-[var(--input-bg)] border-r-2 border-[var(--border-ui)] py-8",
+                  pIdx !== 0 && "border-t border-[var(--border-ui)]"
                 )}>
-                  <period.icon size={24} style={{ color: period.color }} strokeWidth={2.5} />
-                  <span className="text-[10px] font-[950] uppercase tracking-[0.15em]" style={{ color: period.color }}>
+                  <period.icon size={22} className="text-[var(--muted-foreground)]" />
+                  <span className="text-[10px] font-[900] text-[var(--muted-foreground)] uppercase tracking-widest">
                     {period.label}
                   </span>
                 </div>
@@ -129,9 +122,8 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                     <div 
                       key={day.toString() + period.label} 
                       className={cn(
-                        "p-3 flex flex-col gap-2 justify-center transition-all",
-                        !hasHabitsInPeriod ? "min-h-[40px]" : "min-h-[100px]",
-                        dIdx !== 6 && "border-r border-[var(--border-ui)]/30",
+                        "p-3 min-h-[100px] flex flex-col gap-2 justify-center",
+                        dIdx !== 6 && "border-r border-[var(--border-ui)]",
                         pIdx !== 0 && "border-t border-[var(--border-ui)]"
                       )}
                     >
@@ -145,30 +137,35 @@ const WeeklyView = ({ currentDate, habits, onToggleHabit }: WeeklyViewProps) => 
                               key={habit.id}
                               onClick={() => onToggleHabit(habit.id, day)}
                               className={cn(
-                                "w-full text-left p-2 rounded-[12px] border-2 transition-all hover:scale-[1.03] active:scale-[0.97] flex items-center gap-2",
+                                "w-full text-left p-2.5 rounded-[16px] border-2 transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-center",
                                 styles.bg,
                                 styles.border,
-                                isDone && "opacity-30 grayscale"
+                                isDone && "opacity-40"
                               )}
                             >
-                              <div className={cn(
-                                "h-4 w-4 rounded-full border-2 flex items-center justify-center shrink-0",
-                                isDone ? "bg-primary border-primary" : styles.checkbox
-                              )}>
-                                {isDone && <Check size={10} className="text-white stroke-[4px]" />}
+                              <div className="flex items-center gap-2.5 w-full">
+                                <div className={cn(
+                                  "h-[18px] w-[18px] rounded-full border-2 flex items-center justify-center shrink-0",
+                                  isDone ? "bg-[#3F3047] border-[#3F3047]" : styles.checkbox
+                                )}>
+                                  {isDone && <Check size={12} className="text-white stroke-[4px]" />}
+                                </div>
+                                <span className={cn(
+                                  "text-[12px] font-[800] text-[var(--foreground)] truncate",
+                                  isDone && "line-through opacity-50"
+                                )}>
+                                  {habit.title}
+                                </span>
                               </div>
-                              <span className={cn(
-                                "text-[11px] font-[900] text-[var(--foreground)] truncate leading-tight",
-                                isDone && "line-through opacity-50"
-                              )}>
-                                {habit.title}
+                              <span className="text-[10px] font-[700] text-[var(--muted-foreground)] ml-[28px] mt-1 uppercase tracking-tighter">
+                                {habit.time}
                               </span>
                             </button>
                           );
                         })
                       ) : (
-                        <div className="flex-1 flex items-center justify-center opacity-5">
-                           <div className="w-1.5 h-1.5 rounded-full bg-[var(--muted-foreground)]" />
+                        <div className="flex-1 flex items-center justify-center opacity-10">
+                           <div className="w-2 h-2 rounded-full bg-[var(--muted-foreground)]" />
                         </div>
                       )}
                     </div>
