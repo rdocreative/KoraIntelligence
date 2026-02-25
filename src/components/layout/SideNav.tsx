@@ -29,27 +29,39 @@ const navItems = [
 
 export const SideNav = () => {
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-[200px] z-[100] flex flex-col bg-[#f5eeee] dark:bg-[#212121] border-r border-[var(--border-ui)] px-[12px] py-6">
-      <nav className="flex-1 flex flex-col gap-1 overflow-y-auto">
+    <aside className="fixed left-0 top-0 bottom-0 w-[200px] z-[100] flex flex-col bg-[#f5eeee] dark:bg-[#212121] border-r border-[var(--border-ui)]">
+      {/* Navegação Principal com espaçamento generoso no topo */}
+      <nav className="flex-1 px-3 pt-10 pb-4 flex flex-col gap-[4px] overflow-y-auto">
         {navItems.map(({ icon: Icon, path, label }) => (
           <NavLink
             key={path}
             to={path}
             className={({ isActive }) => cn(
-              "flex items-center gap-3 px-3 py-2 rounded-[10px] transition-all duration-200",
+              "group relative flex items-center gap-3 px-3 py-[10px] rounded-[12px] transition-all duration-200",
               isActive 
-                ? "bg-primary text-primary-foreground shadow-sm" 
+                ? "bg-primary text-primary-foreground shadow-[0_2px_0_0_var(--primary-dark)]" 
                 : "text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)]"
             )}
           >
-            <Icon size={16} strokeWidth={2} className="shrink-0" />
-            <span className="text-[13px] font-semibold leading-none">{label}</span>
+            {({ isActive }) => (
+              <>
+                <Icon size={16} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
+                <span className="text-[13px] font-semibold leading-none">{label}</span>
+                {isActive && (
+                  <div className="absolute right-3 w-1 h-1 rounded-full bg-primary-foreground/60" />
+                )}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      <div className="mt-auto pt-4">
-        <div className="flex items-center justify-between gap-2 p-2 rounded-[10px] hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+      {/* Linha divisória sutil */}
+      <div className="mx-4 h-px bg-[var(--border-ui)] opacity-50" />
+
+      {/* Rodapé com Usuário Minimalista */}
+      <div className="p-3 mt-auto">
+        <div className="flex items-center justify-between gap-2 bg-black/5 dark:bg-white/5 p-2 rounded-[12px]">
           <div className="flex items-center gap-2 overflow-hidden">
             <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
               <User size={14} className="text-primary" />
@@ -61,7 +73,7 @@ export const SideNav = () => {
           </div>
           <NavLink 
             to="/configuracoes" 
-            className="p-1.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors rounded-md"
+            className="p-1.5 hover:bg-black/10 dark:hover:bg-white/10 rounded-lg transition-colors text-[var(--muted-foreground)]"
           >
             <Settings size={14} />
           </NavLink>
