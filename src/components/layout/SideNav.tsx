@@ -30,7 +30,7 @@ const navItems = [
 
 const DEFAULT_WIDTH = 240;
 const MIN_WIDTH = DEFAULT_WIDTH * 0.9;
-const MAX_WIDTH = DEFAULT_WIDTH * 1.65; // Aumentado para 1.65 (+15% adicionais)
+const MAX_WIDTH = DEFAULT_WIDTH * 1.85; // Aumentado de 1.65 para 1.85 (+20% adicionais)
 
 export const SideNav = () => {
   const [width, setWidth] = useState(() => {
