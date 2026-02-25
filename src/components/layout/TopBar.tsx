@@ -26,6 +26,12 @@ import {
   Dialog,
   DialogContent,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface PageConfig {
   title: string;
@@ -89,36 +95,73 @@ export const TopBar = () => {
           </span>
         </div>
 
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <button 
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="h-[40px] md:h-[48px] w-[40px] md:w-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none"
-          >
-            {theme === 'dark' ? (
-              <Sun size={18} className="text-[#FF9600]" />
-            ) : (
-              <Moon size={18} className="text-[#3F3047]" />
-            )}
-          </button>
+        <TooltipProvider delayDuration={100}>
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button 
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="h-[40px] md:h-[48px] w-[40px] md:w-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none"
+                >
+                  {theme === 'dark' ? (
+                    <Sun size={18} className="text-[#FF9600]" />
+                  ) : (
+                    <Moon size={18} className="text-[#3F3047]" />
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className="bg-[var(--topbar)] border-2 border-[var(--border-ui)] text-[var(--foreground)] font-bold">
+                Alternar Tema
+              </TooltipContent>
+            </Tooltip>
 
-          <button className="h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
-            <Coins size={15} className="text-[#FF9600]" />
-            <span className="text-[14px] font-[700] text-[#FF9600] tracking-tight">{userStats.coins}</span>
-          </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button className="h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
+                  <Coins size={15} className="text-[#FF9600]" />
+                  <span className="text-[14px] font-[700] text-[#FF9600] tracking-tight">{userStats.coins}</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className="bg-[var(--topbar)] border-2 border-[var(--border-ui)] text-[var(--foreground)] font-bold">
+                Suas Moedas (Koras)
+              </TooltipContent>
+            </Tooltip>
 
-          <button onClick={() => setActiveModal('profile')} className="h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
-            <Zap size={15} className="text-primary" />
-            <span className="text-primary text-[14px] font-[700] tracking-tight">{userStats.xp}</span>
-          </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button onClick={() => setActiveModal('profile')} className="h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
+                  <Zap size={15} className="text-primary" />
+                  <span className="text-primary text-[14px] font-[700] tracking-tight">{userStats.xp}</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className="bg-[var(--topbar)] border-2 border-[var(--border-ui)] text-[var(--foreground)] font-bold">
+                Sua Experiência (XP)
+              </TooltipContent>
+            </Tooltip>
 
-          <button onClick={() => setActiveModal('achievements')} className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
-            <Trophy size={17} className="text-[#FF9600]" />
-          </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button onClick={() => setActiveModal('achievements')} className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
+                  <Trophy size={17} className="text-[#FF9600]" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className="bg-[var(--topbar)] border-2 border-[var(--border-ui)] text-[var(--foreground)] font-bold">
+                Ver Conquistas
+              </TooltipContent>
+            </Tooltip>
 
-          <button onClick={() => setActiveModal('profile')} className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
-            <UserCircle size={22} className="text-primary" />
-          </button>
-        </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button onClick={() => setActiveModal('profile')} className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
+                  <UserCircle size={22} className="text-primary" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className="bg-[var(--topbar)] border-2 border-[var(--border-ui)] text-[var(--foreground)] font-bold">
+                Meu Perfil
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        </TooltipProvider>
       </div>
 
       <Dialog open={activeModal !== null} onOpenChange={() => setActiveModal(null)}>
