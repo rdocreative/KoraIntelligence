@@ -728,13 +728,14 @@ const HabitsPage = () => {
                                 className={cn(
                                   "aspect-square rounded-[16px] border-[3px] flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative",
                                   !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-20",
-                                  day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#212121] border-[var(--border-ui)] text-[var(--foreground)]",
-                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#FF3B3015] border-[#FF3B30] text-[#FF3B30]", 
-                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#FF950015] border-[#FF9500] text-[#FF9500]", 
-                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#FFD60A15] border-[#FFD60A] text-[#FFD60A]", 
-                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#34C75915] border-[#34C759] text-[#34C759]", 
-                                  day.isToday && !day.isSelected && "border-[#10B981] bg-[#10B981]/10 text-[#059669]",
-                                  day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.1)]"
+                                  day.isCurrentMonth && "bg-[#212121] text-[var(--foreground)]",
+                                  day.isCurrentMonth && day.level === 0 && "border-[var(--border-ui)]",
+                                  day.isCurrentMonth && day.level === 1 && "border-[#FF3B30] text-[#FF3B30]", 
+                                  day.isCurrentMonth && day.level === 2 && "border-[#FF9500] text-[#FF9500]", 
+                                  day.isCurrentMonth && day.level === 3 && "border-[#FFD60A] text-[#FFD60A]", 
+                                  day.isCurrentMonth && day.level === 4 && "border-[#34C759] text-[#34C759]", 
+                                  day.isToday && !day.isSelected && "border-[#10B981] text-[#10B981]",
+                                  day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-xl"
                                 )}
                               >
                                 <span className={cn(
