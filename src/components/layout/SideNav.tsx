@@ -14,7 +14,8 @@ import {
   Brain,
   User,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  Sparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -143,7 +144,14 @@ export const SideNav = () => {
         )}
 
         {/* Top Header Section */}
-        <div className="px-6 pt-10 pb-6 flex items-center justify-end gap-3">
+        <div className="px-6 pt-10 pb-6 flex items-center justify-between gap-3">
+          {/* Left Icon */}
+          {!isCollapsed && expandedWidth >= 120 && (
+            <div className="text-primary animate-pulse">
+              <Sparkles size={20} strokeWidth={2.5} />
+            </div>
+          )}
+
           <div className="flex items-center gap-1.5">
             {/* Notifications */}
             <div className="relative">
@@ -218,31 +226,17 @@ export const SideNav = () => {
           ))}
         </nav>
 
-        <div className="p-4 mt-auto mb-2">
-          <div className="relative group bg-black/5 dark:bg-white/5 p-3 rounded-[24px] hover:bg-black/10 dark:hover:bg-white/10 transition-colors duration-200">
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-3 overflow-hidden">
-                <div className="w-10 h-10 rounded-[14px] bg-primary/20 flex items-center justify-center shrink-0 text-primary">
-                  <User size={18} strokeWidth={2.5} />
-                </div>
-                <div className={cn(
-                  "flex flex-col min-w-0 transition-opacity duration-200",
-                  expandedWidth < 180 ? "opacity-0 w-0" : "opacity-100"
-                )}>
-                  <span className="text-[13px] font-extrabold truncate leading-tight">Ricardo</span>
-                  <span className="text-[11px] text-primary font-bold leading-none mt-0.5">Lvl 42</span>
-                </div>
-              </div>
-              {expandedWidth >= 180 && (
-                <NavLink 
-                  to="/configuracoes" 
-                  className="p-2 hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors text-[var(--muted-foreground)]"
-                >
-                  <Settings size={18} strokeWidth={2.5} />
-                </NavLink>
-              )}
-            </div>
-          </div>
+        <div className="p-4 mt-auto mb-4">
+           {/* Footer minimalista ou apenas espaçamento */}
+           {!isCollapsed && expandedWidth >= 180 && (
+              <NavLink 
+                to="/configuracoes" 
+                className="flex items-center gap-4 py-3.5 px-4 rounded-[20px] text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)] transition-all"
+              >
+                <Settings size={20} strokeWidth={2.5} className="shrink-0" />
+                <span className="text-[14px] font-bold tracking-wide">Configurações</span>
+              </NavLink>
+           )}
         </div>
       </div>
     </aside>
