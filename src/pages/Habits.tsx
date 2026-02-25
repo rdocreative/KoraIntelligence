@@ -609,7 +609,7 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-background pb-4 animate-in fade-in duration-500 relative flex-1 min-w-0">
       
-      <div className="flex justify-center px-4 md:px-8 pt-[35px] pb-0 shrink-0">
+      <div className="flex justify-center px-4 md:px-8 pt-[31px] pb-0 shrink-0">
         <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-full p-1 shadow-[0_4px_0_0_var(--border-ui)] flex items-center gap-1.5 overflow-visible">
           <button 
             onClick={() => setActiveTab('overview')} 
@@ -637,7 +637,7 @@ const HabitsPage = () => {
       </div>
 
       {activeTab === 'overview' ? (
-        <div className="mt-[35px] flex flex-col lg:flex-row gap-8 p-4 md:p-8 items-start w-full min-w-0">
+        <div className="mt-[31px] flex flex-col lg:flex-row gap-8 p-4 md:p-8 items-start w-full min-w-0">
           <div className={cn("transition-all duration-500 shrink-0 min-w-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
             <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[24px] shadow-[0_4px_0_0_var(--border-ui)] p-6 py-[24px] flex flex-col min-w-0">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-8 shrink-0">
@@ -750,7 +750,7 @@ const HabitsPage = () => {
             </div>
           )}
         </div>
-      ) : (<div className="mt-[35px] w-full px-4 md:px-8"><DashboardOverview stats={stats} /></div>)}
+      ) : (<div className="mt-[31px] w-full px-4 md:px-8"><DashboardOverview stats={stats} /></div>)}
       {editingHabit && (<EditPopup habit={editingHabit.habit} rect={editingHabit.rect} onClose={() => setEditingHabit(null)} onSave={(updated) => setHabits(prev => prev.map(h => h.id === updated.id ? updated : h))} onDelete={(id) => setHabits(prev => prev.filter(h => h.id !== id))} />)}
       <DateSelectorModal isOpen={isDateSelectorOpen} onClose={() => setIsDateSelectorOpen(false)} currentDate={currentDate} onSelectDate={(date) => { setCurrentDate(date); setSelectedDate(date); }} />
     </div>
