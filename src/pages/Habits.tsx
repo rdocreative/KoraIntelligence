@@ -533,7 +533,15 @@ const HabitsPage = () => {
     return days.map(day => {
       const dStr = format(day, 'yyyy-MM-dd');
       const habitsScheduledForDay = habits.filter(h => h.active && h.weekDays.includes(getDay(day)));
-      const doneCount = habitsScheduledForDay.filter(h => h.completedDates.includes(dStr)).length;
+      const completedHabitsForDay = habitsScheduledForDay.filter(h => h.completedDates.includes(dStr));
+      
+      // Cores das categorias concluídas para o heat map
+      const completedCategoryColors = completedHabitsForDay.map(h => {
+        const cat = CATEGORY_CONFIG.find(c => c.id === h.categoryId);
+        return cat?.color || '#ACACAC';
+      });
+
+      const doneCount = completedHabitsForDay.length;
       const totalCount = habitsScheduledForDay.length;
       let level = 0;
       if (totalCount > 0 && doneCount > 0) {
@@ -545,7 +553,18 @@ const HabitsPage = () => {
       }
       const isPast = isBefore(startOfDay(day), startOfDay(new Date()));
       const isToday = isSameDay(day, new Date());
-      return { date: day, isCurrentMonth: isSameMonth(day, currentDate), isToday, isPast, isFuture: !isPast && !isToday, isSelected: isSameDay(day, selectedDate), done: doneCount, total: totalCount, level };
+      return { 
+        date: day, 
+        isCurrentMonth: isSameMonth(day, currentDate), 
+        isToday, 
+        isPast, 
+        isFuture: !isPast && !isToday, 
+        isSelected: isSameDay(day, selectedDate), 
+        done: doneCount, 
+        total: totalCount, 
+        level,
+        completedCategoryColors
+      };
     });
   }, [currentDate, selectedDate, habits]);
 
@@ -627,8 +646,24 @@ const HabitsPage = () => {
                         {calendarDays.map((day, i) => (
                           <Tooltip key={i}>
                             <TooltipTrigger asChild>
-                              <div onClick={() => setSelectedDate(day.date)} className={cn("aspect-square rounded-[12px] md:rounded-[16px] border-[2px] md:border-[3px] flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative", !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-20", day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#383838] border-[var(--border-ui)] text-[var(--foreground)]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#383838] border-[#FF3B30] text-[#FF3B30]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#383838] border-[#FF9500] text-[#FF9500]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#383838] border-[#FFD60A] text-[#FFD60A]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#383838] border-[#34C759] text-[#34C759]", day.isToday && !day.isSelected && "border-[#10B981] bg-[#383838] text-[#059669]", day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.1)]")}>
-                                <span className={cn("text-[12px] md:text-[14px] font-[900]", day.isCurrentMonth ? "opacity-100" : "opacity-40")}>{format(day.date, 'd')}</span>
+                              <div onClick={() => setSelectedDate(day.date)} className={cn("aspect-square rounded-[12px] md:rounded-[16px] border-[2px] md:border-[3px] flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative overflow-hidden", !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-20", day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#383838] border-[var(--border-ui)] text-[var(--foreground)]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#383838] border-[#FF3B30] text-[#FF3B30]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#383838] border-[#FF9500] text-[#FF9500]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#383838] border-[#FFD60A] text-[#FFD60A]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#383838] border-[#34C759] text-[#34C759]", day.isToday && !day.isSelected && "border-[#10B981] bg-[#383838] text-[#059669]", day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.1)]")}>
+                                <span className={cn("text-[12px] md:text-[14px] font-[900] mb-1", day.isCurrentMonth ? "opacity-100" : "opacity-40")}>{format(day.date, 'd')}</span>
+                                
+                                {/* Micro-status indicators (Heat map) */}
+                                {day.isCurrentMonth && day.completedCategoryColors.length > 0 && (
+                                  <div className="absolute bottom-1.5 left-0 right-0 flex justify-center gap-0.5 px-1">
+                                    {day.completedCategoryColors.slice(0, 4).map((color, idx) => (
+                                      <div 
+                                        key={idx} 
+                                        className="h-1 w-1 md:h-1.5 md:w-1.5 rounded-full" 
+                                        style={{ backgroundColor: color }}
+                                      />
+                                    ))}
+                                    {day.completedCategoryColors.length > 4 && (
+                                      <div className="h-1 w-1 md:h-1.5 md:w-1.5 rounded-full bg-white/30" />
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             </TooltipTrigger>
                             <TooltipContent className="bg-[var(--card)] border-2 border-[var(--border-ui)] text-[var(--foreground)] rounded-[16px] shadow-xl p-3"><p className="text-xs font-bold mb-1">{format(day.date, 'dd/MM')}</p><p className="text-[10px] text-[var(--muted-foreground)] font-bold uppercase">{day.done} de {day.total} feitos</p></TooltipContent>
