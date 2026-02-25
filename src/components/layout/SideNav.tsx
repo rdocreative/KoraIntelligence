@@ -11,11 +11,11 @@ import {
   Swords, 
   ShoppingBag, 
   Settings, 
-  Brain,
-  User,
-  Sparkles,
-  PanelLeftClose,
-  PanelLeftOpen
+  Brain, 
+  User, 
+  Sparkles, 
+  PanelLeftClose, 
+  PanelLeftOpen 
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -98,11 +98,10 @@ export const SideNav = () => {
       ref={sidebarRef}
       style={{ 
         width: `${currentWidth}px`,
-        // Transição snappier e rápida para máxima fluidez
-        transition: isResizing ? 'none' : 'width 300ms cubic-bezier(0.16, 1, 0.3, 1)'
+        transition: isResizing ? 'none' : 'width 350ms cubic-bezier(0.16, 1, 0.3, 1)'
       }}
       className={cn(
-        "relative sticky top-0 h-screen z-[50] flex flex-col shrink-0 will-change-[width]",
+        "relative sticky top-0 h-screen z-[50] flex flex-col shrink-0 will-change-[width] overflow-visible",
         isCollapsed ? "bg-transparent" : "bg-[#f5eeee] dark:bg-[#212121] rounded-r-[40px] shadow-2xl"
       )}
     >
@@ -110,27 +109,27 @@ export const SideNav = () => {
       <button 
         onClick={toggleCollapse}
         className={cn(
-          "absolute top-8 z-[60] flex items-center justify-center transition-all duration-300 ease-out cursor-pointer hover:scale-110",
+          "absolute top-8 z-[60] flex items-center justify-center transition-all duration-300 ease-in-out cursor-pointer hover:scale-110",
           isCollapsed 
             ? "left-6 text-primary p-2 bg-white/90 dark:bg-white/10 backdrop-blur-xl rounded-xl shadow-lg border border-black/5 dark:border-white/10" 
             : "right-6 p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full"
         )}
-        title={isCollapsed ? "Expandir Menu" : "Recolher Menu"}
       >
         {isCollapsed ? (
-          <PanelLeftOpen size={24} strokeWidth={2} className="animate-in fade-in zoom-in duration-300" />
+          <PanelLeftOpen size={24} strokeWidth={2} className="animate-in zoom-in duration-300" />
         ) : (
           <PanelLeftClose size={20} />
         )}
       </button>
 
-      {/* Conteúdo Interno */}
-      <div className={cn(
-        "flex flex-col h-full w-full overflow-hidden transition-all duration-300 ease-out",
-        isCollapsed 
-          ? "opacity-0 pointer-events-none translate-x-[-15px] scale-95" 
-          : "opacity-100 translate-x-0 scale-100"
-      )}>
+      {/* Conteúdo Interno - Usamos uma largura fixa para evitar que o conteúdo se esmague durante a transição de largura do pai */}
+      <div 
+        style={{ width: `${expandedWidth}px` }}
+        className={cn(
+          "flex flex-col h-full overflow-hidden shrink-0",
+          isCollapsed && "pointer-events-none"
+        )}
+      >
         {/* Resizer Handle */}
         {!isCollapsed && (
           <div 
