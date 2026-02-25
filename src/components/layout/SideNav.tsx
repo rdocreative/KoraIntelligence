@@ -13,7 +13,6 @@ import {
   Settings, 
   Brain,
   User,
-  Sparkles,
   PanelLeftClose,
   PanelLeftOpen
 } from "lucide-react";
@@ -143,12 +142,10 @@ export const SideNav = () => {
           </div>
         )}
 
-        <div className="px-6 pt-8 pb-6 flex items-center justify-between gap-2">
-          <div className="w-10 h-10 rounded-[14px] bg-primary flex items-center justify-center shadow-lg shadow-primary/25 shrink-0 transition-transform hover:scale-105">
-            <Sparkles className="text-primary-foreground w-5 h-5" strokeWidth={2.5} />
-          </div>
-
-          <div className="flex items-center gap-1 mr-10">
+        {/* Top Header Section */}
+        <div className="px-6 pt-10 pb-6 flex items-center justify-end gap-3">
+          <div className="flex items-center gap-1.5">
+            {/* Notifications */}
             <div className="relative">
               <button 
                 onClick={() => setShowNotifications(!showNotifications)}
@@ -171,6 +168,23 @@ export const SideNav = () => {
                 </div>
               )}
             </div>
+
+            {/* Profile & Level */}
+            {!isCollapsed && expandedWidth >= 160 && (
+              <div className="flex items-center gap-2.5 pl-2">
+                <div className="flex flex-col items-end">
+                  <span className="text-[9px] font-black text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full tracking-tighter uppercase">
+                    LVL 42
+                  </span>
+                </div>
+                <NavLink 
+                  to="/perfil"
+                  className="w-10 h-10 rounded-[14px] bg-white dark:bg-white/5 border-2 border-black/5 dark:border-white/10 flex items-center justify-center hover:border-primary/50 hover:scale-105 transition-all active:scale-95 group overflow-hidden"
+                >
+                  <User size={18} strokeWidth={2.5} className="text-muted-foreground group-hover:text-primary transition-colors" />
+                </NavLink>
+              </div>
+            )}
           </div>
         </div>
 
