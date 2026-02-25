@@ -209,7 +209,8 @@ const HabitCardUI = ({
       ref={cardRef}
       style={{
         backgroundColor: cardTheme.bg,
-        borderColor: isCompleted ? "var(--border-ui)" : `${cardTheme.main}44`,
+        borderColor: isCompleted ? "var(--border-ui)" : cardTheme.main,
+        borderWidth: "1.5px",
         boxShadow: isCompleted || isOverlay ? 'none' : `0 4px 0 0 ${cardTheme.main}22`,
       }}
       className={cn(
@@ -648,7 +649,9 @@ const HabitsPage = () => {
                   <div className="flex items-center gap-3"><h2 className="text-[var(--foreground)] font-[900] text-[15px] uppercase tracking-[0.05em]">HÁBITOS DE HOJE</h2></div>
                   <div className="bg-primary/10 text-primary text-[11px] font-[800] px-3 py-1 rounded-full border-2 border-primary/10">{displayedHabitsData.completed.length}/{displayedHabitsData.all.length}</div>
                 </div>
-                <div className="flex-1 overflow-y-auto px-6 py-2 min-w-0">
+                
+                {/* Lista de Hábitos com altura fixa para 4 cards e scroll invisível */}
+                <div className="flex-1 min-w-0 overflow-y-auto px-6 py-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" style={{ maxHeight: '600px' }}>
                   <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
                     <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
                       {displayedHabitsData.pending.map((habit) => (<SortableHabitItem key={habit.id} habit={habit} isCompleted={false} onEdit={(habit, rect) => setEditingHabit({ habit, rect })} onToggle={(id) => toggleHabit(id)} currentDate={currentDate} />))}
@@ -659,6 +662,7 @@ const HabitsPage = () => {
                     <DragOverlay>{activeDraggingHabit ? (<div className="w-full"><HabitCardUI habit={activeDraggingHabit} isCompleted={false} currentDate={currentDate} isOverlay={true} /></div>) : null}</DragOverlay>
                   </DndContext>
                 </div>
+                
                 <div className="p-6 pt-4 border-t-2 border-[var(--border-ui)] bg-[var(--panel)] shrink-0">
                   <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                     <DialogTrigger asChild><Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-[900] text-[12px] uppercase tracking-[0.1em] h-12 rounded-[20px] shadow-[0_4px_0_0_var(--primary-dark)] transition-all active:translate-y-[2px] active:shadow-none"><Plus className="mr-2" size={18} strokeWidth={4} /> NOVO HÁBITO</Button></DialogTrigger>
