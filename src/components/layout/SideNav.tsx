@@ -13,8 +13,7 @@ import {
   Settings, 
   Brain,
   User,
-  Sparkles,
-  GripVertical
+  Sparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +30,7 @@ const navItems = [
 
 const DEFAULT_WIDTH = 240;
 const MIN_WIDTH = DEFAULT_WIDTH * 0.9;
-const MAX_WIDTH = DEFAULT_WIDTH * 1.35;
+const MAX_WIDTH = DEFAULT_WIDTH * 1.50; // Aumentado de 1.35 para 1.50 (+15%)
 
 export const SideNav = () => {
   const [width, setWidth] = useState(() => {
