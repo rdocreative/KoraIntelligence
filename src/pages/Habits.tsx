@@ -57,7 +57,6 @@ import { CSS } from '@dnd-kit/utilities';
 import WeeklyView from "@/components/habits/WeeklyView";
 import DateSelectorModal from "@/components/habits/DateSelectorModal";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
-import { ParticleEffect } from "@/components/effects/ParticleEffect";
 
 // --- Types ---
 type Frequency = 'daily' | 'weekly';
@@ -103,7 +102,7 @@ const HabitCardUI = ({
   habit: Habit, 
   isCompleted: boolean, 
   onEdit?: (habit: Habit, rect: DOMRect) => void, 
-  onToggle?: (id: string, x: number, y: number, color: string) => void,
+  onToggle?: (id: string) => void,
   currentDate: Date,
   isPlaceholder?: boolean,
   isOverlay?: boolean
@@ -222,26 +221,25 @@ const HabitCardUI = ({
     >
       <div className="flex items-center gap-4">
         <button 
-          onClick={(e) => { 
-            e.stopPropagation(); 
-            const rect = e.currentTarget.getBoundingClientRect();
-            onToggle?.(habit.id, rect.left + rect.width / 2, rect.top + rect.height / 2, category.color); 
-          }}
+          onClick={(e) => { e.stopPropagation(); onToggle?.(habit.id); }}
           className={cn(
-            "h-8 w-8 rounded-full border-2 flex items-center justify-center transition-all duration-300 transform active:scale-90 shrink-0 z-10",
+            "h-10 w-10 rounded-full border-2 flex items-center justify-center transition-all duration-300 transform active:scale-95 shrink-0 z-10",
             isCompleted 
-              ? "bg-primary border-primary rotate-[360deg]" 
-              : "bg-white/50 border-gray-300 hover:border-gray-400"
+              ? "bg-primary border-primary" 
+              : "bg-white/50 border-gray-300 hover:border-primary/40"
           )}
-          style={{ borderColor: isCompleted ? "var(--primary)" : cardTheme.main }}
+          style={{ 
+            borderColor: isCompleted ? "var(--primary)" : (isCompleted ? "var(--border-ui)" : cardTheme.main),
+            backgroundColor: isCompleted ? cardTheme.main : 'transparent'
+          }}
         >
           {isCompleted ? (
             <Check 
-              size={16} 
-              className="stroke-[4px] text-primary-foreground animate-in zoom-in duration-200" 
+              size={18} 
+              className="stroke-[4px] text-white animate-in zoom-in duration-200" 
             />
           ) : (
-            <div className="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all group-hover:bg-primary/50" />
+            <div className="w-2 h-2 rounded-full bg-gray-300 transition-all group-hover:scale-125 group-hover:bg-primary/50" />
           )}
         </button>
 
@@ -306,22 +304,26 @@ const HabitCardUI = ({
         </div>
       </div>
 
-      <div className="mt-5 pt-3 border-t border-[var(--border-ui)]/10">
-        <div className="flex justify-between items-end mb-1.5 px-0.5">
-          <span className="text-[9px] font-black text-[var(--muted-foreground)]/60 uppercase tracking-[0.2em]">Meta Mensal</span>
-          <span className="text-[11px] font-black tabular-nums opacity-80" style={{ color: isCompleted ? "var(--muted-foreground)" : cardTheme.main }}>
+      {/* Progress Line Divider */}
+      <div className="mt-5 relative h-[24px]">
+        {/* The Track */}
+        <div className="absolute top-[2px] left-0 w-full h-[3px] bg-gray-200/50 dark:bg-white/10 rounded-full" />
+        
+        {/* The Fill (Monthly Progress) */}
+        <div 
+          className="absolute top-[2px] left-0 h-[3px] rounded-full transition-all duration-1000 ease-out z-10" 
+          style={{ 
+            width: `${progressPercent}%`,
+            backgroundColor: isCompleted ? "var(--muted-foreground)" : category.color,
+            boxShadow: isCompleted ? 'none' : `0 0 8px ${category.color}44`
+          }}
+        />
+
+        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center px-0.5">
+          <span className="text-[9px] font-black text-[var(--muted-foreground)]/60 uppercase tracking-[0.15em]">Meta Mensal</span>
+          <span className="text-[11px] font-black tabular-nums opacity-90" style={{ color: isCompleted ? "var(--muted-foreground)" : category.color }}>
             {completionsThisMonth}<span className="opacity-30 mx-0.5">/</span>{target}
           </span>
-        </div>
-        <div className="h-[4px] w-full bg-gray-200/50 dark:bg-white/10 rounded-full overflow-hidden">
-          <div 
-            className="h-full transition-all duration-1000 ease-out rounded-full" 
-            style={{ 
-              width: `${progressPercent}%`,
-              backgroundColor: isCompleted ? "var(--muted-foreground)" : cardTheme.main,
-              opacity: isCompleted ? 0.3 : 1
-            }}
-          />
         </div>
       </div>
     </div>
@@ -333,7 +335,7 @@ interface SortableItemProps {
   habit: Habit;
   isCompleted: boolean;
   onEdit: (habit: Habit, rect: DOMRect) => void;
-  onToggle: (id: string, x: number, y: number, color: string) => void;
+  onToggle: (id: string) => void;
   currentDate: Date;
 }
 
@@ -499,11 +501,6 @@ const HabitsPage = () => {
   const [newHabitPriority, setNewHabitPriority] = useState(3);
   const [newHabitCategory, setNewHabitCategory] = useState('health');
 
-  // Partículas
-  const [particleConfig, setParticleConfig] = useState<{ active: boolean, x: number, y: number, color: string }>({
-    active: false, x: 0, y: 0, color: '#FFFFFF'
-  });
-
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -523,14 +520,11 @@ const HabitsPage = () => {
     setActiveDragId(null);
   };
 
-  const toggleHabit = (id: string, x?: number, y?: number, color?: string, date: Date = selectedDate) => {
+  const toggleHabit = (id: string, date: Date = selectedDate) => {
     const dStr = format(date, 'yyyy-MM-dd');
     setHabits(prev => prev.map(h => {
       if (h.id === id) {
         const completed = h.completedDates.includes(dStr);
-        if (!completed && x && y && color) {
-          setParticleConfig({ active: true, x, y, color });
-        }
         return { ...h, completedDates: completed ? h.completedDates.filter(d => d !== dStr) : [...h.completedDates, dStr] };
       }
       return h;
@@ -546,7 +540,15 @@ const HabitsPage = () => {
     return days.map(day => {
       const dStr = format(day, 'yyyy-MM-dd');
       const habitsScheduledForDay = habits.filter(h => h.active && h.weekDays.includes(getDay(day)));
-      const doneCount = habitsScheduledForDay.filter(h => h.completedDates.includes(dStr)).length;
+      const completedHabitsForDay = habitsScheduledForDay.filter(h => h.completedDates.includes(dStr));
+      
+      // Cores das categorias concluídas para o heat map
+      const completedCategoryColors = completedHabitsForDay.map(h => {
+        const cat = CATEGORY_CONFIG.find(c => c.id === h.categoryId);
+        return cat?.color || '#ACACAC';
+      });
+
+      const doneCount = completedHabitsForDay.length;
       const totalCount = habitsScheduledForDay.length;
       let level = 0;
       if (totalCount > 0 && doneCount > 0) {
@@ -558,7 +560,18 @@ const HabitsPage = () => {
       }
       const isPast = isBefore(startOfDay(day), startOfDay(new Date()));
       const isToday = isSameDay(day, new Date());
-      return { date: day, isCurrentMonth: isSameMonth(day, currentDate), isToday, isPast, isFuture: !isPast && !isToday, isSelected: isSameDay(day, selectedDate), done: doneCount, total: totalCount, level };
+      return { 
+        date: day, 
+        isCurrentMonth: isSameMonth(day, currentDate), 
+        isToday, 
+        isPast, 
+        isFuture: !isPast && !isToday, 
+        isSelected: isSameDay(day, selectedDate), 
+        done: doneCount, 
+        total: totalCount, 
+        level,
+        completedCategoryColors
+      };
     });
   }, [currentDate, selectedDate, habits]);
 
@@ -596,36 +609,12 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-background pb-4 animate-in fade-in duration-500 relative flex-1 min-w-0">
       
-      <ParticleEffect 
-        trigger={particleConfig.active}
-        startX={particleConfig.x}
-        startY={particleConfig.y}
-        color={particleConfig.color}
-        onComplete={() => setParticleConfig(prev => ({ ...prev, active: false }))}
-      />
-
       <div className="flex justify-center pt-[35px] pb-0 shrink-0">
-        <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-full p-1.5 shadow-[0_4px_0_0_var(--border-ui)] flex items-center gap-1.5 overflow-visible">
-          <button 
-            onClick={() => setActiveTab('overview')} 
-            className={cn(
-              "flex items-center gap-2 px-6 py-2.5 rounded-full text-[12px] font-[900] uppercase tracking-[0.08em] transition-all duration-300 border-2 shrink-0", 
-              activeTab === 'overview' 
-                ? "bg-primary/10 border-primary text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" 
-                : "bg-transparent border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-            )}
-          >
+        <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-full p-1 shadow-[0_4px_0_0_var(--border-ui)] flex items-center gap-1.5 overflow-visible">
+          <button onClick={() => setActiveTab('overview')} className={cn("flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0", activeTab === 'overview' ? "bg-primary text-primary-foreground shadow-[0_4px_0_0_var(--primary-dark)]" : "bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]")}>
             <LayoutGrid size={14} strokeWidth={3} /> Visão Geral
           </button>
-          <button 
-            onClick={() => setActiveTab('charts')} 
-            className={cn(
-              "flex items-center gap-2 px-6 py-2.5 rounded-full text-[12px] font-[900] uppercase tracking-[0.08em] transition-all duration-300 border-2 shrink-0", 
-              activeTab === 'charts' 
-                ? "bg-primary/10 border-primary text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" 
-                : "bg-transparent border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-            )}
-          >
+          <button onClick={() => setActiveTab('charts')} className={cn("flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0", activeTab === 'charts' ? "bg-primary text-primary-foreground shadow-[0_4px_0_0_var(--primary-dark)]" : "bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]")}>
             <BarChart3 size={14} strokeWidth={3} /> Dashboard
           </button>
         </div>
@@ -664,8 +653,24 @@ const HabitsPage = () => {
                         {calendarDays.map((day, i) => (
                           <Tooltip key={i}>
                             <TooltipTrigger asChild>
-                              <div onClick={() => setSelectedDate(day.date)} className={cn("aspect-square rounded-[12px] md:rounded-[16px] border-[2px] md:border-[3px] flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative", !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-20", day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#383838] border-[var(--border-ui)] text-[var(--foreground)]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#383838] border-[#FF3B30] text-[#FF3B30]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#383838] border-[#FF9500] text-[#FF9500]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#383838] border-[#FFD60A] text-[#FFD60A]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#383838] border-[#34C759] text-[#34C759]", day.isToday && !day.isSelected && "border-[#10B981] bg-[#383838] text-[#059669]", day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.1)]")}>
-                                <span className={cn("text-[12px] md:text-[14px] font-[900]", day.isCurrentMonth ? "opacity-100" : "opacity-40")}>{format(day.date, 'd')}</span>
+                              <div onClick={() => setSelectedDate(day.date)} className={cn("aspect-square rounded-[12px] md:rounded-[16px] border-[2px] md:border-[3px] flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative overflow-hidden", !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-20", day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#383838] border-[var(--border-ui)] text-[var(--foreground)]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#383838] border-[#FF3B30] text-[#FF3B30]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#383838] border-[#FF9500] text-[#FF9500]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#383838] border-[#FFD60A] text-[#FFD60A]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#383838] border-[#34C759] text-[#34C759]", day.isToday && !day.isSelected && "border-[#10B981] bg-[#383838] text-[#059669]", day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.1)]")}>
+                                <span className={cn("text-[12px] md:text-[14px] font-[900] mb-1", day.isCurrentMonth ? "opacity-100" : "opacity-40")}>{format(day.date, 'd')}</span>
+                                
+                                {/* Micro-status indicators (Heat map) */}
+                                {day.isCurrentMonth && day.completedCategoryColors.length > 0 && (
+                                  <div className="absolute bottom-1.5 left-0 right-0 flex justify-center gap-0.5 px-1">
+                                    {day.completedCategoryColors.slice(0, 4).map((color, idx) => (
+                                      <div 
+                                        key={idx} 
+                                        className="h-1 w-1 md:h-1.5 md:w-1.5 rounded-full" 
+                                        style={{ backgroundColor: color }}
+                                      />
+                                    ))}
+                                    {day.completedCategoryColors.length > 4 && (
+                                      <div className="h-1 w-1 md:h-1.5 md:w-1.5 rounded-full bg-white/30" />
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             </TooltipTrigger>
                             <TooltipContent className="bg-[var(--card)] border-2 border-[var(--border-ui)] text-[var(--foreground)] rounded-[16px] shadow-xl p-3"><p className="text-xs font-bold mb-1">{format(day.date, 'dd/MM')}</p><p className="text-[10px] text-[var(--muted-foreground)] font-bold uppercase">{day.done} de {day.total} feitos</p></TooltipContent>
@@ -691,9 +696,9 @@ const HabitsPage = () => {
                 <div className="flex-1 min-w-0 overflow-y-auto px-6 py-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" style={{ maxHeight: '600px' }}>
                   <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
                     <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
-                      {displayedHabitsData.pending.map((habit) => (<SortableHabitItem key={habit.id} habit={habit} isCompleted={false} onEdit={(habit, rect) => setEditingHabit({ habit, rect })} onToggle={(id, x, y, color) => toggleHabit(id, x, y, color)} currentDate={currentDate} />))}
+                      {displayedHabitsData.pending.map((habit) => (<SortableHabitItem key={habit.id} habit={habit} isCompleted={false} onEdit={(habit, rect) => setEditingHabit({ habit, rect })} onToggle={(id) => toggleHabit(id)} currentDate={currentDate} />))}
                       {displayedHabitsData.completed.length > 0 && (
-                        <><div className="mt-4 mb-4 pt-4 border-t-2 border-[var(--border-ui)]"><span className="text-[10px] font-black text-[var(--muted-foreground)] uppercase tracking-[0.1em]">CONCLUÍDOS</span></div>{displayedHabitsData.completed.map((habit) => (<HabitCardUI key={habit.id} habit={habit} isCompleted={true} onToggle={(id, x, y, color) => toggleHabit(id, x, y, color)} currentDate={currentDate} />))}</>
+                        <><div className="mt-4 mb-4 pt-4 border-t-2 border-[var(--border-ui)]"><span className="text-[10px] font-black text-[var(--muted-foreground)] uppercase tracking-[0.1em]">CONCLUÍDOS</span></div>{displayedHabitsData.completed.map((habit) => (<HabitCardUI key={habit.id} habit={habit} isCompleted={true} onToggle={(id) => toggleHabit(id)} currentDate={currentDate} />))}</>
                       )}
                     </SortableContext>
                     <DragOverlay>{activeDraggingHabit ? (<div className="w-full"><HabitCardUI habit={activeDraggingHabit} isCompleted={false} currentDate={currentDate} isOverlay={true} /></div>) : null}</DragOverlay>
