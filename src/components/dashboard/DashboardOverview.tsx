@@ -18,11 +18,13 @@ const DATA_EVOLUTION = [
   { name: 'Dom', habitos: 5, metas: 4 },
 ];
 
+// Categorias sincronizadas com o HabitCard
 const DATA_DISTRIBUTION = [
-  { name: 'Saúde', value: 400, color: '#3F3047' },
-  { name: 'Foco', value: 300, color: '#FF9600' },
-  { name: 'Rotina', value: 300, color: '#58CC02' },
-  { name: 'Mente', value: 200, color: '#CE82FF' },
+  { name: 'Saúde', value: 400, color: '#00D1FF' },
+  { name: 'Estudos', value: 300, color: '#BF5AF2' },
+  { name: 'Trabalho', value: 300, color: '#FF9F0A' },
+  { name: 'Lazer', value: 200, color: '#FFD60A' },
+  { name: 'Outros', value: 150, color: '#ACACAC' },
 ];
 
 interface DashboardOverviewProps {
@@ -37,28 +39,45 @@ interface DashboardOverviewProps {
 const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
   const displayStats = stats || {
     total: 4,
-    today: "0/4",
+    today: "4/4", // Exemplo para testar o feedback visual de 100%
     streak: "7d",
     progress: "0%"
   };
 
+  // Lógica para verificar se hoje está completo
+  const isTodayComplete = React.useMemo(() => {
+    const [done, total] = displayStats.today.split('/').map(Number);
+    return total > 0 && done >= total;
+  }, [displayStats.today]);
+
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full pb-10">
       
+      {/* Cards de Resumo */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: "TOTAL HÁBITOS", value: displayStats.total, icon: Target, color: "#3F3047", shadow: "#261D2E" },
           { label: "SEQUÊNCIA", value: displayStats.streak, icon: Flame, color: "#FF9600", shadow: "#E58700" },
-          { label: "HOJE", value: displayStats.today, icon: CheckCircle2, color: "#58CC02", shadow: "#46A302" },
+          { 
+            label: "HOJE", 
+            value: displayStats.today, 
+            icon: CheckCircle2, 
+            color: isTodayComplete ? "#58CC02" : "#727272", // Cinza se incompleto, Verde se completo
+            shadow: isTodayComplete ? "#46A302" : "#505050",
+            glow: isTodayComplete ? "0 0 20px rgba(88, 204, 2, 0.4)" : "none"
+          },
           { label: "MÊS", value: displayStats.progress, icon: CalendarDays, color: "#CE82FF", shadow: "#A855F7" }
         ].map((s, i) => (
           <div
             key={i}
-            className="py-6 px-7 rounded-[32px] flex items-center gap-5 border-2 transition-all hover:scale-[1.02]"
+            className={cn(
+              "py-6 px-7 rounded-[32px] flex items-center gap-5 border-2 transition-all duration-300 hover:scale-[1.02]",
+              i === 2 && isTodayComplete && "animate-pulse-subtle"
+            )}
             style={{
               backgroundColor: s.color,
               borderColor: 'transparent',
-              boxShadow: `0 4px 0 0 ${s.shadow}`,
+              boxShadow: `0 4px 0 0 ${s.shadow}, ${s.glow || 'none'}`,
               color: 'white'
             }}
           >
@@ -66,13 +85,14 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
               <s.icon size={28} className="text-white fill-white/10" strokeWidth={3} />
             </div>
             <div className="flex flex-col">
-              <span className="text-[10px] font-[900] uppercase tracking-widest leading-tight mb-1 opacity-80">{s.label}</span>
+              <span className="text-[10px] font-[900] uppercase tracking-widest leading-tight mb-1 opacity-90">{s.label}</span>
               <span className="text-[28px] font-[950] leading-none tracking-tight">{s.value}</span>
             </div>
           </div>
         ))}
       </div>
 
+      {/* Bloco Mestre da Rotina (Gamificação) */}
       <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[40px] p-10 shadow-[var(--shadow-ui)] relative overflow-hidden">
         <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
           <Trophy size={140} className="text-[var(--foreground)]" />
@@ -100,11 +120,17 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
               </div>
             </div>
             
-            <div className="h-5 w-full bg-[var(--border-ui)] rounded-full overflow-hidden p-1 shadow-inner">
+            {/* Barra de XP Aprimorada */}
+            <div className="h-7 w-full bg-[var(--border-ui)] rounded-full overflow-hidden p-1.5 shadow-inner">
               <div 
-                className="h-full bg-gradient-to-r from-[#3F3047] to-[#261D2E] rounded-full transition-all duration-1000" 
-                style={{ width: '75%' }}
-              />
+                className="h-full bg-gradient-to-r from-[#BF5AF2] to-[#3F3047] rounded-full transition-all duration-1000 relative" 
+                style={{ 
+                  width: '75%',
+                  boxShadow: '0 0 15px rgba(191, 90, 242, 0.4)' 
+                }}
+              >
+                <div className="absolute inset-0 bg-white/20 animate-pulse" />
+              </div>
             </div>
             
             <div className="flex gap-4">
@@ -121,7 +147,9 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
         </div>
       </div>
 
+      {/* Gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Evolução Semanal */}
         <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[32px] p-8 shadow-[var(--shadow-ui)]">
           <div className="flex items-center gap-3 mb-10">
             <div className="p-2.5 bg-[#3F3047]/10 rounded-xl text-[#3F3047]">
@@ -144,7 +172,7 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                   dataKey="name" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: 'var(--muted-foreground)', fontSize: 11, fontWeight: 800 }} 
+                  tick={{ fill: 'var(--foreground)', fontSize: 11, fontWeight: 900, opacity: 0.8 }} // Contraste aumentado
                 />
                 <YAxis hide />
                 <Tooltip 
@@ -164,6 +192,7 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
           </div>
         </div>
 
+        {/* Distribuição de Foco (Sincronizada) */}
         <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[32px] p-8 shadow-[var(--shadow-ui)]">
           <div className="flex items-center gap-3 mb-10">
             <div className="p-2.5 bg-[#FF9600]/10 rounded-xl text-[#FF9600]">
@@ -173,7 +202,13 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
           </div>
 
           <div className="flex items-center flex-col md:flex-row h-full">
-            <div className="h-[220px] w-full md:w-1/2">
+            <div className="h-[220px] w-full md:w-1/2 relative">
+              {/* Centro do Donut Chart */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span className="text-[var(--muted-foreground)] text-[10px] font-black uppercase tracking-tighter">TOTAL</span>
+                <span className="text-[var(--foreground)] text-[24px] font-[950]">85%</span>
+              </div>
+              
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -203,7 +238,7 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                     <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: item.color }} />
                     <span className="text-[12px] font-[800] text-[var(--muted-foreground)] uppercase tracking-tighter">{item.name}</span>
                   </div>
-                  <span className="text-[14px] font-[950] text-[var(--foreground)]">{Math.round(item.value / 12)}%</span>
+                  <span className="text-[14px] font-[950] text-[var(--foreground)]">{Math.round(item.value / 13.5)}%</span>
                 </div>
               ))}
             </div>
