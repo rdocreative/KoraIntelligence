@@ -730,16 +730,16 @@ const HabitsPage = () => {
                                   !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-20",
                                   
                                   // Default/Empty state
-                                  day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#212121] border-[var(--border-ui)] text-[var(--foreground)]",
+                                  day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#0d0d0d] border-[var(--border-ui)] text-[var(--foreground)]",
                                   
-                                  // Levels - changing bg to #212121
-                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#212121] border-[#FF3B30] text-[#FF3B30]", 
-                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#212121] border-[#FF9500] text-[#FF9500]", 
-                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#212121] border-[#FFD60A] text-[#FFD60A]", 
-                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#212121] border-[#34C759] text-[#34C759]", 
+                                  // Levels - changing bg to #0d0d0d
+                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#0d0d0d] border-[#FF3B30] text-[#FF3B30]", 
+                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#0d0d0d] border-[#FF9500] text-[#FF9500]", 
+                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#0d0d0d] border-[#FFD60A] text-[#FFD60A]", 
+                                  day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#0d0d0d] border-[#34C759] text-[#34C759]", 
                                   
-                                  // Today - changing bg to #212121
-                                  day.isToday && !day.isSelected && "border-[#10B981] bg-[#212121] text-[#059669]",
+                                  // Today - changing bg to #0d0d0d
+                                  day.isToday && !day.isSelected && "border-[#10B981] bg-[#0d0d0d] text-[#059669]",
                                   
                                   day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.1)]"
                                 )}
