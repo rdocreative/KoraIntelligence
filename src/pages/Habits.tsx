@@ -295,7 +295,7 @@ const HabitCardUI = ({
         </div>
       </div>
 
-      {/* Meta Mensal - Minimalista e Sutil */}
+      {/* Meta Mensal - Minimalista com Trilha Visível */}
       <div className="mt-5 pt-3 border-t border-[var(--border-ui)]/10">
         <div className="flex justify-between items-end mb-1.5 px-0.5">
           <span className="text-[9px] font-black text-[var(--muted-foreground)]/60 uppercase tracking-[0.2em]">Meta Mensal</span>
@@ -303,7 +303,7 @@ const HabitCardUI = ({
             {completionsThisMonth}<span className="opacity-30 mx-0.5">/</span>{target}
           </span>
         </div>
-        <div className="h-[4px] w-full bg-[var(--border-ui)]/20 rounded-full overflow-hidden">
+        <div className="h-[4px] w-full bg-gray-200/50 dark:bg-white/10 rounded-full overflow-hidden">
           <div 
             className="h-full transition-all duration-1000 ease-out rounded-full" 
             style={{ 
