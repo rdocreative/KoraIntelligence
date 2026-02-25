@@ -226,20 +226,18 @@ const HabitCardUI = ({
             "h-10 w-10 rounded-full border-2 flex items-center justify-center transition-all duration-300 transform active:scale-95 shrink-0 z-10",
             isCompleted 
               ? "bg-primary border-primary shadow-[0_0_15px_rgba(var(--primary),0.6)]" 
-              : "bg-white/50 border-gray-300 hover:border-primary/40 hover:shadow-[0_0_10px_rgba(var(--primary),0.2)]"
+              : "bg-transparent border-gray-300 hover:border-primary/40 hover:shadow-[0_0_10px_rgba(var(--primary),0.2)]"
           )}
           style={{ 
             borderColor: isCompleted ? "var(--primary)" : (isCompleted ? "var(--border-ui)" : cardTheme.main),
             backgroundColor: isCompleted ? cardTheme.main : 'transparent'
           }}
         >
-          {isCompleted ? (
+          {isCompleted && (
             <Check 
               size={18} 
               className="stroke-[4px] text-white animate-in zoom-in duration-200" 
             />
-          ) : (
-            <div className="w-2 h-2 rounded-full bg-gray-300 transition-all group-hover:scale-125 group-hover:bg-primary/50" />
           )}
         </button>
 
@@ -609,8 +607,7 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-background pb-4 animate-in fade-in duration-500 relative flex-1 min-w-0">
       
-      {/* Seletor de Abas Fixo (Sticky) */}
-      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md flex justify-center px-4 md:px-8 py-6 shrink-0 transition-all">
+      <div className="flex justify-center px-4 md:px-8 pt-[31px] pb-0 shrink-0">
         <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-full p-1 shadow-[0_4px_0_0_var(--border-ui)] flex items-center gap-1.5 overflow-visible">
           <button 
             onClick={() => setActiveTab('overview')} 
@@ -638,7 +635,7 @@ const HabitsPage = () => {
       </div>
 
       {activeTab === 'overview' ? (
-        <div className="flex flex-col lg:flex-row gap-8 p-4 md:p-8 pt-0 items-start w-full min-w-0">
+        <div className="mt-[31px] flex flex-col lg:flex-row gap-8 p-4 md:p-8 items-start w-full min-w-0">
           <div className={cn("transition-all duration-500 shrink-0 min-w-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
             <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[24px] shadow-[0_4px_0_0_var(--border-ui)] p-6 py-[24px] flex flex-col min-w-0">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-8 shrink-0">
@@ -751,7 +748,7 @@ const HabitsPage = () => {
             </div>
           )}
         </div>
-      ) : (<div className="w-full px-4 md:px-8"><DashboardOverview stats={stats} /></div>)}
+      ) : (<div className="mt-[31px] w-full px-4 md:px-8"><DashboardOverview stats={stats} /></div>)}
       {editingHabit && (<EditPopup habit={editingHabit.habit} rect={editingHabit.rect} onClose={() => setEditingHabit(null)} onSave={(updated) => setHabits(prev => prev.map(h => h.id === updated.id ? updated : h))} onDelete={(id) => setHabits(prev => prev.filter(h => h.id !== id))} />)}
       <DateSelectorModal isOpen={isDateSelectorOpen} onClose={() => setIsDateSelectorOpen(false)} currentDate={currentDate} onSelectDate={(date) => { setCurrentDate(date); setSelectedDate(date); }} />
     </div>
