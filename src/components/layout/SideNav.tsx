@@ -141,9 +141,9 @@ export const SideNav = () => {
           {/* Top Header Section */}
           <div className="px-5 pt-8 pb-6 flex items-center justify-between">
             
-            {/* Coluna Esquerda: Avatar */}
-            <div className="shrink-0">
-              <NavLink to="/perfil" className="block relative group">
+            {/* Coluna Esquerda: Avatar + Nível */}
+            <div className="flex items-center gap-3">
+              <NavLink to="/perfil" className="block relative group shrink-0">
                 <img 
                   src="https://github.com/shadcn.png" 
                   alt="User Avatar" 
@@ -151,10 +151,20 @@ export const SideNav = () => {
                 />
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#f5eeee] dark:border-[#212121] rounded-full"></span>
               </NavLink>
+
+              {/* Nível (Visível se a largura permitir) */}
+              <div className={cn(
+                 "transition-opacity duration-200",
+                 expandedWidth < 180 ? "opacity-0 w-0 overflow-hidden" : "opacity-100 w-auto"
+              )}>
+                <span className="text-[10px] font-black text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full tracking-tighter uppercase shrink-0 cursor-help select-none whitespace-nowrap" title="Nível Atual">
+                  LVL 42
+                </span>
+              </div>
             </div>
 
-            {/* Coluna Direita: Notificações + Nível + Botão Recolher */}
-            <div className="flex items-center gap-3">
+            {/* Coluna Direita: Notificações + Botão Recolher */}
+            <div className="flex items-center gap-2">
               
               {/* Notificações */}
               <div className="relative">
@@ -180,11 +190,6 @@ export const SideNav = () => {
                   </div>
                 )}
               </div>
-
-              {/* Nível */}
-              <span className="text-[10px] font-black text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full tracking-tighter uppercase shrink-0 cursor-help select-none" title="Nível Atual">
-                LVL 42
-              </span>
 
               {/* Botão Recolher */}
               <button 
