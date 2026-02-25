@@ -14,12 +14,11 @@ import {
   Brain,
   User,
   Sparkles,
-  PanelLeft,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  ChevronRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
 const navItems = [
   { icon: LayoutDashboard, path: "/", label: "Início" },
@@ -33,7 +32,7 @@ const navItems = [
 ];
 
 const DEFAULT_WIDTH = 240;
-const COLLAPSED_WIDTH = 88;
+const COLLAPSED_WIDTH = 48; // Largura mínima apenas para o botão
 const MIN_WIDTH = DEFAULT_WIDTH * 0.9;
 const MAX_WIDTH = DEFAULT_WIDTH * 1.85;
 
@@ -96,25 +95,32 @@ export const SideNav = () => {
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
+    // Fecha notificações ao colapsar para evitar popups flutuando
+    if (!isCollapsed) setShowNotifications(false);
   };
 
   return (
     <aside 
       ref={sidebarRef}
-      style={{ width: `${currentWidth}px` }}
-      className="sticky top-0 h-screen z-[50] flex flex-col bg-[#f5eeee] dark:bg-[#212121] rounded-r-[40px] shadow-2xl shrink-0 transition-[width,background-color,shadow] duration-300 ease-in-out will-change-[width]"
+      style={{ 
+        width: `${currentWidth}px`,
+        // Remove a transição durante o redimensionamento para máxima fluidez
+        transition: isResizing ? 'none' : 'width 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+      }}
+      className="sticky top-0 h-screen z-[50] flex flex-col bg-[#f5eeee] dark:bg-[#212121] rounded-r-[40px] shadow-2xl shrink-0 will-change-[width]"
     >
       {/* Resizer Handle (apenas se não estiver colapsado) */}
       {!isCollapsed && (
         <div 
           onMouseDown={startResizing}
           className={cn(
-            "absolute right-0 top-0 bottom-0 w-2 cursor-col-resize group z-[60] flex items-center justify-center",
-            isResizing && "bg-primary/5"
+            "absolute right-0 top-0 bottom-0 w-3 cursor-col-resize group z-[60] flex items-center justify-center -mr-1.5 hover:bg-transparent",
+            isResizing && "w-screen fixed left-0 right-0 z-[9999] cursor-col-resize bg-transparent" // Overlay invisível para capturar mouse
           )}
         >
+          {/* Visual indicator of handle */}
           <div className={cn(
-            "w-[2px] h-12 rounded-full transition-all duration-200 bg-transparent group-hover:bg-primary/20",
+            "w-[3px] h-12 rounded-full transition-all duration-200 bg-transparent group-hover:bg-primary/20 absolute right-1.5",
             isResizing && "bg-primary/40 h-24"
           )} />
         </div>
@@ -122,100 +128,103 @@ export const SideNav = () => {
 
       {/* Header com Logo e Ações */}
       <div className={cn(
-        "px-6 pt-8 pb-6 flex items-center transition-all duration-300",
-        isCollapsed ? "justify-center flex-col gap-4 px-2" : "justify-between gap-2"
+        "flex items-center transition-all duration-300 relative",
+        isCollapsed ? "justify-center pt-6 px-0" : "px-6 pt-8 pb-6 justify-between gap-2"
       )}>
-        {/* Logo Icon */}
-        <div className="w-10 h-10 rounded-[14px] bg-primary flex items-center justify-center shadow-lg shadow-primary/25 shrink-0 transition-transform hover:scale-105">
+        {/* Logo Icon - Oculto quando colapsado */}
+        <div className={cn(
+          "w-10 h-10 rounded-[14px] bg-primary flex items-center justify-center shadow-lg shadow-primary/25 shrink-0 transition-all duration-300",
+          isCollapsed ? "hidden opacity-0 scale-0" : "flex opacity-100 scale-100 hover:scale-105"
+        )}>
           <Sparkles className="text-primary-foreground w-5 h-5" />
         </div>
 
-        {/* Botões de Ação (Notificação e Collapse) */}
+        {/* Botões de Ação */}
         <div className={cn(
-          "flex items-center gap-1",
-          isCollapsed && "flex-col gap-3"
+          "flex items-center gap-1 transition-all duration-300",
+          isCollapsed && "w-full justify-center"
         )}>
-          {/* Botão de Notificações */}
-          <div className="relative">
-            <button 
-              onClick={() => setShowNotifications(!showNotifications)}
-              className="p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors relative"
-            >
-              <Bell size={20} />
-              <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#f5eeee] dark:border-[#212121]" />
-            </button>
+          {/* Botão de Notificações - Oculto quando colapsado */}
+          {!isCollapsed && (
+            <div className="relative animate-in fade-in zoom-in duration-300">
+              <button 
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors relative"
+              >
+                <Bell size={20} />
+                <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#f5eeee] dark:border-[#212121]" />
+              </button>
 
-            {/* Dropdown de Notificações Simples */}
-            {showNotifications && (
-              <div className="absolute left-full top-0 ml-2 w-64 bg-white dark:bg-[#1e1e1e] rounded-xl shadow-xl border border-border p-3 z-[70] animate-in fade-in zoom-in-95 duration-200 origin-top-left">
-                <div className="flex items-center justify-between mb-2 pb-2 border-b">
-                  <span className="font-bold text-sm">Notificações</span>
-                  <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded-full">3 novas</span>
-                </div>
-                <div className="space-y-2">
-                  <div className="text-xs p-2 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors cursor-pointer">
-                    <p className="font-medium">Meta Concluída!</p>
-                    <p className="text-muted-foreground mt-0.5">Você completou "Beber Água".</p>
+              {/* Dropdown de Notificações */}
+              {showNotifications && (
+                <div className="absolute left-full top-0 ml-2 w-64 bg-white dark:bg-[#1e1e1e] rounded-xl shadow-xl border border-border p-3 z-[70] animate-in fade-in zoom-in-95 duration-200 origin-top-left">
+                  <div className="flex items-center justify-between mb-2 pb-2 border-b">
+                    <span className="font-bold text-sm">Notificações</span>
+                    <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded-full">3 novas</span>
                   </div>
-                  <div className="text-xs p-2 rounded-lg hover:bg-secondary/50 transition-colors cursor-pointer">
-                    <p className="font-medium">Novo Hábito</p>
-                    <p className="text-muted-foreground mt-0.5">Hora de praticar meditação.</p>
+                  <div className="space-y-2">
+                    <div className="text-xs p-2 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors cursor-pointer">
+                      <p className="font-medium">Meta Concluída!</p>
+                      <p className="text-muted-foreground mt-0.5">Você completou "Beber Água".</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
-          {/* Botão Collapse/Expand */}
+          {/* Botão Collapse/Expand - Único visível quando colapsado */}
           <button 
             onClick={toggleCollapse}
-            className="p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
+            className={cn(
+              "p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors",
+              isCollapsed && "bg-transparent hover:bg-primary/10 text-primary"
+            )}
             title={isCollapsed ? "Expandir Menu" : "Recolher Menu"}
           >
-            {isCollapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
+            {isCollapsed ? <ChevronRight size={24} /> : <PanelLeftClose size={20} />}
           </button>
         </div>
       </div>
 
-      {/* Navegação Principal */}
-      <nav className="flex-1 px-4 flex flex-col gap-2 overflow-y-auto scrollbar-none mt-2">
-        {navItems.map(({ icon: Icon, path, label }) => (
-          <NavLink
-            key={path}
-            to={path}
-            className={({ isActive }) => cn(
-              "group relative flex items-center gap-4 py-3.5 rounded-[20px] transition-all duration-300 ease-out overflow-hidden",
-              isCollapsed ? "justify-center px-0 w-12 mx-auto" : "px-4",
-              isActive 
-                ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
-                : "text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)]",
-              isActive && !isCollapsed && "scale-[1.02]"
-            )}
-            title={isCollapsed ? label : undefined}
-          >
-            {({ isActive }) => (
-              <>
-                <Icon size={20} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
-                
-                <span className={cn(
-                  "text-[14px] font-bold tracking-wide truncate transition-all duration-300",
-                  (isCollapsed || currentWidth < 180) ? "opacity-0 w-0 absolute" : "opacity-100 w-auto relative"
-                )}>
-                  {label}
-                </span>
-                
-                {isActive && currentWidth >= 180 && !isCollapsed && (
-                  <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-white/80 shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
-                )}
-              </>
-            )}
-          </NavLink>
-        ))}
-      </nav>
+      {/* Navegação Principal - Oculta quando colapsado */}
+      {!isCollapsed && (
+        <nav className="flex-1 px-4 flex flex-col gap-2 overflow-y-auto scrollbar-none mt-2 animate-in fade-in slide-in-from-left-4 duration-300">
+          {navItems.map(({ icon: Icon, path, label }) => (
+            <NavLink
+              key={path}
+              to={path}
+              className={({ isActive }) => cn(
+                "group relative flex items-center gap-4 py-3.5 px-4 rounded-[20px] transition-all duration-300 ease-out overflow-hidden",
+                isActive 
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]" 
+                  : "text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)]"
+              )}
+            >
+              {({ isActive }) => (
+                <>
+                  <Icon size={20} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
+                  
+                  <span className={cn(
+                    "text-[14px] font-bold tracking-wide truncate transition-all duration-300",
+                    currentWidth < 180 ? "opacity-0 w-0 absolute" : "opacity-100 w-auto relative"
+                  )}>
+                    {label}
+                  </span>
+                  
+                  {isActive && currentWidth >= 180 && (
+                    <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-white/80 shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+                  )}
+                </>
+              )}
+            </NavLink>
+          ))}
+        </nav>
+      )}
 
       {/* Rodapé com Usuário - Oculto quando colapsado */}
       {!isCollapsed && (
-        <div className="p-4 mt-auto mb-2 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="p-4 mt-auto mb-2 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300 delay-100">
           <div className="relative group bg-black/5 dark:bg-white/5 p-3 rounded-[24px] hover:bg-black/10 dark:hover:bg-white/10 transition-colors duration-200">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3 overflow-hidden">
