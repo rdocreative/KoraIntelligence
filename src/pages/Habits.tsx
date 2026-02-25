@@ -5,7 +5,7 @@ import {
   Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, Clock, Flame, 
   BarChart3, Pencil, Trash2, 
-  CalendarDays, HelpCircle,
+  CalendarDays,
   HeartPulse, GraduationCap, Briefcase, Coffee, Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -211,38 +211,37 @@ const HabitCardUI = ({
         backgroundColor: cardTheme.bg,
         borderColor: isCompleted ? "var(--border-ui)" : cardTheme.main,
         borderWidth: "1.5px",
-        boxShadow: isCompleted || isOverlay ? 'none' : `0 4px 12px ${cardTheme.main}15`,
+        boxShadow: isCompleted || isOverlay ? 'none' : `0 4px 0 0 ${cardTheme.main}22`,
       }}
       className={cn(
-        "group rounded-[20px] border-2 p-[20px] pb-[24px] mb-[16px] select-none transition-all duration-300",
+        "group rounded-[20px] border-2 p-[16px] mb-[16px] select-none transition-all duration-300",
         isOverlay ? "cursor-grabbing scale-[1.02] shadow-2xl opacity-90" : "cursor-grab active:cursor-grabbing",
-        isCompleted && "opacity-60 grayscale-[0.5]"
+        isCompleted && "opacity-50 grayscale-[0.5]"
       )}
     >
       <div className="flex items-center gap-4">
         <button 
           onClick={(e) => { e.stopPropagation(); onToggle?.(habit.id); }}
           className={cn(
-            "h-10 w-10 rounded-full border-2 flex items-center justify-center transition-all duration-300 transform active:scale-95 shrink-0 z-10",
+            "h-8 w-8 rounded-full border-2 flex items-center justify-center transition-all duration-300 transform active:scale-90 shrink-0 z-10",
             isCompleted 
-              ? "bg-primary border-primary shadow-[0_0_15px_rgba(var(--primary),0.6)]" 
-              : "bg-transparent border-gray-300 hover:border-primary/40 hover:shadow-[0_0_10px_rgba(var(--primary),0.2)]"
+              ? "bg-primary border-primary rotate-[360deg]" 
+              : "bg-white/50 border-gray-300 hover:border-gray-400"
           )}
-          style={{ 
-            borderColor: isCompleted ? "var(--primary)" : (isCompleted ? "var(--border-ui)" : cardTheme.main),
-            backgroundColor: isCompleted ? cardTheme.main : 'transparent'
-          }}
+          style={{ borderColor: isCompleted ? "var(--primary)" : cardTheme.main }}
         >
-          {isCompleted && (
+          {isCompleted ? (
             <Check 
-              size={18} 
-              className="stroke-[4px] text-white animate-in zoom-in duration-200" 
+              size={16} 
+              className="stroke-[4px] text-primary-foreground animate-in zoom-in duration-200" 
             />
+          ) : (
+            <div className="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all group-hover:bg-primary/50" />
           )}
         </button>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-3 mb-1.5 overflow-hidden">
+          <div className="flex items-center gap-2 mb-1.5 overflow-hidden">
             <h3 className={cn(
               "text-[15px] font-[950] truncate leading-tight transition-all duration-300",
               isCompleted ? "line-through text-[var(--muted-foreground)] opacity-70" : "text-[var(--foreground)]"
@@ -251,7 +250,7 @@ const HabitCardUI = ({
             </h3>
             
             <div 
-              className="flex items-center gap-1 px-2 py-0.5 rounded-md shrink-0 transition-all ml-1"
+              className="flex items-center gap-1 px-2 py-0.5 rounded-md shrink-0 transition-all"
               style={{ 
                 backgroundColor: `${category.color}4D`, 
                 color: category.color 
@@ -302,26 +301,22 @@ const HabitCardUI = ({
         </div>
       </div>
 
-      {/* Progress Line Divider */}
-      <div className="mt-5 relative h-[24px]">
-        {/* The Track */}
-        <div className="absolute top-[2px] left-0 w-full h-[3px] bg-gray-200/50 dark:bg-white/10 rounded-full" />
-        
-        {/* The Fill (Monthly Progress) */}
-        <div 
-          className="absolute top-[2px] left-0 h-[3px] rounded-full transition-all duration-1000 ease-out z-10" 
-          style={{ 
-            width: `${progressPercent}%`,
-            backgroundColor: isCompleted ? "var(--muted-foreground)" : category.color,
-            boxShadow: isCompleted ? 'none' : `0 0 8px ${category.color}44`
-          }}
-        />
-
-        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center px-0.5">
-          <span className="text-[9px] font-black text-[var(--muted-foreground)]/60 uppercase tracking-[0.15em]">Meta Mensal</span>
-          <span className="text-[11px] font-black tabular-nums opacity-90" style={{ color: isCompleted ? "var(--muted-foreground)" : category.color }}>
+      <div className="mt-5 pt-3 border-t border-[var(--border-ui)]/10">
+        <div className="flex justify-between items-end mb-1.5 px-0.5">
+          <span className="text-[9px] font-black text-[var(--muted-foreground)]/60 uppercase tracking-[0.2em]">Meta Mensal</span>
+          <span className="text-[11px] font-black tabular-nums opacity-80" style={{ color: isCompleted ? "var(--muted-foreground)" : cardTheme.main }}>
             {completionsThisMonth}<span className="opacity-30 mx-0.5">/</span>{target}
           </span>
+        </div>
+        <div className="h-[4px] w-full bg-gray-200/50 dark:bg-white/10 rounded-full overflow-hidden">
+          <div 
+            className="h-full transition-all duration-1000 ease-out rounded-full" 
+            style={{ 
+              width: `${progressPercent}%`,
+              backgroundColor: isCompleted ? "var(--muted-foreground)" : cardTheme.main,
+              opacity: isCompleted ? 0.3 : 1
+            }}
+          />
         </div>
       </div>
     </div>
@@ -538,15 +533,7 @@ const HabitsPage = () => {
     return days.map(day => {
       const dStr = format(day, 'yyyy-MM-dd');
       const habitsScheduledForDay = habits.filter(h => h.active && h.weekDays.includes(getDay(day)));
-      const completedHabitsForDay = habitsScheduledForDay.filter(h => h.completedDates.includes(dStr));
-      
-      // Cores das categorias concluídas para o heat map
-      const completedCategoryColors = completedHabitsForDay.map(h => {
-        const cat = CATEGORY_CONFIG.find(c => c.id === h.categoryId);
-        return cat?.color || '#ACACAC';
-      });
-
-      const doneCount = completedHabitsForDay.length;
+      const doneCount = habitsScheduledForDay.filter(h => h.completedDates.includes(dStr)).length;
       const totalCount = habitsScheduledForDay.length;
       let level = 0;
       if (totalCount > 0 && doneCount > 0) {
@@ -558,18 +545,7 @@ const HabitsPage = () => {
       }
       const isPast = isBefore(startOfDay(day), startOfDay(new Date()));
       const isToday = isSameDay(day, new Date());
-      return { 
-        date: day, 
-        isCurrentMonth: isSameMonth(day, currentDate), 
-        isToday, 
-        isPast, 
-        isFuture: !isPast && !isToday, 
-        isSelected: isSameDay(day, selectedDate), 
-        done: doneCount, 
-        total: totalCount, 
-        level,
-        completedCategoryColors
-      };
+      return { date: day, isCurrentMonth: isSameMonth(day, currentDate), isToday, isPast, isFuture: !isPast && !isToday, isSelected: isSameDay(day, selectedDate), done: doneCount, total: totalCount, level };
     });
   }, [currentDate, selectedDate, habits]);
 
@@ -607,15 +583,15 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-background pb-4 animate-in fade-in duration-500 relative flex-1 min-w-0">
       
-      <div className="flex justify-center px-4 md:px-8 pt-[31px] pb-0 shrink-0">
-        <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-full p-1 shadow-[0_4px_0_0_var(--border-ui)] flex items-center gap-1.5 overflow-visible">
+      <div className="flex justify-center pt-[35px] pb-0 shrink-0">
+        <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-full p-1.5 shadow-[0_4px_0_0_var(--border-ui)] flex items-center gap-1.5 overflow-visible">
           <button 
             onClick={() => setActiveTab('overview')} 
             className={cn(
-              "flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0", 
+              "flex items-center gap-2 px-6 py-2.5 rounded-full text-[12px] font-[900] uppercase tracking-[0.08em] transition-all duration-300 border-2 shrink-0", 
               activeTab === 'overview' 
-                ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.5)]" 
-                : "bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                ? "bg-primary/10 border-primary text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" 
+                : "bg-transparent border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
             )}
           >
             <LayoutGrid size={14} strokeWidth={3} /> Visão Geral
@@ -623,10 +599,10 @@ const HabitsPage = () => {
           <button 
             onClick={() => setActiveTab('charts')} 
             className={cn(
-              "flex items-center gap-2 px-5 py-2 rounded-full text-[12px] font-[800] uppercase tracking-[0.05em] transition-all duration-300 border-none shrink-0", 
+              "flex items-center gap-2 px-6 py-2.5 rounded-full text-[12px] font-[900] uppercase tracking-[0.08em] transition-all duration-300 border-2 shrink-0", 
               activeTab === 'charts' 
-                ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary),0.5)]" 
-                : "bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                ? "bg-primary/10 border-primary text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" 
+                : "bg-transparent border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
             )}
           >
             <BarChart3 size={14} strokeWidth={3} /> Dashboard
@@ -635,7 +611,7 @@ const HabitsPage = () => {
       </div>
 
       {activeTab === 'overview' ? (
-        <div className="mt-[31px] flex flex-col lg:flex-row gap-8 p-4 md:p-8 items-start w-full min-w-0">
+        <div className="mt-[35px] flex flex-col lg:flex-row gap-8 p-4 md:p-8 items-start w-full min-w-0">
           <div className={cn("transition-all duration-500 shrink-0 min-w-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
             <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[24px] shadow-[0_4px_0_0_var(--border-ui)] p-6 py-[24px] flex flex-col min-w-0">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-8 shrink-0">
@@ -648,7 +624,7 @@ const HabitsPage = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <button onClick={() => setCurrentDate(viewMode === 'weekly' ? subWeeks(currentDate, 1) : subMonths(currentDate, 1))} className="p-1 text-[var(--muted-foreground)] hover:text-primary"><ChevronLeft size={22} /></button>
-                  <button onClick={() => setIsDateSelectorOpen(true)} className="flex items-center gap-2 text-[15px] font-[800] text-[var(--foreground)] uppercase tracking-[0.05em] px-3 py-1.5 rounded-xl hover:bg-[var(--border-ui)] transition-colors group">
+                  <button onClick={() => setIsDateSelectorOpen(true)} className="flex items-center gap-2 text-[18px] font-[900] text-[var(--foreground)] uppercase tracking-[0.05em] px-3 py-1.5 rounded-xl hover:bg-[var(--border-ui)] transition-colors group">
                     {viewMode === 'weekly' ? `Semana de ${format(startOfWeek(currentDate), 'dd/MM')}` : format(currentDate, 'MMMM yyyy', { locale: ptBR })}
                     <Pencil size={12} className="opacity-0 group-hover:opacity-50 text-primary" />
                   </button>
@@ -667,24 +643,18 @@ const HabitsPage = () => {
                         {calendarDays.map((day, i) => (
                           <Tooltip key={i}>
                             <TooltipTrigger asChild>
-                              <div onClick={() => setSelectedDate(day.date)} className={cn("aspect-square rounded-[12px] md:rounded-[16px] border-[2px] md:border-[3px] flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative overflow-hidden", !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-50", day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#383838] border-[var(--border-ui)] text-[var(--foreground)]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#383838] border-[#FF3B30] text-[#FF3B30]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#383838] border-[#FF9500] text-[#FF9500]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#383838] border-[#FFD60A] text-[#FFD60A]", day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#383838] border-[#34C759] text-[#34C759]", day.isToday && !day.isSelected && "border-[#10B981] bg-[#10B981]/20 text-[#059669] shadow-[0_0_15px_rgba(16,185,129,0.4)]", day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.1)]")}>
-                                <span className={cn("text-[12px] md:text-[14px] font-[900] mb-1", day.isCurrentMonth ? "opacity-100" : "opacity-40")}>{format(day.date, 'd')}</span>
-                                
-                                {/* Micro-status indicators (Heat map) */}
-                                {day.isCurrentMonth && day.completedCategoryColors.length > 0 && (
-                                  <div className="absolute bottom-1.5 left-0 right-0 flex justify-center gap-0.5 px-1">
-                                    {day.completedCategoryColors.slice(0, 4).map((color, idx) => (
-                                      <div 
-                                        key={idx} 
-                                        className="h-1 w-1 md:h-1.5 md:w-1.5 rounded-full" 
-                                        style={{ backgroundColor: color }}
-                                      />
-                                    ))}
-                                    {day.completedCategoryColors.length > 4 && (
-                                      <div className="h-1 w-1 md:h-1.5 md:w-1.5 rounded-full bg-white/30" />
-                                    )}
-                                  </div>
-                                )}
+                              <div onClick={() => setSelectedDate(day.date)} className={cn(
+                                "aspect-square rounded-[12px] md:rounded-[16px] border-[2px] md:border-[3px] flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative", 
+                                !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-20", 
+                                day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#383838] border-[var(--border-ui)] text-[var(--foreground)]", 
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#FF3B30]/20 border-[#FF3B30]/40 text-white", 
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#FF9500]/25 border-[#FF9500]/45 text-white", 
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#FFD60A]/30 border-[#FFD60A]/50 text-white", 
+                                day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#34C759]/40 border-[#34C759]/60 text-white font-black", 
+                                day.isToday && !day.isSelected && !day.level && "border-[#10B981] bg-[#383838] text-[#059669]", 
+                                day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.1)]"
+                              )}>
+                                <span className={cn("text-[12px] md:text-[14px] font-[900]", day.isCurrentMonth ? "opacity-100" : "opacity-40")}>{format(day.date, 'd')}</span>
                               </div>
                             </TooltipTrigger>
                             <TooltipContent className="bg-[var(--card)] border-2 border-[var(--border-ui)] text-[var(--foreground)] rounded-[16px] shadow-xl p-3"><p className="text-xs font-bold mb-1">{format(day.date, 'dd/MM')}</p><p className="text-[10px] text-[var(--muted-foreground)] font-bold uppercase">{day.done} de {day.total} feitos</p></TooltipContent>
@@ -694,18 +664,7 @@ const HabitsPage = () => {
                     </div>
                   </div>
                 )}
-                {viewMode === 'weekly' && (
-                  <div className="overflow-y-auto custom-scrollbar">
-                    <WeeklyView 
-                      currentDate={currentDate} 
-                      habits={habits.map(h => ({
-                        ...h,
-                        priority: h.priority <= 1 ? 'high' : h.priority === 2 ? 'medium' : 'low'
-                      }))} 
-                      onToggleHabit={toggleHabit} 
-                    />
-                  </div>
-                )}
+                {viewMode === 'weekly' && (<div className="overflow-y-auto custom-scrollbar"><WeeklyView currentDate={currentDate} habits={habits} onToggleHabit={toggleHabit} /></div>)}
               </div>
             </div>
           </div>
@@ -717,7 +676,6 @@ const HabitsPage = () => {
                   <div className="bg-primary/10 text-primary text-[11px] font-[800] px-3 py-1 rounded-full border-2 border-primary/10">{displayedHabitsData.completed.length}/{displayedHabitsData.all.length}</div>
                 </div>
                 
-                {/* Lista de Hábitos com altura fixa para 4 cards e scroll invisível */}
                 <div className="flex-1 min-w-0 overflow-y-auto px-6 py-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" style={{ maxHeight: '600px' }}>
                   <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
                     <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
@@ -748,7 +706,7 @@ const HabitsPage = () => {
             </div>
           )}
         </div>
-      ) : (<div className="mt-[31px] w-full px-4 md:px-8"><DashboardOverview stats={stats} /></div>)}
+      ) : (<div className="mt-[35px] w-full px-4 md:px-8"><DashboardOverview stats={stats} /></div>)}
       {editingHabit && (<EditPopup habit={editingHabit.habit} rect={editingHabit.rect} onClose={() => setEditingHabit(null)} onSave={(updated) => setHabits(prev => prev.map(h => h.id === updated.id ? updated : h))} onDelete={(id) => setHabits(prev => prev.filter(h => h.id !== id))} />)}
       <DateSelectorModal isOpen={isDateSelectorOpen} onClose={() => setIsDateSelectorOpen(false)} currentDate={currentDate} onSelectDate={(date) => { setCurrentDate(date); setSelectedDate(date); }} />
     </div>
