@@ -5,7 +5,8 @@ import {
   Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, Clock, Flame, 
   BarChart3, Pencil, Trash2, 
-  Play, Pause, CalendarDays, HelpCircle
+  Play, Pause, CalendarDays, HelpCircle,
+  HeartPulse, GraduationCap, Briefcase, Coffee, Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,13 +72,22 @@ interface Habit {
   completedDates: string[];
   active: boolean;
   priority: number; 
+  categoryId: string;
 }
 
 const PRIORITY_CONFIG = [
-  { id: 0, label: "MÁXIMA", bg: "#FF3B30", text: "#FFFFFF", dark: "#C22D25" },
-  { id: 1, label: "ALTA", bg: "#FF9500", text: "#FFFFFF", dark: "#CC7800" },
-  { id: 2, label: "MÉDIA", bg: "#FFD60A", text: "#7A5C00", dark: "#CCAB08" },
-  { id: 3, label: "NORMAL", bg: "#34C759", text: "#FFFFFF", dark: "#2A9F47" },
+  { id: 0, label: "MÁXIMA", color: "#FF3B30" },
+  { id: 1, label: "ALTA", color: "#FF9500" },
+  { id: 2, label: "MÉDIA", color: "#FFD60A" },
+  { id: 3, label: "NORMAL", color: "#34C759" },
+];
+
+const CATEGORY_CONFIG = [
+  { id: 'health', label: 'Saúde', color: '#3B82F6', icon: HeartPulse },
+  { id: 'study', label: 'Estudos', color: '#A855F7', icon: GraduationCap },
+  { id: 'work', label: 'Trabalho', color: '#F97316', icon: Briefcase },
+  { id: 'leisure', label: 'Lazer', color: '#EAB308', icon: Coffee },
+  { id: 'other', label: 'Outros', color: '#64748B', icon: Sparkles },
 ];
 
 // --- Habit Card UI Component ---
@@ -99,6 +109,14 @@ const HabitCardUI = ({
   isOverlay?: boolean
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
+
+  const category = useMemo(() => 
+    CATEGORY_CONFIG.find(c => c.id === habit.categoryId) || CATEGORY_CONFIG[4],
+  [habit.categoryId]);
+
+  const priority = useMemo(() => 
+    PRIORITY_CONFIG.find(p => p.id === habit.priority) || PRIORITY_CONFIG[3],
+  [habit.priority]);
 
   const streakInfo = useMemo(() => {
     const today = startOfDay(new Date());
@@ -164,27 +182,20 @@ const HabitCardUI = ({
   const target = useMemo(() => getDaysInMonth(currentDate), [currentDate]);
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
-  const priorityTheme = useMemo(() => {
-    const config = PRIORITY_CONFIG.find(c => c.id === habit.priority) || PRIORITY_CONFIG[3];
+  const cardTheme = useMemo(() => {
     if (isCompleted) {
       return {
-        main: "var(--accent-color)",
-        dark: "var(--primary-dark)",
+        main: "var(--border-ui)",
         bg: "var(--input-bg)",
-        tag: "CONCLUÍDO",
-        tagBg: "var(--muted-foreground)",
-        tagColor: "white"
+        text: "var(--muted-foreground)"
       };
     }
     return {
-      main: config.bg,
-      dark: config.dark,
-      bg: `${config.bg}22`,
-      tag: config.label,
-      tagBg: config.bg,
-      tagColor: config.text
+      main: category.color,
+      bg: `${category.color}15`,
+      text: "var(--foreground)"
     };
-  }, [habit.priority, isCompleted]);
+  }, [category.color, isCompleted]);
 
   if (isPlaceholder) {
     return (
@@ -198,9 +209,9 @@ const HabitCardUI = ({
     <div 
       ref={cardRef}
       style={{
-        backgroundColor: priorityTheme.bg,
-        borderColor: isCompleted ? "var(--border-ui)" : priorityTheme.main,
-        boxShadow: isCompleted || isOverlay ? 'none' : `0 4px 0 0 ${priorityTheme.dark}88`,
+        backgroundColor: cardTheme.bg,
+        borderColor: isCompleted ? "var(--border-ui)" : `${category.color}44`,
+        boxShadow: isCompleted || isOverlay ? 'none' : `0 4px 0 0 ${category.color}22`,
       }}
       className={cn(
         "group rounded-[20px] border-2 p-[16px] mb-[16px] select-none transition-all duration-200",
@@ -217,7 +228,7 @@ const HabitCardUI = ({
               ? "bg-primary border-primary" 
               : "bg-white/50"
           )}
-          style={{ borderColor: priorityTheme.main }}
+          style={{ borderColor: isCompleted ? "var(--primary)" : category.color }}
         >
           {isCompleted && (
             <Check 
@@ -228,36 +239,46 @@ const HabitCardUI = ({
         </button>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1.5">
+          <div className="flex items-center gap-2 mb-1">
             <h3 className={cn(
-              "text-[15px] font-[950] text-[var(--foreground)] truncate leading-tight transition-all",
-              isCompleted && "line-through text-[var(--muted-foreground)]"
+              "text-[15px] font-[950] truncate leading-tight transition-all",
+              isCompleted ? "line-through text-[var(--muted-foreground)]" : "text-[var(--foreground)]"
             )}>
               {habit.title}
             </h3>
             <span 
-              className="text-[9px] font-[950] px-2.5 py-0.5 rounded-full border-none shrink-0 uppercase tracking-widest"
+              className="text-[8px] font-black px-2 py-0.5 rounded-md border shrink-0 uppercase tracking-wider"
               style={{ 
-                backgroundColor: priorityTheme.tagBg,
-                color: priorityTheme.tagColor
+                borderColor: `${priority.color}44`,
+                backgroundColor: `${priority.color}11`,
+                color: priority.color
               }}
             >
-              {priorityTheme.tag}
+              {priority.label}
             </span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <Clock size={12} className="text-[var(--muted-foreground)]" />
-            <span className="text-[11px] font-[800] text-[var(--muted-foreground)]">
-              {habit.time}
-            </span>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <category.icon size={11} style={{ color: category.color }} />
+              <span className="text-[10px] font-bold uppercase tracking-tight" style={{ color: category.color }}>
+                {category.label}
+              </span>
+            </div>
+            <span className="text-[var(--muted-foreground)] opacity-30">•</span>
+            <div className="flex items-center gap-1">
+              <Clock size={11} className="text-[var(--muted-foreground)]" />
+              <span className="text-[10px] font-bold text-[var(--muted-foreground)]">
+                {habit.time}
+              </span>
+            </div>
           </div>
         </div>
 
         <div className="flex items-center shrink-0 gap-3">
           {streakInfo.streak > 0 && (
-            <div className="flex items-center gap-1.5 bg-[var(--input-bg)] border-2 border-[var(--border-ui)] px-3 py-1 rounded-xl text-[var(--foreground)]">
-              <Flame size={14} className="text-[#FF9600] fill-[#FF9600]" />
-              <span className="text-[12px] font-black">{streakInfo.streak}</span>
+            <div className="flex items-center gap-1.5 bg-[var(--input-bg)]/50 border border-[var(--border-ui)] px-2.5 py-1 rounded-lg text-[var(--foreground)]">
+              <Flame size={12} className="text-[#FF9600] fill-[#FF9600]" />
+              <span className="text-[11px] font-black">{streakInfo.streak}</span>
             </div>
           )}
           {!isCompleted && onEdit && (
@@ -271,19 +292,13 @@ const HabitCardUI = ({
         </div>
       </div>
 
-      <div className="mt-4 pt-3 border-t-2 border-[var(--border-ui)]/30">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-[11px] font-[700] text-[#8892AA] uppercase tracking-[0.2em]">Meta Mensal</span>
-          <span className="text-[12px] font-[900] tabular-nums" style={{ color: priorityTheme.main }}>
-            {completionsThisMonth}/{target}
-          </span>
-        </div>
-        <div className="h-[6px] w-full bg-[var(--border-ui)]/40 rounded-full overflow-hidden p-0.5">
+      <div className="mt-3 pt-3 border-t border-[var(--border-ui)]/20">
+        <div className="h-[5px] w-full bg-[var(--border-ui)]/30 rounded-full overflow-hidden">
           <div 
-            className="h-full transition-all duration-700 ease-out rounded-full shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]" 
+            className="h-full transition-all duration-700 ease-out rounded-full" 
             style={{ 
               width: `${progressPercent}%`,
-              backgroundColor: priorityTheme.main
+              backgroundColor: isCompleted ? "var(--muted-foreground)" : category.color
             }}
           />
         </div>
@@ -390,53 +405,55 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-[10px] font-[800] uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Prioridade</Label>
-          <div className="flex gap-1.5">
-            {PRIORITY_CONFIG.map((config) => (
-              <button
-                key={config.id}
-                onClick={() => setForm({...form, priority: config.id})}
-                className={cn(
-                  "flex-1 h-8 rounded-lg text-[8px] font-black transition-all border-2",
-                  form.priority === config.id 
-                    ? "scale-105" 
-                    : "opacity-40 hover:opacity-100"
-                )}
-                style={{
-                  backgroundColor: config.bg,
-                  color: config.text,
-                  borderColor: form.priority === config.id ? 'var(--foreground)' : 'transparent'
-                }}
-              >
-                {config.label}
-              </button>
+          <Label className="text-[10px] font-[800] uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Categoria</Label>
+          <div className="grid grid-cols-5 gap-1">
+            {CATEGORY_CONFIG.map((cat) => (
+              <TooltipProvider key={cat.id}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => setForm({...form, categoryId: cat.id})}
+                      className={cn(
+                        "h-8 flex items-center justify-center rounded-lg transition-all border-2",
+                        form.categoryId === cat.id ? "scale-105" : "opacity-40 grayscale hover:opacity-100 hover:grayscale-0"
+                      )}
+                      style={{ 
+                        backgroundColor: `${cat.color}22`, 
+                        borderColor: form.categoryId === cat.id ? cat.color : 'transparent',
+                        color: cat.color
+                      }}
+                    >
+                      <cat.icon size={14} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>{cat.label}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             ))}
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-[10px] font-[800] uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Horário</Label>
-          <Input 
-            type="time"
-            value={form.time} 
-            onChange={(e) => setForm({...form, time: e.target.value})}
-            className="h-10 bg-[var(--input-bg)] border-2 border-[var(--border-ui)] text-[14px] font-[700] text-[var(--foreground)] focus-visible:ring-primary rounded-[12px]" 
-          />
-        </div>
-
-        <div className="flex items-center justify-between bg-[var(--input-bg)] p-3 rounded-[12px] border-2 border-[var(--border-ui)]">
-          <span className="text-[10px] font-[800] uppercase tracking-[0.1em] text-[var(--muted-foreground)] ml-1">
-            {form.active ? 'Ativo' : 'Pausado'}
-          </span>
-          <button 
-            onClick={() => setForm({...form, active: !form.active})}
-            className={cn(
-              "p-2 rounded-[8px] transition-all",
-              form.active ? "text-primary bg-primary/10" : "text-[var(--muted-foreground)] bg-[var(--border-ui)]"
-            )}
-          >
-            {form.active ? <Play size={14} fill="currentColor" /> : <Pause size={14} fill="currentColor" />}
-          </button>
+          <Label className="text-[10px] font-[800] uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Prioridade</Label>
+          <div className="flex gap-1">
+            {PRIORITY_CONFIG.map((p) => (
+              <button
+                key={p.id}
+                onClick={() => setForm({...form, priority: p.id})}
+                className={cn(
+                  "flex-1 h-7 rounded-md text-[8px] font-black transition-all border",
+                  form.priority === p.id ? "opacity-100 scale-105" : "opacity-40"
+                )}
+                style={{
+                  borderColor: p.color,
+                  backgroundColor: form.priority === p.id ? `${p.color}22` : 'transparent',
+                  color: p.color
+                }}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="flex items-center gap-3 pt-2">
@@ -446,7 +463,7 @@ const EditPopup = ({ habit, rect, onClose, onSave, onDelete }: EditPopupProps) =
             onClick={() => { onDelete(habit.id); onClose(); }}
             className="flex-1 h-10 border-2 border-[#FF4B4B]/30 text-[#FF4B4B] hover:bg-[#FF4B4B] hover:text-white text-[10px] font-[800] uppercase tracking-wider rounded-[12px]"
           >
-            <Trash2 size={14} className="mr-2" /> Excluir
+            <Trash2 size={14} />
           </Button>
           <Button 
             size="sm"
@@ -465,10 +482,10 @@ const HabitsPage = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'charts'>('overview');
   const [viewMode, setViewMode] = useState<'monthly' | 'weekly'>('monthly');
   const [habits, setHabits] = useState<Habit[]>([
-    { id: '1', title: 'Beber 3L de água', emoji: '💧', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '08:00', completedDates: [], active: true, priority: 0 },
-    { id: '2', title: 'Ler 10 páginas', emoji: '📚', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '21:00', completedDates: [], active: true, priority: 1 },
-    { id: '3', title: 'Academia', emoji: '💪', frequency: 'weekly', weekDays: [1,3,5], time: '18:00', completedDates: [], active: true, priority: 2 },
-    { id: '4', title: 'Meditar', emoji: '🧘', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '07:30', completedDates: [], active: true, priority: 3 },
+    { id: '1', title: 'Beber 3L de água', emoji: '💧', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '08:00', completedDates: [], active: true, priority: 0, categoryId: 'health' },
+    { id: '2', title: 'Ler 10 páginas', emoji: '📚', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '21:00', completedDates: [], active: true, priority: 1, categoryId: 'study' },
+    { id: '3', title: 'Academia', emoji: '💪', frequency: 'weekly', weekDays: [1,3,5], time: '18:00', completedDates: [], active: true, priority: 2, categoryId: 'health' },
+    { id: '4', title: 'Meditar', emoji: '🧘', frequency: 'daily', weekDays: [0,1,2,3,4,5,6], time: '07:30', completedDates: [], active: true, priority: 3, categoryId: 'other' },
   ]);
 
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -481,6 +498,7 @@ const HabitsPage = () => {
 
   const [newHabitTitle, setNewHabitTitle] = useState("");
   const [newHabitPriority, setNewHabitPriority] = useState(3);
+  const [newHabitCategory, setNewHabitCategory] = useState('health');
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -593,10 +611,12 @@ const HabitsPage = () => {
         time: format(new Date(), 'HH:mm'),
         completedDates: [],
         active: true,
-        priority: newHabitPriority
+        priority: newHabitPriority,
+        categoryId: newHabitCategory
       }]);
       setNewHabitTitle("");
       setNewHabitPriority(3);
+      setNewHabitCategory('health');
       setIsModalOpen(false);
     }
   };
@@ -696,14 +716,12 @@ const HabitsPage = () => {
                                 onClick={() => setSelectedDate(day.date)}
                                 className={cn(
                                   "aspect-square rounded-[16px] border-[3px] flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative",
-                                  // Contrast improvement for day numbers
                                   !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-20",
                                   day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[var(--background)] border-[var(--border-ui)] text-[var(--foreground)]",
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#FF3B3015] border-[#FF3B30] text-[#FF3B30]", 
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#FF950015] border-[#FF9500] text-[#FF9500]", 
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#FFD60A15] border-[#FFD60A] text-[#FFD60A]", 
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#34C75915] border-[#34C759] text-[#34C759]", 
-                                  // Highlight "Today"
                                   day.isToday && !day.isSelected && "border-[#10B981] bg-[#10B981]/10 text-[#059669]",
                                   day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.1)]"
                                 )}
@@ -801,15 +819,7 @@ const HabitsPage = () => {
                       )}
                     </SortableContext>
                     
-                    <DragOverlay dropAnimation={{
-                        sideEffects: defaultDropAnimationSideEffects({
-                            styles: {
-                                active: {
-                                    opacity: '0.5',
-                                },
-                            },
-                        }),
-                    }}>
+                    <DragOverlay>
                       {activeDraggingHabit ? (
                         <div className="w-full">
                           <HabitCardUI 
@@ -822,13 +832,6 @@ const HabitsPage = () => {
                       ) : null}
                     </DragOverlay>
                   </DndContext>
-                  
-                  {displayedHabitsData.all.length === 0 && (
-                    <div className="flex flex-col items-center justify-center py-12 text-center">
-                      <Clock size={32} className="text-[var(--border-ui)] mb-4" />
-                      <p className="text-[12px] font-[800] uppercase text-[var(--muted-foreground)] tracking-widest">Nada planejado</p>
-                    </div>
-                  )}
                 </div>
 
                 <div className="p-6 pt-4 border-t-2 border-[var(--border-ui)] bg-[var(--panel)] shrink-0">
@@ -848,30 +851,50 @@ const HabitsPage = () => {
                             onChange={(e) => setNewHabitTitle(e.target.value)}
                             placeholder="Ex: Beber 2L de água..." 
                             className="bg-[var(--input-bg)] border-2 border-[var(--border-ui)] h-12 rounded-[16px] text-[var(--foreground)] font-bold" 
-                            onKeyDown={(e) => e.key === 'Enter' && handleCreateHabit()}
                           />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-[11px] uppercase font-[900] tracking-[0.1em] text-[var(--muted-foreground)]">Categoria</Label>
+                          <div className="grid grid-cols-5 gap-2">
+                            {CATEGORY_CONFIG.map((cat) => (
+                              <button
+                                key={cat.id}
+                                onClick={() => setNewHabitCategory(cat.id)}
+                                className={cn(
+                                  "flex flex-col items-center justify-center p-3 rounded-xl transition-all border-2",
+                                  newHabitCategory === cat.id ? "scale-105" : "opacity-40 grayscale hover:opacity-100 hover:grayscale-0"
+                                )}
+                                style={{ 
+                                  backgroundColor: `${cat.color}22`, 
+                                  borderColor: newHabitCategory === cat.id ? cat.color : 'transparent',
+                                  color: cat.color
+                                }}
+                              >
+                                <cat.icon size={20} />
+                              </button>
+                            ))}
+                          </div>
                         </div>
 
                         <div className="space-y-2">
                           <Label className="text-[11px] uppercase font-[900] tracking-[0.1em] text-[var(--muted-foreground)]">Prioridade</Label>
                           <div className="flex gap-2">
-                            {PRIORITY_CONFIG.map((config) => (
+                            {PRIORITY_CONFIG.map((p) => (
                               <button
-                                key={config.id}
-                                onClick={() => setNewHabitPriority(config.id)}
+                                key={p.id}
+                                onClick={() => setNewHabitPriority(p.id)}
                                 className={cn(
                                   "flex-1 h-10 rounded-xl text-[10px] font-black transition-all border-2",
-                                  newHabitPriority === config.id 
-                                    ? "scale-105" 
-                                    : "opacity-40 hover:opacity-100"
+                                  newHabitPriority === p.id ? "scale-105" : "opacity-40"
                                 )}
                                 style={{
-                                  backgroundColor: config.bg,
-                                  color: config.text,
-                                  borderColor: newHabitPriority === config.id ? 'var(--foreground)' : 'transparent'
+                                  backgroundColor: `${p.color}22`,
+                                  borderColor: newHabitPriority === p.id ? p.color : 'transparent',
+                                  color: p.color
                                 }}
                               >
-                                {config.label}
+                                {p.label}
                               </button>
                             ))}
                           </div>
