@@ -212,9 +212,10 @@ const HabitCardUI = ({
         borderColor: isCompleted ? "var(--border-ui)" : cardTheme.main,
         borderWidth: "1.5px",
         boxShadow: isCompleted || isOverlay ? 'none' : `0 4px 0 0 ${cardTheme.main}22`,
+        height: '140px' // Fixando a altura para manter a grade consistente
       }}
       className={cn(
-        "group rounded-[20px] border-2 p-[16px] mb-[16px] select-none transition-all duration-300",
+        "group rounded-[20px] border-2 p-[16px] mb-[16px] select-none transition-all duration-300 flex flex-col justify-between shrink-0",
         isOverlay ? "cursor-grabbing scale-[1.02] shadow-2xl opacity-90" : "cursor-grab active:cursor-grabbing",
         isCompleted && "opacity-50 grayscale-[0.5]"
       )}
@@ -305,7 +306,7 @@ const HabitCardUI = ({
       </div>
 
       {/* Progress Line Divider */}
-      <div className="mt-5 relative h-[24px]">
+      <div className="mt-auto relative h-[24px]">
         {/* The Track */}
         <div className="absolute top-[2px] left-0 w-full h-[3px] bg-gray-200/50 dark:bg-white/10 rounded-full" />
         
@@ -692,8 +693,8 @@ const HabitsPage = () => {
                   <div className="bg-primary/10 text-primary text-[11px] font-[800] px-3 py-1 rounded-full border-2 border-primary/10">{displayedHabitsData.completed.length}/{displayedHabitsData.all.length}</div>
                 </div>
                 
-                {/* Lista de Hábitos com altura fixa para 4 cards e scroll invisível */}
-                <div className="flex-1 min-w-0 overflow-y-auto px-6 py-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" style={{ maxHeight: '600px' }}>
+                {/* Lista de Hábitos travada em exatamente 4 slots sem mostrar sobras do 5º */}
+                <div className="flex-1 min-w-0 overflow-y-auto px-6 py-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" style={{ maxHeight: '624px' }}>
                   <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd} modifiers={[restrictToVerticalAxis, restrictToParentElement]}>
                     <SortableContext items={displayedHabitsData.all.map(h => h.id)} strategy={verticalListSortingStrategy}>
                       {displayedHabitsData.pending.map((habit) => (<SortableHabitItem key={habit.id} habit={habit} isCompleted={false} onEdit={(habit, rect) => setEditingHabit({ habit, rect })} onToggle={(id) => toggleHabit(id)} currentDate={currentDate} />))}
