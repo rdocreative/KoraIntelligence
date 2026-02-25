@@ -37,9 +37,9 @@ export const SideNav = () => {
             key={path}
             to={path}
             className={({ isActive }) => cn(
-              "group relative flex items-center gap-3 px-[10px] py-[8px] rounded-[10px] transition-all duration-200",
+              "group relative flex items-center gap-3 px-3 py-[10px] rounded-[12px] transition-all duration-200",
               isActive 
-                ? "bg-primary/20 text-primary font-medium" 
+                ? "bg-primary text-primary-foreground shadow-[0_2px_0_0_var(--primary-dark)]" 
                 : "text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)]"
             )}
           >
@@ -48,7 +48,7 @@ export const SideNav = () => {
                 <Icon size={16} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
                 <span className="text-[13px] font-semibold leading-none">{label}</span>
                 {isActive && (
-                  <div className="absolute right-3 w-1.5 h-1.5 rounded-full bg-primary/60 hidden" />
+                  <div className="absolute right-3 w-1 h-1 rounded-full bg-primary-foreground/60" />
                 )}
               </>
             )}
