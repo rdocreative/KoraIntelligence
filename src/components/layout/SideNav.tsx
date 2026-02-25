@@ -98,39 +98,38 @@ export const SideNav = () => {
       ref={sidebarRef}
       style={{ 
         width: `${currentWidth}px`,
-        // Transição snappier e rápida para máxima fluidez
-        transition: isResizing ? 'none' : 'width 300ms cubic-bezier(0.16, 1, 0.3, 1)'
+        transform: isCollapsed ? `translateX(-${expandedWidth}px)` : 'translateX(0)',
+        transition: isResizing ? 'none' : 'width 300ms ease-in-out, transform 300ms ease-in-out'
       }}
       className={cn(
-        "relative sticky top-0 h-screen z-[50] flex flex-col shrink-0 will-change-[width]",
-        isCollapsed ? "bg-transparent" : "bg-[#f5eeee] dark:bg-[#212121] rounded-r-[40px] shadow-2xl"
+        "relative sticky top-0 h-screen z-[50] flex flex-col shrink-0 will-change-[width,transform]",
+        "bg-[#f5eeee] dark:bg-[#212121] rounded-r-[40px] shadow-2xl"
       )}
     >
-      {/* Botão de Toggle - Único elemento visível ao colapsar */}
+      {/* Botão de Toggle - Posicionado para ficar visível mesmo quando a barra desliza */}
       <button 
         onClick={toggleCollapse}
+        style={{
+          transform: isCollapsed ? `translateX(${expandedWidth + 24}px)` : 'translateX(0)',
+          transition: 'transform 300ms ease-in-out'
+        }}
         className={cn(
-          "absolute top-8 z-[60] flex items-center justify-center transition-all duration-300 ease-out cursor-pointer hover:scale-110",
+          "absolute top-8 z-[60] flex items-center justify-center cursor-pointer hover:scale-110",
           isCollapsed 
-            ? "left-6 text-primary p-2 bg-white/90 dark:bg-white/10 backdrop-blur-xl rounded-xl shadow-lg border border-black/5 dark:border-white/10" 
+            ? "left-0 text-primary p-2 bg-white/90 dark:bg-white/10 backdrop-blur-xl rounded-xl shadow-lg border border-black/5 dark:border-white/10" 
             : "right-6 p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full"
         )}
         title={isCollapsed ? "Expandir Menu" : "Recolher Menu"}
       >
         {isCollapsed ? (
-          <PanelLeftOpen size={24} strokeWidth={2} className="animate-in fade-in zoom-in duration-300" />
+          <PanelLeftOpen size={24} strokeWidth={2} />
         ) : (
           <PanelLeftClose size={20} />
         )}
       </button>
 
-      {/* Conteúdo Interno */}
-      <div className={cn(
-        "flex flex-col h-full w-full overflow-hidden transition-all duration-300 ease-out",
-        isCollapsed 
-          ? "opacity-0 pointer-events-none translate-x-[-15px] scale-95" 
-          : "opacity-100 translate-x-0 scale-100"
-      )}>
+      {/* Conteúdo Interno - Sem Opacity, apenas cortado pelo overflow do pai */}
+      <div className="flex flex-col h-full w-full overflow-hidden">
         {/* Resizer Handle */}
         {!isCollapsed && (
           <div 
@@ -164,7 +163,7 @@ export const SideNav = () => {
               </button>
 
               {showNotifications && (
-                <div className="absolute left-full top-0 ml-2 w-64 bg-white dark:bg-[#1e1e1e] rounded-xl shadow-xl border border-border p-3 z-[70] animate-in fade-in zoom-in-95 duration-200 origin-top-left">
+                <div className="absolute left-full top-0 ml-2 w-64 bg-white dark:bg-[#1e1e1e] rounded-xl shadow-xl border border-border p-3 z-[70]">
                   <div className="flex items-center justify-between mb-2 pb-2 border-b">
                     <span className="font-bold text-sm">Notificações</span>
                     <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded-full">3 novas</span>
@@ -186,7 +185,7 @@ export const SideNav = () => {
               key={path}
               to={path}
               className={({ isActive }) => cn(
-                "group relative flex items-center gap-4 py-3.5 px-4 rounded-[20px] transition-all duration-200 ease-out",
+                "group relative flex items-center gap-4 py-3.5 px-4 rounded-[20px] transition-all duration-200",
                 isActive 
                   ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]" 
                   : "text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)]"

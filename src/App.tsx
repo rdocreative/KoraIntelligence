@@ -45,9 +45,9 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background overflow-x-hidden">
       <SideNav />
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out">
         <TopBar />
         <main className="flex-1 px-10 py-5 w-full max-w-[100rem] mx-auto overflow-visible">
           <Outlet />
