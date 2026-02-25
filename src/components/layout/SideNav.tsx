@@ -145,14 +145,18 @@ export const SideNav = () => {
 
         {/* Top Header Section */}
         <div className="px-6 pt-10 pb-6 flex items-center justify-between">
-          {/* Logo / Left Icon */}
+          {/* Avatar (Left) - Replaces Logo */}
           {!isCollapsed && expandedWidth >= 120 && (
-            <div className="text-primary animate-pulse shrink-0">
-              <Sparkles size={22} strokeWidth={2.5} />
+            <div className="shrink-0 mr-auto">
+              <img 
+                src="https://github.com/shadcn.png" 
+                alt="User Avatar" 
+                className="w-9 h-9 rounded-full border border-black/10 dark:border-white/10 shadow-sm object-cover"
+              />
             </div>
           )}
 
-          {/* Right Section: Notifications + Level + Profile */}
+          {/* Right Section: Notifications + Level + Profile Link */}
           <div className="flex items-center gap-2 ml-auto">
             {/* Notifications */}
             <div className="relative">
@@ -179,7 +183,7 @@ export const SideNav = () => {
               )}
             </div>
 
-            {/* Level Badge & Profile */}
+            {/* Level Badge & Profile Link */}
             {!isCollapsed && expandedWidth >= 160 && (
               <div className="flex items-center gap-2 pl-1 border-l border-black/5 dark:border-white/5">
                 <span className="ml-2 text-[9px] font-black text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full tracking-tighter uppercase shrink-0 cursor-help" title="Nível Atual">
