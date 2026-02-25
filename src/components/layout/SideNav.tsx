@@ -93,7 +93,7 @@ export const SideNav = () => {
 
   return (
     <>
-      {/* Botão Flutuante de Abrir (Apenas quando fechado) */}
+      {/* Botão Flutuante de Abrir */}
       <div 
         className={cn(
           "fixed top-8 left-0 z-[60] transition-all duration-300",
@@ -120,7 +120,7 @@ export const SideNav = () => {
           "bg-[#f5eeee] dark:bg-[#212121]" 
         )}
       >
-        <div className="flex flex-col h-full w-full min-w-[240px]"> {/* min-w garante layout estável durante animação */}
+        <div className="flex flex-col h-full w-full min-w-[240px]">
           
           {/* Resizer Handle */}
           {!isCollapsed && (
@@ -144,15 +144,17 @@ export const SideNav = () => {
             {/* Coluna Esquerda: Avatar + Nível */}
             <div className="flex items-center gap-3">
               <NavLink to="/perfil" className="block relative group shrink-0">
-                <img 
-                  src="https://github.com/shadcn.png" 
-                  alt="User Avatar" 
-                  className="w-10 h-10 rounded-full border-2 border-white dark:border-[#212121] shadow-sm object-cover group-hover:scale-105 transition-transform"
-                />
-                <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#f5eeee] dark:border-[#212121] rounded-full"></span>
+                <div className="relative p-[2px] rounded-full ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all shadow-sm">
+                  <img 
+                    src="https://github.com/shadcn.png" 
+                    alt="User Avatar" 
+                    className="w-10 h-10 min-w-[32px] min-h-[32px] rounded-full border-2 border-white dark:border-[#212121] object-cover"
+                  />
+                  <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-500 border-2 border-[#f5eeee] dark:border-[#212121] rounded-full"></span>
+                </div>
               </NavLink>
 
-              {/* Nível (Visível se a largura permitir) */}
+              {/* Nível */}
               <div className={cn(
                  "transition-opacity duration-200",
                  expandedWidth < 180 ? "opacity-0 w-0 overflow-hidden" : "opacity-100 w-auto"
@@ -225,7 +227,7 @@ export const SideNav = () => {
                       {label}
                     </span>
                     {isActive && expandedWidth >= 180 && (
-                      <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-white/80" />
+                      <div className="absolute right-6 w-1.5 h-1.5 rounded-full bg-white/80" />
                     )}
                   </>
                 )}

@@ -5,7 +5,7 @@ import {
   Plus, Check, ChevronLeft, ChevronRight, 
   LayoutGrid, Clock, Flame, 
   BarChart3, Pencil, Trash2, 
-  Play, Pause, CalendarDays, HelpCircle,
+  CalendarDays, HelpCircle,
   HeartPulse, GraduationCap, Briefcase, Coffee, Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -43,8 +43,7 @@ import {
   useSensors,
   DragEndEvent,
   DragStartEvent,
-  DragOverlay,
-  defaultDropAnimationSideEffects
+  DragOverlay
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -190,12 +189,13 @@ const HabitCardUI = ({
         text: "var(--muted-foreground)"
       };
     }
+    // Fundo baseado na prioridade com baixa opacidade
     return {
-      main: category.color,
-      bg: `${category.color}15`,
+      main: priority.color,
+      bg: `${priority.color}15`,
       text: "var(--foreground)"
     };
-  }, [category.color, isCompleted]);
+  }, [priority.color, isCompleted]);
 
   if (isPlaceholder) {
     return (
@@ -210,8 +210,8 @@ const HabitCardUI = ({
       ref={cardRef}
       style={{
         backgroundColor: cardTheme.bg,
-        borderColor: isCompleted ? "var(--border-ui)" : `${category.color}44`,
-        boxShadow: isCompleted || isOverlay ? 'none' : `0 4px 0 0 ${category.color}22`,
+        borderColor: isCompleted ? "var(--border-ui)" : `${cardTheme.main}44`,
+        boxShadow: isCompleted || isOverlay ? 'none' : `0 4px 0 0 ${cardTheme.main}22`,
       }}
       className={cn(
         "group rounded-[20px] border-2 p-[16px] mb-[16px] select-none transition-all duration-300",
@@ -220,7 +220,7 @@ const HabitCardUI = ({
       )}
     >
       <div className="flex items-center gap-4">
-        {/* Check-in Button Interativo */}
+        {/* Check-in Button */}
         <button 
           onClick={(e) => { e.stopPropagation(); onToggle?.(habit.id); }}
           className={cn(
@@ -229,7 +229,7 @@ const HabitCardUI = ({
               ? "bg-primary border-primary rotate-[360deg]" 
               : "bg-white/50 border-gray-300 hover:border-gray-400"
           )}
-          style={{ borderColor: isCompleted ? "var(--primary)" : category.color }}
+          style={{ borderColor: isCompleted ? "var(--primary)" : cardTheme.main }}
         >
           {isCompleted ? (
             <Check 
@@ -295,11 +295,10 @@ const HabitCardUI = ({
         </div>
       </div>
 
-      {/* Meta Mensal - Minimalista com Trilha Visível */}
       <div className="mt-5 pt-3 border-t border-[var(--border-ui)]/10">
         <div className="flex justify-between items-end mb-1.5 px-0.5">
           <span className="text-[9px] font-black text-[var(--muted-foreground)]/60 uppercase tracking-[0.2em]">Meta Mensal</span>
-          <span className="text-[11px] font-black tabular-nums opacity-80" style={{ color: isCompleted ? "var(--muted-foreground)" : category.color }}>
+          <span className="text-[11px] font-black tabular-nums opacity-80" style={{ color: isCompleted ? "var(--muted-foreground)" : cardTheme.main }}>
             {completionsThisMonth}<span className="opacity-30 mx-0.5">/</span>{target}
           </span>
         </div>
@@ -308,7 +307,7 @@ const HabitCardUI = ({
             className="h-full transition-all duration-1000 ease-out rounded-full" 
             style={{ 
               width: `${progressPercent}%`,
-              backgroundColor: isCompleted ? "var(--muted-foreground)" : category.color,
+              backgroundColor: isCompleted ? "var(--muted-foreground)" : cardTheme.main,
               opacity: isCompleted ? 0.3 : 1
             }}
           />
@@ -637,7 +636,7 @@ const HabitsPage = () => {
   [habits, activeDragId]);
 
   return (
-    <div className="min-h-screen bg-background pb-10 animate-in fade-in duration-500 relative w-full overflow-hidden">
+    <div className="min-h-screen bg-background pb-4 animate-in fade-in duration-500 relative w-full overflow-hidden">
       
       <div className="flex justify-center pt-[35px] pb-0 shrink-0">
         <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-full p-1 shadow-[0_4px_0_0_var(--border-ui)] flex items-center gap-1.5 overflow-visible">
@@ -732,13 +731,13 @@ const HabitsPage = () => {
                                   // Default/Empty state
                                   day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[#383838] border-[var(--border-ui)] text-[var(--foreground)]",
                                   
-                                  // Levels - changing bg to #383838
+                                  // Levels
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#383838] border-[#FF3B30] text-[#FF3B30]", 
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#383838] border-[#FF9500] text-[#FF9500]", 
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#383838] border-[#FFD60A] text-[#FFD60A]", 
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#383838] border-[#34C759] text-[#34C759]", 
                                   
-                                  // Today - changing bg to #383838
+                                  // Today
                                   day.isToday && !day.isSelected && "border-[#10B981] bg-[#383838] text-[#059669]",
                                   
                                   day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.1)]"
