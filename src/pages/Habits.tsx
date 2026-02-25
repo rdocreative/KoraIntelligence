@@ -80,7 +80,7 @@ const PRIORITY_CONFIG = [
   { id: 3, label: "NORMAL", bg: "#34C759", text: "#FFFFFF", dark: "#2A9F47" },
 ];
 
-// --- Habit Card UI Component (Pure Presentational) ---
+// --- Habit Card UI Component ---
 const HabitCardUI = ({ 
   habit, 
   isCompleted, 
@@ -161,7 +161,6 @@ const HabitCardUI = ({
     return habit.completedDates.filter(date => date.startsWith(monthStr)).length;
   }, [habit.completedDates, currentDate]);
 
-  // Meta dinâmica baseada nos dias do mês exibido
   const target = useMemo(() => getDaysInMonth(currentDate), [currentDate]);
   const progressPercent = Math.min(100, (completionsThisMonth / target) * 100);
 
@@ -478,10 +477,8 @@ const HabitsPage = () => {
   const [isDateSelectorOpen, setIsDateSelectorOpen] = useState(false);
   const [editingHabit, setEditingHabit] = useState<{habit: Habit, rect: DOMRect} | null>(null);
   
-  // Drag and Drop state
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
 
-  // New habit state
   const [newHabitTitle, setNewHabitTitle] = useState("");
   const [newHabitPriority, setNewHabitPriority] = useState(3);
 
@@ -699,17 +696,24 @@ const HabitsPage = () => {
                                 onClick={() => setSelectedDate(day.date)}
                                 className={cn(
                                   "aspect-square rounded-[16px] border-[3px] flex flex-col items-center justify-center cursor-pointer transition-all duration-300 relative",
-                                  !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-30",
+                                  // Contrast improvement for day numbers
+                                  !day.isCurrentMonth && "text-[var(--border-ui)] border-transparent bg-transparent opacity-20",
                                   day.isCurrentMonth && (day.isFuture || ((day.isPast || day.isToday) && day.level === 0)) && "bg-[var(--background)] border-[var(--border-ui)] text-[var(--foreground)]",
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 1 && "bg-[#FF3B3015] border-[#FF3B30] text-[#FF3B30]", 
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 2 && "bg-[#FF950015] border-[#FF9500] text-[#FF9500]", 
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 3 && "bg-[#FFD60A15] border-[#FFD60A] text-[#FFD60A]", 
                                   day.isCurrentMonth && (day.isPast || day.isToday) && day.level === 4 && "bg-[#34C75915] border-[#34C759] text-[#34C759]", 
-                                  day.isToday && !day.isSelected && "border-primary/40",
-                                  day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.05)]"
+                                  // Highlight "Today"
+                                  day.isToday && !day.isSelected && "border-[#10B981] bg-[#10B981]/10 text-[#059669]",
+                                  day.isSelected && "border-[var(--foreground)] z-10 scale-105 shadow-[0_0_10px_rgba(0,0,0,0.1)]"
                                 )}
                               >
-                                <span className="text-[14px] font-[800]">{format(day.date, 'd')}</span>
+                                <span className={cn(
+                                  "text-[14px] font-[900]",
+                                  day.isCurrentMonth ? "opacity-100" : "opacity-40"
+                                )}>
+                                  {format(day.date, 'd')}
+                                </span>
                               </div>
                             </TooltipTrigger>
                             <TooltipContent className="bg-[var(--card)] border-2 border-[var(--border-ui)] text-[var(--foreground)] rounded-[16px] shadow-xl p-3">
@@ -759,7 +763,7 @@ const HabitsPage = () => {
                   </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto px-6 py-2 scrollbar-thin scrollbar-thumb-[var(--border-ui)] scrollbar-track-transparent">
+                <div className="flex-1 overflow-y-auto px-6 py-2">
                   <DndContext 
                     sensors={sensors} 
                     collisionDetection={closestCenter} 

@@ -103,10 +103,9 @@ export const SideNav = () => {
       }}
       className={cn(
         "relative sticky top-0 h-screen z-[50] flex flex-col shrink-0 will-change-[width,transform]",
-        "bg-[#f5eeee] dark:bg-[#212121]" // Removida sombra e bordas para o efeito flat Sidebar + Floating Content
+        "bg-[#f5eeee] dark:bg-[#212121]" 
       )}
     >
-      {/* Botão de Toggle */}
       <button 
         onClick={toggleCollapse}
         style={{
@@ -122,14 +121,13 @@ export const SideNav = () => {
         title={isCollapsed ? "Expandir Menu" : "Recolher Menu"}
       >
         {isCollapsed ? (
-          <PanelLeftOpen size={24} strokeWidth={2} />
+          <PanelLeftOpen size={24} strokeWidth={2.5} />
         ) : (
-          <PanelLeftClose size={20} />
+          <PanelLeftClose size={20} strokeWidth={2.5} />
         )}
       </button>
 
       <div className="flex flex-col h-full w-full overflow-hidden">
-        {/* Resizer Handle */}
         {!isCollapsed && (
           <div 
             onMouseDown={startResizing}
@@ -145,10 +143,9 @@ export const SideNav = () => {
           </div>
         )}
 
-        {/* Header */}
         <div className="px-6 pt-8 pb-6 flex items-center justify-between gap-2">
           <div className="w-10 h-10 rounded-[14px] bg-primary flex items-center justify-center shadow-lg shadow-primary/25 shrink-0 transition-transform hover:scale-105">
-            <Sparkles className="text-primary-foreground w-5 h-5" />
+            <Sparkles className="text-primary-foreground w-5 h-5" strokeWidth={2.5} />
           </div>
 
           <div className="flex items-center gap-1 mr-10">
@@ -157,7 +154,7 @@ export const SideNav = () => {
                 onClick={() => setShowNotifications(!showNotifications)}
                 className="p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors relative"
               >
-                <Bell size={20} />
+                <Bell size={20} strokeWidth={2.5} />
                 <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-[#f5eeee] dark:border-[#212121]" />
               </button>
 
@@ -177,8 +174,7 @@ export const SideNav = () => {
           </div>
         </div>
 
-        {/* Navegação */}
-        <nav className="flex-1 px-4 flex flex-col gap-2 overflow-y-auto scrollbar-none mt-2">
+        <nav className="flex-1 px-4 flex flex-col gap-2 overflow-y-auto mt-2">
           {navItems.map(({ icon: Icon, path, label }) => (
             <NavLink
               key={path}
@@ -192,7 +188,7 @@ export const SideNav = () => {
             >
               {({ isActive }) => (
                 <>
-                  <Icon size={20} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
+                  <Icon size={20} strokeWidth={2.5} className="shrink-0" />
                   <span className={cn(
                     "text-[14px] font-bold tracking-wide truncate transition-all duration-300",
                     expandedWidth < 180 ? "opacity-0 w-0 absolute" : "opacity-100 w-auto relative"
@@ -208,7 +204,6 @@ export const SideNav = () => {
           ))}
         </nav>
 
-        {/* Rodapé Usuário */}
         <div className="p-4 mt-auto mb-2">
           <div className="relative group bg-black/5 dark:bg-white/5 p-3 rounded-[24px] hover:bg-black/10 dark:hover:bg-white/10 transition-colors duration-200">
             <div className="flex items-center justify-between gap-2">
@@ -229,7 +224,7 @@ export const SideNav = () => {
                   to="/configuracoes" 
                   className="p-2 hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-colors text-[var(--muted-foreground)]"
                 >
-                  <Settings size={18} />
+                  <Settings size={18} strokeWidth={2.5} />
                 </NavLink>
               )}
             </div>
