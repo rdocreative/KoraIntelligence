@@ -12,10 +12,8 @@ import {
   ShoppingBag, 
   Settings, 
   Brain,
-  User,
   PanelLeftClose,
   PanelLeftOpen,
-  Sparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -94,155 +92,155 @@ export const SideNav = () => {
   };
 
   return (
-    <aside 
-      ref={sidebarRef}
-      style={{ 
-        width: `${currentWidth}px`,
-        transform: isCollapsed ? `translateX(-${expandedWidth}px)` : 'translateX(0)',
-        transition: isResizing ? 'none' : 'width 300ms ease-in-out, transform 300ms ease-in-out'
-      }}
-      className={cn(
-        "relative sticky top-0 h-screen z-[50] flex flex-col shrink-0 will-change-[width,transform]",
-        "bg-[#f5eeee] dark:bg-[#212121]" 
-      )}
-    >
-      <button 
-        onClick={toggleCollapse}
-        style={{
-          transform: isCollapsed ? `translateX(${expandedWidth + 24}px)` : 'translateX(0)',
-          transition: 'transform 300ms ease-in-out'
+    <>
+      {/* Botão Flutuante de Abrir (Apenas quando fechado) */}
+      <div 
+        className={cn(
+          "fixed top-8 left-0 z-[60] transition-all duration-300",
+          isCollapsed ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0 pointer-events-none"
+        )}
+      >
+        <button 
+          onClick={toggleCollapse}
+          className="bg-white/90 dark:bg-white/10 backdrop-blur-xl p-2 rounded-r-xl shadow-lg border-y border-r border-black/5 dark:border-white/10 text-primary hover:bg-primary hover:text-white transition-colors cursor-pointer"
+          title="Expandir Menu"
+        >
+          <PanelLeftOpen size={24} strokeWidth={2.5} />
+        </button>
+      </div>
+
+      <aside 
+        ref={sidebarRef}
+        style={{ 
+          width: `${currentWidth}px`,
+          transition: isResizing ? 'none' : 'width 300ms ease-in-out'
         }}
         className={cn(
-          "absolute top-8 z-[60] flex items-center justify-center cursor-pointer hover:scale-110",
-          isCollapsed 
-            ? "left-0 text-primary p-2 bg-white/90 dark:bg-white/10 backdrop-blur-xl rounded-xl shadow-lg border border-black/5 dark:border-white/10" 
-            : "right-6 p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full"
+          "relative sticky top-0 h-screen z-[50] flex flex-col shrink-0 will-change-[width] overflow-hidden",
+          "bg-[#f5eeee] dark:bg-[#212121]" 
         )}
-        title={isCollapsed ? "Expandir Menu" : "Recolher Menu"}
       >
-        {isCollapsed ? (
-          <PanelLeftOpen size={24} strokeWidth={2.5} />
-        ) : (
-          <PanelLeftClose size={20} strokeWidth={2.5} />
-        )}
-      </button>
-
-      <div className="flex flex-col h-full w-full overflow-hidden">
-        {!isCollapsed && (
-          <div 
-            onMouseDown={startResizing}
-            className={cn(
-              "absolute right-0 top-0 bottom-0 w-3 cursor-col-resize group z-[60] flex items-center justify-center -mr-1.5",
-              isResizing && "w-screen fixed left-0 right-0 z-[9999] bg-transparent"
-            )}
-          >
-            <div className={cn(
-              "w-[3px] h-12 rounded-full transition-all duration-200 bg-transparent group-hover:bg-primary/20 absolute right-1.5",
-              isResizing && "bg-primary/40 h-24"
-            )} />
-          </div>
-        )}
-
-        {/* Top Header Section */}
-        <div className="px-6 pt-10 pb-6 flex items-center justify-between">
-          {/* Avatar (Left) - Replaces Logo */}
-          {!isCollapsed && expandedWidth >= 120 && (
-            <div className="shrink-0 mr-auto">
-              <img 
-                src="https://github.com/shadcn.png" 
-                alt="User Avatar" 
-                className="w-9 h-9 rounded-full border border-black/10 dark:border-white/10 shadow-sm object-cover"
-              />
+        <div className="flex flex-col h-full w-full min-w-[240px]"> {/* min-w garante layout estável durante animação */}
+          
+          {/* Resizer Handle */}
+          {!isCollapsed && (
+            <div 
+              onMouseDown={startResizing}
+              className={cn(
+                "absolute right-0 top-0 bottom-0 w-3 cursor-col-resize group z-[60] flex items-center justify-center -mr-1.5",
+                isResizing && "w-screen fixed left-0 right-0 z-[9999] bg-transparent"
+              )}
+            >
+              <div className={cn(
+                "w-[3px] h-12 rounded-full transition-all duration-200 bg-transparent group-hover:bg-primary/20 absolute right-1.5",
+                isResizing && "bg-primary/40 h-24"
+              )} />
             </div>
           )}
 
-          {/* Right Section: Notifications + Level + Profile Link */}
-          <div className="flex items-center gap-2 ml-auto">
-            {/* Notifications */}
-            <div className="relative">
-              <button 
-                onClick={() => setShowNotifications(!showNotifications)}
-                className="p-1.5 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors relative"
-                title="Notificações"
-              >
-                <Bell size={18} strokeWidth={2.5} />
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full border-2 border-[#f5eeee] dark:border-[#212121]" />
-              </button>
-
-              {showNotifications && (
-                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#1e1e1e] rounded-xl shadow-xl border border-border p-3 z-[70] animate-in fade-in slide-in-from-top-2">
-                  <div className="flex items-center justify-between mb-2 pb-2 border-b">
-                    <span className="font-bold text-sm">Notificações</span>
-                    <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded-full">3 novas</span>
-                  </div>
-                  <div className="text-xs p-2 rounded-lg bg-secondary/50">
-                    <p className="font-medium">Meta Concluída!</p>
-                    <p className="text-muted-foreground mt-0.5">Você completou "Beber Água".</p>
-                  </div>
-                </div>
-              )}
+          {/* Top Header Section */}
+          <div className="px-5 pt-8 pb-6 flex items-center justify-between">
+            
+            {/* Coluna Esquerda: Avatar */}
+            <div className="shrink-0">
+              <NavLink to="/perfil" className="block relative group">
+                <img 
+                  src="https://github.com/shadcn.png" 
+                  alt="User Avatar" 
+                  className="w-10 h-10 rounded-full border-2 border-white dark:border-[#212121] shadow-sm object-cover group-hover:scale-105 transition-transform"
+                />
+                <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#f5eeee] dark:border-[#212121] rounded-full"></span>
+              </NavLink>
             </div>
 
-            {/* Level Badge & Profile Link */}
-            {!isCollapsed && expandedWidth >= 160 && (
-              <div className="flex items-center gap-2 pl-1 border-l border-black/5 dark:border-white/5">
-                <span className="ml-2 text-[9px] font-black text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full tracking-tighter uppercase shrink-0 cursor-help" title="Nível Atual">
-                  LVL 42
-                </span>
-                <NavLink 
-                  to="/perfil"
-                  className="w-8 h-8 rounded-full bg-white dark:bg-white/5 border border-black/5 dark:border-white/10 flex items-center justify-center hover:border-primary/50 hover:scale-105 transition-all active:scale-95 group overflow-hidden shrink-0"
-                  title="Meu Perfil"
+            {/* Coluna Direita: Notificações + Nível + Botão Recolher */}
+            <div className="flex items-center gap-3">
+              
+              {/* Notificações */}
+              <div className="relative">
+                <button 
+                  onClick={() => setShowNotifications(!showNotifications)}
+                  className="p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors relative"
+                  title="Notificações"
                 >
-                  <User size={14} strokeWidth={2.5} className="text-muted-foreground group-hover:text-primary transition-colors" />
-                </NavLink>
+                  <Bell size={18} strokeWidth={2.5} />
+                  <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full border-2 border-[#f5eeee] dark:border-[#212121]" />
+                </button>
+
+                {showNotifications && (
+                  <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#1e1e1e] rounded-xl shadow-xl border border-border p-3 z-[70] animate-in fade-in slide-in-from-top-2">
+                    <div className="flex items-center justify-between mb-2 pb-2 border-b">
+                      <span className="font-bold text-sm">Notificações</span>
+                      <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded-full">3 novas</span>
+                    </div>
+                    <div className="text-xs p-2 rounded-lg bg-secondary/50">
+                      <p className="font-medium">Meta Concluída!</p>
+                      <p className="text-muted-foreground mt-0.5">Você completou "Beber Água".</p>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
+
+              {/* Nível */}
+              <span className="text-[10px] font-black text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full tracking-tighter uppercase shrink-0 cursor-help select-none" title="Nível Atual">
+                LVL 42
+              </span>
+
+              {/* Botão Recolher */}
+              <button 
+                onClick={toggleCollapse}
+                className="p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
+                title="Recolher Menu"
+              >
+                <PanelLeftClose size={20} strokeWidth={2.5} />
+              </button>
+
+            </div>
+          </div>
+
+          <nav className="flex-1 px-4 flex flex-col gap-2 overflow-y-auto mt-2">
+            {navItems.map(({ icon: Icon, path, label }) => (
+              <NavLink
+                key={path}
+                to={path}
+                className={({ isActive }) => cn(
+                  "group relative flex items-center gap-4 py-3.5 px-4 rounded-[20px] transition-all duration-200",
+                  isActive 
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]" 
+                    : "text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)]"
+                )}
+              >
+                {({ isActive }) => (
+                  <>
+                    <Icon size={20} strokeWidth={2.5} className="shrink-0" />
+                    <span className={cn(
+                      "text-[14px] font-bold tracking-wide truncate transition-all duration-300",
+                      expandedWidth < 180 ? "opacity-0 w-0 absolute" : "opacity-100 w-auto relative"
+                    )}>
+                      {label}
+                    </span>
+                    {isActive && expandedWidth >= 180 && (
+                      <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-white/80" />
+                    )}
+                  </>
+                )}
+              </NavLink>
+            ))}
+          </nav>
+
+          <div className="p-4 mt-auto mb-4">
+             {!isCollapsed && expandedWidth >= 180 && (
+                <NavLink 
+                  to="/configuracoes" 
+                  className="flex items-center gap-4 py-3.5 px-4 rounded-[20px] text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)] transition-all"
+                >
+                  <Settings size={20} strokeWidth={2.5} className="shrink-0" />
+                  <span className="text-[14px] font-bold tracking-wide">Configurações</span>
+                </NavLink>
+             )}
           </div>
         </div>
-
-        <nav className="flex-1 px-4 flex flex-col gap-2 overflow-y-auto mt-2">
-          {navItems.map(({ icon: Icon, path, label }) => (
-            <NavLink
-              key={path}
-              to={path}
-              className={({ isActive }) => cn(
-                "group relative flex items-center gap-4 py-3.5 px-4 rounded-[20px] transition-all duration-200",
-                isActive 
-                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]" 
-                  : "text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)]"
-              )}
-            >
-              {({ isActive }) => (
-                <>
-                  <Icon size={20} strokeWidth={2.5} className="shrink-0" />
-                  <span className={cn(
-                    "text-[14px] font-bold tracking-wide truncate transition-all duration-300",
-                    expandedWidth < 180 ? "opacity-0 w-0 absolute" : "opacity-100 w-auto relative"
-                  )}>
-                    {label}
-                  </span>
-                  {isActive && expandedWidth >= 180 && (
-                    <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-white/80" />
-                  )}
-                </>
-              )}
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="p-4 mt-auto mb-4">
-           {!isCollapsed && expandedWidth >= 180 && (
-              <NavLink 
-                to="/configuracoes" 
-                className="flex items-center gap-4 py-3.5 px-4 rounded-[20px] text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)] transition-all"
-              >
-                <Settings size={20} strokeWidth={2.5} className="shrink-0" />
-                <span className="text-[14px] font-bold tracking-wide">Configurações</span>
-              </NavLink>
-           )}
-        </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 };
