@@ -105,7 +105,7 @@ export const SideNav = () => {
           className="bg-white/90 dark:bg-white/10 backdrop-blur-xl p-2 rounded-r-xl shadow-lg border-y border-r border-black/5 dark:border-white/10 text-primary hover:bg-primary hover:text-white transition-colors cursor-pointer"
           title="Expandir Menu"
         >
-          <PanelLeftOpen size={24} strokeWidth={2.5} />
+          <PanelLeftOpen size={24} strokeWidth={2} />
         </button>
       </div>
 
@@ -153,12 +153,16 @@ export const SideNav = () => {
               </NavLink>
 
               <div className={cn(
-                 "transition-opacity duration-200",
+                 "transition-opacity duration-200 flex flex-col gap-1",
                  expandedWidth < 180 ? "opacity-0 w-0 overflow-hidden" : "opacity-100 w-auto"
               )}>
-                <span className="text-[10px] font-black text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full tracking-tighter uppercase shrink-0 cursor-help select-none whitespace-nowrap" title="Nível Atual">
+                <span className="text-[10px] font-black text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-full tracking-tighter uppercase shrink-0 cursor-help select-none whitespace-nowrap self-start" title="Nível Atual">
                   LVL 42
                 </span>
+                {/* XP Progress Bar */}
+                <div className="w-full h-1 bg-black/5 dark:bg-white/5 rounded-full overflow-hidden w-[80px]">
+                  <div className="h-full bg-primary rounded-full w-[65%]" />
+                </div>
               </div>
             </div>
 
@@ -169,7 +173,7 @@ export const SideNav = () => {
                   className="p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors relative"
                   title="Notificações"
                 >
-                  <Bell size={18} strokeWidth={2.5} />
+                  <Bell size={18} strokeWidth={2} />
                   <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full border-2 border-[#f5eeee] dark:border-[#212121]" />
                 </button>
 
@@ -192,7 +196,7 @@ export const SideNav = () => {
                 className="p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors"
                 title="Recolher Menu"
               >
-                <PanelLeftClose size={20} strokeWidth={2.5} />
+                <PanelLeftClose size={20} strokeWidth={2} />
               </button>
             </div>
           </div>
@@ -211,7 +215,7 @@ export const SideNav = () => {
               >
                 {({ isActive }) => (
                   <>
-                    <Icon size={20} strokeWidth={2.5} className="shrink-0" />
+                    <Icon size={20} strokeWidth={2} className="shrink-0" />
                     <span className={cn(
                       "text-[14px] font-bold tracking-wide truncate transition-all duration-300",
                       expandedWidth < 180 ? "opacity-0 w-0 absolute" : "flex-1 opacity-100 relative"
@@ -233,7 +237,7 @@ export const SideNav = () => {
                   to="/configuracoes" 
                   className="flex items-center gap-4 py-3.5 px-4 rounded-[20px] text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)] transition-all overflow-hidden"
                 >
-                  <Settings size={20} strokeWidth={2.5} className="shrink-0" />
+                  <Settings size={20} strokeWidth={2} className="shrink-0" />
                   <span className="text-[14px] font-bold tracking-wide truncate">Configurações</span>
                 </NavLink>
              )}
