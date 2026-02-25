@@ -15,7 +15,7 @@ import {
   User,
   Sparkles,
   PanelLeftClose,
-  ChevronRight
+  PanelLeftOpen
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +31,7 @@ const navItems = [
 ];
 
 const DEFAULT_WIDTH = 240;
-const COLLAPSED_WIDTH = 0; // Sidebar some completamente
+const COLLAPSED_WIDTH = 0;
 const MIN_WIDTH = DEFAULT_WIDTH * 0.9;
 const MAX_WIDTH = DEFAULT_WIDTH * 1.85;
 
@@ -72,17 +72,14 @@ export const SideNav = () => {
       window.addEventListener("mousemove", resize);
       window.addEventListener("mouseup", stopResizing);
       document.body.style.cursor = "col-resize";
-      document.body.style.userSelect = "none";
     } else {
       window.removeEventListener("mousemove", resize);
       window.removeEventListener("mouseup", stopResizing);
       document.body.style.cursor = "default";
-      document.body.style.userSelect = "auto";
       if (!isCollapsed) {
         localStorage.setItem("kora-sidebar-width", expandedWidth.toString());
       }
     }
-
     return () => {
       window.removeEventListener("mousemove", resize);
       window.removeEventListener("mouseup", stopResizing);
@@ -99,59 +96,59 @@ export const SideNav = () => {
       ref={sidebarRef}
       style={{ 
         width: `${currentWidth}px`,
-        transition: isResizing ? 'none' : 'width 300ms cubic-bezier(0.4, 0, 0.2, 1)'
+        transition: isResizing ? 'none' : 'width 500ms cubic-bezier(0.4, 0, 0.2, 1)'
       }}
       className={cn(
-        "sticky top-0 h-screen z-[50] flex flex-col shrink-0 will-change-[width]",
+        "relative sticky top-0 h-screen z-[50] flex flex-col shrink-0 will-change-[width]",
         isCollapsed ? "bg-transparent" : "bg-[#f5eeee] dark:bg-[#212121] rounded-r-[40px] shadow-2xl"
       )}
     >
-      {/* Botão de Toggle - Flutuante e adaptável */}
+      {/* Botão de Toggle - Único elemento visível ao colapsar */}
       <button 
         onClick={toggleCollapse}
         className={cn(
-          "absolute top-8 z-[60] flex items-center justify-center transition-all duration-300 ease-out cursor-pointer group",
+          "absolute top-8 z-[60] flex items-center justify-center transition-all duration-500 ease-in-out cursor-pointer hover:scale-110",
           isCollapsed 
-            ? "left-0 w-6 h-12 bg-[#f5eeee] dark:bg-[#212121] rounded-r-xl shadow-md border-y border-r border-black/5 dark:border-white/5 text-primary hover:w-8" 
+            ? "left-6 text-primary p-2 bg-white/80 dark:bg-white/10 backdrop-blur-md rounded-xl shadow-lg border border-black/5 dark:border-white/10" 
             : "right-6 p-2 text-[var(--muted-foreground)] hover:text-primary hover:bg-black/5 dark:hover:bg-white/5 rounded-full"
         )}
         title={isCollapsed ? "Expandir Menu" : "Recolher Menu"}
       >
         {isCollapsed ? (
-          <ChevronRight size={16} className="group-hover:scale-110 transition-transform" />
+          <PanelLeftOpen size={24} strokeWidth={2} />
         ) : (
           <PanelLeftClose size={20} />
         )}
       </button>
 
-      {/* Container do conteúdo interno - Oculto quando colapsado */}
+      {/* Conteúdo Interno */}
       <div className={cn(
-        "flex flex-col h-full w-full overflow-hidden transition-opacity duration-200",
-        isCollapsed ? "opacity-0 invisible pointer-events-none" : "opacity-100 visible"
+        "flex flex-col h-full w-full overflow-hidden transition-all duration-500",
+        isCollapsed ? "opacity-0 pointer-events-none translate-x-[-20px]" : "opacity-100 translate-x-0"
       )}>
         {/* Resizer Handle */}
-        <div 
-          onMouseDown={startResizing}
-          className={cn(
-            "absolute right-0 top-0 bottom-0 w-3 cursor-col-resize group z-[60] flex items-center justify-center -mr-1.5 hover:bg-transparent",
-            isResizing && "w-screen fixed left-0 right-0 z-[9999] bg-transparent"
-          )}
-        >
-          <div className={cn(
-            "w-[3px] h-12 rounded-full transition-all duration-200 bg-transparent group-hover:bg-primary/20 absolute right-1.5",
-            isResizing && "bg-primary/40 h-24"
-          )} />
-        </div>
+        {!isCollapsed && (
+          <div 
+            onMouseDown={startResizing}
+            className={cn(
+              "absolute right-0 top-0 bottom-0 w-3 cursor-col-resize group z-[60] flex items-center justify-center -mr-1.5",
+              isResizing && "w-screen fixed left-0 right-0 z-[9999] bg-transparent"
+            )}
+          >
+            <div className={cn(
+              "w-[3px] h-12 rounded-full transition-all duration-200 bg-transparent group-hover:bg-primary/20 absolute right-1.5",
+              isResizing && "bg-primary/40 h-24"
+            )} />
+          </div>
+        )}
 
         {/* Header */}
         <div className="px-6 pt-8 pb-6 flex items-center justify-between gap-2">
-          {/* Logo */}
           <div className="w-10 h-10 rounded-[14px] bg-primary flex items-center justify-center shadow-lg shadow-primary/25 shrink-0 transition-transform hover:scale-105">
             <Sparkles className="text-primary-foreground w-5 h-5" />
           </div>
 
-          {/* Ações (Apenas Notificações aqui, Toggle está fora) */}
-          <div className="flex items-center gap-1 mr-10"> {/* mr-10 dá espaço para o botão de toggle */}
+          <div className="flex items-center gap-1 mr-10">
             <div className="relative">
               <button 
                 onClick={() => setShowNotifications(!showNotifications)}
@@ -167,11 +164,9 @@ export const SideNav = () => {
                     <span className="font-bold text-sm">Notificações</span>
                     <span className="text-[10px] text-muted-foreground bg-secondary px-1.5 py-0.5 rounded-full">3 novas</span>
                   </div>
-                  <div className="space-y-2">
-                    <div className="text-xs p-2 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors cursor-pointer">
-                      <p className="font-medium">Meta Concluída!</p>
-                      <p className="text-muted-foreground mt-0.5">Você completou "Beber Água".</p>
-                    </div>
+                  <div className="text-xs p-2 rounded-lg bg-secondary/50">
+                    <p className="font-medium">Meta Concluída!</p>
+                    <p className="text-muted-foreground mt-0.5">Você completou "Beber Água".</p>
                   </div>
                 </div>
               )}
@@ -186,7 +181,7 @@ export const SideNav = () => {
               key={path}
               to={path}
               className={({ isActive }) => cn(
-                "group relative flex items-center gap-4 py-3.5 px-4 rounded-[20px] transition-all duration-300 ease-out overflow-hidden",
+                "group relative flex items-center gap-4 py-3.5 px-4 rounded-[20px] transition-all duration-300 ease-out",
                 isActive 
                   ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-[1.02]" 
                   : "text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)]"
@@ -195,16 +190,14 @@ export const SideNav = () => {
               {({ isActive }) => (
                 <>
                   <Icon size={20} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
-                  
                   <span className={cn(
                     "text-[14px] font-bold tracking-wide truncate transition-all duration-300",
                     expandedWidth < 180 ? "opacity-0 w-0 absolute" : "opacity-100 w-auto relative"
                   )}>
                     {label}
                   </span>
-                  
                   {isActive && expandedWidth >= 180 && (
-                    <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-white/80 shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+                    <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-white/80" />
                   )}
                 </>
               )}
@@ -213,7 +206,7 @@ export const SideNav = () => {
         </nav>
 
         {/* Rodapé Usuário */}
-        <div className="p-4 mt-auto mb-2 overflow-hidden">
+        <div className="p-4 mt-auto mb-2">
           <div className="relative group bg-black/5 dark:bg-white/5 p-3 rounded-[24px] hover:bg-black/10 dark:hover:bg-white/10 transition-colors duration-200">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3 overflow-hidden">
@@ -228,7 +221,6 @@ export const SideNav = () => {
                   <span className="text-[11px] text-primary font-bold leading-none mt-0.5">Lvl 42</span>
                 </div>
               </div>
-              
               {expandedWidth >= 180 && (
                 <NavLink 
                   to="/configuracoes" 
