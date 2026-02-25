@@ -103,7 +103,7 @@ export const SideNav = () => {
       }}
       className={cn(
         "relative sticky top-0 h-screen z-[50] flex flex-col shrink-0 will-change-[width,transform]",
-        "bg-[#f5eeee] dark:bg-[#212121] shadow-2xl"
+        "bg-[#f5eeee] dark:bg-[#212121]" // Removida sombra e bordas para o efeito flat Sidebar + Floating Content
       )}
     >
       {/* Botão de Toggle */}

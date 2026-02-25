@@ -45,12 +45,12 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#f5eeee] dark:bg-[#212121] overflow-x-hidden">
+    <div className="flex min-h-screen bg-[#f5eeee] dark:bg-[#212121] overflow-hidden">
       <SideNav />
-      {/* Container do Conteúdo Principal com bordas arredondadas e fundo contrastante */}
-      <div className="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out bg-background rounded-tl-[20px] rounded-bl-[20px] overflow-hidden shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)]">
+      {/* Container Principal "Floating Card" */}
+      <div className="flex-1 flex flex-col my-[10px] mr-[10px] ml-0 bg-background rounded-[16px] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all duration-300 ease-in-out border border-black/[0.03] dark:border-white/[0.03]">
         <TopBar />
-        <main className="flex-1 px-10 py-5 w-full max-w-[100rem] mx-auto overflow-visible">
+        <main className="flex-1 px-8 py-5 w-full max-w-[100rem] mx-auto overflow-y-auto scrollbar-none">
           <Outlet />
         </main>
       </div>
@@ -89,7 +89,7 @@ const App = () => (
                 <TooltipProvider>
                   <Sonner theme="light" />
                   <BrowserRouter>
-                    <div className="min-h-screen text-foreground font-sans flex flex-col relative overflow-x-hidden bg-background">
+                    <div className="min-h-screen text-foreground font-sans flex flex-col relative overflow-x-hidden bg-[#f5eeee] dark:bg-[#212121]">
                       <Routes>
                         {/* Rotas Públicas */}
                         <Route element={<PublicRoute />}>
