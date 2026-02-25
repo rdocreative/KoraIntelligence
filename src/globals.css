@@ -48,29 +48,34 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    /* #0d0d0d -> HSL(0, 0%, 5%) */
+    --background: 0 0% 5%;
     --foreground: 210 40% 98%;
-    --card: 222 47% 11%;
+    
+    /* #212121 -> HSL(0, 0%, 13%) */
+    --card: 0 0% 13%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
+    --popover: 0 0% 13%;
     --popover-foreground: 210 40% 98%;
-    --secondary: 217.2 32.6% 17.5%;
+    
+    --secondary: 0 0% 18%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 18%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 83.9%;
     
-    --input-bg: #11141B;
-    --border-ui: #252B38;
+    /* Custom Variables para Modo Dark */
+    --input-bg: #1a1a1a;
+    --border-ui: #333333;
     --shadow-ui: transparent;
-    --panel: #1A1D27;
-    --topbar: #1A1D27;
+    --panel: #212121;
+    --topbar: #212121;
   }
 
   body, #root {
