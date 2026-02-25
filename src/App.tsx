@@ -45,9 +45,9 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex h-screen w-full bg-[#f5eeee] dark:bg-[#212121] overflow-hidden">
+    <div className="flex h-full w-full bg-[#f5eeee] dark:bg-[#212121] overflow-hidden">
       <SideNav />
-      {/* Container Principal "Floating Card" sem sombra e com margem de 7px */}
+      {/* Container Principal "Floating Card" */}
       <div className="flex-1 flex flex-col mt-[7px] mb-[7px] mr-[7px] ml-0 bg-background rounded-[16px] overflow-hidden transition-all duration-300 ease-in-out border border-black/[0.04] dark:border-white/[0.04] relative">
         <TopBar />
         <main className="flex-1 px-8 py-5 w-full max-w-[100rem] mx-auto overflow-y-auto scrollbar-none">
@@ -89,7 +89,7 @@ const App = () => (
                 <TooltipProvider>
                   <Sonner theme="light" />
                   <BrowserRouter>
-                    <div className="h-screen w-screen text-foreground font-sans flex flex-col relative overflow-hidden bg-[#f5eeee] dark:bg-[#212121]">
+                    <div className="h-full w-full text-foreground font-sans flex flex-col relative overflow-hidden bg-[#f5eeee] dark:bg-[#212121]">
                       <Routes>
                         {/* Rotas Públicas */}
                         <Route element={<PublicRoute />}>
