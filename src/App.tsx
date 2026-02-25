@@ -47,8 +47,8 @@ const ProtectedRoute = () => {
   return (
     <div className="flex min-h-screen bg-[#f5eeee] dark:bg-[#212121] overflow-x-hidden">
       <SideNav />
-      {/* O container abaixo é o conteúdo principal que recebe a curvatura */}
-      <div className="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out bg-background rounded-tl-[20px] rounded-bl-[20px] overflow-hidden shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.15)]">
+      {/* Container do Conteúdo Principal com bordas arredondadas e fundo contrastante */}
+      <div className="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out bg-background rounded-tl-[20px] rounded-bl-[20px] overflow-hidden shadow-[-10px_0_30px_-15px_rgba(0,0,0,0.1)]">
         <TopBar />
         <main className="flex-1 px-10 py-5 w-full max-w-[100rem] mx-auto overflow-visible">
           <Outlet />
