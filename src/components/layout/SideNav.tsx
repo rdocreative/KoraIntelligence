@@ -30,7 +30,7 @@ const navItems = [
 
 const DEFAULT_WIDTH = 240;
 const COLLAPSED_WIDTH = 0;
-const MIN_WIDTH = DEFAULT_WIDTH * 0.9;
+const MIN_WIDTH = 200; // Reduzi um pouco para dar mais flexibilidade
 
 export const SideNav = () => {
   const [expandedWidth, setExpandedWidth] = useState(() => {
@@ -121,7 +121,8 @@ export const SideNav = () => {
           "bg-[#f5eeee] dark:bg-[#212121]" 
         )}
       >
-        <div className="flex flex-col h-full w-full min-w-[240px]">
+        {/* Removido min-w-240 para evitar cortes internos */}
+        <div className="flex flex-col h-full w-full">
           
           {!isCollapsed && (
             <div 
@@ -138,8 +139,8 @@ export const SideNav = () => {
             </div>
           )}
 
-          <div className="px-5 pt-8 pb-6 flex items-center justify-between">
-            <div className="flex items-center gap-3">
+          <div className="px-5 pt-8 pb-6 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-3 overflow-hidden">
               <NavLink to="/perfil" className="block relative group shrink-0">
                 <div className="relative p-[2px] rounded-full ring-2 ring-primary/20 group-hover:ring-primary/50 transition-all shadow-sm">
                   <img 
@@ -161,7 +162,7 @@ export const SideNav = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 shrink-0">
               <div className="relative">
                 <button 
                   onClick={() => setShowNotifications(!showNotifications)}
@@ -196,7 +197,7 @@ export const SideNav = () => {
             </div>
           </div>
 
-          <nav className="flex-1 px-4 flex flex-col gap-2 overflow-y-auto mt-2">
+          <nav className="flex-1 px-4 flex flex-col gap-2 overflow-y-auto mt-2 overflow-x-hidden">
             {navItems.map(({ icon: Icon, path, label }) => (
               <NavLink
                 key={path}
@@ -213,12 +214,12 @@ export const SideNav = () => {
                     <Icon size={20} strokeWidth={2.5} className="shrink-0" />
                     <span className={cn(
                       "text-[14px] font-bold tracking-wide truncate transition-all duration-300",
-                      expandedWidth < 180 ? "opacity-0 w-0 absolute" : "opacity-100 w-auto relative"
+                      expandedWidth < 180 ? "opacity-0 w-0 absolute" : "flex-1 opacity-100 relative"
                     )}>
                       {label}
                     </span>
                     {isActive && expandedWidth >= 180 && (
-                      <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-white/80" />
+                      <div className="absolute right-2 w-1.5 h-1.5 rounded-full bg-white/80 shrink-0" />
                     )}
                   </>
                 )}
@@ -226,14 +227,14 @@ export const SideNav = () => {
             ))}
           </nav>
 
-          <div className="p-4 mt-auto mb-4">
+          <div className="p-4 mt-auto mb-4 shrink-0">
              {!isCollapsed && expandedWidth >= 180 && (
                 <NavLink 
                   to="/configuracoes" 
-                  className="flex items-center gap-4 py-3.5 px-4 rounded-[20px] text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)] transition-all"
+                  className="flex items-center gap-4 py-3.5 px-4 rounded-[20px] text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)] transition-all overflow-hidden"
                 >
                   <Settings size={20} strokeWidth={2.5} className="shrink-0" />
-                  <span className="text-[14px] font-bold tracking-wide">Configurações</span>
+                  <span className="text-[14px] font-bold tracking-wide truncate">Configurações</span>
                 </NavLink>
              )}
           </div>
