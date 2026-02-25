@@ -5,6 +5,11 @@
 @tailwind utilities;
 
 @layer base {
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
   html {
     font-size: 80%;
   }
@@ -83,7 +88,7 @@
     color: hsl(var(--foreground));
     font-family: 'Exo 2', sans-serif;
     font-weight: 600;
-    min-height: 100vh;
+    height: 100%;
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
