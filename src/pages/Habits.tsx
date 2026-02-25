@@ -1,4 +1,3 @@
-Ice/Gray, Leisure -> Burnt Orange).">
 "use client";
 
 import React, { useState, useMemo, useRef, useEffect } from "react";
@@ -82,13 +81,12 @@ const PRIORITY_CONFIG = [
   { id: 3, label: "NORMAL", color: "#34C759" },
 ];
 
-// UPDATED COLORS TO MATCH DASHBOARD
 const CATEGORY_CONFIG = [
-  { id: 'health', label: 'Saúde', color: '#cbd5e1', icon: HeartPulse }, // Ice/White (Slate-300)
-  { id: 'study', label: 'Estudos', color: '#A21CAF', icon: GraduationCap }, // Warmer Violet (Fuchsia-700)
-  { id: 'work', label: 'Trabalho', color: '#FF9F0A', icon: Briefcase }, // Orange
-  { id: 'leisure', label: 'Lazer', color: '#ea580c', icon: Coffee }, // Burnt Orange
-  { id: 'other', label: 'Outros', color: '#525252', icon: Sparkles }, // Neutral Gray
+  { id: 'health', label: 'Saúde', color: '#00D1FF', icon: HeartPulse },
+  { id: 'study', label: 'Estudos', color: '#BF5AF2', icon: GraduationCap },
+  { id: 'work', label: 'Trabalho', color: '#FF9F0A', icon: Briefcase },
+  { id: 'leisure', label: 'Lazer', color: '#FFD60A', icon: Coffee },
+  { id: 'other', label: 'Outros', color: '#ACACAC', icon: Sparkles },
 ];
 
 // --- Habit Card UI Component ---
@@ -609,7 +607,8 @@ const HabitsPage = () => {
   return (
     <div className="min-h-screen bg-background pb-4 animate-in fade-in duration-500 relative flex-1 min-w-0">
       
-      <div className="flex justify-center px-4 md:px-8 pt-[31px] pb-0 shrink-0">
+      {/* Seletor de Abas Fixo (Sticky) */}
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md flex justify-center px-4 md:px-8 py-6 shrink-0 transition-all">
         <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-full p-1 shadow-[0_4px_0_0_var(--border-ui)] flex items-center gap-1.5 overflow-visible">
           <button 
             onClick={() => setActiveTab('overview')} 
@@ -637,7 +636,7 @@ const HabitsPage = () => {
       </div>
 
       {activeTab === 'overview' ? (
-        <div className="mt-[31px] flex flex-col lg:flex-row gap-8 p-4 md:p-8 items-start w-full min-w-0">
+        <div className="flex flex-col lg:flex-row gap-8 p-4 md:p-8 pt-0 items-start w-full min-w-0">
           <div className={cn("transition-all duration-500 shrink-0 min-w-0", viewMode === 'weekly' ? 'w-full' : 'lg:w-[60%]')}>
             <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[24px] shadow-[0_4px_0_0_var(--border-ui)] p-6 py-[24px] flex flex-col min-w-0">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-8 shrink-0">
@@ -750,7 +749,7 @@ const HabitsPage = () => {
             </div>
           )}
         </div>
-      ) : (<div className="mt-[31px] w-full px-4 md:px-8"><DashboardOverview stats={stats} /></div>)}
+      ) : (<div className="w-full px-4 md:px-8"><DashboardOverview stats={stats} /></div>)}
       {editingHabit && (<EditPopup habit={editingHabit.habit} rect={editingHabit.rect} onClose={() => setEditingHabit(null)} onSave={(updated) => setHabits(prev => prev.map(h => h.id === updated.id ? updated : h))} onDelete={(id) => setHabits(prev => prev.filter(h => h.id !== id))} />)}
       <DateSelectorModal isOpen={isDateSelectorOpen} onClose={() => setIsDateSelectorOpen(false)} currentDate={currentDate} onSelectDate={(date) => { setCurrentDate(date); setSelectedDate(date); }} />
     </div>

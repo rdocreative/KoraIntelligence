@@ -18,14 +18,13 @@ const DATA_EVOLUTION = [
   { name: 'Dom', habitos: 5, metas: 4 },
 ];
 
-// Categorias sincronizadas com o HabitCard (Habits.tsx)
-// Saúde: Ice/White/Gray | Estudos: Violet (Warmer) | Trabalho: Orange | Lazer: Burnt Orange | Outros: Gray
+// Categorias sincronizadas com o HabitCard
 const DATA_DISTRIBUTION = [
-  { name: 'Saúde', value: 400, color: '#cbd5e1' }, // Ice/White (Slate-300)
-  { name: 'Estudos', value: 300, color: '#A21CAF' }, // Warmer Violet/Fuchsia (Fuchsia-700)
-  { name: 'Trabalho', value: 300, color: '#FF9F0A' }, // Orange (Existing)
-  { name: 'Lazer', value: 200, color: '#ea580c' }, // Burnt Orange (Orange-600)
-  { name: 'Outros', value: 150, color: '#525252' }, // Neutral Gray
+  { name: 'Saúde', value: 400, color: '#00D1FF' },
+  { name: 'Estudos', value: 300, color: '#BF5AF2' },
+  { name: 'Trabalho', value: 300, color: '#FF9F0A' },
+  { name: 'Lazer', value: 200, color: '#FFD60A' },
+  { name: 'Outros', value: 150, color: '#ACACAC' },
 ];
 
 interface DashboardOverviewProps {
@@ -40,7 +39,7 @@ interface DashboardOverviewProps {
 const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
   const displayStats = stats || {
     total: 4,
-    today: "4/4",
+    today: "4/4", // Exemplo para testar o feedback visual de 100%
     streak: "7d",
     progress: "0%"
   };
@@ -51,28 +50,23 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
     return total > 0 && done >= total;
   }, [displayStats.today]);
 
-  // Primary Red Color used across the app
-  const primaryRed = "#EF4444"; 
-  const metallicDark = "#1f2937"; // Gray-800
-  const metallicLight = "#374151"; // Gray-700
-
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full pb-10">
       
       {/* Cards de Resumo */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "TOTAL HÁBITOS", value: displayStats.total, icon: Target, color: metallicLight, shadow: metallicDark },
-          { label: "SEQUÊNCIA", value: displayStats.streak, icon: Flame, color: "#ea580c", shadow: "#c2410c" }, // Burnt Orange
+          { label: "TOTAL HÁBITOS", value: displayStats.total, icon: Target, color: "#3F3047", shadow: "#261D2E" },
+          { label: "SEQUÊNCIA", value: displayStats.streak, icon: Flame, color: "#FF9600", shadow: "#E58700" },
           { 
             label: "HOJE", 
             value: displayStats.today, 
             icon: CheckCircle2, 
-            color: isTodayComplete ? "#10B981" : "#727272", 
-            shadow: isTodayComplete ? "#059669" : "#505050",
-            glow: isTodayComplete ? "0 0 20px rgba(16, 185, 129, 0.4)" : "none"
+            color: isTodayComplete ? "#58CC02" : "#727272", // Cinza se incompleto, Verde se completo
+            shadow: isTodayComplete ? "#46A302" : "#505050",
+            glow: isTodayComplete ? "0 0 20px rgba(88, 204, 2, 0.4)" : "none"
           },
-          { label: "MÊS", value: displayStats.progress, icon: CalendarDays, color: primaryRed, shadow: "#B91C1C" } // Red instead of Purple
+          { label: "MÊS", value: displayStats.progress, icon: CalendarDays, color: "#CE82FF", shadow: "#A855F7" }
         ].map((s, i) => (
           <div
             key={i}
@@ -98,25 +92,18 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
         ))}
       </div>
 
-      {/* Bloco Mestre da Rotina (Gamificação - Tema Metálico/Red) */}
-      <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[40px] p-10 shadow-[var(--shadow-ui)] relative overflow-hidden group">
-        <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity duration-500">
+      {/* Bloco Mestre da Rotina (Gamificação) */}
+      <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[40px] p-10 shadow-[var(--shadow-ui)] relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
           <Trophy size={140} className="text-[var(--foreground)]" />
         </div>
         
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
           <div className="relative">
-            {/* Circle Border: Metallic Dark with Red Glow */}
-            <div 
-              className="w-28 h-28 rounded-full border-[6px] flex items-center justify-center bg-[var(--background)] shadow-2xl transition-all duration-500"
-              style={{ borderColor: metallicLight, boxShadow: `0 10px 30px -10px ${primaryRed}40` }}
-            >
-              <span className="text-[36px] font-[950]" style={{ color: metallicLight }}>12</span>
+            <div className="w-28 h-28 rounded-full border-[6px] border-[#3F3047] flex items-center justify-center bg-[var(--background)] shadow-xl">
+              <span className="text-[36px] font-[950] text-[#3F3047]">12</span>
             </div>
-            <div 
-              className="absolute -bottom-3 left-1/2 -translate-x-1/2 text-white text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-lg"
-              style={{ backgroundColor: metallicLight }}
-            >
+            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-[#3F3047] text-white text-[11px] font-black px-4 py-1.5 rounded-full uppercase tracking-tighter shadow-lg">
               NÍVEL
             </div>
           </div>
@@ -128,19 +115,18 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                 <p className="text-[var(--muted-foreground)] text-sm font-bold uppercase tracking-widest mt-1">Você superou 95% dos guerreiros este mês!</p>
               </div>
               <div className="text-right">
-                <span className="font-black text-xl" style={{ color: metallicLight }}>2.450 / 3.000</span>
+                <span className="text-[#3F3047] font-black text-xl">2.450 / 3.000</span>
                 <span className="text-[var(--muted-foreground)] font-black text-sm ml-1 uppercase">XP</span>
               </div>
             </div>
             
-            {/* Barra de XP Aprimorada (Red Gradient) */}
+            {/* Barra de XP Aprimorada */}
             <div className="h-7 w-full bg-[var(--border-ui)] rounded-full overflow-hidden p-1.5 shadow-inner">
               <div 
-                className="h-full rounded-full transition-all duration-1000 relative" 
+                className="h-full bg-gradient-to-r from-[#BF5AF2] to-[#3F3047] rounded-full transition-all duration-1000 relative" 
                 style={{ 
                   width: '75%',
-                  background: `linear-gradient(90deg, ${primaryRed} 0%, ${metallicDark} 100%)`,
-                  boxShadow: `0 0 15px ${primaryRed}60` 
+                  boxShadow: '0 0 15px rgba(191, 90, 242, 0.4)' 
                 }}
               >
                 <div className="absolute inset-0 bg-white/20 animate-pulse" />
@@ -149,11 +135,11 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
             
             <div className="flex gap-4">
               <div className="flex items-center gap-2.5 bg-[var(--card)] px-4 py-2 rounded-2xl border-2 border-[var(--border-ui)] shadow-sm">
-                <Star size={16} className="text-[#ea580c] fill-[#ea580c]" />
+                <Star size={16} className="text-[#FF9600] fill-[#FF9600]" />
                 <span className="text-[12px] font-[800] text-[var(--foreground)]">Streak: 15 Dias</span>
               </div>
               <div className="flex items-center gap-2.5 bg-[var(--card)] px-4 py-2 rounded-2xl border-2 border-[var(--border-ui)] shadow-sm">
-                <Zap size={16} className="text-[#EF4444] fill-[#EF4444]" />
+                <Zap size={16} className="text-[#3F3047] fill-[#3F3047]" />
                 <span className="text-[12px] font-[800] text-[var(--foreground)]">Combo: x1.5 XP</span>
               </div>
             </div>
@@ -163,10 +149,10 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
 
       {/* Gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Evolução Semanal (Red Theme) */}
+        {/* Evolução Semanal */}
         <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[32px] p-8 shadow-[var(--shadow-ui)]">
           <div className="flex items-center gap-3 mb-10">
-            <div className="p-2.5 rounded-xl" style={{ backgroundColor: `${primaryRed}20`, color: primaryRed }}>
+            <div className="p-2.5 bg-[#3F3047]/10 rounded-xl text-[#3F3047]">
               <TrendingUp size={20} />
             </div>
             <h3 className="text-[var(--foreground)] font-[900] text-sm uppercase tracking-widest">Evolução Semanal</h3>
@@ -177,8 +163,8 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
               <AreaChart data={DATA_EVOLUTION}>
                 <defs>
                   <linearGradient id="colorHabit" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={primaryRed} stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor={primaryRed} stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#3F3047" stopOpacity={0.4}/>
+                    <stop offset="95%" stopColor="#3F3047" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-ui)" />
@@ -186,17 +172,17 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                   dataKey="name" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: 'var(--foreground)', fontSize: 11, fontWeight: 900, opacity: 0.8 }}
+                  tick={{ fill: 'var(--foreground)', fontSize: 11, fontWeight: 900, opacity: 0.8 }} // Contraste aumentado
                 />
                 <YAxis hide />
                 <Tooltip 
                   contentStyle={{ backgroundColor: 'var(--card)', border: '2px solid var(--border-ui)', borderRadius: '16px', fontSize: '11px', fontWeight: 'bold', color: 'var(--foreground)' }}
-                  itemStyle={{ color: primaryRed }}
+                  itemStyle={{ color: '#3F3047' }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="habitos" 
-                  stroke={primaryRed}
+                  stroke="#3F3047" 
                   strokeWidth={4}
                   fillOpacity={1} 
                   fill="url(#colorHabit)" 
@@ -206,10 +192,10 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
           </div>
         </div>
 
-        {/* Distribuição de Foco (Colors fixed: Ice, Burnt Orange) */}
+        {/* Distribuição de Foco (Sincronizada) */}
         <div className="bg-[var(--panel)] border-2 border-[var(--border-ui)] rounded-[32px] p-8 shadow-[var(--shadow-ui)]">
           <div className="flex items-center gap-3 mb-10">
-            <div className="p-2.5 bg-[#ea580c]/10 rounded-xl text-[#ea580c]">
+            <div className="p-2.5 bg-[#FF9600]/10 rounded-xl text-[#FF9600]">
               <Target size={20} />
             </div>
             <h3 className="text-[var(--foreground)] font-[900] text-sm uppercase tracking-widest">Distribuição de Foco</h3>
@@ -231,9 +217,8 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
                     cy="50%"
                     innerRadius={70}
                     outerRadius={95}
-                    paddingAngle={6}
+                    paddingAngle={8}
                     dataKey="value"
-                    stroke="none"
                   >
                     {DATA_DISTRIBUTION.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
@@ -250,7 +235,7 @@ const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
               {DATA_DISTRIBUTION.map((item, i) => (
                 <div key={i} className="flex items-center justify-between group">
                   <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full shadow-sm ring-1 ring-inset ring-black/5" style={{ backgroundColor: item.color }} />
+                    <div className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: item.color }} />
                     <span className="text-[12px] font-[800] text-[var(--muted-foreground)] uppercase tracking-tighter">{item.name}</span>
                   </div>
                   <span className="text-[14px] font-[950] text-[var(--foreground)]">{Math.round(item.value / 13.5)}%</span>
