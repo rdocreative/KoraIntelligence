@@ -242,13 +242,27 @@ const HabitCardUI = ({
         </button>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1.5">
             <h3 className={cn(
               "text-[15px] font-[950] truncate leading-tight transition-all duration-300",
               isCompleted ? "line-through text-[var(--muted-foreground)] opacity-70" : "text-[var(--foreground)]"
             )}>
               {habit.title}
             </h3>
+            
+            <div 
+              className="flex items-center gap-1 px-2 py-0.5 rounded-md shrink-0 transition-all"
+              style={{ 
+                backgroundColor: `${category.color}4D`, 
+                color: category.color 
+              }}
+            >
+              <category.icon size={10} />
+              <span className="text-[8px] font-black uppercase tracking-wider">
+                {category.label}
+              </span>
+            </div>
+
             <span 
               className="text-[8px] font-black px-2 py-0.5 rounded-md border shrink-0 uppercase tracking-wider"
               style={{ 
@@ -261,13 +275,6 @@ const HabitCardUI = ({
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <category.icon size={12} style={{ color: category.color }} />
-              <span className="text-[10px] font-black uppercase tracking-tight" style={{ color: category.color }}>
-                {category.label}
-              </span>
-            </div>
-            <span className="text-[var(--muted-foreground)] opacity-30 font-bold">•</span>
             <div className="flex items-center gap-1.5">
               <Clock size={12} className="text-[var(--muted-foreground)]" />
               <span className="text-[11px] font-black text-[var(--muted-foreground)]/90">
