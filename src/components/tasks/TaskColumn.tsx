@@ -4,7 +4,7 @@ import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TaskCard } from './TaskCard';
-import { Plus, Sun, Moon, Coffee, Clock } from 'lucide-react';
+import { Sun, Moon, Coffee, CloudMoon, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TaskColumnProps {
@@ -16,32 +16,44 @@ interface TaskColumnProps {
 
 const PERIODS = [
   { 
-    id: 'Anytime', 
-    label: 'Qualquer Hora', 
-    icon: Clock, 
-    color: '#D1D5DB',
-    gradient: 'linear-gradient(135deg, rgba(156, 163, 175, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%)'
-  },
-  { 
     id: 'Morning', 
     label: 'Manhã', 
+    time: '06:00 — 12:00',
     icon: Sun, 
-    color: '#FB923C',
-    gradient: 'linear-gradient(135deg, rgba(251, 146, 60, 0.1) 0%, rgba(255, 255, 255, 0.01) 100%)'
+    color: '#FDBA74', // Warm Orange
+    gradient: 'linear-gradient(180deg, rgba(253, 186, 116, 0.12) 0%, rgba(253, 186, 116, 0.02) 100%)'
   },
   { 
     id: 'Afternoon', 
     label: 'Tarde', 
+    time: '12:00 — 18:00',
     icon: Coffee, 
-    color: '#4ADE80',
-    gradient: 'linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(255, 255, 255, 0.01) 100%)'
+    color: '#4ADE80', // Green
+    gradient: 'linear-gradient(180deg, rgba(74, 222, 128, 0.12) 0%, rgba(74, 222, 128, 0.02) 100%)'
   },
   { 
     id: 'Evening', 
     label: 'Noite', 
+    time: '18:00 — 00:00',
     icon: Moon, 
-    color: '#A78BFA',
-    gradient: 'linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(255, 255, 255, 0.01) 100%)'
+    color: '#A78BFA', // Purple
+    gradient: 'linear-gradient(180deg, rgba(167, 139, 250, 0.12) 0%, rgba(167, 139, 250, 0.02) 100%)'
+  },
+  { 
+    id: 'Dawn', 
+    label: 'Madrugada', 
+    time: '00:00 — 06:00',
+    icon: CloudMoon, 
+    color: '#818CF8', // Indigo
+    gradient: 'linear-gradient(180deg, rgba(129, 140, 248, 0.12) 0%, rgba(129, 140, 248, 0.02) 100%)'
+  },
+  { 
+    id: 'Anytime', 
+    label: 'Qualquer Hora', 
+    time: 'Sem horário fixo',
+    icon: Clock, 
+    color: '#94A3B8', // Slate
+    gradient: 'linear-gradient(180deg, rgba(148, 163, 184, 0.08) 0%, rgba(148, 163, 184, 0.01) 100%)'
   },
 ];
 
@@ -62,16 +74,13 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
             {tasks.length}
           </span>
         </div>
-        <button className="p-1 hover:bg-white/5 rounded-lg text-zinc-500 hover:text-white transition-all">
-          <Plus size={16} />
-        </button>
       </div>
 
       <div
         ref={setNodeRef}
         className={cn(
-          "flex-1 flex flex-col gap-4 p-2 rounded-[24px] bg-white/[0.01] border border-white/5 custom-scrollbar overflow-y-auto pb-10",
-          isToday && "bg-[#38BDF8]/[0.01] border-[#38BDF8]/10 shadow-[inset_0_0_20px_rgba(56,189,248,0.01)]"
+          "flex-1 flex flex-col gap-5 p-2 rounded-[24px] bg-white/[0.01] border border-white/5 custom-scrollbar overflow-y-auto pb-10",
+          isToday && "bg-[#38BDF8]/[0.01] border-[#38BDF8]/10"
         )}
       >
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
@@ -81,37 +90,38 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
             return (
               <div 
                 key={period.id} 
-                className="space-y-3 p-4 rounded-[24px] border border-white/[0.03] transition-all"
+                className="group flex flex-col p-4 rounded-[24px] border border-white/[0.04] transition-all hover:border-white/10"
                 style={{ background: period.gradient }}
               >
-                <div className="flex items-center gap-2 px-1 mb-1 opacity-60">
-                  <period.icon size={12} style={{ color: period.color }} />
-                  <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: period.color }}>
-                    {period.label}
-                  </span>
+                <div className="flex items-center justify-between mb-4 px-1">
+                  <div className="flex flex-col gap-0.5">
+                    <div className="flex items-center gap-2">
+                      <period.icon size={12} style={{ color: period.color }} />
+                      <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: period.color }}>
+                        {period.label}
+                      </span>
+                    </div>
+                    <span className="text-[9px] font-medium text-zinc-500 ml-5 uppercase tracking-tighter">
+                      {period.time}
+                    </span>
+                  </div>
                 </div>
                 
-                <div className="space-y-3 min-h-[10px]">
+                <div className="space-y-3 min-h-[20px]">
                   {periodTasks.map((task) => (
                     <TaskCard key={task.id} task={task} />
                   ))}
+                  
+                  {periodTasks.length === 0 && (
+                     <div className="flex items-center justify-center py-6 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
+                       <period.icon size={32} style={{ color: period.color }} />
+                     </div>
+                  )}
                 </div>
-
-                {periodTasks.length === 0 && (
-                   <div className="flex items-center justify-center py-4 opacity-10">
-                     <period.icon size={20} style={{ color: period.color }} />
-                   </div>
-                )}
               </div>
             );
           })}
         </SortableContext>
-        
-        {tasks.length === 0 && (
-          <div className="flex-1 flex items-center justify-center border-2 border-dashed border-white/[0.03] rounded-[24px] min-h-[200px]">
-             <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Sem tarefas</span>
-          </div>
-        )}
       </div>
     </div>
   );
