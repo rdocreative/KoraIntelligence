@@ -101,9 +101,10 @@ const PeriodContainer = ({
 
   // Estilos dinâmicos para iluminação
   const activeStyle = isActive && isToday ? {
-    borderColor: `${period.color}40`, // Borda colorida suave (hex + alpha)
-    backgroundColor: `rgba(255, 255, 255, 0.03)`, // Fundo levemente mais claro que o padrão
-    boxShadow: `0 0 30px -5px ${period.color}30, inset 0 0 20px -10px ${period.color}20`, // Glow externo e interno
+    borderColor: `${period.color}50`, // Borda colorida mais visível (~30%)
+    // Gradiente com a cor do período, mas com opacidade aumentada para destaque
+    // Hex + 40 = ~25% opacidade, Hex + 10 = ~6% opacidade
+    background: `linear-gradient(180deg, ${period.color}40 0%, ${period.color}10 100%)`, 
   } : {};
 
   return (
@@ -119,6 +120,7 @@ const PeriodContainer = ({
       style={{ 
         // Se não estiver ativo e não estiver arrastando, usa o gradiente padrão sutil
         background: (!isActive || !isToday) && !isOver ? period.gradient : undefined,
+        // Se estiver ativo, aplica o estilo ativo (que contém o background mais forte)
         ...activeStyle
       }}
     >
@@ -129,8 +131,8 @@ const PeriodContainer = ({
               size={14} 
               style={{ 
                 color: period.color,
-                // Se estiver ativo, o ícone brilha um pouco mais
-                filter: isActive && isToday ? `drop-shadow(0 0 8px ${period.color})` : undefined
+                // Ícone levemente mais brilhante se ativo
+                filter: isActive && isToday ? `drop-shadow(0 0 2px ${period.color})` : undefined
               }} 
               className="bg-[#09090b]/40 rounded-full transition-all duration-500" 
             />
@@ -140,7 +142,6 @@ const PeriodContainer = ({
               className="text-[11px] font-black uppercase tracking-widest leading-none transition-all duration-500" 
               style={{ 
                 color: period.color,
-                textShadow: isActive && isToday ? `0 0 10px ${period.color}80` : undefined
               }}
             >
               {period.label}
