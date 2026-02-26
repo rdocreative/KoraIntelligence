@@ -39,9 +39,9 @@ export const TaskCard = ({ task }: TaskCardProps) => {
   };
 
   const accentColors = {
-    Extrema: 'border-red-500/60',
-    Média: 'border-orange-500/60',
-    Baixa: 'border-sky-500/60',
+    Extrema: 'border-red-500/85',
+    Média: 'border-orange-500/85',
+    Baixa: 'border-sky-500/85',
   };
 
   return (
@@ -55,16 +55,16 @@ export const TaskCard = ({ task }: TaskCardProps) => {
         isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
       )}
     >
-      {/* Destaque de prioridade sobrepondo a borda no canto inferior esquerdo */}
+      {/* Destaque de prioridade sobrepondo a borda com mais intensidade */}
       {task.priority && (
         <div 
           className={cn(
-            "absolute -bottom-[1px] -left-[1px] w-14 h-14 border-l-[2px] border-b-[2px] border-transparent rounded-bl-[20px] pointer-events-none z-20",
+            "absolute -bottom-[1px] -left-[1px] w-16 h-16 border-l-[2.5px] border-b-[2.5px] border-transparent rounded-bl-[20px] pointer-events-none z-20",
             accentColors[task.priority]
           )}
           style={{ 
-            maskImage: 'linear-gradient(to top right, black 10%, transparent 60%)',
-            WebkitMaskImage: 'linear-gradient(to top right, black 10%, transparent 60%)'
+            maskImage: 'linear-gradient(to top right, black 20%, transparent 70%)',
+            WebkitMaskImage: 'linear-gradient(to top right, black 20%, transparent 70%)'
           }}
         />
       )}
