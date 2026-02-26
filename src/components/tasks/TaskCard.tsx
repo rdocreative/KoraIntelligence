@@ -3,7 +3,7 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, Circle, Clock } from 'lucide-react';
+import { Circle, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TaskCardProps {
@@ -42,8 +42,10 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     <div
       ref={setNodeRef}
       style={style}
+      {...attributes}
+      {...listeners}
       className={cn(
-        "group flex flex-col p-4 rounded-[24px] bg-[#1A1A20]/40 border border-white/5 hover:border-white/10 transition-all",
+        "group flex flex-col p-4 rounded-[24px] bg-[#1A1A20]/40 border border-white/5 hover:border-white/10 transition-all cursor-grab active:cursor-grabbing",
         isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl"
       )}
     >
@@ -54,13 +56,6 @@ export const TaskCard = ({ task }: TaskCardProps) => {
           </div>
           <h4 className="text-sm font-semibold text-zinc-200 line-clamp-1">{task.name}</h4>
         </div>
-        <button 
-          {...attributes} 
-          {...listeners} 
-          className="cursor-grab active:cursor-grabbing p-1 hover:bg-white/5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          <GripVertical size={14} className="text-zinc-500" />
-        </button>
       </div>
 
       <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.02]">
@@ -77,7 +72,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
             </div>
           )}
         </div>
-        <Circle size={16} className="text-zinc-700 hover:text-zinc-400 transition-colors cursor-pointer" />
+        <Circle size={16} className="text-zinc-700 hover:text-zinc-400 transition-colors" />
       </div>
     </div>
   );
