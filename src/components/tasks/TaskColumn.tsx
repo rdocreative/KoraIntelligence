@@ -72,14 +72,14 @@ const PeriodContainer = ({
       style={{ background: isOver ? undefined : period.gradient }}
     >
       <div className="flex items-center justify-between mb-4 px-1">
-        <div className="flex flex-col gap-0.5">
+        <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <period.icon size={12} style={{ color: period.color }} />
-            <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: period.color }}>
+            <period.icon size={14} style={{ color: period.color }} />
+            <span className="text-[11px] font-black uppercase tracking-widest" style={{ color: period.color }}>
               {period.label}
             </span>
           </div>
-          <span className="text-[9px] font-medium text-zinc-500 ml-5 uppercase tracking-tighter">
+          <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight opacity-80">
             {period.time}
           </span>
         </div>
