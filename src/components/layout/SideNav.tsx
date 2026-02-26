@@ -8,7 +8,8 @@ import {
   Activity,
   Target,
   Settings,
-  Plus
+  Plus,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,47 +21,74 @@ const navItems = [
   { name: 'Configurações', icon: Settings, path: '/configuracoes' },
 ];
 
-export const SideNav = () => {
+interface SideNavProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export const SideNav = ({ isOpen = false, onClose }: SideNavProps) => {
   const location = useLocation();
 
   return (
-    <div className="w-64 h-full flex flex-col pt-12 pb-6 px-6 relative z-10 shrink-0 bg-transparent">
-      <div className="flex items-center justify-between mb-10">
-        <h1 className="text-3xl font-serif font-medium tracking-tight text-white">Néctar.</h1>
-        <button className="p-1.5 rounded-[24px] hover:bg-white/10 text-zinc-400 transition-colors border border-white/5">
-          <Plus size={18} />
-        </button>
-      </div>
+    <>
+      <div 
+        className={cn(
+          "flex flex-col pt-12 pb-6 px-6 z-50 transition-all duration-300 ease-in-out",
+          // Mobile Styles
+          "fixed inset-y-0 left-0 w-64 bg-[#070707] border-r border-white/10 shadow-2xl md:shadow-none",
+          isOpen ? "translate-x-0" : "-translate-x-full",
+          // Desktop Styles
+          "md:relative md:translate-x-0 md:bg-transparent md:border-none md:h-full md:shrink-0"
+        )}
+      >
+        <div className="flex items-center justify-between mb-10">
+          <h1 className="text-3xl font-serif font-medium tracking-tight text-white">Néctar.</h1>
+          
+          {/* Mobile Close Button */}
+          <button 
+            onClick={onClose}
+            className="p-1.5 rounded-[24px] hover:bg-white/10 text-zinc-400 transition-colors border border-white/5 md:hidden"
+          >
+            <X size={18} />
+          </button>
 
-      <nav className="flex-1 space-y-2">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-[24px] transition-all",
-                isActive 
-                  ? "bg-[#38BDF8]/10 text-white font-semibold shadow-sm border border-[#38BDF8]/20" 
-                  : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.02]"
-              )}
-            >
-              <item.icon 
-                size={18} 
-                strokeWidth={isActive ? 2 : 1.5} 
-                style={{ color: isActive ? '#38BDF8' : 'currentColor' }} 
-              />
-              <span className="text-[13px]">{item.name}</span>
-            </NavLink>
-          );
-        })}
-      </nav>
-      
-      <div className="pt-4 mt-auto flex items-center gap-3 cursor-pointer border-t border-white/5">
-        <div className="w-8 h-8 rounded-[24px] flex items-center justify-center text-[10px] font-bold bg-[#38BDF8]/20 text-[#38BDF8]">RS</div>
-        <span className="text-xs font-semibold text-zinc-300 hover:text-white transition-colors">Ricardo S.</span>
+          {/* Desktop Add Button (mantido apenas no desktop se desejar, ou em ambos) */}
+          <button className="hidden md:block p-1.5 rounded-[24px] hover:bg-white/10 text-zinc-400 transition-colors border border-white/5">
+            <Plus size={18} />
+          </button>
+        </div>
+
+        <nav className="flex-1 space-y-2">
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <NavLink
+                key={item.name}
+                to={item.path}
+                onClick={() => onClose?.()} // Fecha o menu ao clicar em um link no mobile
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2.5 rounded-[24px] transition-all",
+                  isActive 
+                    ? "bg-[#38BDF8]/10 text-white font-semibold shadow-sm border border-[#38BDF8]/20" 
+                    : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.02]"
+                )}
+              >
+                <item.icon 
+                  size={18} 
+                  strokeWidth={isActive ? 2 : 1.5} 
+                  style={{ color: isActive ? '#38BDF8' : 'currentColor' }} 
+                />
+                <span className="text-[13px]">{item.name}</span>
+              </NavLink>
+            );
+          })}
+        </nav>
+        
+        <div className="pt-4 mt-auto flex items-center gap-3 cursor-pointer border-t border-white/5">
+          <div className="w-8 h-8 rounded-[24px] flex items-center justify-center text-[10px] font-bold bg-[#38BDF8]/20 text-[#38BDF8]">RS</div>
+          <span className="text-xs font-semibold text-zinc-300 hover:text-white transition-colors">Ricardo S.</span>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
