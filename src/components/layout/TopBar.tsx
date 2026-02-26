@@ -67,7 +67,7 @@ export const TopBar = () => {
     titles: 0, 
     level: profile?.nivel || 1,
     xp: profile?.xp_total || 0,
-    coins: profile?.moedas || 0,
+    coins: (profile as any)?.moedas || 0,
     nextLevelXp: (profile?.nivel || 1) * 1000 
   };
 
@@ -75,25 +75,27 @@ export const TopBar = () => {
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none">
       <div className="flex items-center justify-center sm:justify-between w-full max-w-[100rem] pointer-events-auto py-4 px-5 overflow-visible">
         
-        <div 
-          className="hidden sm:flex items-center gap-3 px-5 py-3 rounded-full bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] transition-all duration-300 flex-shrink-0"
-        >
-          <div className="flex items-center gap-2.5">
-            <Icon 
-              size={18} 
-              style={{ color: color }}
-            />
-            <h1 className="text-[14px] font-[800] text-[var(--foreground)] tracking-tight leading-none whitespace-nowrap uppercase">
-              {title}
-            </h1>
-          </div>
+        {currentPath !== '/habitos' && (
+          <div 
+            className="hidden sm:flex items-center gap-3 px-5 py-3 rounded-full bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--border-ui)] transition-all duration-300 flex-shrink-0"
+          >
+            <div className="flex items-center gap-2.5">
+              <Icon 
+                size={18} 
+                style={{ color: color }}
+              />
+              <h1 className="text-[14px] font-[800] text-[var(--foreground)] tracking-tight leading-none whitespace-nowrap uppercase">
+                {title}
+              </h1>
+            </div>
 
-          <div className="w-px h-[14px] bg-[var(--border-ui)] mx-1" />
-          
-          <span className="text-[12px] font-[500] text-[var(--muted-foreground)] tracking-wide leading-none whitespace-nowrap overflow-visible">
-            {subtitle}
-          </span>
-        </div>
+            <div className="w-px h-[14px] bg-[var(--border-ui)] mx-1" />
+            
+            <span className="text-[12px] font-[500] text-[var(--muted-foreground)] tracking-wide leading-none whitespace-nowrap overflow-visible">
+              {subtitle}
+            </span>
+          </div>
+        )}
 
         <TooltipProvider delayDuration={100}>
           <div className="flex items-center gap-3 flex-shrink-0">
