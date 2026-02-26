@@ -54,11 +54,11 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       style={style}
       {...attributes}
       {...listeners}
-      className="relative pl-6 group/card"
+      className="relative pl-8 group/card"
     >
-      {/* Nodo de conexão com o rastro */}
+      {/* Nodo de conexão - alinhado em 6px dentro do card para somar 30px total na coluna */}
       <div 
-        className="absolute left-[7px] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border-2 border-[#09090b] z-10 transition-transform duration-300 group-hover/card:scale-125"
+        className="absolute left-[6px] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border-2 border-[#09090b] z-20 transition-transform duration-300 group-hover/card:scale-125"
         style={{ backgroundColor: periodColor, boxShadow: `0 0 8px ${periodColor}40` }}
       />
 

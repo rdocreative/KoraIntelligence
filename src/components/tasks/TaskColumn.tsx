@@ -91,14 +91,6 @@ const PeriodContainer = ({
       </div>
       
       <div className="relative space-y-3 min-h-[20px]">
-        {/* Linha vertical do rastro */}
-        {tasks.length > 0 && (
-          <div 
-            className="absolute left-[10px] top-4 bottom-4 w-[2px] opacity-20 rounded-full"
-            style={{ backgroundColor: period.color }}
-          />
-        )}
-
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {tasks.map((task) => (
             <TaskCard key={task.id} task={{ ...task, period: period.id }} />
@@ -140,10 +132,22 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
 
       <div
         className={cn(
-          "flex-1 flex flex-col gap-5 p-2 rounded-[28px] bg-white/[0.01] border border-white/[0.03] custom-scrollbar overflow-y-auto pb-10",
+          "flex-1 relative flex flex-col gap-5 p-2 rounded-[28px] bg-white/[0.01] border border-white/[0.03] custom-scrollbar overflow-y-auto pb-10",
           isToday && "bg-[#38BDF8]/[0.01] border-[#38BDF8]/10"
         )}
       >
+        {/* Rastro contínuo com gradiente de cores dos períodos */}
+        <div 
+          className="absolute left-[30px] top-6 bottom-10 w-[2px] opacity-10 pointer-events-none z-0 rounded-full"
+          style={{ 
+            background: `linear-gradient(to bottom, 
+              ${PERIODS[0].color} 0%, 
+              ${PERIODS[1].color} 33%, 
+              ${PERIODS[2].color} 66%, 
+              ${PERIODS[3].color} 100%)` 
+          }}
+        />
+
         {PERIODS.map((period) => (
           <PeriodContainer 
             key={period.id}
