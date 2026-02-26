@@ -101,10 +101,9 @@ const PeriodContainer = ({
 
   // Estilos dinâmicos para iluminação
   const activeStyle = isActive && isToday ? {
-    borderColor: `${period.color}50`, // Borda colorida mais visível (~30%)
-    // Gradiente com a cor do período, mas com opacidade aumentada para destaque
-    // Hex + 40 = ~25% opacidade, Hex + 10 = ~6% opacidade
-    background: `linear-gradient(180deg, ${period.color}40 0%, ${period.color}10 100%)`, 
+    borderColor: `${period.color}40`, 
+    // Opacidade reduzida drasticamente: Hex 1A (~10%) e 05 (~2%)
+    background: `linear-gradient(180deg, ${period.color}1A 0%, ${period.color}05 100%)`, 
   } : {};
 
   return (
@@ -120,7 +119,7 @@ const PeriodContainer = ({
       style={{ 
         // Se não estiver ativo e não estiver arrastando, usa o gradiente padrão sutil
         background: (!isActive || !isToday) && !isOver ? period.gradient : undefined,
-        // Se estiver ativo, aplica o estilo ativo (que contém o background mais forte)
+        // Se estiver ativo, aplica o estilo ativo
         ...activeStyle
       }}
     >
@@ -131,8 +130,7 @@ const PeriodContainer = ({
               size={14} 
               style={{ 
                 color: period.color,
-                // Ícone levemente mais brilhante se ativo
-                filter: isActive && isToday ? `drop-shadow(0 0 2px ${period.color})` : undefined
+                // Removido qualquer filter/drop-shadow
               }} 
               className="bg-[#09090b]/40 rounded-full transition-all duration-500" 
             />
@@ -158,7 +156,12 @@ const PeriodContainer = ({
         )}
       </div>
       
-      <div className="relative space-y-3 min-h-[20px]">
+      {/* 
+        Limitando a altura para aproximadamente 3 tasks.
+        Supondo ~90-100px por task + gaps.
+        300px deve acomodar 3 tasks confortavelmente.
+      */}
+      <div className="relative flex flex-col gap-3 min-h-[20px] max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {tasks.map((task) => (
             <TaskCard key={task.id} task={{ ...task, period: period.id }} />
