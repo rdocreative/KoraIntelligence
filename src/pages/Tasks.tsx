@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { 
   DndContext, 
   DragOverlay, 
@@ -67,6 +67,30 @@ export default function TasksPage() {
   const currentDayName = useMemo(() => {
     return WEEK_DAYS[new Date().getDay()];
   }, []);
+
+  // Efeito para centralizar o dia atual ao iniciar
+  useEffect(() => {
+    // Pequeno delay para garantir que o DOM foi renderizado completamente
+    const timer = setTimeout(() => {
+      if (scrollRef.current) {
+        const todayElement = scrollRef.current.querySelector(`[data-day="${currentDayName}"]`) as HTMLElement;
+        if (todayElement) {
+          const containerWidth = scrollRef.current.clientWidth;
+          const elementWidth = todayElement.clientWidth;
+          const elementLeft = todayElement.offsetLeft;
+          
+          // Cálculo para centralizar: posição do elemento - metade do container + metade do elemento
+          const scrollTo = elementLeft - (containerWidth / 2) + (elementWidth / 2);
+          
+          scrollRef.current.scrollTo({
+            left: scrollTo,
+            behavior: 'smooth'
+          });
+        }
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [currentDayName]);
 
   const findDay = (id: string) => {
     if (DISPLAY_ORDER.includes(id)) return id;

@@ -167,7 +167,11 @@ const PeriodContainer = ({
 
 export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday }, ref) => {
   return (
-    <div ref={ref} className="flex flex-col w-72 shrink-0 h-full scroll-snap-align-center">
+    <div 
+      ref={ref} 
+      data-day={id}
+      className="flex flex-col w-72 shrink-0 h-full scroll-snap-align-center"
+    >
       <div className="flex items-center justify-center mb-4 px-3 relative">
         <div className="flex items-center gap-3">
           <h3 className={cn(
