@@ -119,8 +119,8 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
       <div className="flex items-center justify-between mb-4 px-3">
         <div className="flex items-center gap-2">
           <h3 className={cn(
-            "text-xs font-black uppercase tracking-[0.2em]",
-            isToday ? "text-[#38BDF8]" : "text-zinc-500"
+            "text-sm font-serif italic font-bold tracking-tight",
+            isToday ? "text-[#38BDF8]" : "text-zinc-400"
           )}>
             {title}
           </h3>
