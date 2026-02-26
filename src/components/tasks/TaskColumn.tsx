@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TaskCard } from './TaskCard';
@@ -73,7 +73,6 @@ const PeriodContainer = ({
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          {/* Ícone posicionado para alinhar o centro com o rastro (22px da borda da coluna) */}
           <div className="flex items-center justify-center pl-[9px] z-10">
             <period.icon size={14} style={{ color: period.color }} className="bg-[#09090b]/40 rounded-full" />
           </div>
@@ -117,6 +116,41 @@ const PeriodContainer = ({
 };
 
 export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
+  const [progress, setProgress] = useState(0);
+  const [currentColor, setCurrentColor] = useState(PERIODS[0].color);
+
+  useEffect(() => {
+    if (!isToday) return;
+
+    const updateProgress = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const totalMinutes = (hours * 60) + minutes;
+      
+      // O rastro começa na Manhã (06:00) e termina no fim da Madrugada (06:00 do dia seguinte)
+      // Ajustamos o tempo para que 06:00 seja o ponto 0
+      const startMinutes = 6 * 60; // 360
+      let adjustedMinutes = (totalMinutes - startMinutes + 1440) % 1440;
+      const progressPercent = (adjustedMinutes / 1440) * 100;
+      
+      setProgress(progressPercent);
+
+      // Determinar a cor atual baseada na hora
+      let color = PERIODS[0].color;
+      if (hours >= 6 && hours < 12) color = PERIODS[0].color;
+      else if (hours >= 12 && hours < 18) color = PERIODS[1].color;
+      else if (hours >= 18 || hours < 0) color = PERIODS[2].color;
+      else if (hours >= 0 && hours < 6) color = PERIODS[3].color;
+      
+      setCurrentColor(color);
+    };
+
+    updateProgress();
+    const interval = setInterval(updateProgress, 60000); // Atualiza a cada minuto
+    return () => clearInterval(interval);
+  }, [isToday]);
+
   return (
     <div className="flex flex-col w-80 shrink-0 h-full">
       <div className="flex items-center justify-between mb-4 px-3">
@@ -139,17 +173,40 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
           isToday && "bg-[#38BDF8]/[0.01] border-[#38BDF8]/10"
         )}
       >
-        {/* Rastro contínuo centralizado (22px da borda esquerda da coluna) */}
+        {/* Rastro estático (o caminho por onde a linha passa) */}
         <div 
-          className="absolute left-[22px] top-6 bottom-10 w-[2px] opacity-10 pointer-events-none z-0 rounded-full"
-          style={{ 
-            background: `linear-gradient(to bottom, 
-              ${PERIODS[0].color} 0%, 
-              ${PERIODS[1].color} 33%, 
-              ${PERIODS[2].color} 66%, 
-              ${PERIODS[3].color} 100%)` 
-          }}
+          className="absolute left-[22px] top-6 bottom-10 w-[2px] opacity-[0.03] pointer-events-none z-0 rounded-full bg-white"
         />
+
+        {/* Rastro dinâmico (só aparece se for Hoje) */}
+        {isToday && (
+          <div 
+            className="absolute left-[22px] top-6 w-[2px] pointer-events-none z-0 rounded-full transition-all duration-[1000ms] ease-linear"
+            style={{ 
+              height: `calc(${progress}% - 24px)`,
+              background: `linear-gradient(to bottom, 
+                ${PERIODS[0].color} 0%, 
+                ${PERIODS[1].color} 33%, 
+                ${PERIODS[2].color} 66%, 
+                ${PERIODS[3].color} 100%)`,
+              opacity: progress > 0 ? 0.4 : 0
+            }}
+          />
+        )}
+
+        {/* Bolinha indicadora de tempo atual */}
+        {isToday && progress > 0 && (
+          <div 
+            className="absolute left-[22px] -translate-x-1/2 w-2.5 h-2.5 rounded-full z-20 pointer-events-none transition-all duration-[1000ms] ease-linear flex items-center justify-center"
+            style={{ 
+              top: `calc(1.5rem + (${progress}% * 0.9))`, // Ajuste leve para compensar o padding do container
+              backgroundColor: currentColor,
+              boxShadow: `0 0 12px ${currentColor}aa`,
+            }}
+          >
+            <div className="w-full h-full rounded-full animate-ping absolute bg-current opacity-40" />
+          </div>
+        )}
 
         {PERIODS.map((period) => (
           <PeriodContainer 
