@@ -17,13 +17,6 @@ interface TaskCardProps {
   };
 }
 
-const PERIOD_COLORS: Record<string, string> = {
-  Morning: '#FDBA74',
-  Afternoon: '#4ADE80',
-  Evening: '#A78BFA',
-  Dawn: '#818CF8',
-};
-
 export const TaskCard = ({ task }: TaskCardProps) => {
   const {
     attributes,
@@ -62,7 +55,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       >
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-lg">
+            <div className="w-6 h-6 flex items-center justify-center text-lg">
               {task.icon || '📝'}
             </div>
             <h4 className="text-sm font-semibold text-zinc-100 line-clamp-1">{task.name}</h4>
