@@ -29,7 +29,6 @@ const INITIAL_DATA: Record<string, any[]> = {
   'Segunda': [
     { id: 't1', name: 'Reunião Semanal', time: '09:00', icon: '💬', priority: 'Extrema', period: 'Morning' },
     { id: 't2', name: 'Responder E-mails', time: '10:30', icon: '📧', priority: 'Baixa', period: 'Morning' },
-    { id: 't8', name: 'Beber Água', time: '3L', icon: '💧', priority: 'Média', period: 'Anytime' }
   ],
   'Terça': [
     { id: 't3', name: 'Design Review', time: '14:00', icon: '🎨', priority: 'Média', period: 'Afternoon' }
@@ -38,16 +37,12 @@ const INITIAL_DATA: Record<string, any[]> = {
     { id: 't4', name: 'Deep Work: Backend', time: '08:00', icon: '💻', priority: 'Extrema', period: 'Morning' },
     { id: 't5', name: 'Treino de Pernas', time: '18:00', icon: '🏋️‍♂️', priority: 'Média', period: 'Evening' }
   ],
-  'Quinta': [
-    { id: 't9', name: 'Leitura', time: '20m', icon: '📚', priority: 'Baixa', period: 'Evening' }
-  ],
+  'Quinta': [],
   'Sexta': [
     { id: 't6', name: 'Happy Hour', time: '19:00', icon: '🍻', priority: 'Baixa', period: 'Evening' }
   ],
   'Sábado': [],
-  'Domingo': [
-    { id: 't7', name: 'Planejamento', time: '20:00', icon: '📅', priority: 'Média', period: 'Evening' }
-  ]
+  'Domingo': []
 };
 
 const WEEK_DAYS = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
@@ -70,68 +65,60 @@ export default function TasksPage() {
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
     const day = findDay(active.id as string);
-    if (!day) return;
-    
-    const task = columns[day].find((t) => t.id === active.id);
-    setActiveTask(task);
+    if (day) {
+      setActiveTask(columns[day].find((t) => t.id === active.id));
+    }
   };
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) return;
 
-    const activeDay = findDay(active.id as string);
+    const activeId = active.id as string;
     const overId = over.id as string;
-    
-    let overDay = findDay(overId);
-    let overPeriod = activeTask?.period;
 
-    // Se estiver sobre um container de período (formato "Dia:Periodo")
-    if (overId.includes(':')) {
-      const parts = overId.split(':');
-      overDay = parts[0];
-      overPeriod = parts[1];
-    } else {
-      // Se estiver sobre outra tarefa, pega o período dela
-      const targetTask = columns[overDay!]?.find(t => t.id === overId);
-      if (targetTask) {
-        overPeriod = targetTask.period;
-      }
-    }
+    const activeDay = findDay(activeId);
+    let overDay = findDay(overId);
 
     if (!activeDay || !overDay) return;
 
+    let overPeriod = activeTask?.period;
+    if (overId.includes(':')) {
+      overPeriod = overId.split(':')[1];
+    } else {
+      const targetTask = columns[overDay].find(t => t.id === overId);
+      if (targetTask) overPeriod = targetTask.period;
+    }
+
     if (activeDay !== overDay || activeTask?.period !== overPeriod) {
       setColumns((prev) => {
-        const activeItems = [...prev[activeDay]];
-        const overItems = [...prev[overDay!]];
-
-        const activeIndex = activeItems.findIndex((i) => i.id === active.id);
-        const taskToMove = { ...activeItems[activeIndex], period: overPeriod };
-
-        const overIndex = overItems.findIndex((i) => i.id === overId);
+        const activeItems = prev[activeDay].filter(i => i.id !== activeId);
+        const overItems = [...prev[overDay]];
         
-        let newIndex;
-        if (overId.includes(':')) {
-          newIndex = overItems.length;
-        } else {
-          newIndex = overIndex >= 0 ? overIndex : overItems.length;
+        const taskToMove = { ...activeTask, period: overPeriod };
+        
+        const overIndex = overItems.findIndex(i => i.id === overId);
+        const newIndex = overIndex >= 0 ? overIndex : overItems.length;
+
+        // Se for o mesmo dia, atualizamos apenas uma lista
+        if (activeDay === overDay) {
+          const updatedDayItems = prev[activeDay].filter(i => i.id !== activeId);
+          updatedDayItems.splice(newIndex, 0, taskToMove);
+          return { ...prev, [activeDay]: updatedDayItems };
         }
 
-        const newColumns = {
+        // Se forem dias diferentes
+        return {
           ...prev,
-          [activeDay]: activeItems.filter((i) => i.id !== active.id),
-          [overDay!]: [
+          [activeDay]: activeItems,
+          [overDay]: [
             ...overItems.slice(0, newIndex),
             taskToMove,
             ...overItems.slice(newIndex)
           ]
         };
-
-        return newColumns;
       });
       
-      // Atualiza o activeTask localmente para refletir o novo período durante o drag
       if (activeTask) {
         setActiveTask({ ...activeTask, period: overPeriod });
       }
@@ -211,11 +198,7 @@ export default function TasksPage() {
 
           <DragOverlay dropAnimation={{
             sideEffects: defaultDropAnimationSideEffects({
-              styles: {
-                active: {
-                  opacity: '0.5',
-                },
-              },
+              styles: { active: { opacity: '0.5' } },
             }),
           }}>
             {activeTask ? <TaskCard task={activeTask} /> : null}
