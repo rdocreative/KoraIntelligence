@@ -4,7 +4,7 @@ import React from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TaskCard } from './TaskCard';
-import { Sun, Moon, Coffee, CloudMoon, Clock } from 'lucide-react';
+import { Sun, Moon, Coffee, CloudMoon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TaskColumnProps {
@@ -46,14 +46,6 @@ const PERIODS = [
     icon: CloudMoon, 
     color: '#818CF8',
     gradient: 'linear-gradient(180deg, rgba(129, 140, 248, 0.12) 0%, rgba(129, 140, 248, 0.02) 100%)'
-  },
-  { 
-    id: 'Anytime', 
-    label: 'Qualquer Hora', 
-    time: 'Sem horário fixo',
-    icon: Clock, 
-    color: '#94A3B8',
-    gradient: 'linear-gradient(180deg, rgba(148, 163, 184, 0.08) 0%, rgba(148, 163, 184, 0.01) 100%)'
   },
 ];
 
