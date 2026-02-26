@@ -25,30 +25,33 @@ import {
   ChevronDown
 } from "lucide-react";
 
-// Mock de dados inicial
+// Mock de dados atualizado com períodos
 const INITIAL_DATA: Record<string, any[]> = {
-  'Seg': [
-    { id: 't1', name: 'Reunião Semanal', time: '09:00', icon: '💬', priority: 'Extrema' },
-    { id: 't2', name: 'Responder E-mails', time: '10:30', icon: '📧', priority: 'Baixa' }
+  'Segunda': [
+    { id: 't1', name: 'Reunião Semanal', time: '09:00', icon: '💬', priority: 'Extrema', period: 'Morning' },
+    { id: 't2', name: 'Responder E-mails', time: '10:30', icon: '📧', priority: 'Baixa', period: 'Morning' },
+    { id: 't8', name: 'Beber Água', time: '3L', icon: '💧', priority: 'Média', period: 'Anytime' }
   ],
-  'Ter': [
-    { id: 't3', name: 'Design Review', time: '14:00', icon: '🎨', priority: 'Média' }
+  'Terça': [
+    { id: 't3', name: 'Design Review', time: '14:00', icon: '🎨', priority: 'Média', period: 'Afternoon' }
   ],
-  'Qua': [
-    { id: 't4', name: 'Deep Work: Backend', time: '08:00', icon: '💻', priority: 'Extrema' },
-    { id: 't5', name: 'Treino de Pernas', time: '18:00', icon: '🏋️‍♂️', priority: 'Média' }
+  'Quarta': [
+    { id: 't4', name: 'Deep Work: Backend', time: '08:00', icon: '💻', priority: 'Extrema', period: 'Morning' },
+    { id: 't5', name: 'Treino de Pernas', time: '18:00', icon: '🏋️‍♂️', priority: 'Média', period: 'Evening' }
   ],
-  'Qui': [],
-  'Sex': [
-    { id: 't6', name: 'Happy Hour', time: '19:00', icon: '🍻', priority: 'Baixa' }
+  'Quinta': [
+    { id: 't9', name: 'Leitura', time: '20m', icon: '📚', priority: 'Baixa', period: 'Evening' }
   ],
-  'Sáb': [],
-  'Dom': [
-    { id: 't7', name: 'Planejamento Semanal', time: '20:00', icon: '📅', priority: 'Média' }
+  'Sexta': [
+    { id: 't6', name: 'Happy Hour', time: '19:00', icon: '🍻', priority: 'Baixa', period: 'Evening' }
+  ],
+  'Sábado': [],
+  'Domingo': [
+    { id: 't7', name: 'Planejamento', time: '20:00', icon: '📅', priority: 'Média', period: 'Evening' }
   ]
 };
 
-const WEEK_DAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
+const WEEK_DAYS = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
 
 export default function TasksPage() {
   const [columns, setColumns] = useState(INITIAL_DATA);
@@ -154,7 +157,7 @@ export default function TasksPage() {
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-sm font-medium text-zinc-400 cursor-pointer hover:text-white transition-colors">
-            <span>Kanban</span>
+            <span>Visão Semanal</span>
             <ChevronDown size={14} />
           </div>
           <button className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 text-zinc-400">
@@ -163,7 +166,7 @@ export default function TasksPage() {
         </div>
       </header>
 
-      <div className="flex-1 flex gap-6 overflow-x-auto pb-6 custom-scrollbar min-h-0">
+      <div className="flex-1 flex gap-6 overflow-x-auto pb-8 custom-scrollbar min-h-0">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
@@ -177,7 +180,7 @@ export default function TasksPage() {
               id={day} 
               title={day} 
               tasks={columns[day]} 
-              isToday={day === 'Qua'} // Qua como mock de 'Hoje'
+              isToday={day === 'Quarta'} 
             />
           ))}
 
