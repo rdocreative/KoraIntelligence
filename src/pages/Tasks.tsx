@@ -184,28 +184,28 @@ export default function TasksPage() {
 
   return (
     <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0">
-      <header className="flex items-center justify-between py-6 shrink-0">
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
-            <h2 className="text-4xl font-serif font-medium text-white tracking-tight">Quadro Semanal</h2>
-            <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronRight size={20} /></button>
+      <header className="flex flex-col md:flex-row md:items-center justify-between py-4 md:py-6 gap-4 shrink-0">
+        <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
+          <div className="flex items-center gap-2 md:gap-3">
+            <button className="hidden md:block p-1 text-gray-400 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
+            <h2 className="text-2xl md:text-4xl font-serif font-medium text-white tracking-tight">Quadro Semanal</h2>
+            <button className="hidden md:block p-1 text-gray-400 hover:text-white transition-colors"><ChevronRight size={20} /></button>
           </div>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-[#38BDF8]/10 px-4 py-1.5 rounded-full text-[#38BDF8] border border-[#38BDF8]/20">
+          <span className="self-start text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] bg-[#38BDF8]/10 px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[#38BDF8] border border-[#38BDF8]/20">
             Fevereiro • Semana 08
           </span>
         </div>
 
-        <div className="flex items-center gap-4">
-          <button className="p-2 border border-white/10 rounded-xl hover:bg-white/5 text-zinc-400 transition-colors">
-            <CalendarDays size={18} />
+        <div className="flex items-center gap-2 md:gap-4 self-end md:self-auto">
+          <button className="p-1.5 md:p-2 border border-white/10 rounded-xl hover:bg-white/5 text-zinc-400 transition-colors">
+            <CalendarDays size={16} className="md:w-[18px] md:h-[18px]" />
           </button>
-          <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl text-sm font-semibold text-zinc-300 cursor-pointer hover:text-white transition-colors">
+          <div className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-white/5 rounded-xl text-xs md:text-sm font-semibold text-zinc-300 cursor-pointer hover:text-white transition-colors">
             <span>Visão Semanal</span>
             <ChevronDown size={14} />
           </div>
-          <button className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 text-zinc-400">
-             <MoreHorizontal size={18} />
+          <button className="w-8 h-8 md:w-10 md:h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 text-zinc-400">
+             <MoreHorizontal size={16} className="md:w-[18px] md:h-[18px]" />
           </button>
         </div>
       </header>
@@ -228,7 +228,7 @@ export default function TasksPage() {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex gap-5 items-start h-full pr-10">
+          <div className="flex gap-4 md:gap-5 items-start h-full pr-10">
             {DISPLAY_ORDER.map((day) => {
               const isToday = day === currentDayName;
 
