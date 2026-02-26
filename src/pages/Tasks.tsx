@@ -18,9 +18,8 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { TaskColumn } from "@/components/tasks/TaskColumn";
 import { TaskCard } from "@/components/tasks/TaskCard";
 import { 
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight
+  CalendarDays,
+  ChevronDown
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -50,12 +49,9 @@ const DISPLAY_ORDER = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábad
 export default function TasksPage() {
   const [columns, setColumns] = useState(INITIAL_DATA);
   const [activeTask, setActiveTask] = useState<any>(null);
+  const [currentDayIndex, setCurrentDayIndex] = useState(0); // Estado para controlar a aba ativa
   
-  // Refs para funcionalidade de drag-to-scroll
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -66,22 +62,13 @@ export default function TasksPage() {
     return WEEK_DAYS[new Date().getDay()];
   }, []);
 
-  // Scroll inicial para o dia atual
+  // Inicializa o índice do dia atual
   useEffect(() => {
     const todayIndex = DISPLAY_ORDER.indexOf(currentDayName);
-    if (todayIndex !== -1 && scrollRef.current) {
-        // Pequeno delay para garantir renderização
-        setTimeout(() => {
-            if (scrollRef.current) {
-                const container = scrollRef.current;
-                const columnWidth = container.children[0].children[0].getBoundingClientRect().width;
-                const gap = 16; // 4 * 4px (tailwind gap-4)
-                
-                // Centraliza o dia atual ou coloca no início
-                const scrollPos = (columnWidth + gap) * todayIndex;
-                container.scrollTo({ left: scrollPos, behavior: 'smooth' });
-            }
-        }, 100);
+    if (todayIndex !== -1) {
+      setCurrentDayIndex(todayIndex);
+      // Timeout para garantir que o render ocorreu antes do scroll inicial
+      setTimeout(() => scrollToDay(todayIndex), 100);
     }
   }, []);
 
@@ -89,6 +76,37 @@ export default function TasksPage() {
     if (DISPLAY_ORDER.includes(id)) return id;
     if (id.includes(':')) return id.split(':')[0];
     return Object.keys(columns).find((key) => columns[key].find((task) => task.id === id));
+  };
+
+  const scrollToDay = (index: number) => {
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      const child = container.children[0].children[index] as HTMLElement; // Acessa o TaskColumn
+      if (child) {
+        container.scrollTo({
+          left: child.offsetLeft,
+          behavior: 'smooth'
+        });
+        setCurrentDayIndex(index);
+      }
+    }
+  };
+
+  // Detecta qual dia está visível ao fazer scroll (snap)
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const container = scrollRef.current;
+      const scrollPosition = container.scrollLeft + (container.offsetWidth / 2);
+      
+      // Encontra o índice baseado na posição de scroll
+      const width = container.offsetWidth; // No mobile, cada coluna é width: 100% (quase)
+      // Ajuste simples assumindo largura total
+      const newIndex = Math.floor(container.scrollLeft / container.offsetWidth + 0.5);
+      
+      if (newIndex !== currentDayIndex && newIndex >= 0 && newIndex < DISPLAY_ORDER.length) {
+        setCurrentDayIndex(newIndex);
+      }
+    }
   };
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -156,34 +174,49 @@ export default function TasksPage() {
     setActiveTask(null);
   };
 
-  // Funções para drag-to-scroll horizontal
-  const onMouseDown = (e: React.MouseEvent) => {
-    if (!scrollRef.current) return;
-    if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('[data-draggable]')) return;
-    setIsScrolling(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
-  };
-  const onMouseLeave = () => setIsScrolling(false);
-  const onMouseUp = () => setIsScrolling(false);
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!isScrolling || !scrollRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
-
   return (
     <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0">
       
-      {/* Header Centralizado e Miniaturizado */}
-      <header className="flex flex-col items-center justify-center py-1 shrink-0 space-y-1 mb-2">
-        <h2 className="text-lg font-serif font-medium text-white tracking-tight text-center">Quadro Semanal</h2>
-        <span className="text-[8px] font-black uppercase tracking-[0.2em] bg-[#38BDF8]/10 px-3 py-1 rounded-full text-[#38BDF8] border border-[#38BDF8]/20">
-          Fev • Semana 08
+      {/* Header Centralizado */}
+      <header className="flex flex-col items-center justify-center py-2 shrink-0 space-y-2">
+        <h2 className="text-xl font-serif font-medium text-white tracking-tight text-center">Quadro Semanal</h2>
+        <span className="text-[9px] font-black uppercase tracking-[0.2em] bg-[#38BDF8]/10 px-3 py-1 rounded-full text-[#38BDF8] border border-[#38BDF8]/20">
+          Semana 08
         </span>
       </header>
+
+      {/* Tabs de Dias da Semana (Visível apenas no Mobile) */}
+      <div className="md:hidden flex items-center justify-between px-2 py-3 border-b border-white/5 mb-2 overflow-x-auto custom-scrollbar">
+        {DISPLAY_ORDER.map((day, index) => {
+           const isSelected = index === currentDayIndex;
+           const isToday = day === currentDayName;
+           // Pega as primeiras 3 letras do dia (Seg, Ter...)
+           const shortName = day.substring(0, 3);
+           
+           return (
+             <button
+               key={day}
+               onClick={() => scrollToDay(index)}
+               className={cn(
+                 "flex flex-col items-center justify-center min-w-[3rem] py-1 transition-all rounded-lg gap-1",
+                 isSelected ? "text-white" : "text-zinc-600 hover:text-zinc-400"
+               )}
+             >
+               <span className={cn(
+                 "text-[10px] font-black uppercase tracking-widest",
+                 isSelected ? "text-white" : "text-zinc-600"
+               )}>
+                 {shortName}
+               </span>
+               <div className={cn(
+                 "h-1 w-1 rounded-full transition-all",
+                 isSelected ? "bg-[#38BDF8] scale-100" : "bg-transparent scale-0",
+                 isToday && !isSelected && "bg-[#38BDF8]/50 scale-75" // Bolinha indicando "Hoje" mesmo inativo
+               )} />
+             </button>
+           );
+        })}
+      </div>
 
       <div className="hidden md:flex justify-end px-4 mb-4">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-xl text-xs font-semibold text-zinc-300 cursor-pointer hover:text-white transition-colors">
@@ -194,14 +227,8 @@ export default function TasksPage() {
 
       <div 
         ref={scrollRef}
-        onMouseDown={onMouseDown}
-        onMouseLeave={onMouseLeave}
-        onMouseUp={onMouseUp}
-        onMouseMove={onMouseMove}
-        className={cn(
-          "flex-1 flex min-h-0 pb-0 overflow-x-auto custom-scrollbar cursor-grab select-none snap-x snap-mandatory scroll-smooth",
-          isScrolling && "cursor-grabbing"
-        )}
+        onScroll={handleScroll}
+        className="flex-1 flex min-h-0 pb-0 overflow-x-auto custom-scrollbar snap-x snap-mandatory scroll-smooth"
       >
         <DndContext
           sensors={sensors}
@@ -210,8 +237,8 @@ export default function TasksPage() {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          {/* gap-4 no mobile para espaçamento entre dias */}
-          <div className="flex gap-4 md:gap-5 items-start h-full md:pr-10 px-2 md:px-0">
+          {/* Container flex com gap no desktop, sem gap no mobile (para snap perfeito) */}
+          <div className="flex md:gap-5 items-start h-full md:pr-10">
             {DISPLAY_ORDER.map((day) => {
               const isToday = day === currentDayName;
 

@@ -163,17 +163,18 @@ const PeriodContainer = ({
       </div>
     </div>
   );
-});
+};
 
 export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday }, ref) => {
   return (
-    // Voltamos para uma largura fixa no mobile que permite ver parte da próxima coluna (aprox 85% da tela)
+    // Alterado: min-w-full no mobile, w-72 no desktop. scroll-snap-align-center para travar no scroll.
     <div 
       ref={ref} 
-      className="flex flex-col min-w-[85vw] md:min-w-[18rem] md:w-72 shrink-0 h-full scroll-snap-align-center md:scroll-snap-align-none"
+      className="flex flex-col min-w-full md:min-w-[18rem] md:w-72 shrink-0 h-full scroll-snap-align-center snap-center md:snap-align-none"
     >
       <div className="flex items-center justify-between mb-4 px-1 relative">
-         <div className="flex items-center gap-3">
+         {/* Título escondido no mobile porque usaremos Tabs, visível no desktop */}
+         <div className="hidden md:flex items-center gap-3">
           <h3 className={cn(
             "text-lg font-serif font-medium tracking-tight transition-colors duration-500",
             isToday ? "text-[#38BDF8]" : "text-zinc-100"
@@ -182,7 +183,7 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
           </h3>
         </div>
         {isToday && (
-            <span className="text-[9px] font-black uppercase tracking-widest text-[#38BDF8] bg-[#38BDF8]/5 px-2 py-1 rounded-full border border-[#38BDF8]/10">
+            <span className="md:hidden w-full text-center text-[9px] font-black uppercase tracking-widest text-[#38BDF8] bg-[#38BDF8]/5 py-1 rounded-full border border-[#38BDF8]/10">
               Hoje
             </span>
         )}

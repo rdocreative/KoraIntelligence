@@ -46,18 +46,19 @@ const ProtectedRoute = () => {
     <div className="flex h-screen w-screen overflow-hidden text-white antialiased relative bg-[#070707]">
       <SideNav />
 
-      {/* Removemos paddings extras no mobile para aproveitar 100% da altura */}
+      {/* Alterado: p-0 no mobile para remover espaçamento das bordas, pb-20 para não esconder atrás da nav bar */}
       <div className="flex-1 flex flex-col p-0 pb-20 md:p-4 md:pl-0 md:pb-4 z-10 min-w-0 h-full">
         
-        {/* Container principal sem bordas/arredondamento no mobile para imersão total */}
+        {/* Mobile Header Removido conforme solicitado para subir o conteúdo */}
+
         <div 
           className="flex-1 flex flex-col md:rounded-[24px] md:border border-transparent md:border-white/5 overflow-hidden relative min-h-0 w-full" 
           style={{ 
-            backgroundColor: 'transparent', 
+            backgroundColor: 'transparent', // Transparente no mobile para fundir com o fundo
           }}
         >
-          {/* Fundo escuro apenas no desktop */}
-          <div className="absolute inset-0 bg-[#0b0b0b] md:rounded-[24px] -z-10 hidden md:block" />
+          {/* Fundo escuro apenas no desktop ou container interno se necessário */}
+          <div className="absolute inset-0 bg-[#0b0b0b] md:rounded-[24px] -z-10" />
 
           <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-4 md:px-10">
             <main className="flex-1 flex flex-col py-4 md:py-0">
