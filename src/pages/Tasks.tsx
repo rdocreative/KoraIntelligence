@@ -25,7 +25,6 @@ import {
   ChevronDown
 } from "lucide-react";
 
-// Mock de dados atualizado com períodos
 const INITIAL_DATA: Record<string, any[]> = {
   'Segunda': [
     { id: 't1', name: 'Reunião Semanal', time: '09:00', icon: '💬', priority: 'Extrema', period: 'Morning' },
@@ -62,17 +61,18 @@ export default function TasksPage() {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const findColumn = (id: string) => {
-    if (id in columns) return id;
+  const findDay = (id: string) => {
+    if (WEEK_DAYS.includes(id)) return id;
+    if (id.includes(':')) return id.split(':')[0];
     return Object.keys(columns).find((key) => columns[key].find((task) => task.id === id));
   };
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
-    const columnId = findColumn(active.id as string);
-    if (!columnId) return;
+    const day = findDay(active.id as string);
+    if (!day) return;
     
-    const task = columns[columnId].find((t) => t.id === active.id);
+    const task = columns[day].find((t) => t.id === active.id);
     setActiveTask(task);
   };
 
@@ -80,59 +80,84 @@ export default function TasksPage() {
     const { active, over } = event;
     if (!over) return;
 
-    const activeColumn = findColumn(active.id as string);
-    const overColumn = findColumn(over.id as string);
+    const activeDay = findDay(active.id as string);
+    const overId = over.id as string;
+    
+    let overDay = findDay(overId);
+    let overPeriod = activeTask?.period;
 
-    if (!activeColumn || !overColumn || activeColumn === overColumn) return;
-
-    setColumns((prev) => {
-      const activeItems = prev[activeColumn];
-      const overItems = prev[overColumn];
-
-      const activeIndex = activeItems.findIndex((i) => i.id === active.id);
-      const overIndex = overItems.findIndex((i) => i.id === over.id);
-
-      let newIndex;
-      if (over.id in prev) {
-        newIndex = overItems.length + 1;
-      } else {
-        const isBelowLastItem = over && overIndex === overItems.length - 1;
-        const modifier = isBelowLastItem ? 1 : 0;
-        newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
+    // Se estiver sobre um container de período (formato "Dia:Periodo")
+    if (overId.includes(':')) {
+      const parts = overId.split(':');
+      overDay = parts[0];
+      overPeriod = parts[1];
+    } else {
+      // Se estiver sobre outra tarefa, pega o período dela
+      const targetTask = columns[overDay!]?.find(t => t.id === overId);
+      if (targetTask) {
+        overPeriod = targetTask.period;
       }
+    }
 
-      return {
-        ...prev,
-        [activeColumn]: activeItems.filter((i) => i.id !== active.id),
-        [overColumn]: [
-          ...overItems.slice(0, newIndex),
-          activeItems[activeIndex],
-          ...overItems.slice(newIndex)
-        ]
-      };
-    });
+    if (!activeDay || !overDay) return;
+
+    if (activeDay !== overDay || activeTask?.period !== overPeriod) {
+      setColumns((prev) => {
+        const activeItems = [...prev[activeDay]];
+        const overItems = [...prev[overDay!]];
+
+        const activeIndex = activeItems.findIndex((i) => i.id === active.id);
+        const taskToMove = { ...activeItems[activeIndex], period: overPeriod };
+
+        const overIndex = overItems.findIndex((i) => i.id === overId);
+        
+        let newIndex;
+        if (overId.includes(':')) {
+          newIndex = overItems.length;
+        } else {
+          newIndex = overIndex >= 0 ? overIndex : overItems.length;
+        }
+
+        const newColumns = {
+          ...prev,
+          [activeDay]: activeItems.filter((i) => i.id !== active.id),
+          [overDay!]: [
+            ...overItems.slice(0, newIndex),
+            taskToMove,
+            ...overItems.slice(newIndex)
+          ]
+        };
+
+        return newColumns;
+      });
+      
+      // Atualiza o activeTask localmente para refletir o novo período durante o drag
+      if (activeTask) {
+        setActiveTask({ ...activeTask, period: overPeriod });
+      }
+    }
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (!over) return;
-
-    const activeColumn = findColumn(active.id as string);
-    const overColumn = findColumn(over.id as string);
-
-    if (!activeColumn || !overColumn || activeColumn !== overColumn) {
+    if (!over) {
       setActiveTask(null);
       return;
     }
 
-    const activeIndex = columns[activeColumn].findIndex((i) => i.id === active.id);
-    const overIndex = columns[overColumn].findIndex((i) => i.id === over.id);
+    const activeDay = findDay(active.id as string);
+    const overDay = findDay(over.id as string);
 
-    if (activeIndex !== overIndex) {
-      setColumns((prev) => ({
-        ...prev,
-        [overColumn]: arrayMove(prev[overColumn], activeIndex, overIndex)
-      }));
+    if (activeDay && overDay && activeDay === overDay) {
+      const activeIndex = columns[activeDay].findIndex((i) => i.id === active.id);
+      const overIndex = columns[overDay].findIndex((i) => i.id === over.id);
+
+      if (activeIndex !== overIndex && overIndex !== -1) {
+        setColumns((prev) => ({
+          ...prev,
+          [activeDay]: arrayMove(prev[activeDay], activeIndex, overIndex)
+        }));
+      }
     }
 
     setActiveTask(null);
