@@ -107,7 +107,6 @@ const PeriodContainer = ({
       className={cn(
         "relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 ease-in-out",
         !isActive && !isOver ? "border-white/[0.03]" : "",
-        // Trocado azul por branco sutil no estado de drop
         isOver ? "border-white/20 bg-white/5 scale-[1.01]" : ""
       )}
       style={{ 
@@ -172,12 +171,11 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
       <div className="flex items-center justify-between mb-4 px-3">
         <div className="flex items-center gap-2">
           <h3 className={cn(
-            "text-sm font-serif italic font-bold tracking-tight text-zinc-200",
-            // Removido cor azul do título de "Hoje"
+            "text-lg font-serif font-medium tracking-tight text-zinc-100"
           )}>
             {title}
           </h3>
-          <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-zinc-300 font-bold">
+          <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-zinc-400 font-bold">
             {tasks.length}
           </span>
         </div>
@@ -186,7 +184,6 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
       <div
         className={cn(
           "flex-1 relative flex flex-col gap-5 p-2 rounded-[28px] bg-white/[0.01] border border-white/[0.03] custom-scrollbar overflow-y-auto pb-10"
-          // Removido background e borda azul aqui
         )}
       >
         {PERIODS.map((period) => (

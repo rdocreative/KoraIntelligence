@@ -16,8 +16,8 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-transparent text-white p-8 overflow-x-auto custom-scrollbar">
       <header className="mb-12 max-w-7xl mx-auto">
-        <h1 className="text-4xl font-serif italic font-bold tracking-tight mb-2">My Day</h1>
-        <p className="text-zinc-500 text-sm font-medium">Organize sua rotina com clareza e elegância.</p>
+        <h1 className="text-5xl font-serif font-medium tracking-tight mb-2">My Day</h1>
+        <p className="text-zinc-500 text-sm font-medium uppercase tracking-[0.2em] opacity-60">Organize sua rotina com clareza e elegância.</p>
       </header>
 
       <main className="flex gap-8 max-w-7xl mx-auto pb-20">

@@ -27,7 +27,7 @@ import {
 
 const INITIAL_DATA: Record<string, any[]> = {
   'Segunda': [
-    { id: 't1', name: 'Reunião Semanal', time: '09:00', icon: '💬', priority: 'Extrema', period: 'Morning' },
+    { id: 't1', name: 'Reunião Semanal', time: '09:00', icon: '🤝', priority: 'Extrema', period: 'Morning' },
     { id: 't2', name: 'Responder E-mails', time: '10:30', icon: '📧', priority: 'Baixa', period: 'Morning' },
   ],
   'Terça': [
@@ -100,14 +100,12 @@ export default function TasksPage() {
         const overIndex = overItems.findIndex(i => i.id === overId);
         const newIndex = overIndex >= 0 ? overIndex : overItems.length;
 
-        // Se for o mesmo dia, atualizamos apenas uma lista
         if (activeDay === overDay) {
           const updatedDayItems = prev[activeDay].filter(i => i.id !== activeId);
           updatedDayItems.splice(newIndex, 0, taskToMove);
           return { ...prev, [activeDay]: updatedDayItems };
         }
 
-        // Se forem dias diferentes
         return {
           ...prev,
           [activeDay]: activeItems,
@@ -153,27 +151,27 @@ export default function TasksPage() {
   return (
     <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0">
       <header className="flex items-center justify-between py-6 shrink-0">
-        <div className="flex items-center gap-4">
-          <button className="p-1.5 border border-white/10 rounded-xl hover:bg-white/5 text-zinc-400 transition-colors">
-            <CalendarDays size={16} />
-          </button>
+        <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
-            <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronLeft size={18} /></button>
-            <h2 className="text-3xl font-serif text-white tracking-tight italic">Quadro Semanal</h2>
-            <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronRight size={18} /></button>
+            <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
+            <h2 className="text-4xl font-serif font-medium text-white tracking-tight">Quadro Semanal</h2>
+            <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronRight size={20} /></button>
           </div>
-          <span className="text-[10px] font-black uppercase tracking-widest bg-[#38BDF8]/10 px-3 py-1 rounded-full text-[#38BDF8]">
-            Semana 08
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-[#38BDF8]/10 px-4 py-1.5 rounded-full text-[#38BDF8] border border-[#38BDF8]/20">
+            Fevereiro • Semana 08
           </span>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-sm font-medium text-zinc-400 cursor-pointer hover:text-white transition-colors">
+          <button className="p-2 border border-white/10 rounded-xl hover:bg-white/5 text-zinc-400 transition-colors">
+            <CalendarDays size={18} />
+          </button>
+          <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl text-sm font-semibold text-zinc-300 cursor-pointer hover:text-white transition-colors">
             <span>Visão Semanal</span>
             <ChevronDown size={14} />
           </div>
           <button className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 text-zinc-400">
-             <MoreHorizontal size={16} />
+             <MoreHorizontal size={18} />
           </button>
         </div>
       </header>

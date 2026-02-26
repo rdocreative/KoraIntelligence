@@ -26,7 +26,7 @@ export const SideNav = () => {
   return (
     <div className="w-64 h-full flex flex-col pt-12 pb-6 px-6 relative z-10 shrink-0 bg-transparent">
       <div className="flex items-center justify-between mb-10">
-        <h1 className="text-3xl font-serif tracking-tight text-white">Néctar.</h1>
+        <h1 className="text-3xl font-serif font-medium tracking-tight text-white">Néctar.</h1>
         <button className="p-1.5 rounded-[24px] hover:bg-white/10 text-zinc-400 transition-colors border border-white/5">
           <Plus size={18} />
         </button>
