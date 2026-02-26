@@ -12,7 +12,6 @@ interface TaskColumnProps {
   title: string;
   tasks: any[];
   isToday?: boolean;
-  isPast?: boolean;
 }
 
 const PERIODS = [
@@ -62,14 +61,12 @@ const PeriodContainer = ({
   dayId, 
   period, 
   tasks,
-  isToday,
-  isPast
+  isToday
 }: { 
   dayId: string; 
   period: typeof PERIODS[0]; 
   tasks: any[];
   isToday?: boolean;
-  isPast?: boolean;
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `${dayId}:${period.id}`,
@@ -110,8 +107,7 @@ const PeriodContainer = ({
       className={cn(
         "relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 ease-in-out",
         !isActive && !isOver ? "border-white/[0.03]" : "",
-        isOver ? "border-white/20 bg-white/5 scale-[1.01]" : "",
-        isPast && "grayscale opacity-50 contrast-75"
+        isOver ? "border-white/20 bg-white/5 scale-[1.01]" : ""
       )}
       style={{ 
         background: (!isActive || !isToday) && !isOver ? period.gradient : undefined,
@@ -123,14 +119,14 @@ const PeriodContainer = ({
           <div className="flex items-center justify-center z-10">
             <period.icon 
               size={16} 
-              style={{ color: isPast ? '#71717a' : period.color }} 
+              style={{ color: period.color }} 
               className="transition-all duration-500" 
             />
           </div>
           <div className="flex flex-col">
             <span 
               className="text-[11px] font-black uppercase tracking-widest leading-none transition-all duration-500" 
-              style={{ color: isPast ? '#71717a' : period.color }}
+              style={{ color: period.color }}
             >
               {period.label}
             </span>
@@ -155,7 +151,7 @@ const PeriodContainer = ({
         
         {tasks.length === 0 && !isOver && (
            <div className="flex items-center justify-center py-4 opacity-[0.05]">
-             <period.icon size={24} style={{ color: isPast ? '#71717a' : period.color }} />
+             <period.icon size={24} style={{ color: period.color }} />
            </div>
         )}
 
@@ -169,14 +165,14 @@ const PeriodContainer = ({
   );
 };
 
-export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday, isPast }, ref) => {
+export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday }, ref) => {
   return (
     <div ref={ref} className="flex flex-col w-80 shrink-0 h-full scroll-snap-align-center">
       <div className="flex items-center justify-between mb-4 px-3">
         <div className="flex items-center gap-2">
           <h3 className={cn(
             "text-lg font-serif font-medium tracking-tight transition-colors duration-500",
-            isToday ? "text-[#38BDF8]" : isPast ? "text-zinc-500" : "text-zinc-100"
+            isToday ? "text-[#38BDF8]" : "text-zinc-100"
           )}>
             {title}
           </h3>
@@ -198,9 +194,7 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
           "flex-1 relative flex flex-col gap-5 p-2 rounded-[28px] border custom-scrollbar overflow-y-auto pb-10 transition-all duration-500",
           isToday 
             ? "bg-[#38BDF8]/[0.02] border-[#38BDF8]/10 shadow-[0_0_40px_rgba(56,189,248,0.02)]" 
-            : isPast 
-              ? "bg-transparent border-white/[0.02] opacity-60"
-              : "bg-white/[0.01] border-white/[0.03]"
+            : "bg-white/[0.01] border-white/[0.03]"
         )}
       >
         {PERIODS.map((period) => (
@@ -210,7 +204,6 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
             period={period}
             tasks={tasks.filter(t => t.period === period.id)}
             isToday={isToday}
-            isPast={isPast}
           />
         ))}
       </div>

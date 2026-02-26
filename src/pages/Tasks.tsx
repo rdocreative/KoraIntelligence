@@ -192,9 +192,6 @@ export default function TasksPage() {
           <div className="flex gap-6 items-start h-full">
             {DISPLAY_ORDER.map((day) => {
               const isToday = day === currentDayName;
-              const dayIndex = DISPLAY_ORDER.indexOf(day);
-              const currentIndex = DISPLAY_ORDER.indexOf(currentDayName);
-              const isPast = dayIndex < currentIndex;
 
               return (
                 <TaskColumn 
@@ -203,7 +200,6 @@ export default function TasksPage() {
                   title={day} 
                   tasks={columns[day] || []} 
                   isToday={isToday}
-                  isPast={isPast}
                 />
               );
             })}
