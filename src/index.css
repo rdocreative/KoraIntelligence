@@ -1,64 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Fundo principal: Cinza escuro profundo */
-    --background: 0 0% 5%; 
-    --foreground: 0 0% 98%;
-    
-    /* Componentes: 5% mais claro que o fundo */
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 98%;
-    
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 98%;
-    
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 10%;
-    
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 98%;
-    
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 65%;
-    
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 98%;
-    
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 0 0% 80%;
-    --radius: 1.5rem;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
   }
-}
 
-@layer base {
-  * {
-    @apply border-border;
-  }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-black text-white antialiased;
+    background-color: #000000;
   }
 }
 
+/* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
-  height: 4px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
+  border-radius: 10px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.1);
 }
