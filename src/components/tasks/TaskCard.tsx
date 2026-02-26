@@ -45,8 +45,8 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       {...attributes}
       {...listeners}
       className={cn(
-        "group flex flex-col p-4 rounded-[24px] bg-[#1A1A20]/40 border border-white/5 hover:border-white/10 transition-all cursor-grab active:cursor-grabbing",
-        isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl"
+        "group flex flex-col p-4 rounded-[20px] bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all cursor-grab active:cursor-grabbing",
+        isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
       )}
     >
       <div className="flex items-start justify-between mb-3">

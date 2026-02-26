@@ -21,7 +21,7 @@ const PERIODS = [
     time: '06:00 — 12:00',
     icon: Sun, 
     color: '#FDBA74',
-    gradient: 'linear-gradient(180deg, rgba(253, 186, 116, 0.12) 0%, rgba(253, 186, 116, 0.02) 100%)'
+    gradient: 'linear-gradient(180deg, rgba(253, 186, 116, 0.08) 0%, rgba(253, 186, 116, 0.01) 100%)'
   },
   { 
     id: 'Afternoon', 
@@ -29,7 +29,7 @@ const PERIODS = [
     time: '12:00 — 18:00',
     icon: Coffee, 
     color: '#4ADE80',
-    gradient: 'linear-gradient(180deg, rgba(74, 222, 128, 0.12) 0%, rgba(74, 222, 128, 0.02) 100%)'
+    gradient: 'linear-gradient(180deg, rgba(74, 222, 128, 0.08) 0%, rgba(74, 222, 128, 0.01) 100%)'
   },
   { 
     id: 'Evening', 
@@ -37,7 +37,7 @@ const PERIODS = [
     time: '18:00 — 00:00',
     icon: Moon, 
     color: '#A78BFA',
-    gradient: 'linear-gradient(180deg, rgba(167, 139, 250, 0.12) 0%, rgba(167, 139, 250, 0.02) 100%)'
+    gradient: 'linear-gradient(180deg, rgba(167, 139, 250, 0.08) 0%, rgba(167, 139, 250, 0.01) 100%)'
   },
   { 
     id: 'Dawn', 
@@ -45,7 +45,7 @@ const PERIODS = [
     time: '00:00 — 06:00',
     icon: CloudMoon, 
     color: '#818CF8',
-    gradient: 'linear-gradient(180deg, rgba(129, 140, 248, 0.12) 0%, rgba(129, 140, 248, 0.02) 100%)'
+    gradient: 'linear-gradient(180deg, rgba(129, 140, 248, 0.08) 0%, rgba(129, 140, 248, 0.01) 100%)'
   },
 ];
 
@@ -67,7 +67,7 @@ const PeriodContainer = ({
       ref={setNodeRef}
       className={cn(
         "group flex flex-col p-4 rounded-[24px] border transition-all duration-200",
-        isOver ? "border-[#38BDF8] bg-[#38BDF8]/10 scale-[1.01]" : "border-white/[0.04]"
+        isOver ? "border-[#38BDF8] bg-[#38BDF8]/10 scale-[1.01]" : "border-white/[0.03]"
       )}
       style={{ background: isOver ? undefined : period.gradient }}
     >
@@ -79,7 +79,7 @@ const PeriodContainer = ({
               {period.label}
             </span>
           </div>
-          <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tight opacity-80">
+          <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight opacity-70">
             {period.time}
           </span>
         </div>
@@ -104,7 +104,7 @@ const PeriodContainer = ({
         )}
 
         {isOver && tasks.length === 0 && (
-          <div className="h-10 border-2 border-dashed border-[#38BDF8]/20 rounded-[24px] flex items-center justify-center">
+          <div className="h-10 border-2 border-dashed border-[#38BDF8]/20 rounded-[20px] flex items-center justify-center">
              <span className="text-[8px] font-black text-[#38BDF8] uppercase tracking-tighter">Soltar</span>
           </div>
         )}
@@ -120,11 +120,11 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
         <div className="flex items-center gap-2">
           <h3 className={cn(
             "text-sm font-serif italic font-bold tracking-tight",
-            isToday ? "text-[#38BDF8]" : "text-zinc-400"
+            isToday ? "text-[#38BDF8]" : "text-zinc-500"
           )}>
             {title}
           </h3>
-          <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-zinc-400 font-bold">
+          <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-zinc-500 font-bold">
             {tasks.length}
           </span>
         </div>
@@ -132,7 +132,7 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
 
       <div
         className={cn(
-          "flex-1 flex flex-col gap-5 p-2 rounded-[24px] bg-white/[0.01] border border-white/5 custom-scrollbar overflow-y-auto pb-10",
+          "flex-1 flex flex-col gap-5 p-2 rounded-[28px] bg-white/[0.01] border border-white/[0.03] custom-scrollbar overflow-y-auto pb-10",
           isToday && "bg-[#38BDF8]/[0.01] border-[#38BDF8]/10"
         )}
       >
