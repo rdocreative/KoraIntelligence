@@ -33,7 +33,11 @@ const ProtectedRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-    return <div className="h-screen w-full flex items-center justify-center bg-background"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>;
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-[#080809]">
+        <div className="w-8 h-8 border-4 border-[#C4B5FD] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   if (!session) {
@@ -41,25 +45,26 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex h-screen w-full bg-[#f5eeee] dark:bg-[#212121] overflow-hidden">
+    <div className="flex h-screen overflow-hidden font-sans bg-[#080809] text-white">
       <SideNav />
-      {/* Container Principal "Floating Card" sem sombra e com margem de 7px */}
-      <div className="flex-1 flex flex-col mt-[7px] mb-[7px] mr-[7px] ml-0 bg-background rounded-[16px] overflow-hidden transition-all duration-300 ease-in-out border border-black/[0.04] dark:border-white/[0.04] relative">
-        <TopBar />
-        <main className="flex-1 w-full h-full overflow-y-auto scrollbar-none">
-          <Outlet />
-        </main>
+      <div className="flex-1 flex flex-col h-full py-3 pr-3">
+        <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative bg-[#121216] rounded-[2.5rem] border border-white/5 shadow-2xl p-8 lg:p-14">
+          <TopBar />
+          <main className="flex-1 h-full">
+            <Outlet />
+          </main>
+        </div>
       </div>
     </div>
   );
 };
 
-// Componente para rotas públicas (Login/Cadastro)
+// Componente para rotas públicas
 const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-background"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>;
+     return <div className="h-screen w-full flex items-center justify-center bg-[#080809]"><div className="w-8 h-8 border-4 border-[#C4B5FD] border-t-transparent rounded-full animate-spin"></div></div>;
   }
 
   if (session) {
@@ -73,18 +78,18 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider 
       attribute="class" 
-      defaultTheme="light" 
+      defaultTheme="dark" 
       enableSystem={false}
-      storageKey="kora-theme"
+      storageKey="nectar-theme"
     >
       <AuthProvider>
         <ColorProvider>
           <SettingsProvider>
             <HabitProvider>
               <TooltipProvider>
-                <Sonner theme="light" />
+                <Sonner theme="dark" />
                 <BrowserRouter>
-                  <div className="h-screen w-screen text-foreground font-sans flex flex-col relative overflow-hidden bg-[#f5eeee] dark:bg-[#212121]">
+                  <div className="h-screen w-screen text-white font-sans flex flex-col relative overflow-hidden bg-[#080809]">
                     <Routes>
                       {/* Rotas Públicas */}
                       <Route element={<PublicRoute />}>
@@ -99,10 +104,9 @@ const App = () => (
                         <Route path="/habitos" element={<HabitsPage />} />
                         <Route path="/tarefas" element={<TasksPage />} />
                         <Route path="/missoes" element={<MissionsPage />} />
-                        <Route path="/financa" element={<StorePage />} />
                         <Route path="/loja" element={<StorePage />} />
-                        <Route path="/inventario" element={<StorePage />} />
                         <Route path="/configuracoes" element={<SettingsPage />} />
+                        <Route path="/dashboard" element={<Index />} />
                       </Route>
 
                       <Route path="*" element={<NotFound />} />

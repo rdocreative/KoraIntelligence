@@ -1,208 +1,129 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
 import { 
-  Sparkles, 
-  Send, 
-  Bot, 
-  Circle, 
-  Calendar, 
-  PlusCircle, 
-  TrendingUp,
-  MoreHorizontal
+  Flame, 
+  Trophy, 
+  Target, 
+  Coffee, 
+  Quote,
+  ChevronRight,
+  TrendingUp
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
-interface Message {
-  id: string;
-  text: string;
-  sender: 'user' | 'assistant';
-  timestamp: Date;
-}
+const theme = {
+  primary: '#C4B5FD',
+  secondary: '#FB923C',
+  accent: '#F472B6',
+  gradPrimary: 'linear-gradient(135deg, #C4B5FD 0%, #A855F7 100%)',
+  primaryGlow: '0 0 20px rgba(196, 181, 253, 0.25)',
+};
 
 const Index = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  // Auto-scroll to bottom
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages, isTyping]);
-
-  const handleSend = (text: string = inputValue) => {
-    if (!text.trim()) return;
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text,
-      sender: 'user',
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-    setInputValue('');
-    setIsTyping(true);
-
-    // Simulated Assistant Response
-    setTimeout(() => {
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: getSimulatedResponse(text),
-        sender: 'assistant',
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
-      setIsTyping(false);
-    }, 1500);
-  };
-
-  const getSimulatedResponse = (input: string) => {
-    const lower = input.toLowerCase();
-    if (lower.includes('hábito')) return "Claro! Você tem 3 hábitos pendentes para hoje: Beber água, Ler e Meditar. Gostaria que eu te lembrasse de algum deles mais tarde?";
-    if (lower.includes('tarefa')) return "Com certeza. Qual o título da nova tarefa que você deseja criar? Posso também sugerir um prazo baseado na sua rotina atual.";
-    if (lower.includes('progresso')) return "Sua semana está sendo produtiva! Você completou 85% das suas metas até agora. Terça-feira foi seu dia mais eficiente.";
-    return "Entendi! Estou aqui para ajudar você a manter o foco e a produtividade. O que mais podemos planejar para hoje?";
-  };
-
-  const suggestions = [
-    { label: "Ver meus hábitos de hoje", icon: Calendar },
-    { label: "Criar uma nova tarefa", icon: PlusCircle },
-    { label: "Mostrar meu progresso semanal", icon: TrendingUp },
-  ];
-
   return (
-    <div className="flex flex-col h-[calc(100vh-120px)] w-full max-w-[1000px] mx-auto gap-6 p-10 font-sans text-[#1A1A1A]">
-      
-      {/* HEADER DO CHAT */}
-      <header className="bg-white rounded-[24px] p-6 shadow-[0_2px_16px_rgba(0,0,0,0.04)] flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#9D4EDD] to-[#FF6B4A] flex items-center justify-center shadow-lg">
-            <Sparkles className="text-white" size={24} />
-          </div>
-          <div>
-            <h1 className="font-serif text-[28px] font-semibold leading-none mb-1">Kora</h1>
-            <p className="text-[14px] text-[#6B6B6B] font-medium tracking-tight">Seu assistente de produtividade</p>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-2 bg-[#F8F8F6] px-4 py-2 rounded-full border border-[#E5E5E5]">
-          <Circle size={8} fill="#22C55E" className="text-[#22C55E]" />
-          <span className="text-[12px] font-bold text-[#1A1A1A] uppercase tracking-widest">ONLINE</span>
-        </div>
-      </header>
+    <div className="max-w-7xl mx-auto relative z-10 animate-in fade-in duration-700">
+      {/* Background Orbs */}
+      <div className="fixed top-[0%] left-[20%] w-[500px] h-[500px] rounded-full blur-[150px] opacity-10 pointer-events-none" style={{ background: theme.gradPrimary }} />
+      <div className="fixed bottom-[-10%] right-[10%] w-[400px] h-[400px] rounded-full blur-[120px] opacity-10 pointer-events-none" style={{ background: theme.secondary }} />
 
-      {/* ÁREA DE MENSAGENS */}
-      <div className="flex-grow bg-white rounded-[24px] shadow-[0_2px_16px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col relative">
-        <div 
-          ref={scrollRef}
-          className="flex-grow overflow-y-auto p-8 flex flex-col gap-6 scroll-smooth"
-        >
-          {messages.length === 0 ? (
-            /* ESTADO INICIAL */
-            <div className="flex-grow flex flex-col items-center justify-center text-center animate-in fade-in zoom-in duration-500">
-              <div className="w-20 h-20 rounded-[32px] bg-gradient-to-br from-[#9D4EDD]/10 to-[#FF6B4A]/10 flex items-center justify-center mb-6 border border-[#9D4EDD]/20">
-                <Sparkles size={40} className="text-[#9D4EDD]" />
+      <div className="grid grid-cols-12 gap-8 lg:gap-10">
+        {/* Hero Card - Saudação Imersiva */}
+        <div className="col-span-12 lg:col-span-8 p-10 rounded-[3rem] border border-white/5 relative overflow-hidden group transition-all duration-500 hover:scale-[1.01]" 
+             style={{ background: 'rgba(255, 255, 255, 0.02)' }}>
+          <div className="absolute top-0 right-0 w-full h-full opacity-[0.03] pointer-events-none" 
+               style={{ background: 'radial-gradient(circle at top right, #C4B5FD, transparent 60%)' }} />
+          
+          <div className="relative z-10 flex flex-col h-full justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-xs font-black tracking-[0.3em] uppercase opacity-50">Bom dia, Ricardo</span>
               </div>
-              <h2 className="font-serif text-[24px] font-semibold mb-8">Como posso te ajudar hoje?</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-[700px]">
-                {suggestions.map((s, i) => (
-                  <button
-                    key={i}
-                    onClick={() => handleSend(s.label)}
-                    className="p-4 bg-white border border-[#E5E5E5] rounded-[16px] flex flex-col items-center gap-3 transition-all hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:border-[#9D4EDD]/30 group"
-                  >
-                    <s.icon size={20} className="text-[#6B6B6B] group-hover:text-[#9D4EDD] transition-colors" />
-                    <span className="text-[14px] font-semibold text-[#1A1A1A]">{s.label}</span>
-                  </button>
-                ))}
-              </div>
+              <h2 className="text-4xl lg:text-5xl font-serif italic tracking-tight mb-4 text-white leading-tight">
+                A excelência não é um ato, <br/>mas um <span style={{ color: theme.primary }}>hábito.</span>
+              </h2>
             </div>
-          ) : (
-            /* LISTA DE MENSAGENS */
-            <>
-              {messages.map((m) => (
-                <div 
-                  key={m.id}
-                  className={cn(
-                    "flex flex-col max-w-[70%;] animate-in slide-in-from-bottom-2 duration-300",
-                    m.sender === 'user' ? "self-end items-end" : "self-start items-start"
-                  )}
-                >
-                  <div className="flex items-end gap-3 w-full">
-                    {m.sender === 'assistant' && (
-                      <div className="w-8 h-8 rounded-full bg-[#F8F8F6] border border-[#E5E5E5] flex items-center justify-center shrink-0">
-                        <Bot size={16} className="text-[#9D4EDD]" />
-                      </div>
-                    )}
-                    <div
-                      className={cn(
-                        "p-4 px-5 text-[15px] leading-relaxed shadow-sm",
-                        m.sender === 'user' 
-                          ? "bg-gradient-to-br from-[#9D4EDD] to-[#FF6B4A] text-white rounded-[16px] rounded-tr-[4px]" 
-                          : "bg-[#F8F8F6] text-[#1A1A1A] rounded-[16px] rounded-tl-[4px] border border-[#E5E5E5]"
-                      )}
-                    >
-                      {m.text}
-                    </div>
-                  </div>
-                  <span className="text-[10px] text-[#6B6B6B] font-bold mt-1 uppercase tracking-widest opacity-50 px-1">
-                    {format(m.timestamp, 'HH:mm')}
-                  </span>
-                </div>
-              ))}
+            
+            <div className="mt-12 flex items-center gap-6">
+              <button className="px-8 py-4 rounded-[2rem] text-sm font-black uppercase tracking-widest text-black transition-all hover:scale-105"
+                      style={{ background: theme.primary, boxShadow: theme.primaryGlow }}>
+                Iniciar Foco
+              </button>
+              <span className="text-xs font-bold opacity-40">3 Hábitos pendentes hoje</span>
+            </div>
+          </div>
+        </div>
 
-              {/* INDICADOR DIGITANDO */}
-              {isTyping && (
-                <div className="self-start flex items-end gap-3 animate-pulse">
-                  <div className="w-8 h-8 rounded-full bg-[#F8F8F6] border border-[#E5E5E5] flex items-center justify-center">
-                    <Bot size={16} className="text-[#9D4EDD]" />
-                  </div>
-                  <div className="bg-[#F8F8F6] p-3 px-5 rounded-[16px] rounded-tl-[4px] border border-[#E5E5E5]">
-                    <MoreHorizontal className="text-[#6B6B6B] animate-bounce" size={20} />
-                  </div>
-                </div>
-              )}
-            </>
-          )}
+        {/* Progresso Diário */}
+        <div className="col-span-12 lg:col-span-4 p-10 rounded-[3rem] border border-white/5 bg-white/[0.02] backdrop-blur-xl flex flex-col items-center justify-center text-center group hover:bg-white/[0.04] transition-colors">
+          <div className="relative mb-6">
+            <svg className="w-32 h-32 transform -rotate-90">
+              <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="4" fill="transparent" className="text-white/5" />
+              <circle cx="64" cy="64" r="60" stroke="currentColor" strokeWidth="4" fill="transparent" strokeDasharray="377" strokeDashoffset="113" className="transition-all duration-1000 ease-out" style={{ color: theme.primary }} />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-3xl font-black">70%</span>
+            </div>
+          </div>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-1">Energia do Dia</p>
+          <p className="text-sm font-bold opacity-50">Quase lá, não pare!</p>
+        </div>
+
+        {/* Estatísticas Rápidas (3 Cards) */}
+        {[
+          { label: 'Ofensiva Atual', value: '12 Dias', icon: Flame, color: theme.secondary, sub: '+2 hoje' },
+          { label: 'Pontos XP', value: '2.450', icon: Trophy, color: theme.primary, sub: 'Nível 42' },
+          { label: 'Conclusão', value: '85%', icon: TrendingUp, color: '#10B981', sub: 'Semana' },
+        ].map((stat, i) => (
+          <div key={`stat-${i}`} className="col-span-12 md:col-span-4 p-8 rounded-[2.5rem] border border-white/5 bg-white/[0.02] backdrop-blur-md group hover:bg-white/[0.04] transition-all duration-300">
+            <div className="flex items-center justify-between mb-6">
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-110" 
+                   style={{ background: `linear-gradient(135deg, ${stat.color}40 0%, transparent 100%)`, border: `1px solid ${stat.color}30` }}>
+                <stat.icon size={20} style={{ color: stat.color }} />
+              </div>
+              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-white/5 text-slate-400">{stat.sub}</span>
+            </div>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-1">{stat.label}</p>
+            <h3 className="text-2xl font-black tracking-tight">{stat.value}</h3>
+          </div>
+        ))}
+
+        {/* Foco Atual (Próximo Hábito) */}
+        <div className="col-span-12 lg:col-span-8 p-8 rounded-[3rem] border border-white/5 bg-gradient-to-r from-white/[0.02] to-transparent backdrop-blur-xl">
+          <div className="flex items-center justify-between mb-8 opacity-50">
+            <div className="flex items-center gap-3">
+              <Target size={16} style={{ color: theme.primary }} />
+              <h3 className="text-[11px] font-black uppercase tracking-[0.4em]">Próximo Foco</h3>
+            </div>
+            <ChevronRight size={16} />
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center gap-6 p-6 rounded-[2rem] bg-[#16161C]/80 border border-white/5 transition-all hover:bg-[#1A1A24]">
+             <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+               <Coffee size={24} className="text-slate-300" />
+             </div>
+             <div className="flex-1 text-center md:text-left">
+               <h4 className="text-xl font-bold tracking-tight mb-1">Deep Work: UX Design</h4>
+               <p className="text-xs font-bold opacity-40 uppercase tracking-widest">Estudos • 14:00 - 16:00</p>
+             </div>
+             <button className="px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-white/10"
+                     style={{ border: `1px solid ${theme.primary}50` }}>
+               Começar
+             </button>
+          </div>
+        </div>
+
+        {/* Card de Inspiração Mínimo */}
+        <div className="col-span-12 lg:col-span-4 p-8 rounded-[3rem] border border-white/5 bg-white/[0.02] flex flex-col justify-center items-center text-center relative overflow-hidden group">
+          <Quote size={40} className="absolute -top-4 -left-2 opacity-5" />
+          <p className="text-sm font-medium italic opacity-60 leading-relaxed mb-6">
+            "A motivação serve para começar. O hábito é o que te mantém a avançar."
+          </p>
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-full bg-white/10" />
+            <span className="text-[10px] font-black uppercase tracking-widest opacity-40">Jim Rohn</span>
+          </div>
         </div>
       </div>
-
-      {/* INPUT DE MENSAGEM */}
-      <div className="bg-white rounded-[24px] p-5 shadow-[0_2px_16px_rgba(0,0,0,0.04)] shrink-0">
-        <form 
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSend();
-          }}
-          className="flex items-center gap-4"
-        >
-          <input 
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Digite sua mensagem..."
-            className="flex-grow bg-[#F8F8F6] rounded-[16px] p-4 px-6 text-[15px] font-medium outline-none transition-all focus:ring-2 focus:ring-[#9D4EDD]/20 placeholder:text-[#6B6B6B]/60"
-          />
-          <button 
-            type="submit"
-            disabled={!inputValue.trim() || isTyping}
-            className={cn(
-              "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 shadow-md",
-              !inputValue.trim() || isTyping
-                ? "bg-[#E5E5E5] text-[#6B6B6B] scale-95 opacity-50"
-                : "bg-gradient-to-br from-[#9D4EDD] to-[#FF6B4A] text-white hover:scale-105 hover:shadow-[0_4px_20px_rgba(157,78,221,0.4)] active:scale-95"
-            )}
-          >
-            <Send size={20} className="translate-x-0.5 -translate-y-0.5" />
-          </button>
-        </form>
-      </div>
-
     </div>
   );
 };

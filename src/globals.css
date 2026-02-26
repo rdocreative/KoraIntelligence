@@ -1,121 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&family=Rajdhani:wght@500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  /* Remove scrollbars globalmente */
   * {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE e Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   *::-webkit-scrollbar {
-    display: none; /* Chrome, Safari e Opera */
-  }
-
-  html {
-    font-size: 80%;
+    display: none;
   }
 
   :root {
-    /* Cores em HSL puro (canais) para o Tailwind funcionar com opacidade */
-    --background: 0 20% 88%;
+    --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-    --card: 0 20% 95%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 20% 95%;
-    --popover-foreground: 222.2 84% 4.9%;
-    
-    /* Primária (será sobrescrita pelo ColorProvider) */
-    --primary: 359 99% 40%;
-    --primary-foreground: 0 0% 100%;
-    
-    --secondary: 0 20% 92%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 0 20% 92%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 0 20% 92%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 0 20% 79%;
-    --input: 0 20% 79%;
-    --ring: 359 99% 40%;
-    
-    /* Legado/Custom */
-    --accent-color: #CB0104;
-    --accent-dark: #8A0002;
-    --primary-dark: #8A0002;
-    --input-bg: #F0E4E4;
-    --border-ui: #D4C0C0;
-    --shadow-ui: rgba(0, 0, 0, 0.08);
-    --panel: #F5EEEE;
-    --topbar: #F5EEEE;
-    
+    --primary: 262.1 83.3% 57.8%;
+    --primary-foreground: 210 40% 98%;
     --radius: 1rem;
+    
+    /* Vivid & Glow Theme Variables */
+    --vivid-bg: #080809;
+    --vivid-surface: #121216;
+    --vivid-primary: #C4B5FD;
+    --vivid-secondary: #FB923C;
+    --vivid-accent: #F472B6;
+    --vivid-text: #F9FAFB;
+    --vivid-muted: #64748B;
+    --vivid-border: rgba(255, 255, 255, 0.04);
   }
 
-  .dark {
-    /* #0d0d0d -> HSL(0, 0%, 5%) */
-    --background: 0 0% 5%;
-    --foreground: 210 40% 98%;
-    
-    /* #212121 -> HSL(0, 0%, 13%) */
-    --card: 0 0% 13%;
-    --card-foreground: 210 40% 98%;
-    --popover: 0 0% 13%;
-    --popover-foreground: 210 40% 98%;
-    
-    --secondary: 0 0% 18%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 0 0% 18%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 0 0% 18%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 0% 83.9%;
-    
-    /* Custom Variables para Modo Dark */
-    --input-bg: #1a1a1a;
-    --border-ui: #333333;
-    --shadow-ui: transparent;
-    --panel: #212121;
-    --topbar: #212121;
+  body {
+    background-color: var(--vivid-bg);
+    color: var(--vivid-text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.02em;
   }
 
-  body, #root {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-family: 'Exo 2', sans-serif;
-    font-weight: 600;
-    min-height: 100vh;
-    transition: background-color 0.2s ease, color 0.2s ease;
+  .font-serif {
+    font-family: 'Playfair Display', serif;
   }
 }
 
-@layer components {
-  .card-glass {
-    background-color: var(--panel);
-    border: 1px solid var(--border-ui);
-    box-shadow: 0 2px 12px 0 var(--shadow-ui);
-    border-radius: 16px;
-    color: hsl(var(--foreground));
+@layer utilities {
+  .vivid-glow-primary {
+    box-shadow: 0 0 20px rgba(196, 181, 253, 0.25);
   }
-
-  .btn-primary {
-    background-color: hsl(var(--primary));
-    box-shadow: 0 4px 0 0 var(--primary-dark);
-    border-radius: 16px;
-    color: hsl(var(--primary-foreground));
-    transition: all 0.15s ease;
+  .vivid-glow-accent {
+    box-shadow: 0 0 20px rgba(244, 114, 182, 0.2);
   }
-  .btn-primary:active {
-    transform: translateY(1px);
-    box-shadow: none;
-  }
+  
+  .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 10px; }
 }

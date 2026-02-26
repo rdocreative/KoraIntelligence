@@ -1,165 +1,64 @@
 "use client";
 
-import { useState } from 'react';
-import { useProfile } from '@/hooks/useProfile';
-import { useTheme } from 'next-themes';
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { 
-  Zap,
-  Trophy,
-  UserCircle,
-  Award,
-  Coins,
-  Sun,
-  Moon
+  Bell,
+  Flame,
 } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+
+const theme = {
+  text: '#F9FAFB',
+  border: 'rgba(255, 255, 255, 0.04)',
+};
+
+const pageTitles: Record<string, string> = {
+  '/': 'Início',
+  '/habitos': 'Masterplan',
+  '/missoes': 'Missões',
+  '/loja': 'Loja',
+  '/configuracoes': 'Ajustes',
+  '/dashboard': 'Dashboard',
+};
 
 export const TopBar = () => {
-  const { theme, setTheme } = useTheme();
-  const { profile } = useProfile();
-
-  const [activeModal, setActiveModal] = useState<'achievements' | 'profile' | 'wallet' | null>(null);
-
-  const userStats = {
-    name: profile?.nome || "Usuário",
-    titles: 0, 
-    level: profile?.nivel || 1,
-    xp: profile?.xp_total || 0,
-    coins: (profile as any)?.moedas || 0,
-    nextLevelXp: (profile?.nivel || 1) * 1000 
-  };
-
+  const location = useLocation();
+  const title = pageTitles[location.pathname] || 'Néctar';
+  
   return (
-    <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none">
-      <div className="flex items-center justify-center sm:justify-end w-full max-w-[100rem] pointer-events-auto py-4 px-5 overflow-visible">
-        
-        <TooltipProvider delayDuration={100}>
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button 
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="h-[40px] md:h-[48px] w-[40px] md:w-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none"
-                >
-                  {theme === 'dark' ? (
-                    <Sun size={18} className="text-[#FF9600]" />
-                  ) : (
-                    <Moon size={18} className="text-[#3F3047]" />
-                  )}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent className="bg-[var(--topbar)] border-2 border-[var(--border-ui)] text-[var(--foreground)] font-bold">
-                Alternar Tema
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button className="h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
-                  <Coins size={15} className="text-[#FF9600]" />
-                  <span className="text-[14px] font-[700] text-[#FF9600] tracking-tight">{userStats.coins}</span>
-                </button>
-              </TooltipTrigger>
-              <TooltipContent className="bg-[var(--topbar)] border-2 border-[var(--border-ui)] text-[var(--foreground)] font-bold">
-                Suas Moedas (Koras)
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button onClick={() => setActiveModal('profile')} className="h-[40px] md:h-[48px] px-3.5 md:px-5 flex items-center gap-2 md:gap-3 rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
-                  <Zap size={15} className="text-primary" />
-                  <span className="text-primary text-[14px] font-[700] tracking-tight">{userStats.xp}</span>
-                </button>
-              </TooltipTrigger>
-              <TooltipContent className="bg-[var(--topbar)] border-2 border-[var(--border-ui)] text-[var(--foreground)] font-bold">
-                Sua Experiência (XP)
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button onClick={() => setActiveModal('achievements')} className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
-                  <Trophy size={17} className="text-[#FF9600]" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent className="bg-[var(--topbar)] border-2 border-[var(--border-ui)] text-[var(--foreground)] font-bold">
-                Ver Conquistas
-              </TooltipContent>
-            </Tooltip>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button onClick={() => setActiveModal('profile')} className="w-[40px] h-[40px] md:w-[48px] md:h-[48px] flex items-center justify-center rounded-[15px] md:rounded-[20px] bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--shadow-ui)] group transition-all duration-300 hover:scale-[1.02] active:translate-y-[1px] active:shadow-none outline-none">
-                  <UserCircle size={22} className="text-primary" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent className="bg-[var(--topbar)] border-2 border-[var(--border-ui)] text-[var(--foreground)] font-bold">
-                Meu Perfil
-              </TooltipContent>
-            </Tooltip>
-          </div>
-        </TooltipProvider>
+    <header className="mb-14 flex items-center justify-between px-4 lg:px-0">
+      <div>
+        <h1 className="text-5xl font-serif italic mb-3 tracking-tight text-[#F9FAFB]">
+          {title}
+        </h1>
+        <div className="flex items-center gap-3">
+           <span className="text-[11px] font-black opacity-30 uppercase tracking-[0.3em]">
+             {format(new Date(), "dd MMMM, yyyy", { locale: ptBR })}
+           </span>
+           <div className="h-1 w-1 rounded-full bg-white/20" />
+           <span className="text-[11px] font-black text-emerald-400 uppercase tracking-[0.2em]">
+             Sincronizado
+           </span>
+        </div>
       </div>
-
-      <Dialog open={activeModal !== null} onOpenChange={() => setActiveModal(null)}>
-        <DialogContent className="bg-[var(--topbar)] border-2 border-[var(--border-ui)] text-[var(--foreground)] w-[90vw] sm:max-w-[400px] rounded-[32px] p-0 overflow-hidden shadow-2xl outline-none mx-auto">
-          {activeModal === 'achievements' && (
-            <div className="p-8 flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-[22px] bg-[#FF9600]/10 border border-[#FF9600]/20 flex items-center justify-center mb-4">
-                <Trophy size={32} className="text-[#FF9600]" />
-              </div>
-              <h2 className="text-xl font-bold mb-1">Conquistas</h2>
-              <p className="text-sm text-[var(--muted-foreground)] mb-6">Você desbloqueou {userStats.titles} títulos épicos.</p>
-              <div className="grid grid-cols-2 gap-3 w-full">
-                {['Mestre do Foco', 'Persistente', 'Explorador', 'Visionário'].map((title) => (
-                  <div key={title} className="p-4 rounded-2xl bg-[var(--topbar)] border-2 border-[var(--border-ui)] flex flex-col items-center gap-2 group hover:border-[#FF9600]/40 transition-colors">
-                    <Award size={20} className="text-[#FF9600]" />
-                    <span className="text-[0.7rem] font-medium text-[var(--foreground)]">{title}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeModal === 'profile' && (
-            <div className="p-8 flex flex-col items-center text-center">
-              <div className="relative mb-4">
-                <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20 shadow-md">
-                  <UserCircle size={48} className="text-primary" />
-                </div>
-                <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground text-[0.65rem] font-black px-2.5 py-1 rounded-full shadow-lg">
-                  LVL {userStats.level}
-                </div>
-              </div>
-              <h2 className="text-xl font-bold mb-1">{userStats.name}</h2>
-              <p className="text-sm text-[var(--muted-foreground)] mb-6">Membro da Comunidade</p>
-              
-              <div className="w-full bg-[var(--topbar)] rounded-2xl p-5 border-2 border-[var(--border-ui)]">
-                <div className="flex justify-between text-[0.7rem] mb-2.5 text-[var(--muted-foreground)] font-medium">
-                  <span>Progresso de XP</span>
-                  <span>{userStats.xp} / {userStats.nextLevelXp}</span>
-                </div>
-                <div className="w-full h-2.5 bg-[var(--border-ui)] rounded-full overflow-hidden border border-[var(--shadow-ui)]">
-                  <div 
-                    className="h-full bg-primary transition-all duration-700"
-                    style={{ width: `${(userStats.xp / userStats.nextLevelXp) * 100}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      
+      <div className="flex gap-4">
+        <div 
+          className="flex items-center gap-3 px-6 py-3 rounded-full border bg-white/[0.02] backdrop-blur-xl transition-all hover:border-white/10" 
+          style={{ borderColor: theme.border }}
+        >
+          <Flame size={16} className="text-orange-500" fill="currentColor" />
+          <span className="text-sm font-black tracking-tight text-white">12 D</span>
+        </div>
+        <button 
+          className="w-12 h-12 rounded-full flex items-center justify-center border bg-white/[0.02] hover:bg-white/10 transition-all group" 
+          style={{ borderColor: theme.border }}
+        >
+          <Bell size={20} className="text-slate-400 group-hover:text-white transition-colors" />
+        </button>
+      </div>
     </header>
   );
 };
