@@ -1,20 +1,10 @@
 "use client";
 
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useProfile } from '@/hooks/useProfile';
 import { useTheme } from 'next-themes';
 import { 
-  Home,
-  ClipboardList,
-  Target,
   Zap,
-  Bell,
-  Users,
-  ShoppingBag,
-  Settings,
-  Eye,
-  LucideIcon,
   Trophy,
   UserCircle,
   Award,
@@ -33,31 +23,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-interface PageConfig {
-  title: string;
-  subtitle: string;
-  color: string;
-  icon: LucideIcon;
-}
-
-const pageConfigs: Record<string, PageConfig> = {
-  '/': { title: 'Início', subtitle: 'Visão total do seu progresso', color: 'var(--accent-color)', icon: Home },
-  '/habitos': { title: 'Hábitos', subtitle: 'Seus hábitos de hoje', color: 'var(--accent-color)', icon: ClipboardList },
-  '/metas': { title: 'Metas', subtitle: 'Foco nos grandes objetivos', color: '#58CC02', icon: Target },
-  '/missoes': { title: 'Missões', subtitle: 'Desafios e conquistas épicas', color: '#FF9600', icon: Zap },
-  '/lembretes': { title: 'Lembretes', subtitle: 'Alertas e compromissos', color: '#FF4B4B', icon: Bell },
-  '/comunidade': { title: 'Comunidade', subtitle: 'Conexão e troca de ideias', color: 'var(--accent-color)', icon: Users },
-  '/loja': { title: 'Loja', subtitle: 'Resgate suas recompensas', color: '#FF9600', icon: ShoppingBag },
-  '/configuracoes': { title: 'Ajustes', subtitle: 'Personalize sua experiênia', color: '#6B7280', icon: Settings },
-  '/masterplan': { title: 'Master Plan', subtitle: 'Sua visão estratégica futura', color: 'var(--accent-color)', icon: Eye }
-};
-
 export const TopBar = () => {
-  const location = useLocation();
   const { theme, setTheme } = useTheme();
-  const currentPath = location.pathname;
-  const config = pageConfigs[currentPath] || pageConfigs['/'];
-  const { title, subtitle, color, icon: Icon } = config;
   const { profile } = useProfile();
 
   const [activeModal, setActiveModal] = useState<'achievements' | 'profile' | 'wallet' | null>(null);
@@ -73,30 +40,8 @@ export const TopBar = () => {
 
   return (
     <header className="sticky top-0 w-full flex justify-center z-50 pt-2 md:pt-4 pointer-events-none">
-      <div className="flex items-center justify-center sm:justify-between w-full max-w-[100rem] pointer-events-auto py-4 px-5 overflow-visible">
+      <div className="flex items-center justify-center sm:justify-end w-full max-w-[100rem] pointer-events-auto py-4 px-5 overflow-visible">
         
-        {currentPath !== '/habitos' && (
-          <div 
-            className="hidden sm:flex items-center gap-3 px-5 py-3 rounded-full bg-[var(--topbar)] border-2 border-[var(--border-ui)] shadow-[0_4px_0_0_var(--border-ui)] transition-all duration-300 flex-shrink-0"
-          >
-            <div className="flex items-center gap-2.5">
-              <Icon 
-                size={18} 
-                style={{ color: color }}
-              />
-              <h1 className="text-[14px] font-[800] text-[var(--foreground)] tracking-tight leading-none whitespace-nowrap uppercase">
-                {title}
-              </h1>
-            </div>
-
-            <div className="w-px h-[14px] bg-[var(--border-ui)] mx-1" />
-            
-            <span className="text-[12px] font-[500] text-[var(--muted-foreground)] tracking-wide leading-none whitespace-nowrap overflow-visible">
-              {subtitle}
-            </span>
-          </div>
-        )}
-
         <TooltipProvider delayDuration={100}>
           <div className="flex items-center gap-3 flex-shrink-0">
             <Tooltip>

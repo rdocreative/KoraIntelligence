@@ -5,7 +5,6 @@ import {
   ChevronLeft, 
   ChevronRight, 
   Clock, 
-  Plus,
   ArrowRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,7 +20,6 @@ import {
   getDay,
   startOfWeek,
   endOfWeek,
-  startOfDay,
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -38,7 +36,7 @@ interface Habit {
 
 const HabitsPage = () => {
   const [viewMode, setViewMode] = useState<'monthly' | 'weekly'>('monthly');
-  const [currentDate, setCurrentDate] = useState(new Date(2026, 1, 25)); // Set to February 2026 for the spec
+  const [currentDate, setCurrentDate] = useState(new Date(2026, 1, 25)); // February 2026
   const [selectedDate, setSelectedDate] = useState(new Date(2026, 1, 25));
 
   const [habits, setHabits] = useState<Habit[]>([
@@ -87,13 +85,12 @@ const HabitsPage = () => {
     const days = eachDayOfInterval({ start: startDate, end: endDate });
 
     return days.map(day => {
-      const isToday = isSameDay(day, new Date(2026, 1, 25)); // Matching spec today
+      const isToday = isSameDay(day, new Date(2026, 1, 25)); 
       return { 
         date: day, 
         isCurrentMonth: isSameMonth(day, currentDate), 
         isToday,
         isSelected: isSameDay(day, selectedDate),
-        // Mock dots for the spec
         completedDots: isToday ? [] : (getDay(day) % 3 === 0 ? ['#E63946', '#FF8A3D', '#06D6A0'] : [])
       };
     });
@@ -124,7 +121,6 @@ const HabitsPage = () => {
         {/* COLUNA ESQUERDA - CALENDÁRIO */}
         <div className="bg-white rounded-[24px] p-8 shadow-[0_2px_16px_rgba(0,0,0,0.04)] flex flex-col h-fit">
           <div className="flex items-center justify-between mb-8">
-            {/* Toggle MÊS / SEM */}
             <div className="bg-[#F8F8F6] rounded-full p-1 flex items-center">
               <button 
                 onClick={() => setViewMode('monthly')}
@@ -147,7 +143,6 @@ const HabitsPage = () => {
             </div>
           </div>
 
-          {/* Month Header */}
           <div className="flex items-center justify-between mb-8 px-4">
             <button 
               onClick={() => setCurrentDate(subMonths(currentDate, 1))}
@@ -166,7 +161,6 @@ const HabitsPage = () => {
             </button>
           </div>
 
-          {/* Calendar Grid */}
           <div className="grid grid-cols-7 gap-2 mb-2">
             {['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].map(day => (
               <div key={day} className="text-center text-[12px] font-semibold text-[#6B6B6B] py-2">
@@ -195,7 +189,6 @@ const HabitsPage = () => {
                   {format(day.date, 'd')}
                 </span>
                 
-                {/* Dots for completed habits */}
                 {day.completedDots.length > 0 && (
                   <div className="absolute bottom-1.5 flex gap-0.5">
                     {day.completedDots.map((color, i) => (
@@ -213,9 +206,9 @@ const HabitsPage = () => {
         </div>
 
         {/* COLUNA DIREITA - LISTA DE HÁBITOS */}
-        <div className="flex flex-col gap-[32px]">
-          <div className="bg-white rounded-[24px] p-8 shadow-[0_2px_16px_rgba(0,0,0,0.04)] flex flex-col h-fit">
-            <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col">
+          <div className="bg-white rounded-[24px] p-8 shadow-[0_2px_16px_rgba(0,0,0,0.04)] flex flex-col h-fit mb-6">
+            <div className="flex items-center justify-between mb-6">
               <h2 className="font-serif text-[20px] font-semibold uppercase tracking-tight">
                 HÁBITOS DE HOJE
               </h2>
@@ -230,22 +223,23 @@ const HabitsPage = () => {
                 return (
                   <div 
                     key={habit.id}
-                    className="group relative rounded-[16px] p-[2px] transition-all hover:scale-[1.01] hover:shadow-lg active:scale-[0.99]"
+                    className="group relative rounded-[16px] p-[2px] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,0,0,0.08)] active:scale-[0.99]"
                     style={{ background: habit.gradient }}
                   >
-                    <div className="bg-white rounded-[14px] p-5 flex items-center">
-                      {/* Custom Circular Checkbox */}
+                    <div className="bg-white rounded-[14px] p-6 flex items-center h-full">
+                      {/* Custom Circular Checkbox (48px) */}
                       <button 
                         onClick={() => toggleHabit(habit.id)}
                         className={cn(
-                          "w-[40px] h-[40px] rounded-full border-2 flex items-center justify-center transition-all shrink-0 mr-4",
-                          isCompleted
-                            ? "bg-[#9D4EDD] border-[#9D4EDD]"
+                          "w-[48px] h-[48px] rounded-full border-2 flex items-center justify-center transition-all shrink-0 mr-4",
+                          isCompleted 
+                            ? "border-transparent" 
                             : "border-[#E5E5E5] hover:border-[#9D4EDD]/50"
                         )}
+                        style={isCompleted ? { background: habit.gradient } : {}}
                       >
                         {isCompleted && (
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="20 6 9 17 4 12" />
                           </svg>
                         )}
@@ -253,7 +247,7 @@ const HabitsPage = () => {
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-[16px] font-semibold truncate leading-tight">
+                          <h3 className="text-[17px] font-semibold truncate leading-tight">
                             {habit.title}
                           </h3>
                         </div>
@@ -281,7 +275,7 @@ const HabitsPage = () => {
                         <span className="text-[#9D4EDD] text-[11px] font-bold tracking-tight mb-2">
                           {habit.meta}
                         </span>
-                        <ArrowRight size={18} className="text-[#E5E5E5] group-hover:text-[#9D4EDD] transition-colors" />
+                        <ArrowRight size={20} className="text-[#E5E5E5] group-hover:text-[#9D4EDD] transition-colors" />
                       </div>
                     </div>
                   </div>
@@ -292,7 +286,7 @@ const HabitsPage = () => {
 
           {/* BOTÃO NOVO HÁBITO */}
           <button 
-            className="w-full h-[56px] rounded-[16px] bg-gradient-to-r from-[#9D4EDD] to-[#FF6B4A] text-white font-bold text-[15px] flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(157,78,221,0.3)] transition-all hover:translate-y-[-2px] hover:shadow-[0_6px_24px_rgba(157,78,221,0.4)] active:translate-y-[0px]"
+            className="w-full h-[56px] rounded-[16px] bg-gradient-to-r from-[#9D4EDD] to-[#FF6B4A] text-white font-bold text-[15px] flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(157,78,221,0.3)] transition-all hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(157,78,221,0.4)] active:translate-y-[0px]"
           >
             <span>✨</span> NOVO HÁBITO
           </button>
