@@ -46,8 +46,6 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     Baixa: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
   };
 
-  const periodColor = task.period ? PERIOD_COLORS[task.period] : '#ffffff';
-
   return (
     <div
       ref={setNodeRef}
@@ -56,12 +54,6 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       {...listeners}
       className="relative pl-8 group/card"
     >
-      {/* Nodo de conexão - posicionado para alinhar com o rastro em 22px */}
-      <div 
-        className="absolute left-[12px] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border-2 border-[#09090b] z-20 transition-transform duration-300 group-hover/card:scale-125"
-        style={{ backgroundColor: periodColor, boxShadow: `0 0 8px ${periodColor}40` }}
-      />
-
       <div
         className={cn(
           "group relative flex flex-col p-4 rounded-[20px] bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all cursor-grab active:cursor-grabbing overflow-hidden",
