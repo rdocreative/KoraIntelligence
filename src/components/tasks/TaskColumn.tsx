@@ -163,10 +163,11 @@ const PeriodContainer = ({
       </div>
     </div>
   );
-};
+});
 
 export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday }, ref) => {
   return (
+    // Voltamos para uma largura fixa no mobile que permite ver parte da próxima coluna (aprox 85% da tela)
     <div 
       ref={ref} 
       className="flex flex-col min-w-[85vw] md:min-w-[18rem] md:w-72 shrink-0 h-full scroll-snap-align-center md:scroll-snap-align-none"
