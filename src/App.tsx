@@ -33,7 +33,7 @@ const ProtectedRoute = () => {
   if (loading) {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-[#131316]">
-        <div className="w-8 h-8 border-4 border-[#38BDF8] border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-[#38BDF8] border-t-transparent rounded-[24px] animate-spin"></div>
       </div>
     );
   }
@@ -68,7 +68,7 @@ const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-[#131316]"><div className="w-8 h-8 border-4 border-[#38BDF8] border-t-transparent rounded-full animate-spin"></div></div>;
+     return <div className="h-screen w-full flex items-center justify-center bg-[#131316]"><div className="w-8 h-8 border-4 border-[#38BDF8] border-t-transparent rounded-[24px] animate-spin"></div></div>;
   }
 
   if (session) {

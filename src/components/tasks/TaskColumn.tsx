@@ -50,7 +50,6 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
 
   return (
     <div className="flex flex-col w-80 shrink-0 h-full">
-      {/* Header da Coluna */}
       <div className="flex items-center justify-between mb-4 px-3">
         <div className="flex items-center gap-2">
           <h3 className={cn(
@@ -68,11 +67,10 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
         </button>
       </div>
 
-      {/* Área de Drop e Conteúdo */}
       <div
         ref={setNodeRef}
         className={cn(
-          "flex-1 flex flex-col gap-4 p-2 rounded-[32px] bg-white/[0.01] border border-white/5 custom-scrollbar overflow-y-auto pb-10",
+          "flex-1 flex flex-col gap-4 p-2 rounded-[24px] bg-white/[0.01] border border-white/5 custom-scrollbar overflow-y-auto pb-10",
           isToday && "bg-[#38BDF8]/[0.01] border-[#38BDF8]/10 shadow-[inset_0_0_20px_rgba(56,189,248,0.01)]"
         )}
       >

@@ -43,7 +43,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group flex flex-col p-4 rounded-2xl bg-[#1A1A20]/40 border border-white/5 hover:border-white/10 transition-all",
+        "group flex flex-col p-4 rounded-[24px] bg-[#1A1A20]/40 border border-white/5 hover:border-white/10 transition-all",
         isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl"
       )}
     >

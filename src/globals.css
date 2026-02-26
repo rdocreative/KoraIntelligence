@@ -18,6 +18,7 @@
     --primary: 199 89% 60%; /* #38BDF8 */
     --surface: 240 8% 12%; /* #1C1C21 */
     --border-ui: rgba(255, 255, 255, 0.06);
+    --radius: 24px;
   }
 
   body {
