@@ -17,6 +17,7 @@ import Index from "./pages/Index";
 import SettingsPage from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import HabitsPage from "./pages/Habits";
+import TasksPage from "./pages/Tasks";
 import MissionsPage from "./pages/Missions";
 import StorePage from "./pages/Store";
 
@@ -45,7 +46,7 @@ const ProtectedRoute = () => {
       {/* Container Principal "Floating Card" sem sombra e com margem de 7px */}
       <div className="flex-1 flex flex-col mt-[7px] mb-[7px] mr-[7px] ml-0 bg-background rounded-[16px] overflow-hidden transition-all duration-300 ease-in-out border border-black/[0.04] dark:border-white/[0.04] relative">
         <TopBar />
-        <main className="flex-1 px-8 py-5 w-full max-w-[100rem] mx-auto overflow-y-auto scrollbar-none">
+        <main className="flex-1 w-full h-full overflow-y-auto scrollbar-none">
           <Outlet />
         </main>
       </div>
@@ -96,7 +97,7 @@ const App = () => (
                       <Route element={<ProtectedRoute />}>
                         <Route path="/" element={<Index />} />
                         <Route path="/habitos" element={<HabitsPage />} />
-                        <Route path="/tarefas" element={<HabitsPage />} />
+                        <Route path="/tarefas" element={<TasksPage />} />
                         <Route path="/missoes" element={<MissionsPage />} />
                         <Route path="/financa" element={<StorePage />} />
                         <Route path="/loja" element={<StorePage />} />
