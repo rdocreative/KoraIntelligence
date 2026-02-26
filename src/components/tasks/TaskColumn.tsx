@@ -15,10 +15,34 @@ interface TaskColumnProps {
 }
 
 const PERIODS = [
-  { id: 'Anytime', label: 'Qualquer Hora', icon: Clock, color: '#D1D5DB' },
-  { id: 'Morning', label: 'Manhã', icon: Sun, color: '#FB923C' },
-  { id: 'Afternoon', label: 'Tarde', icon: Coffee, color: '#4ADE80' },
-  { id: 'Evening', label: 'Noite', icon: Moon, color: '#A78BFA' },
+  { 
+    id: 'Anytime', 
+    label: 'Qualquer Hora', 
+    icon: Clock, 
+    color: '#D1D5DB',
+    gradient: 'linear-gradient(135deg, rgba(156, 163, 175, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%)'
+  },
+  { 
+    id: 'Morning', 
+    label: 'Manhã', 
+    icon: Sun, 
+    color: '#FB923C',
+    gradient: 'linear-gradient(135deg, rgba(251, 146, 60, 0.1) 0%, rgba(255, 255, 255, 0.01) 100%)'
+  },
+  { 
+    id: 'Afternoon', 
+    label: 'Tarde', 
+    icon: Coffee, 
+    color: '#4ADE80',
+    gradient: 'linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(255, 255, 255, 0.01) 100%)'
+  },
+  { 
+    id: 'Evening', 
+    label: 'Noite', 
+    icon: Moon, 
+    color: '#A78BFA',
+    gradient: 'linear-gradient(135deg, rgba(167, 139, 250, 0.1) 0%, rgba(255, 255, 255, 0.01) 100%)'
+  },
 ];
 
 export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
@@ -48,8 +72,8 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
       <div
         ref={setNodeRef}
         className={cn(
-          "flex-1 flex flex-col gap-6 p-3 rounded-[32px] bg-white/[0.02] border border-white/5 custom-scrollbar overflow-y-auto pb-10",
-          isToday && "bg-[#38BDF8]/[0.02] border-[#38BDF8]/10 shadow-[inset_0_0_20px_rgba(56,189,248,0.02)]"
+          "flex-1 flex flex-col gap-4 p-2 rounded-[32px] bg-white/[0.01] border border-white/5 custom-scrollbar overflow-y-auto pb-10",
+          isToday && "bg-[#38BDF8]/[0.01] border-[#38BDF8]/10 shadow-[inset_0_0_20px_rgba(56,189,248,0.01)]"
         )}
       >
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
@@ -57,8 +81,12 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
             const periodTasks = tasks.filter(t => t.period === period.id);
             
             return (
-              <div key={period.id} className="space-y-3">
-                <div className="flex items-center gap-2 px-1 mb-1 opacity-40">
+              <div 
+                key={period.id} 
+                className="space-y-3 p-4 rounded-[24px] border border-white/[0.03] transition-all"
+                style={{ background: period.gradient }}
+              >
+                <div className="flex items-center gap-2 px-1 mb-1 opacity-60">
                   <period.icon size={12} style={{ color: period.color }} />
                   <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: period.color }}>
                     {period.label}
@@ -72,7 +100,9 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
                 </div>
 
                 {periodTasks.length === 0 && (
-                   <div className="h-px w-full bg-white/[0.03] my-4" />
+                   <div className="flex items-center justify-center py-4 opacity-10">
+                     <period.icon size={20} style={{ color: period.color }} />
+                   </div>
                 )}
               </div>
             );
