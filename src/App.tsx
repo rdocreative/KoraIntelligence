@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -11,7 +10,6 @@ import { HabitProvider } from "./hooks/useHabitTracker";
 import { AuthProvider, useAuth } from "./components/providers/AuthProvider";
 import { ColorProvider } from "./components/providers/ColorProvider";
 import { SideNav } from "./components/layout/SideNav";
-import { Menu } from "lucide-react"; // Importando ícone de menu
 
 // Pages
 import Index from "./pages/Index";
@@ -31,7 +29,6 @@ const queryClient = new QueryClient();
 
 const ProtectedRoute = () => {
   const { session, loading } = useAuth();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   if (loading) {
     return (
@@ -47,33 +44,8 @@ const ProtectedRoute = () => {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden text-white antialiased relative bg-[#070707]">
-      {/* Mobile Overlay */}
-      {isMobileMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden animate-in fade-in"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
-
-      {/* SideNav com props de controle */}
-      <SideNav 
-        isOpen={isMobileMenuOpen} 
-        onClose={() => setIsMobileMenuOpen(false)} 
-      />
-
-      <div className="flex-1 flex flex-col p-4 md:pl-0 z-10 min-w-0 h-full">
-        {/* Mobile Header / Toggle Button */}
-        <div className="md:hidden flex items-center justify-between mb-4 px-2">
-          <button 
-            onClick={() => setIsMobileMenuOpen(true)}
-            className="p-2 -ml-2 text-zinc-400 hover:text-white transition-colors"
-          >
-            <Menu />
-          </button>
-          <span className="text-lg font-serif italic text-white/50">Néctar.</span>
-          <div className="w-8" /> {/* Spacer para centralizar visualmente o logo se necessário */}
-        </div>
-
+      <SideNav />
+      <div className="flex-1 flex flex-col p-4 pl-0 z-10 min-w-0">
         <div 
           className="flex-1 flex flex-col rounded-[24px] border overflow-hidden relative min-h-0 w-full" 
           style={{ 
@@ -81,8 +53,8 @@ const ProtectedRoute = () => {
             borderColor: 'rgba(255,255,255,0.06)' 
           }}
         >
-          <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-4 md:px-10">
-            <main className="flex-1 flex flex-col py-6 md:py-0">
+          <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-10">
+            <main className="flex-1 flex flex-col">
               <Outlet />
             </main>
           </div>
