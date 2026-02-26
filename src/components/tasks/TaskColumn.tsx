@@ -90,10 +90,18 @@ const PeriodContainer = ({
         )}
       </div>
       
-      <div className="space-y-3 min-h-[20px]">
+      <div className="relative space-y-3 min-h-[20px]">
+        {/* Linha vertical do rastro */}
+        {tasks.length > 0 && (
+          <div 
+            className="absolute left-[10px] top-4 bottom-4 w-[2px] opacity-20 rounded-full"
+            style={{ backgroundColor: period.color }}
+          />
+        )}
+
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
+            <TaskCard key={task.id} task={{ ...task, period: period.id }} />
           ))}
         </SortableContext>
         
@@ -104,7 +112,7 @@ const PeriodContainer = ({
         )}
 
         {isOver && tasks.length === 0 && (
-          <div className="h-10 border-2 border-dashed border-[#38BDF8]/20 rounded-[20px] flex items-center justify-center">
+          <div className="h-10 border-2 border-dashed border-[#38BDF8]/20 rounded-[20px] flex items-center justify-center ml-6">
              <span className="text-[8px] font-black text-[#38BDF8] uppercase tracking-tighter">Soltar</span>
           </div>
         )}

@@ -13,8 +13,16 @@ interface TaskCardProps {
     time?: string;
     icon?: string;
     priority?: 'Extrema' | 'Média' | 'Baixa';
+    period?: string;
   };
 }
+
+const PERIOD_COLORS: Record<string, string> = {
+  Morning: '#FDBA74',
+  Afternoon: '#4ADE80',
+  Evening: '#A78BFA',
+  Dawn: '#818CF8',
+};
 
 export const TaskCard = ({ task }: TaskCardProps) => {
   const {
@@ -38,41 +46,53 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     Baixa: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
   };
 
+  const periodColor = task.period ? PERIOD_COLORS[task.period] : '#ffffff';
+
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
-      className={cn(
-        "group relative flex flex-col p-4 rounded-[20px] bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all cursor-grab active:cursor-grabbing overflow-hidden",
-        isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
-      )}
+      className="relative pl-6 group/card"
     >
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-lg">
-            {task.icon || '📝'}
-          </div>
-          <h4 className="text-sm font-semibold text-zinc-100 line-clamp-1">{task.name}</h4>
-        </div>
-      </div>
+      {/* Nodo de conexão com o rastro */}
+      <div 
+        className="absolute left-[7px] top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border-2 border-[#09090b] z-10 transition-transform duration-300 group-hover/card:scale-125"
+        style={{ backgroundColor: periodColor, boxShadow: `0 0 8px ${periodColor}40` }}
+      />
 
-      <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.04]">
-        <div className="flex items-center gap-3">
-          {task.priority && (
-            <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityColors[task.priority])}>
-              {task.priority}
-            </span>
-          )}
-          {task.time && (
-            <div className="flex items-center gap-1 text-[10px] text-zinc-300 font-medium">
-              <Clock size={10} className="text-zinc-400" />
-              {task.time}
+      <div
+        className={cn(
+          "group relative flex flex-col p-4 rounded-[20px] bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all cursor-grab active:cursor-grabbing overflow-hidden",
+          isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
+        )}
+      >
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-lg">
+              {task.icon || '📝'}
             </div>
-          )}
+            <h4 className="text-sm font-semibold text-zinc-100 line-clamp-1">{task.name}</h4>
+          </div>
         </div>
-        <Circle size={16} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
+
+        <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.04]">
+          <div className="flex items-center gap-3">
+            {task.priority && (
+              <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityColors[task.priority])}>
+                {task.priority}
+              </span>
+            )}
+            {task.time && (
+              <div className="flex items-center gap-1 text-[10px] text-zinc-300 font-medium">
+                <Clock size={10} className="text-zinc-400" />
+                {task.time}
+              </div>
+            )}
+          </div>
+          <Circle size={16} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
+        </div>
       </div>
     </div>
   );
