@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TaskColumn } from '@/components/tasks/TaskColumn';
 
 // Mock data para exemplo
@@ -13,6 +13,19 @@ const MOCK_TASKS = [
 ];
 
 const Index = () => {
+  const currentDayInfo = useMemo(() => {
+    const days = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+    const date = new Date();
+    const dayName = days[date.getDay()];
+    
+    // Calcula amanhã
+    const tomorrowDate = new Date();
+    tomorrowDate.setDate(date.getDate() + 1);
+    const tomorrowName = days[tomorrowDate.getDay()];
+    
+    return { today: dayName, tomorrow: tomorrowName };
+  }, []);
+
   return (
     <div className="min-h-screen bg-transparent text-white p-8 overflow-x-auto custom-scrollbar">
       <header className="mb-12 max-w-7xl mx-auto">
@@ -23,13 +36,13 @@ const Index = () => {
       <main className="flex gap-8 max-w-7xl mx-auto pb-20">
         <TaskColumn 
           id="today" 
-          title="Hoje — Segunda-feira" 
+          title={`Hoje — ${currentDayInfo.today}`} 
           tasks={MOCK_TASKS} 
           isToday={true} 
         />
         <TaskColumn 
           id="tomorrow" 
-          title="Amanhã — Terça-feira" 
+          title={`Amanhã — ${currentDayInfo.tomorrow}`} 
           tasks={[]} 
           isToday={false} 
         />

@@ -45,7 +45,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       style={style}
       {...attributes}
       {...listeners}
-      className="relative pl-8 group/card"
+      className="relative group/card"
     >
       <div
         className={cn(

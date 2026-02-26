@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { 
   DndContext, 
   DragOverlay, 
@@ -45,7 +45,8 @@ const INITIAL_DATA: Record<string, any[]> = {
   'Domingo': []
 };
 
-const WEEK_DAYS = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+const WEEK_DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+const DISPLAY_ORDER = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
 
 export default function TasksPage() {
   const [columns, setColumns] = useState(INITIAL_DATA);
@@ -56,8 +57,12 @@ export default function TasksPage() {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
+  const currentDayName = useMemo(() => {
+    return WEEK_DAYS[new Date().getDay()];
+  }, []);
+
   const findDay = (id: string) => {
-    if (WEEK_DAYS.includes(id)) return id;
+    if (DISPLAY_ORDER.includes(id)) return id;
     if (id.includes(':')) return id.split(':')[0];
     return Object.keys(columns).find((key) => columns[key].find((task) => task.id === id));
   };
@@ -184,13 +189,13 @@ export default function TasksPage() {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          {WEEK_DAYS.map((day) => (
+          {DISPLAY_ORDER.map((day) => (
             <TaskColumn 
               key={day} 
               id={day} 
               title={day} 
-              tasks={columns[day]} 
-              isToday={day === 'Quarta'} 
+              tasks={columns[day] || []} 
+              isToday={day === currentDayName} 
             />
           ))}
 

@@ -156,7 +156,7 @@ const PeriodContainer = ({
         )}
 
         {isOver && tasks.length === 0 && (
-          <div className="h-10 border-2 border-dashed border-white/10 rounded-[20px] flex items-center justify-center ml-8">
+          <div className="h-10 border-2 border-dashed border-white/10 rounded-[20px] flex items-center justify-center">
              <span className="text-[8px] font-black text-zinc-400 uppercase tracking-tighter">Soltar</span>
           </div>
         )}
@@ -171,19 +171,30 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
       <div className="flex items-center justify-between mb-4 px-3">
         <div className="flex items-center gap-2">
           <h3 className={cn(
-            "text-lg font-serif font-medium tracking-tight text-zinc-100"
+            "text-lg font-serif font-medium tracking-tight transition-colors duration-500",
+            isToday ? "text-[#38BDF8]" : "text-zinc-100"
           )}>
             {title}
           </h3>
-          <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-zinc-400 font-bold">
-            {tasks.length}
-          </span>
+          {isToday && (
+            <span className="text-[9px] font-black uppercase tracking-widest text-[#38BDF8] bg-[#38BDF8]/10 px-2 py-0.5 rounded-full border border-[#38BDF8]/20 animate-pulse">
+              Hoje
+            </span>
+          )}
+          {!isToday && (
+            <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-zinc-400 font-bold">
+              {tasks.length}
+            </span>
+          )}
         </div>
       </div>
 
       <div
         className={cn(
-          "flex-1 relative flex flex-col gap-5 p-2 rounded-[28px] bg-white/[0.01] border border-white/[0.03] custom-scrollbar overflow-y-auto pb-10"
+          "flex-1 relative flex flex-col gap-5 p-2 rounded-[28px] border custom-scrollbar overflow-y-auto pb-10 transition-all duration-500",
+          isToday 
+            ? "bg-[#38BDF8]/[0.02] border-[#38BDF8]/10 shadow-[0_0_40px_rgba(56,189,248,0.02)]" 
+            : "bg-white/[0.01] border-white/[0.03]"
         )}
       >
         {PERIODS.map((period) => (
