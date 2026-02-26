@@ -79,12 +79,12 @@ const PeriodContainer = ({
               {period.label}
             </span>
           </div>
-          <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-tight opacity-70">
+          <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tight opacity-90">
             {period.time}
           </span>
         </div>
         {tasks.length > 0 && (
-          <span className="text-[9px] font-bold text-zinc-600 bg-white/5 px-2 py-0.5 rounded-full">
+          <span className="text-[9px] font-bold text-zinc-200 bg-white/10 px-2 py-0.5 rounded-full">
             {tasks.length}
           </span>
         )}
@@ -98,7 +98,7 @@ const PeriodContainer = ({
         </SortableContext>
         
         {tasks.length === 0 && !isOver && (
-           <div className="flex items-center justify-center py-4 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
+           <div className="flex items-center justify-center py-4 opacity-[0.05] group-hover:opacity-[0.1] transition-opacity">
              <period.icon size={24} style={{ color: period.color }} />
            </div>
         )}
@@ -120,11 +120,11 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
         <div className="flex items-center gap-2">
           <h3 className={cn(
             "text-sm font-serif italic font-bold tracking-tight",
-            isToday ? "text-[#38BDF8]" : "text-zinc-500"
+            isToday ? "text-[#38BDF8]" : "text-zinc-200"
           )}>
             {title}
           </h3>
-          <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-zinc-500 font-bold">
+          <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-zinc-300 font-bold">
             {tasks.length}
           </span>
         </div>
