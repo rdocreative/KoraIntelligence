@@ -24,6 +24,7 @@ import {
   MoreHorizontal,
   ChevronDown
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const INITIAL_DATA: Record<string, any[]> = {
   'Segunda': [
