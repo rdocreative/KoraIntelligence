@@ -7,23 +7,18 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom
 import { ThemeProvider } from "./components/providers/ThemeProvider";
 import { SettingsProvider } from "./hooks/useSettings"; 
 import { HabitProvider } from "./hooks/useHabitTracker";
-import { MasterplanProvider } from "./hooks/useMasterplan";
 import { AuthProvider, useAuth } from "./components/providers/AuthProvider";
 import { ColorProvider } from "./components/providers/ColorProvider";
 import { SideNav } from "./components/layout/SideNav";
-import { TopBar } from "./components/layout/TopBar"; 
+import { TopBar } from "./components/layout/TopBar";
 
 // Pages
 import Index from "./pages/Index";
-import MasterplanPage from "./pages/Masterplan";
 import SettingsPage from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import HabitsPage from "./pages/Habits";
-import GoalsPage from "./pages/Goals";
 import MissionsPage from "./pages/Missions";
-import CommunityPage from "./pages/Community";
 import StorePage from "./pages/Store";
-import RemindersPage from "./pages/Reminders";
 
 // Auth Pages
 import Login from "./pages/auth/Login";
@@ -85,41 +80,35 @@ const App = () => (
         <ColorProvider>
           <SettingsProvider>
             <HabitProvider>
-              <MasterplanProvider>
-                <TooltipProvider>
-                  <Sonner theme="light" />
-                  <BrowserRouter>
-                    <div className="h-screen w-screen text-foreground font-sans flex flex-col relative overflow-hidden bg-[#f5eeee] dark:bg-[#212121]">
-                      <Routes>
-                        {/* Rotas Públicas */}
-                        <Route element={<PublicRoute />}>
-                          <Route path="/login" element={<Login />} />
-                          <Route path="/cadastro" element={<SignUp />} />
-                          <Route path="/recuperar-senha" element={<ForgotPassword />} />
-                        </Route>
+              <TooltipProvider>
+                <Sonner theme="light" />
+                <BrowserRouter>
+                  <div className="h-screen w-screen text-foreground font-sans flex flex-col relative overflow-hidden bg-[#f5eeee] dark:bg-[#212121]">
+                    <Routes>
+                      {/* Rotas Públicas */}
+                      <Route element={<PublicRoute />}>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/cadastro" element={<SignUp />} />
+                        <Route path="/recuperar-senha" element={<ForgotPassword />} />
+                      </Route>
 
-                        {/* Rotas Protegidas */}
-                        <Route element={<ProtectedRoute />}>
-                          <Route path="/" element={<Index />} />
-                          <Route path="/masterplan" element={<MasterplanPage />} />
-                          <Route path="/habitos" element={<HabitsPage />} />
-                          <Route path="/tarefas" element={<HabitsPage />} />
-                          <Route path="/metas" element={<GoalsPage />} />
-                          <Route path="/lembretes" element={<RemindersPage />} />
-                          <Route path="/missoes" element={<MissionsPage />} />
-                          <Route path="/comunidade" element={<CommunityPage />} />
-                          <Route path="/financa" element={<StorePage />} />
-                          <Route path="/loja" element={<StorePage />} />
-                          <Route path="/inventario" element={<StorePage />} />
-                          <Route path="/configuracoes" element={<SettingsPage />} />
-                        </Route>
+                      {/* Rotas Protegidas */}
+                      <Route element={<ProtectedRoute />}>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/habitos" element={<HabitsPage />} />
+                        <Route path="/tarefas" element={<HabitsPage />} />
+                        <Route path="/missoes" element={<MissionsPage />} />
+                        <Route path="/financa" element={<StorePage />} />
+                        <Route path="/loja" element={<StorePage />} />
+                        <Route path="/inventario" element={<StorePage />} />
+                        <Route path="/configuracoes" element={<SettingsPage />} />
+                      </Route>
 
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </div>
-                  </BrowserRouter>
-                </TooltipProvider>
-              </MasterplanProvider>
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </div>
+                </BrowserRouter>
+              </TooltipProvider>
             </HabitProvider>
           </SettingsProvider>
         </ColorProvider>

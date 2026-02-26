@@ -2,29 +2,24 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { 
-  LayoutDashboard, 
-  Crown, 
-  ClipboardList, 
-  Target, 
-  Bell, 
-  Swords, 
-  ShoppingBag, 
-  Settings, 
-  Brain,
+import {
+  MessageSquare,
+  ListTodo,
+  Target,
+  Trophy,
+  ShoppingBag,
+  Settings,
+  Bell,
   PanelLeftClose,
   PanelLeftOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { icon: LayoutDashboard, path: "/", label: "Início" },
-  { icon: Crown, path: "/masterplan", label: "Masterplan" },
-  { icon: ClipboardList, path: "/habitos", label: "Hábitos" },
-  { icon: Target, path: "/metas", label: "Metas" },
-  { icon: Brain, path: "/brain", label: "Sistema" },
-  { icon: Bell, path: "/lembretes", label: "Lembretes" },
-  { icon: Swords, path: "/missoes", label: "Missões" },
+  { icon: MessageSquare, path: "/", label: "Início" },
+  { icon: ListTodo, path: "/tarefas", label: "Tarefas" },
+  { icon: Target, path: "/habitos", label: "Hábitos" },
+  { icon: Trophy, path: "/missoes", label: "Missões" },
   { icon: ShoppingBag, path: "/loja", label: "Loja" },
 ];
 
@@ -232,9 +227,10 @@ export const SideNav = () => {
           </nav>
 
           <div className="p-4 mt-auto mb-4 shrink-0">
+             <div className="h-[1px] bg-black/5 dark:bg-white/5 mx-4 mb-4" />
              {!isCollapsed && expandedWidth >= 180 && (
-                <NavLink 
-                  to="/configuracoes" 
+                <NavLink
+                  to="/configuracoes"
                   className="flex items-center gap-4 py-3.5 px-4 rounded-[20px] text-[var(--muted-foreground)] hover:bg-black/5 dark:hover:bg-white/5 hover:text-[var(--foreground)] transition-all overflow-hidden"
                 >
                   <Settings size={20} strokeWidth={2} className="shrink-0" />

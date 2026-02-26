@@ -3,10 +3,10 @@
 import React from 'react';
 import { useDashboardStats } from '@/hooks/useDashboardStats';
 import { useProfile } from '@/hooks/useProfile';
-import { 
-  Target, 
-  CheckCircle2, 
-  ListTodo, 
+import {
+  Trophy,
+  CheckCircle2,
+  ListTodo,
   TrendingUp,
   ArrowRight
 } from 'lucide-react';
@@ -30,22 +30,22 @@ const Index = () => {
       link: "/habitos"
     },
     {
-      label: "Metas em Foco",
-      value: activeGoals,
-      icon: Target,
-      color: "#58CC02",
-      shadowColor: "#46A302",
-      textColor: "white",
-      link: "/metas"
-    },
-    {
       label: "Tarefas Pendentes",
       value: pendingTasks,
       icon: ListTodo,
       color: "#FF9600",
       shadowColor: "#E58700",
       textColor: "white",
-      link: "/masterplan"
+      link: "/tarefas"
+    },
+    {
+      label: "Missões Ativas",
+      value: activeGoals,
+      icon: Trophy,
+      color: "#58CC02",
+      shadowColor: "#46A302",
+      textColor: "white",
+      link: "/missoes"
     },
   ];
 
@@ -111,13 +111,13 @@ const Index = () => {
           </h3>
 
           <div className="space-y-4 relative z-10">
-            <Link to="/masterplan" className="p-5 rounded-[24px] bg-[var(--background)] border-2 border-[var(--border-ui)] flex items-center gap-5 hover:border-primary transition-all group/item shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+            <Link to="/tarefas" className="p-5 rounded-[24px] bg-[var(--background)] border-2 border-[var(--border-ui)] flex items-center gap-5 hover:border-primary transition-all group/item shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
               <div className="w-12 h-12 rounded-2xl bg-[var(--panel)] flex items-center justify-center text-2xl">
                 🚀
               </div>
               <div className="flex-1">
-                <h4 className="text-[15px] font-[900] text-[var(--foreground)]">Acessar Masterplan</h4>
-                <p className="text-[12px] text-[var(--muted-foreground)] font-bold">Gerencie seus grandes objetivos</p>
+                <h4 className="text-[15px] font-[900] text-[var(--foreground)]">Ver Tarefas</h4>
+                <p className="text-[12px] text-[var(--muted-foreground)] font-bold">Gerencie sua lista de afazeres</p>
               </div>
               <ArrowRight className="w-5 h-5 text-[var(--border-ui)] group-hover/item:text-primary transition-colors" />
             </Link>
