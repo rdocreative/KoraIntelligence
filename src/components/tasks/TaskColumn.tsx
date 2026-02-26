@@ -167,21 +167,20 @@ const PeriodContainer = ({
 
 export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday }, ref) => {
   return (
-    <div ref={ref} className="flex flex-col w-80 shrink-0 h-full scroll-snap-align-center">
-      <div className="flex items-center justify-between mb-4 px-3">
-        <div className="flex items-center gap-2">
+    <div ref={ref} className="flex flex-col w-72 shrink-0 h-full scroll-snap-align-center">
+      <div className="flex items-center justify-center mb-4 px-3 relative">
+        <div className="flex items-center gap-3">
           <h3 className={cn(
             "text-lg font-serif font-medium tracking-tight transition-colors duration-500",
             isToday ? "text-[#38BDF8]" : "text-zinc-100"
           )}>
             {title}
           </h3>
-          {isToday && (
+          {isToday ? (
             <span className="text-[9px] font-black uppercase tracking-widest text-[#38BDF8] bg-[#38BDF8]/10 px-2 py-0.5 rounded-full border border-[#38BDF8]/20 animate-pulse">
               Hoje
             </span>
-          )}
-          {!isToday && (
+          ) : (
             <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-zinc-400 font-bold">
               {tasks.length}
             </span>
@@ -191,7 +190,7 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
 
       <div
         className={cn(
-          "flex-1 relative flex flex-col gap-5 p-2 rounded-[28px] border custom-scrollbar overflow-y-auto pb-10 transition-all duration-500",
+          "flex-1 relative flex flex-col gap-4 p-2 rounded-[28px] border custom-scrollbar overflow-y-auto pb-10 transition-all duration-500",
           isToday 
             ? "bg-[#38BDF8]/[0.02] border-[#38BDF8]/10 shadow-[0_0_40px_rgba(56,189,248,0.02)]" 
             : "bg-white/[0.01] border-white/[0.03]"

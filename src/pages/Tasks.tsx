@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { 
   DndContext, 
   DragOverlay, 
@@ -51,6 +51,12 @@ const DISPLAY_ORDER = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábad
 export default function TasksPage() {
   const [columns, setColumns] = useState(INITIAL_DATA);
   const [activeTask, setActiveTask] = useState<any>(null);
+  
+  // Refs para funcionalidade de drag-to-scroll
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -153,6 +159,28 @@ export default function TasksPage() {
     setActiveTask(null);
   };
 
+  // Funções para drag-to-scroll horizontal
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (!scrollRef.current) return;
+    // Não iniciar scroll se o alvo for um botão ou card (DndContext já cuida deles)
+    if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('[data-draggable]')) return;
+    
+    setIsScrolling(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
+  };
+
+  const onMouseLeave = () => setIsScrolling(false);
+  const onMouseUp = () => setIsScrolling(false);
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isScrolling || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5; // Velocidade do scroll
+    scrollRef.current.scrollLeft = scrollLeft - walk;
+  };
+
   return (
     <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0">
       <header className="flex items-center justify-between py-6 shrink-0">
@@ -181,7 +209,17 @@ export default function TasksPage() {
         </div>
       </header>
 
-      <div className="flex-1 flex min-h-0 pb-8 overflow-x-auto custom-scrollbar">
+      <div 
+        ref={scrollRef}
+        onMouseDown={onMouseDown}
+        onMouseLeave={onMouseLeave}
+        onMouseUp={onMouseUp}
+        onMouseMove={onMouseMove}
+        className={cn(
+          "flex-1 flex min-h-0 pb-8 overflow-x-auto custom-scrollbar cursor-grab select-none",
+          isScrolling && "cursor-grabbing"
+        )}
+      >
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
@@ -189,7 +227,7 @@ export default function TasksPage() {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          <div className="flex gap-6 items-start h-full">
+          <div className="flex gap-5 items-start h-full pr-10">
             {DISPLAY_ORDER.map((day) => {
               const isToday = day === currentDayName;
 
