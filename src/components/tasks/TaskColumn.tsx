@@ -128,15 +128,12 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
       const minutes = now.getMinutes();
       const totalMinutes = (hours * 60) + minutes;
       
-      // O rastro começa na Manhã (06:00) e termina no fim da Madrugada (06:00 do dia seguinte)
-      // Ajustamos o tempo para que 06:00 seja o ponto 0
-      const startMinutes = 6 * 60; // 360
+      const startMinutes = 6 * 60;
       let adjustedMinutes = (totalMinutes - startMinutes + 1440) % 1440;
       const progressPercent = (adjustedMinutes / 1440) * 100;
       
       setProgress(progressPercent);
 
-      // Determinar a cor atual baseada na hora
       let color = PERIODS[0].color;
       if (hours >= 6 && hours < 12) color = PERIODS[0].color;
       else if (hours >= 12 && hours < 18) color = PERIODS[1].color;
@@ -147,7 +144,7 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
     };
 
     updateProgress();
-    const interval = setInterval(updateProgress, 60000); // Atualiza a cada minuto
+    const interval = setInterval(updateProgress, 60000);
     return () => clearInterval(interval);
   }, [isToday]);
 
@@ -173,33 +170,12 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
           isToday && "bg-[#38BDF8]/[0.01] border-[#38BDF8]/10"
         )}
       >
-        {/* Rastro estático (o caminho por onde a linha passa) */}
-        <div 
-          className="absolute left-[22px] top-6 bottom-10 w-[2px] opacity-[0.03] pointer-events-none z-0 rounded-full bg-white"
-        />
-
-        {/* Rastro dinâmico (só aparece se for Hoje) */}
-        {isToday && (
-          <div 
-            className="absolute left-[22px] top-6 w-[2px] pointer-events-none z-0 rounded-full transition-all duration-[1000ms] ease-linear"
-            style={{ 
-              height: `calc(${progress}% - 24px)`,
-              background: `linear-gradient(to bottom, 
-                ${PERIODS[0].color} 0%, 
-                ${PERIODS[1].color} 33%, 
-                ${PERIODS[2].color} 66%, 
-                ${PERIODS[3].color} 100%)`,
-              opacity: progress > 0 ? 0.4 : 0
-            }}
-          />
-        )}
-
-        {/* Bolinha indicadora de tempo atual */}
+        {/* Bolinha indicadora de tempo atual (mantida, mas sem a linha de fundo) */}
         {isToday && progress > 0 && (
           <div 
             className="absolute left-[22px] -translate-x-1/2 w-2.5 h-2.5 rounded-full z-20 pointer-events-none transition-all duration-[1000ms] ease-linear flex items-center justify-center"
             style={{ 
-              top: `calc(1.5rem + (${progress}% * 0.9))`, // Ajuste leve para compensar o padding do container
+              top: `calc(1.5rem + (${progress}% * 0.9))`,
               backgroundColor: currentColor,
               boxShadow: `0 0 12px ${currentColor}aa`,
             }}
