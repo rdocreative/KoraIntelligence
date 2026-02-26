@@ -38,6 +38,12 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     Baixa: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
   };
 
+  const accentColors = {
+    Extrema: 'border-red-500/40',
+    Média: 'border-orange-500/40',
+    Baixa: 'border-sky-500/40',
+  };
+
   return (
     <div
       ref={setNodeRef}
@@ -45,11 +51,25 @@ export const TaskCard = ({ task }: TaskCardProps) => {
       {...attributes}
       {...listeners}
       className={cn(
-        "group flex flex-col p-4 rounded-[20px] bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all cursor-grab active:cursor-grabbing",
+        "group relative flex flex-col p-4 rounded-[20px] bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all cursor-grab active:cursor-grabbing overflow-hidden",
         isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
       )}
     >
-      <div className="flex items-start justify-between mb-3">
+      {/* Destaque de prioridade no canto inferior esquerdo */}
+      {task.priority && (
+        <div 
+          className={cn(
+            "absolute bottom-0 left-0 w-12 h-12 border-l-[2px] border-b-[2px] border-transparent rounded-bl-[20px] transition-colors pointer-events-none",
+            accentColors[task.priority]
+          )}
+          style={{ 
+            maskImage: 'linear-gradient(to top right, black, transparent 70%)',
+            WebkitMaskImage: 'linear-gradient(to top right, black, transparent 70%)'
+          }}
+        />
+      )}
+
+      <div className="flex items-start justify-between mb-3 relative z-10">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-lg">
             {task.icon || '📝'}
@@ -58,7 +78,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
         </div>
       </div>
 
-      <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.02]">
+      <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.02] relative z-10">
         <div className="flex items-center gap-3">
           {task.priority && (
             <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityColors[task.priority])}>
