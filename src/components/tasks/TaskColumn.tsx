@@ -71,17 +71,20 @@ const PeriodContainer = ({
       )}
       style={{ background: isOver ? undefined : period.gradient }}
     >
-      <div className="flex items-center justify-between mb-4 px-1">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <period.icon size={14} style={{ color: period.color }} />
-            <span className="text-[11px] font-black uppercase tracking-widest" style={{ color: period.color }}>
+          {/* Ícone posicionado para alinhar o centro com o rastro (22px da borda da coluna) */}
+          <div className="flex items-center justify-center pl-[9px] z-10">
+            <period.icon size={14} style={{ color: period.color }} className="bg-[#09090b]/40 rounded-full" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[11px] font-black uppercase tracking-widest leading-none" style={{ color: period.color }}>
               {period.label}
             </span>
+            <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight opacity-70 mt-0.5">
+              {period.time}
+            </span>
           </div>
-          <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tight opacity-90">
-            {period.time}
-          </span>
         </div>
         {tasks.length > 0 && (
           <span className="text-[9px] font-bold text-zinc-200 bg-white/10 px-2 py-0.5 rounded-full">
@@ -104,7 +107,7 @@ const PeriodContainer = ({
         )}
 
         {isOver && tasks.length === 0 && (
-          <div className="h-10 border-2 border-dashed border-[#38BDF8]/20 rounded-[20px] flex items-center justify-center ml-6">
+          <div className="h-10 border-2 border-dashed border-[#38BDF8]/20 rounded-[20px] flex items-center justify-center ml-8">
              <span className="text-[8px] font-black text-[#38BDF8] uppercase tracking-tighter">Soltar</span>
           </div>
         )}
@@ -136,9 +139,9 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
           isToday && "bg-[#38BDF8]/[0.01] border-[#38BDF8]/10"
         )}
       >
-        {/* Rastro contínuo com gradiente de cores dos períodos */}
+        {/* Rastro contínuo centralizado (22px da borda esquerda da coluna) */}
         <div 
-          className="absolute left-[30px] top-6 bottom-10 w-[2px] opacity-10 pointer-events-none z-0 rounded-full"
+          className="absolute left-[22px] top-6 bottom-10 w-[2px] opacity-10 pointer-events-none z-0 rounded-full"
           style={{ 
             background: `linear-gradient(to bottom, 
               ${PERIODS[0].color} 0%, 
