@@ -105,7 +105,7 @@ const PeriodContainer = ({
     <div 
       ref={setNodeRef}
       className={cn(
-        "relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 ease-in-out",
+        "relative flex flex-col p-3 rounded-[20px] border transition-all duration-300 ease-in-out",
         !isActive && !isOver ? "border-white/[0.03]" : "",
         isOver ? "border-white/20 bg-white/5 scale-[1.01]" : ""
       )}
@@ -114,35 +114,35 @@ const PeriodContainer = ({
         ...activeStyle
       }}
     >
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
           <div className="flex items-center justify-center z-10">
             <period.icon 
-              size={16} 
+              size={14} 
               style={{ color: period.color }} 
               className="transition-all duration-500" 
             />
           </div>
           <div className="flex flex-col">
             <span 
-              className="text-[11px] font-black uppercase tracking-widest leading-none transition-all duration-500" 
+              className="text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-500" 
               style={{ color: period.color }}
             >
               {period.label}
             </span>
-            <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight opacity-70 mt-0.5">
+            <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-tight opacity-70 mt-0.5">
               {period.time}
             </span>
           </div>
         </div>
         {tasks.length > 0 && (
-          <span className="text-[9px] font-bold text-zinc-200 bg-white/10 px-2 py-0.5 rounded-full">
+          <span className="text-[9px] font-bold text-zinc-300 bg-white/5 px-1.5 py-0.5 rounded-full">
             {tasks.length}
           </span>
         )}
       </div>
       
-      <div className="relative flex flex-col gap-3 min-h-[20px] max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
+      <div className="relative flex flex-col gap-2 min-h-[10px] max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {tasks.map((task) => (
             <TaskCard key={task.id} task={{ ...task, period: period.id }} />
@@ -150,8 +150,8 @@ const PeriodContainer = ({
         </SortableContext>
         
         {tasks.length === 0 && !isOver && (
-           <div className="flex items-center justify-center py-4 opacity-[0.05]">
-             <period.icon size={24} style={{ color: period.color }} />
+           <div className="flex items-center justify-center py-2 opacity-[0.05]">
+             <period.icon size={20} style={{ color: period.color }} />
            </div>
         )}
 
@@ -167,30 +167,31 @@ const PeriodContainer = ({
 
 export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday }, ref) => {
   return (
-    <div ref={ref} className="flex flex-col w-72 shrink-0 h-full scroll-snap-align-center">
-      <div className="flex items-center justify-center mb-4 px-3 relative">
-        <div className="flex items-center gap-3">
+    // Alterado: min-w-full no mobile, w-72 no desktop. scroll-snap-align-center para travar no scroll.
+    <div 
+      ref={ref} 
+      className="flex flex-col min-w-full md:min-w-[18rem] md:w-72 shrink-0 h-full scroll-snap-align-center snap-center md:snap-align-none"
+    >
+      <div className="flex items-center justify-between mb-4 px-1 relative">
+         {/* Título escondido no mobile porque usaremos Tabs, visível no desktop */}
+         <div className="hidden md:flex items-center gap-3">
           <h3 className={cn(
             "text-lg font-serif font-medium tracking-tight transition-colors duration-500",
             isToday ? "text-[#38BDF8]" : "text-zinc-100"
           )}>
             {title}
           </h3>
-          {isToday ? (
-            <span className="text-[9px] font-black uppercase tracking-widest text-[#38BDF8] bg-[#38BDF8]/10 px-2 py-0.5 rounded-full border border-[#38BDF8]/20 animate-pulse">
+        </div>
+        {isToday && (
+            <span className="md:hidden w-full text-center text-[9px] font-black uppercase tracking-widest text-[#38BDF8] bg-[#38BDF8]/5 py-1 rounded-full border border-[#38BDF8]/10">
               Hoje
             </span>
-          ) : (
-            <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-zinc-400 font-bold">
-              {tasks.length}
-            </span>
-          )}
-        </div>
+        )}
       </div>
 
       <div
         className={cn(
-          "flex-1 relative flex flex-col gap-4 p-2 rounded-[28px] border custom-scrollbar overflow-y-auto pb-10 transition-all duration-500",
+          "flex-1 relative flex flex-col gap-3 p-2 rounded-[24px] border custom-scrollbar overflow-y-auto pb-10 transition-all duration-500",
           isToday 
             ? "bg-[#38BDF8]/[0.02] border-[#38BDF8]/10 shadow-[0_0_40px_rgba(56,189,248,0.02)]" 
             : "bg-white/[0.01] border-white/[0.03]"

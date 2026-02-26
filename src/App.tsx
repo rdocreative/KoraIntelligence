@@ -44,22 +44,22 @@ const ProtectedRoute = () => {
 
   return (
     <div className="flex h-screen w-screen overflow-hidden text-white antialiased relative bg-[#070707]">
-      {/* SideNav agora gerencia sua própria responsividade (Bottom Bar no mobile) */}
       <SideNav />
 
-      <div className="flex-1 flex flex-col p-4 md:pl-0 z-10 min-w-0 h-full pb-24 md:pb-4">
-        {/* Mobile Header simples */}
-        <div className="md:hidden flex items-center justify-center mb-4 px-2">
-          <span className="text-lg font-serif italic text-white/50">Néctar.</span>
-        </div>
+      {/* Alterado: p-0 no mobile para remover espaçamento das bordas, pb-20 para não esconder atrás da nav bar */}
+      <div className="flex-1 flex flex-col p-0 pb-20 md:p-4 md:pl-0 md:pb-4 z-10 min-w-0 h-full">
+        
+        {/* Mobile Header Removido conforme solicitado para subir o conteúdo */}
 
         <div 
-          className="flex-1 flex flex-col rounded-[24px] border overflow-hidden relative min-h-0 w-full" 
+          className="flex-1 flex flex-col md:rounded-[24px] md:border border-transparent md:border-white/5 overflow-hidden relative min-h-0 w-full" 
           style={{ 
-            backgroundColor: '#0b0b0b', 
-            borderColor: 'rgba(255,255,255,0.06)' 
+            backgroundColor: 'transparent', // Transparente no mobile para fundir com o fundo
           }}
         >
+          {/* Fundo escuro apenas no desktop ou container interno se necessário */}
+          <div className="absolute inset-0 bg-[#0b0b0b] md:rounded-[24px] -z-10" />
+
           <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-4 md:px-10">
             <main className="flex-1 flex flex-col py-4 md:py-0">
               <Outlet />
