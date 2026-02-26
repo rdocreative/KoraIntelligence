@@ -14,9 +14,9 @@ const MOCK_TASKS = [
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-black text-white p-8 overflow-x-auto custom-scrollbar">
+    <div className="min-h-screen bg-transparent text-[#080808] p-8 overflow-x-auto custom-scrollbar">
       <header className="mb-12 max-w-7xl mx-auto">
-        <h1 className="text-4xl font-serif italic font-bold tracking-tight mb-2">My Day</h1>
+        <h1 className="text-4xl font-serif italic font-bold tracking-tight mb-2">Meu Dia</h1>
         <p className="text-zinc-500 text-sm font-medium">Organize sua rotina com clareza e elegância.</p>
       </header>
 

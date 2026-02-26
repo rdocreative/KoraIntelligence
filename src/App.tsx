@@ -32,8 +32,8 @@ const ProtectedRoute = () => {
 
   if (loading) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-[#080808]">
-        <div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-[24px] animate-spin"></div>
+      <div className="h-screen w-full flex items-center justify-center bg-[#FAFAFA]">
+        <div className="w-8 h-8 border-4 border-black/10 border-t-black rounded-[24px] animate-spin"></div>
       </div>
     );
   }
@@ -43,14 +43,14 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden text-white antialiased relative bg-[#080808]">
+    <div className="flex h-screen w-screen overflow-hidden text-[#080808] antialiased relative bg-[#FAFAFA]">
       <SideNav />
       <div className="flex-1 flex flex-col p-4 pl-0 z-10 min-w-0">
         <div 
-          className="flex-1 flex flex-col rounded-[24px] border overflow-hidden relative min-h-0 w-full" 
+          className="flex-1 flex flex-col rounded-[24px] border overflow-hidden relative min-h-0 w-full shadow-sm" 
           style={{ 
-            backgroundColor: '#0a0a0a', 
-            borderColor: 'rgba(255,255,255,0.06)' 
+            backgroundColor: '#FFFFFF', 
+            borderColor: 'rgba(0,0,0,0.06)' 
           }}
         >
           <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-10">
@@ -68,7 +68,7 @@ const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-[#080808]"><div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-[24px] animate-spin"></div></div>;
+     return <div className="h-screen w-full flex items-center justify-center bg-[#FAFAFA]"><div className="w-8 h-8 border-4 border-black/10 border-t-black rounded-[24px] animate-spin"></div></div>;
   }
 
   if (session) {
@@ -82,7 +82,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider 
       attribute="class" 
-      defaultTheme="dark" 
+      defaultTheme="light" 
       enableSystem={false}
       storageKey="nectar-theme"
     >
@@ -91,9 +91,9 @@ const App = () => (
           <SettingsProvider>
             <HabitProvider>
               <TooltipProvider>
-                <Sonner theme="dark" />
+                <Sonner theme="light" />
                 <BrowserRouter>
-                  <div className="h-screen w-screen text-white font-sans flex flex-col relative overflow-hidden bg-[#080808]">
+                  <div className="h-screen w-screen text-[#080808] font-sans flex flex-col relative overflow-hidden bg-[#FAFAFA]">
                     <Routes>
                       <Route element={<PublicRoute />}>
                         <Route path="/login" element={<Login />} />

@@ -26,8 +26,8 @@ export const SideNav = () => {
   return (
     <div className="w-64 h-full flex flex-col pt-12 pb-6 px-6 relative z-10 shrink-0 bg-transparent">
       <div className="flex items-center justify-between mb-10">
-        <h1 className="text-3xl font-serif tracking-tight text-white">Néctar.</h1>
-        <button className="p-1.5 rounded-[24px] hover:bg-white/10 text-zinc-400 transition-colors border border-white/5">
+        <h1 className="text-3xl font-serif tracking-tight text-[#080808]">Néctar.</h1>
+        <button className="p-1.5 rounded-[24px] hover:bg-black/5 text-zinc-500 transition-colors border border-black/5">
           <Plus size={18} />
         </button>
       </div>
@@ -42,8 +42,8 @@ export const SideNav = () => {
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-2.5 rounded-[24px] transition-all",
                 isActive 
-                  ? "bg-[#38BDF8]/10 text-white font-semibold shadow-sm border border-[#38BDF8]/20" 
-                  : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.02]"
+                  ? "bg-[#38BDF8]/10 text-[#080808] font-semibold shadow-sm border border-[#38BDF8]/20" 
+                  : "text-zinc-500 hover:text-zinc-800 hover:bg-black/[0.03]"
               )}
             >
               <item.icon 
@@ -57,9 +57,9 @@ export const SideNav = () => {
         })}
       </nav>
       
-      <div className="pt-4 mt-auto flex items-center gap-3 cursor-pointer border-t border-white/5">
+      <div className="pt-4 mt-auto flex items-center gap-3 cursor-pointer border-t border-black/5">
         <div className="w-8 h-8 rounded-[24px] flex items-center justify-center text-[10px] font-bold bg-[#38BDF8]/20 text-[#38BDF8]">RS</div>
-        <span className="text-xs font-semibold text-zinc-300 hover:text-white transition-colors">Ricardo S.</span>
+        <span className="text-xs font-semibold text-zinc-600 hover:text-black transition-colors">Ricardo S.</span>
       </div>
     </div>
   );
