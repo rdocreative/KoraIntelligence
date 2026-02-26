@@ -97,17 +97,18 @@ const PeriodContainer = ({
   }, [isToday, period]);
 
   const activeStyle = isActive && isToday ? {
-    borderColor: `${period.color}40`, 
-    background: `linear-gradient(180deg, ${period.color}1A 0%, ${period.color}05 100%)`, 
+    borderColor: `${period.color}30`, 
+    background: `linear-gradient(180deg, ${period.color}0D 0%, transparent 100%)`, 
   } : {};
 
   return (
     <div 
       ref={setNodeRef}
       className={cn(
-        "relative flex flex-col p-4 rounded-[24px] border transition-all duration-500 ease-in-out",
+        "relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 ease-in-out",
         !isActive && !isOver ? "border-white/[0.03]" : "",
-        isOver ? "border-[#38BDF8] bg-[#38BDF8]/10 scale-[1.01]" : ""
+        // Trocado azul por branco sutil no estado de drop
+        isOver ? "border-white/20 bg-white/5 scale-[1.01]" : ""
       )}
       style={{ 
         background: (!isActive || !isToday) && !isOver ? period.gradient : undefined,
@@ -156,8 +157,8 @@ const PeriodContainer = ({
         )}
 
         {isOver && tasks.length === 0 && (
-          <div className="h-10 border-2 border-dashed border-[#38BDF8]/20 rounded-[20px] flex items-center justify-center ml-8">
-             <span className="text-[8px] font-black text-[#38BDF8] uppercase tracking-tighter">Soltar</span>
+          <div className="h-10 border-2 border-dashed border-white/10 rounded-[20px] flex items-center justify-center ml-8">
+             <span className="text-[8px] font-black text-zinc-400 uppercase tracking-tighter">Soltar</span>
           </div>
         )}
       </div>
@@ -171,8 +172,8 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
       <div className="flex items-center justify-between mb-4 px-3">
         <div className="flex items-center gap-2">
           <h3 className={cn(
-            "text-sm font-serif italic font-bold tracking-tight",
-            isToday ? "text-[#38BDF8]" : "text-zinc-200"
+            "text-sm font-serif italic font-bold tracking-tight text-zinc-200",
+            // Removido cor azul do título de "Hoje"
           )}>
             {title}
           </h3>
@@ -184,8 +185,8 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
 
       <div
         className={cn(
-          "flex-1 relative flex flex-col gap-5 p-2 rounded-[28px] bg-white/[0.01] border border-white/[0.03] custom-scrollbar overflow-y-auto pb-10",
-          isToday && "bg-[#38BDF8]/[0.01] border-[#38BDF8]/10"
+          "flex-1 relative flex flex-col gap-5 p-2 rounded-[28px] bg-white/[0.01] border border-white/[0.03] custom-scrollbar overflow-y-auto pb-10"
+          // Removido background e borda azul aqui
         )}
       >
         {PERIODS.map((period) => (
