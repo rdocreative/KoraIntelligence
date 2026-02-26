@@ -77,16 +77,25 @@ const PeriodContainer = ({
   const [progress, setProgress] = useState(0);
   const [isActive, setIsActive] = useState(false);
 
-  // Monitorar redimensionamento do container para desenhar o SVG corretamente
+  // Monitorar redimensionamento usando BorderBox para precisão
   useEffect(() => {
     if (!containerRef.current) return;
     
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
-        setDimensions({
-          width: entry.contentRect.width,
-          height: entry.contentRect.height
-        });
+        if (entry.borderBoxSize) {
+          const borderBoxSize = entry.borderBoxSize[0];
+          setDimensions({
+            width: borderBoxSize.inlineSize,
+            height: borderBoxSize.blockSize
+          });
+        } else {
+          // Fallback
+          setDimensions({
+            width: entry.contentRect.width,
+            height: entry.contentRect.height
+          });
+        }
       }
     });
 
@@ -105,11 +114,10 @@ const PeriodContainer = ({
       const totalCurrentMinutes = currentHour * 60 + currentMinute;
 
       const startMinutes = period.startHour * 60;
-      const endMinutes = period.endHour * 60; // Nota: 24 * 60 = 1440
+      const endMinutes = period.endHour * 60; 
 
       let isCurrentPeriod = false;
 
-      // Lógica especial para virada do dia (ex: se precisasse cruzar meia noite, mas aqui definimos Dawn como 0-6 e Evening como 18-24, o que simplifica)
       if (currentHour >= period.startHour && currentHour < period.endHour) {
         isCurrentPeriod = true;
       }
@@ -127,69 +135,110 @@ const PeriodContainer = ({
     };
 
     checkTime();
-    const interval = setInterval(checkTime, 60000); // Atualiza a cada minuto
+    const interval = setInterval(checkTime, 10000); // Atualiza a cada 10s para mais fluidez
     return () => clearInterval(interval);
   }, [isToday, period]);
 
-  // Função para gerar o path do SVG começando do Topo-Centro
-  const getPath = (w: number, h: number, r: number) => {
+  // Função para gerar o path PERFEITO com Arcos (A)
+  const getPath = (w: number, h: number, borderRadius: number, strokeWidth: number) => {
     if (w === 0 || h === 0) return "";
-    // M = Move to (topo centro)
-    // L = Line to
-    // Q = Quadratic Curve (para as bordas arredondadas)
+    
+    // Ajuste fino: O path deve passar no MEIO da borda. 
+    // Se a borda é 2px, o path fica inset em 1px.
+    const halfStroke = strokeWidth / 2;
+    
+    // Dimensões do retângulo do path
+    const pathW = w;
+    const pathH = h;
+    
+    // O raio do arco deve ser ajustado pelo inset
+    // Se border-radius CSS é 24px, o raio do stroke centralizado é 24 - halfStroke
+    const r = Math.max(0, borderRadius - halfStroke);
+    
+    // Pontos de ancoragem
+    const top = halfStroke;
+    const bottom = pathH - halfStroke;
+    const left = halfStroke;
+    const right = pathW - halfStroke;
+
+    // Construção do path no sentido horário começando do Topo-Centro
+    // M = Move, L = Line, A = Arc
     return `
-      M ${w / 2} 0 
-      L ${w - r} 0 
-      Q ${w} 0 ${w} ${r} 
-      L ${w} ${h - r} 
-      Q ${w} ${h} ${w - r} ${h} 
-      L ${r} ${h} 
-      Q 0 ${h} 0 ${h - r} 
-      L 0 ${r} 
-      Q 0 0 ${r} 0 
-      L ${w / 2} 0
+      M ${pathW / 2} ${top}
+      L ${right - r} ${top}
+      A ${r} ${r} 0 0 1 ${right} ${top + r}
+      L ${right} ${bottom - r}
+      A ${r} ${r} 0 0 1 ${right - r} ${bottom}
+      L ${left + r} ${bottom}
+      A ${r} ${r} 0 0 1 ${left} ${bottom - r}
+      L ${left} ${top + r}
+      A ${r} ${r} 0 0 1 ${left + r} ${top}
+      L ${pathW / 2} ${top}
     `.replace(/\s+/g, ' ').trim();
   };
 
-  const borderRadius = 24; // Igual ao rounded-[24px] do CSS
-  const pathData = getPath(dimensions.width, dimensions.height, borderRadius);
-  // Cálculo aproximado do perímetro para o stroke-dasharray
-  // Perímetro de retângulo arredondado = 2(w-2r) + 2(h-2r) + 2*pi*r
-  const perimeter = 2 * (dimensions.width - 2 * borderRadius) + 2 * (dimensions.height - 2 * borderRadius) + 2 * Math.PI * borderRadius;
+  const cssBorderRadius = 24; 
+  const strokeWidth = 2.5; // Espessura da linha
+  const pathData = getPath(dimensions.width, dimensions.height, cssBorderRadius, strokeWidth);
+  
+  // Perímetro preciso para a animação
+  // P = 2 * (width - 2*r) + 2 * (height - 2*r) + 2 * PI * r
+  // Usando as dimensões ajustadas pelo stroke
+  const adjustedW = dimensions.width - strokeWidth;
+  const adjustedH = dimensions.height - strokeWidth;
+  const adjustedR = cssBorderRadius - strokeWidth/2;
+  const straightSegments = 2 * (adjustedW - 2 * adjustedR) + 2 * (adjustedH - 2 * adjustedR);
+  const curvedSegments = 2 * Math.PI * adjustedR;
+  const perimeter = straightSegments + curvedSegments;
 
   return (
     <div className="relative group">
-      {/* SVG de Borda Animada (Apenas se for período ativo e Hoje) */}
+      {/* SVG de Borda Animada */}
       {isActive && isToday && pathData && (
         <svg 
           className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible"
-          style={{ 
-            left: -1, top: -1, // Compensar borda de 1px
-            width: 'calc(100% + 2px)', 
-            height: 'calc(100% + 2px)' 
-          }}
+          // Não precisamos mais de left/top negativos pois usamos border-box dimensions
         >
-          {/* Fundo da borda (opcional, para dar profundidade) */}
+          <defs>
+             {/* Gradiente para suavizar as pontas ou dar um brilho extra */}
+             <linearGradient id={`grad-${period.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
+               <stop offset="0%" stopColor={period.color} stopOpacity="0.6" />
+               <stop offset="50%" stopColor={period.color} stopOpacity="1" />
+               <stop offset="100%" stopColor={period.color} stopOpacity="0.6" />
+             </linearGradient>
+             
+             {/* Filtro de brilho para "suavizar" a linha */}
+             <filter id={`glow-${period.id}`}>
+               <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+               <feMerge>
+                 <feMergeNode in="coloredBlur"/>
+                 <feMergeNode in="SourceGraphic"/>
+               </feMerge>
+             </filter>
+          </defs>
+
+          {/* Trilha de fundo bem sutil */}
           <path 
             d={pathData} 
             fill="none" 
             stroke={period.color} 
             strokeWidth="1" 
             opacity="0.1"
+            strokeLinecap="round"
           />
           
-          {/* A borda de progresso */}
+          {/* A linha de progresso */}
           <path 
             d={pathData} 
             fill="none" 
             stroke={period.color} 
-            strokeWidth="2.5" 
-            strokeLinecap="round"
+            strokeWidth={strokeWidth}
+            strokeLinecap="round" 
             strokeDasharray={perimeter}
             strokeDashoffset={perimeter - (perimeter * progress / 100)}
             className="transition-all duration-[1000ms] ease-linear"
             style={{
-              filter: `drop-shadow(0 0 6px ${period.color})` // Glow effect
+              filter: `drop-shadow(0 0 4px ${period.color})` // Glow externo
             }}
           />
         </svg>
@@ -203,8 +252,7 @@ const PeriodContainer = ({
         }}
         className={cn(
           "relative flex flex-col p-4 rounded-[24px] border transition-all duration-200",
-          // Se estiver ativo, removemos a borda padrão para deixar o SVG brilhar, ou deixamos ela muito sutil
-          isActive && isToday ? "border-transparent bg-white/[0.02]" : "border-white/[0.03]",
+          isActive && isToday ? "border-white/[0.05]" : "border-white/[0.03]",
           isOver ? "border-[#38BDF8] bg-[#38BDF8]/10 scale-[1.01]" : ""
         )}
         style={{ 
