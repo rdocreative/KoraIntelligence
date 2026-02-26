@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, { useState, useMemo } from "react";
 import { 
   DndContext, 
   DragOverlay, 
@@ -51,8 +51,6 @@ const DISPLAY_ORDER = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábad
 export default function TasksPage() {
   const [columns, setColumns] = useState(INITIAL_DATA);
   const [activeTask, setActiveTask] = useState<any>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const todayRef = useRef<HTMLDivElement>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -63,18 +61,9 @@ export default function TasksPage() {
     return WEEK_DAYS[new Date().getDay()];
   }, []);
 
-  const currentIndex = useMemo(() => DISPLAY_ORDER.indexOf(currentDayName), [currentDayName]);
-
-  // Efeito para centralizar o dia atual no carregamento
-  useEffect(() => {
-    if (todayRef.current) {
-      todayRef.current.scrollIntoView({
-        behavior: 'smooth',
-        inline: 'center',
-        block: 'nearest'
-      });
-    }
-  }, []);
+  const otherDays = useMemo(() => {
+    return DISPLAY_ORDER.filter(day => day !== currentDayName);
+  }, [currentDayName]);
 
   const findDay = (id: string) => {
     if (DISPLAY_ORDER.includes(id)) return id;
@@ -196,10 +185,7 @@ export default function TasksPage() {
         </div>
       </header>
 
-      <div 
-        ref={containerRef}
-        className="flex-1 flex gap-6 overflow-x-auto pb-8 custom-scrollbar min-h-0 snap-x snap-mandatory px-[25%]"
-      >
+      <div className="flex-1 flex min-h-0 pb-8 overflow-hidden">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
@@ -207,22 +193,35 @@ export default function TasksPage() {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          {DISPLAY_ORDER.map((day, index) => {
-            const isToday = day === currentDayName;
-            const isPast = index < currentIndex;
-            
-            return (
-              <TaskColumn 
-                key={day} 
-                ref={isToday ? todayRef : null}
-                id={day} 
-                title={day} 
-                tasks={columns[day] || []} 
-                isToday={isToday}
-                isPast={isPast}
-              />
-            );
-          })}
+          {/* Hoje Fixo à Esquerda */}
+          <div className="w-80 shrink-0 pr-6 border-r border-white/5">
+            <TaskColumn 
+              id={currentDayName} 
+              title={currentDayName} 
+              tasks={columns[currentDayName] || []} 
+              isToday={true}
+            />
+          </div>
+
+          {/* Resto da Semana com Scroll */}
+          <div className="flex-1 flex gap-6 overflow-x-auto custom-scrollbar pl-6 items-start">
+            {otherDays.map((day) => {
+              const dayIndex = DISPLAY_ORDER.indexOf(day);
+              const currentIndex = DISPLAY_ORDER.indexOf(currentDayName);
+              const isPast = dayIndex < currentIndex;
+              
+              return (
+                <TaskColumn 
+                  key={day} 
+                  id={day} 
+                  title={day} 
+                  tasks={columns[day] || []} 
+                  isToday={false}
+                  isPast={isPast}
+                />
+              );
+            })}
+          </div>
 
           <DragOverlay dropAnimation={{
             sideEffects: defaultDropAnimationSideEffects({
