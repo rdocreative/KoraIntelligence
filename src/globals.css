@@ -13,16 +13,16 @@
   }
 
   :root {
-    --background: 240 10% 8%; /* #131316 */
+    --background: 0 0% 0%; /* #000000 */
     --foreground: 0 0% 100%;
     --primary: 199 89% 60%; /* #38BDF8 */
-    --surface: 240 8% 12%; /* #1C1C21 */
-    --border-ui: rgba(255, 255, 255, 0.06);
+    --surface: 0 0% 2%; /* Praticamente preto */
+    --border-ui: rgba(255, 255, 255, 0.04);
     --radius: 24px;
   }
 
   body {
-    background-color: #131316;
+    background-color: #000000;
     color: white;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -38,8 +38,4 @@
   .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
   .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
-  
-  .glow-primary {
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
-  }
 }

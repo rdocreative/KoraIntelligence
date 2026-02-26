@@ -32,8 +32,8 @@ const ProtectedRoute = () => {
 
   if (loading) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-[#131316]">
-        <div className="w-8 h-8 border-4 border-[#38BDF8] border-t-transparent rounded-[24px] animate-spin"></div>
+      <div className="h-screen w-full flex items-center justify-center bg-black">
+        <div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-[24px] animate-spin"></div>
       </div>
     );
   }
@@ -43,13 +43,13 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden text-white antialiased relative bg-[#131316]">
+    <div className="flex h-screen w-screen overflow-hidden text-white antialiased relative bg-black">
       <SideNav />
       <div className="flex-1 flex flex-col p-4 pl-0 z-10 min-w-0">
         <div 
-          className="flex-1 flex flex-col rounded-[24px] border overflow-hidden shadow-2xl relative min-h-0 w-full" 
+          className="flex-1 flex flex-col rounded-[24px] border overflow-hidden relative min-h-0 w-full" 
           style={{ 
-            background: 'radial-gradient(circle at bottom right, rgba(186, 230, 253, 0.08) 0%, #131316 65%)', 
+            backgroundColor: '#000000', 
             borderColor: 'rgba(255,255,255,0.06)' 
           }}
         >
@@ -68,7 +68,7 @@ const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-[#131316]"><div className="w-8 h-8 border-4 border-[#38BDF8] border-t-transparent rounded-[24px] animate-spin"></div></div>;
+     return <div className="h-screen w-full flex items-center justify-center bg-black"><div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-[24px] animate-spin"></div></div>;
   }
 
   if (session) {
@@ -93,7 +93,7 @@ const App = () => (
               <TooltipProvider>
                 <Sonner theme="dark" />
                 <BrowserRouter>
-                  <div className="h-screen w-screen text-white font-sans flex flex-col relative overflow-hidden bg-[#131316]">
+                  <div className="h-screen w-screen text-white font-sans flex flex-col relative overflow-hidden bg-black">
                     <Routes>
                       <Route element={<PublicRoute />}>
                         <Route path="/login" element={<Login />} />
