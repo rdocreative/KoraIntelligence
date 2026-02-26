@@ -3,49 +3,35 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
-  Home,
+  Home as HomeIcon,
   CheckCircle2,
-  BarChart3,
+  Activity,
   Target,
-  ShoppingBag,
-  Zap
+  Settings,
+  Plus
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const theme = {
-  primary: '#C4B5FD',
-  gradPrimary: 'linear-gradient(135deg, #C4B5FD 0%, #A855F7 100%)',
-  primaryGlow: '0 0 20px rgba(196, 181, 253, 0.25)',
-};
-
 const navItems = [
-  { name: 'Início', icon: Home, path: '/' },
-  { name: 'Hábitos', icon: CheckCircle2, path: '/habitos' },
-  { name: 'Dashboard', icon: BarChart3, path: '/dashboard' },
+  { name: 'Início', icon: HomeIcon, path: '/' },
+  { name: 'Tarefas', icon: CheckCircle2, path: '/tarefas' },
+  { name: 'Hábitos', icon: Activity, path: '/habitos' },
   { name: 'Missões', icon: Target, path: '/missoes' },
-  { name: 'Loja', icon: ShoppingBag, path: '/loja' },
+  { name: 'Configurações', icon: Settings, path: '/configuracoes' },
 ];
 
 export const SideNav = () => {
   const location = useLocation();
 
   return (
-    <div className="w-20 lg:w-64 h-screen flex flex-col p-6 relative z-20 transition-all duration-500 bg-transparent shrink-0">
-      {/* Logo */}
-      <div className="flex items-center gap-3 mb-12 px-2">
-        <div 
-          className="w-10 h-10 rounded-2xl flex items-center justify-center transition-transform hover:scale-110" 
-          style={{ 
-            background: theme.gradPrimary, 
-            boxShadow: theme.primaryGlow 
-          }}
-        >
-          <Zap size={20} color="#000" fill="#000" />
-        </div>
-        <span className="hidden lg:block text-2xl font-serif italic tracking-tighter text-[#F9FAFB]">Néctar</span>
+    <div className="w-64 h-full flex flex-col pt-12 pb-6 px-6 relative z-10 shrink-0 bg-transparent">
+      <div className="flex items-center justify-between mb-10">
+        <h1 className="text-3xl font-serif tracking-tight text-white">Néctar.</h1>
+        <button className="p-1.5 rounded-xl hover:bg-white/10 text-zinc-400 transition-colors border border-white/5">
+          <Plus size={18} />
+        </button>
       </div>
 
-      {/* Nav Items */}
       <nav className="flex-1 space-y-2">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
@@ -54,41 +40,26 @@ export const SideNav = () => {
               key={item.name}
               to={item.path}
               className={cn(
-                "w-full flex items-center gap-4 px-3 py-3 rounded-2xl transition-all duration-300 group",
-                isActive ? "bg-white/5 text-white" : "text-slate-500 hover:text-slate-300 hover:bg-white/[0.02]"
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all",
+                isActive 
+                  ? "bg-[#38BDF8]/10 text-white font-semibold shadow-sm border border-[#38BDF8]/20" 
+                  : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.02]"
               )}
             >
               <item.icon 
-                size={20} 
-                strokeWidth={isActive ? 2.5 : 1.5} 
-                style={{ color: isActive ? theme.primary : 'currentColor' }} 
+                size={18} 
+                strokeWidth={isActive ? 2 : 1.5} 
+                style={{ color: isActive ? '#38BDF8' : 'currentColor' }} 
               />
-              <span className="hidden lg:block text-sm font-semibold">{item.name}</span>
-              {isActive && (
-                <div 
-                  className="hidden lg:block ml-auto w-1.5 h-1.5 rounded-full" 
-                  style={{ backgroundColor: theme.primary, boxShadow: theme.primaryGlow }} 
-                />
-              )}
+              <span className="text-[13px]">{item.name}</span>
             </NavLink>
           );
         })}
       </nav>
-
-      {/* User Profile */}
-      <div className="mt-auto">
-        <NavLink 
-          to="/perfil"
-          className="p-2 lg:p-4 rounded-3xl bg-white/[0.03] border border-white/5 backdrop-blur-md hover:bg-white/[0.05] transition-colors cursor-pointer block"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 border border-white/10 shadow-lg" />
-            <div className="hidden lg:block flex-1 min-w-0">
-              <p className="text-xs font-black truncate uppercase tracking-widest text-[#F9FAFB]">Ricardo</p>
-              <p className="text-[10px] font-medium opacity-40 uppercase">Nível 42</p>
-            </div>
-          </div>
-        </NavLink>
+      
+      <div className="pt-4 mt-auto flex items-center gap-3 cursor-pointer border-t border-white/5">
+        <div className="w-8 h-8 rounded-xl flex items-center justify-center text-[10px] font-bold bg-[#38BDF8]/20 text-[#38BDF8]">RS</div>
+        <span className="text-xs font-semibold text-zinc-300 hover:text-white transition-colors">Ricardo S.</span>
       </div>
     </div>
   );

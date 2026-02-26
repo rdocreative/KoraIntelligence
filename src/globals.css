@@ -13,45 +13,32 @@
   }
 
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --primary: 262.1 83.3% 57.8%;
-    --primary-foreground: 210 40% 98%;
-    --radius: 1rem;
-    
-    /* Vivid & Glow Theme Variables */
-    --vivid-bg: #080809;
-    --vivid-surface: #121216;
-    --vivid-primary: #C4B5FD;
-    --vivid-secondary: #FB923C;
-    --vivid-accent: #F472B6;
-    --vivid-text: #F9FAFB;
-    --vivid-muted: #64748B;
-    --vivid-border: rgba(255, 255, 255, 0.04);
+    --background: 240 10% 8%; /* #131316 */
+    --foreground: 0 0% 100%;
+    --primary: 199 89% 60%; /* #38BDF8 */
+    --surface: 240 8% 12%; /* #1C1C21 */
+    --border-ui: rgba(255, 255, 255, 0.06);
   }
 
   body {
-    background-color: var(--vivid-bg);
-    color: var(--vivid-text);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #131316;
+    color: white;
+    font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
-    letter-spacing: -0.02em;
   }
 
   .font-serif {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Newsreader', serif;
   }
 }
 
 @layer utilities {
-  .vivid-glow-primary {
-    box-shadow: 0 0 20px rgba(196, 181, 253, 0.25);
-  }
-  .vivid-glow-accent {
-    box-shadow: 0 0 20px rgba(244, 114, 182, 0.2);
-  }
-  
   .custom-scrollbar::-webkit-scrollbar { width: 4px; }
   .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-  .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 10px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+  
+  .glow-primary {
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+  }
 }
