@@ -38,12 +38,6 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     Baixa: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
   };
 
-  const accentColors = {
-    Extrema: 'border-red-500/85',
-    Média: 'border-orange-500/85',
-    Baixa: 'border-sky-500/85',
-  };
-
   return (
     <div
       ref={setNodeRef}
@@ -55,21 +49,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
         isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
       )}
     >
-      {/* Destaque de prioridade sobrepondo a borda com mais intensidade */}
-      {task.priority && (
-        <div 
-          className={cn(
-            "absolute -bottom-[1px] -left-[1px] w-16 h-16 border-l-[2.5px] border-b-[2.5px] border-transparent rounded-bl-[20px] pointer-events-none z-20",
-            accentColors[task.priority]
-          )}
-          style={{ 
-            maskImage: 'linear-gradient(to top right, black 20%, transparent 70%)',
-            WebkitMaskImage: 'linear-gradient(to top right, black 20%, transparent 70%)'
-          }}
-        />
-      )}
-
-      <div className="flex items-start justify-between mb-3 relative z-10">
+      <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-lg">
             {task.icon || '📝'}
@@ -78,7 +58,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
         </div>
       </div>
 
-      <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.02] relative z-10">
+      <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.02]">
         <div className="flex items-center gap-3">
           {task.priority && (
             <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityColors[task.priority])}>
