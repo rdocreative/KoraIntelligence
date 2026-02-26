@@ -61,10 +61,6 @@ export default function TasksPage() {
     return WEEK_DAYS[new Date().getDay()];
   }, []);
 
-  const otherDays = useMemo(() => {
-    return DISPLAY_ORDER.filter(day => day !== currentDayName);
-  }, [currentDayName]);
-
   const findDay = (id: string) => {
     if (DISPLAY_ORDER.includes(id)) return id;
     if (id.includes(':')) return id.split(':')[0];
@@ -185,7 +181,7 @@ export default function TasksPage() {
         </div>
       </header>
 
-      <div className="flex-1 flex min-h-0 pb-8 overflow-hidden">
+      <div className="flex-1 flex min-h-0 pb-8 overflow-x-auto custom-scrollbar">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
@@ -193,30 +189,20 @@ export default function TasksPage() {
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          {/* Hoje Fixo à Esquerda */}
-          <div className="w-80 shrink-0 pr-6 border-r border-white/5">
-            <TaskColumn 
-              id={currentDayName} 
-              title={currentDayName} 
-              tasks={columns[currentDayName] || []} 
-              isToday={true}
-            />
-          </div>
-
-          {/* Resto da Semana com Scroll */}
-          <div className="flex-1 flex gap-6 overflow-x-auto custom-scrollbar pl-6 items-start">
-            {otherDays.map((day) => {
+          <div className="flex gap-6 items-start h-full">
+            {DISPLAY_ORDER.map((day) => {
+              const isToday = day === currentDayName;
               const dayIndex = DISPLAY_ORDER.indexOf(day);
               const currentIndex = DISPLAY_ORDER.indexOf(currentDayName);
               const isPast = dayIndex < currentIndex;
-              
+
               return (
                 <TaskColumn 
                   key={day} 
                   id={day} 
                   title={day} 
                   tasks={columns[day] || []} 
-                  isToday={false}
+                  isToday={isToday}
                   isPast={isPast}
                 />
               );
