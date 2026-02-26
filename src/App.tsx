@@ -32,7 +32,7 @@ const ProtectedRoute = () => {
 
   if (loading) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-[#080808]">
+      <div className="h-screen w-full flex items-center justify-center bg-[#191919]">
         <div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-[24px] animate-spin"></div>
       </div>
     );
@@ -43,13 +43,13 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden text-white antialiased relative bg-[#080808]">
+    <div className="flex h-screen w-screen overflow-hidden text-white antialiased relative bg-[#191919]">
       <SideNav />
       <div className="flex-1 flex flex-col p-4 pl-0 z-10 min-w-0">
         <div 
           className="flex-1 flex flex-col rounded-[24px] border overflow-hidden relative min-h-0 w-full" 
           style={{ 
-            backgroundColor: '#0a0a0a', 
+            backgroundColor: '#202020', 
             borderColor: 'rgba(255,255,255,0.06)' 
           }}
         >
@@ -68,7 +68,7 @@ const PublicRoute = () => {
   const { session, loading } = useAuth();
 
   if (loading) {
-     return <div className="h-screen w-full flex items-center justify-center bg-[#080808]"><div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-[24px] animate-spin"></div></div>;
+     return <div className="h-screen w-full flex items-center justify-center bg-[#191919]"><div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-[24px] animate-spin"></div></div>;
   }
 
   if (session) {
@@ -93,7 +93,7 @@ const App = () => (
               <TooltipProvider>
                 <Sonner theme="dark" />
                 <BrowserRouter>
-                  <div className="h-screen w-screen text-white font-sans flex flex-col relative overflow-hidden bg-[#080808]">
+                  <div className="h-screen w-screen text-white font-sans flex flex-col relative overflow-hidden bg-[#191919]">
                     <Routes>
                       <Route element={<PublicRoute />}>
                         <Route path="/login" element={<Login />} />
