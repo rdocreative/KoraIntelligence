@@ -20,8 +20,8 @@ const PERIODS = [
     label: 'Manhã', 
     time: '06:00 — 12:00',
     icon: Sun, 
-    color: '#F97316',
-    gradient: 'linear-gradient(180deg, rgba(249, 115, 22, 0.05) 0%, rgba(249, 115, 22, 0) 100%)',
+    color: '#FDBA74',
+    gradient: 'linear-gradient(180deg, rgba(253, 186, 116, 0.08) 0%, rgba(253, 186, 116, 0.01) 100%)',
     startHour: 6,
     endHour: 12
   },
@@ -30,8 +30,8 @@ const PERIODS = [
     label: 'Tarde', 
     time: '12:00 — 18:00',
     icon: Coffee, 
-    color: '#16A34A',
-    gradient: 'linear-gradient(180deg, rgba(22, 163, 74, 0.05) 0%, rgba(22, 163, 74, 0) 100%)',
+    color: '#4ADE80',
+    gradient: 'linear-gradient(180deg, rgba(74, 222, 128, 0.08) 0%, rgba(74, 222, 128, 0.01) 100%)',
     startHour: 12,
     endHour: 18
   },
@@ -40,8 +40,8 @@ const PERIODS = [
     label: 'Noite', 
     time: '18:00 — 00:00',
     icon: Moon, 
-    color: '#7C3AED',
-    gradient: 'linear-gradient(180deg, rgba(124, 58, 237, 0.05) 0%, rgba(124, 58, 237, 0) 100%)',
+    color: '#A78BFA',
+    gradient: 'linear-gradient(180deg, rgba(167, 139, 250, 0.08) 0%, rgba(167, 139, 250, 0.01) 100%)',
     startHour: 18,
     endHour: 24
   },
@@ -50,8 +50,8 @@ const PERIODS = [
     label: 'Madrugada', 
     time: '00:00 — 06:00',
     icon: CloudMoon, 
-    color: '#2563EB',
-    gradient: 'linear-gradient(180deg, rgba(37, 99, 235, 0.05) 0%, rgba(37, 99, 235, 0) 100%)',
+    color: '#818CF8',
+    gradient: 'linear-gradient(180deg, rgba(129, 140, 248, 0.08) 0%, rgba(129, 140, 248, 0.01) 100%)',
     startHour: 0,
     endHour: 6
   },
@@ -97,8 +97,8 @@ const PeriodContainer = ({
   }, [isToday, period]);
 
   const activeStyle = isActive && isToday ? {
-    borderColor: `${period.color}20`, 
-    background: `linear-gradient(180deg, ${period.color}05 0%, transparent 100%)`, 
+    borderColor: `${period.color}30`, 
+    background: `linear-gradient(180deg, ${period.color}0D 0%, transparent 100%)`, 
   } : {};
 
   return (
@@ -106,8 +106,9 @@ const PeriodContainer = ({
       ref={setNodeRef}
       className={cn(
         "relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 ease-in-out",
-        !isActive && !isOver ? "border-black/[0.03]" : "",
-        isOver ? "border-black/20 bg-black/5 scale-[1.01]" : ""
+        !isActive && !isOver ? "border-white/[0.03]" : "",
+        // Trocado azul por branco sutil no estado de drop
+        isOver ? "border-white/20 bg-white/5 scale-[1.01]" : ""
       )}
       style={{ 
         background: (!isActive || !isToday) && !isOver ? period.gradient : undefined,
@@ -130,13 +131,13 @@ const PeriodContainer = ({
             >
               {period.label}
             </span>
-            <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-tight opacity-70 mt-0.5">
+            <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight opacity-70 mt-0.5">
               {period.time}
             </span>
           </div>
         </div>
         {tasks.length > 0 && (
-          <span className="text-[9px] font-bold text-zinc-600 bg-black/5 px-2 py-0.5 rounded-full">
+          <span className="text-[9px] font-bold text-zinc-200 bg-white/10 px-2 py-0.5 rounded-full">
             {tasks.length}
           </span>
         )}
@@ -150,14 +151,14 @@ const PeriodContainer = ({
         </SortableContext>
         
         {tasks.length === 0 && !isOver && (
-           <div className="flex items-center justify-center py-4 opacity-[0.1]">
+           <div className="flex items-center justify-center py-4 opacity-[0.05]">
              <period.icon size={24} style={{ color: period.color }} />
            </div>
         )}
 
         {isOver && tasks.length === 0 && (
-          <div className="h-10 border-2 border-dashed border-black/10 rounded-[20px] flex items-center justify-center ml-8">
-             <span className="text-[8px] font-black text-zinc-500 uppercase tracking-tighter">Soltar</span>
+          <div className="h-10 border-2 border-dashed border-white/10 rounded-[20px] flex items-center justify-center ml-8">
+             <span className="text-[8px] font-black text-zinc-400 uppercase tracking-tighter">Soltar</span>
           </div>
         )}
       </div>
@@ -171,11 +172,12 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
       <div className="flex items-center justify-between mb-4 px-3">
         <div className="flex items-center gap-2">
           <h3 className={cn(
-            "text-sm font-serif italic font-bold tracking-tight text-zinc-800",
+            "text-sm font-serif italic font-bold tracking-tight text-zinc-200",
+            // Removido cor azul do título de "Hoje"
           )}>
             {title}
           </h3>
-          <span className="text-[10px] bg-black/5 px-2 py-0.5 rounded-full text-zinc-500 font-bold">
+          <span className="text-[10px] bg-white/10 px-2 py-0.5 rounded-full text-zinc-300 font-bold">
             {tasks.length}
           </span>
         </div>
@@ -183,7 +185,8 @@ export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
 
       <div
         className={cn(
-          "flex-1 relative flex flex-col gap-5 p-2 rounded-[28px] bg-black/[0.01] border border-black/[0.03] custom-scrollbar overflow-y-auto pb-10"
+          "flex-1 relative flex flex-col gap-5 p-2 rounded-[28px] bg-white/[0.01] border border-white/[0.03] custom-scrollbar overflow-y-auto pb-10"
+          // Removido background e borda azul aqui
         )}
       >
         {PERIODS.map((period) => (

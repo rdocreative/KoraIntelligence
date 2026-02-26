@@ -34,9 +34,9 @@ export const TaskCard = ({ task }: TaskCardProps) => {
   };
 
   const priorityColors = {
-    Extrema: 'bg-red-50 text-red-600 border-red-100',
-    Média: 'bg-orange-50 text-orange-600 border-orange-100',
-    Baixa: 'bg-sky-50 text-sky-600 border-sky-100',
+    Extrema: 'bg-red-500/20 text-red-400 border-red-500/30',
+    Média: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+    Baixa: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
   };
 
   return (
@@ -49,8 +49,8 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     >
       <div
         className={cn(
-          "group relative flex flex-col p-4 rounded-[20px] bg-white border border-black/[0.05] hover:border-black/10 shadow-sm transition-all cursor-grab active:cursor-grabbing overflow-hidden",
-          isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white"
+          "group relative flex flex-col p-4 rounded-[20px] bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all cursor-grab active:cursor-grabbing overflow-hidden",
+          isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
         )}
       >
         <div className="flex items-start justify-between mb-3">
@@ -58,11 +58,11 @@ export const TaskCard = ({ task }: TaskCardProps) => {
             <div className="w-6 h-6 flex items-center justify-center text-lg">
               {task.icon || '📝'}
             </div>
-            <h4 className="text-sm font-semibold text-zinc-900 line-clamp-1">{task.name}</h4>
+            <h4 className="text-sm font-semibold text-zinc-100 line-clamp-1">{task.name}</h4>
           </div>
         </div>
 
-        <div className="flex items-center justify-between mt-auto pt-2 border-t border-black/[0.04]">
+        <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.04]">
           <div className="flex items-center gap-3">
             {task.priority && (
               <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityColors[task.priority])}>
@@ -70,13 +70,13 @@ export const TaskCard = ({ task }: TaskCardProps) => {
               </span>
             )}
             {task.time && (
-              <div className="flex items-center gap-1 text-[10px] text-zinc-500 font-medium">
+              <div className="flex items-center gap-1 text-[10px] text-zinc-300 font-medium">
                 <Clock size={10} className="text-zinc-400" />
                 {task.time}
               </div>
             )}
           </div>
-          <Circle size={16} className="text-zinc-400 hover:text-zinc-800 transition-colors" />
+          <Circle size={16} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
         </div>
       </div>
     </div>

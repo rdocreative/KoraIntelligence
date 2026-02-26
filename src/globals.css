@@ -13,17 +13,17 @@
   }
 
   :root {
-    --background: 0 0% 98%; /* Quase branco */
-    --foreground: 0 0% 3%;   /* Quase preto */
-    --primary: 199 89% 48%;  /* Azul um pouco mais saturado para visibilidade */
-    --surface: 0 0% 100%;
-    --border-ui: rgba(0, 0, 0, 0.08);
+    --background: 0 0% 3%; /* #080808 */
+    --foreground: 0 0% 100%;
+    --primary: 199 89% 60%;
+    --surface: 0 0% 5%;
+    --border-ui: rgba(255, 255, 255, 0.04);
     --radius: 24px;
   }
 
   body {
-    background-color: #FAFAFA;
-    color: #080808;
+    background-color: #080808;
+    color: white;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
   }
@@ -36,6 +36,6 @@
 @layer utilities {
   .custom-scrollbar::-webkit-scrollbar { width: 4px; }
   .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-  .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.1); border-radius: 10px; }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.2); }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
 }
