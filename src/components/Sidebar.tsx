@@ -31,7 +31,7 @@ const Sidebar = () => {
       className={cn(
         "h-screen flex flex-col border-r border-white/5 transition-all duration-300 relative z-50",
         isCollapsed ? "w-20" : "w-64",
-        "bg-transparent"
+        "bg-[#0A0C10]"
       )}
     >
       <div className="p-6 flex items-center justify-between">
