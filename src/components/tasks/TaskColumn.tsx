@@ -89,13 +89,14 @@ const PeriodContainer = ({
     <div 
       ref={setNodeRef}
       className={cn(
-        "relative flex flex-col rounded-[24px] transition-all duration-300 ease-in-out",
+        "relative flex flex-col rounded-[24px] transition-all duration-300 ease-in-out border-none",
         isOver ? "bg-white/[0.05] scale-[1.01]" : "",
         isExpanded ? "p-4" : "p-3 hover:bg-white/[0.03] cursor-default"
       )}
       style={{ 
         background: period.background,
-        border: '1px solid rgba(255,255,255,0.04)'
+        border: '1px solid rgba(255,255,255,0.04)',
+        boxShadow: 'none'
       }}
     >
       <div className={cn("flex items-center justify-between transition-all", isExpanded ? "mb-4" : "mb-0")}>

@@ -30,6 +30,7 @@ import {
 import { cn } from '@/lib/utils';
 import { format, getWeek, addMonths, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { toast } from "sonner";
 
 const INITIAL_DATA: Record<string, any[]> = {
   'Segunda': [
@@ -150,7 +151,7 @@ export default function TasksPage() {
       const task = columns[day].find((t) => t.id === active.id);
       setActiveTask(task);
       setOriginalTaskState({ day, period: task.period });
-      setLastMovedTaskId(null); // Reseta qualquer aviso anterior
+      setLastMovedTaskId(null);
     }
   };
 
@@ -215,14 +216,42 @@ export default function TasksPage() {
       return;
     }
 
-    const activeDay = findDay(active.id as string);
-    const overDay = findDay(over.id as string);
+    const activeId = active.id as string;
+    const overId = over.id as string;
+    const activeDay = findDay(activeId);
+    const overDay = findDay(overId);
 
-    // Verifica se a tarefa realmente mudou de dia ou período em relação ao início do drag
+    // Ajuste automático de horário ao mudar de turno
     if (activeTask && originalTaskState) {
-      const currentPeriod = activeTask.period;
-      if (activeDay !== originalTaskState.day || currentPeriod !== originalTaskState.period) {
-        setLastMovedTaskId(activeTask.id);
+      const overPeriod = activeTask.period;
+      if (activeDay !== originalTaskState.day || overPeriod !== originalTaskState.period) {
+        const [hours] = (activeTask.time || "09:00").split(':').map(Number);
+        const periodBounds: Record<string, { start: number; end: number; default: string }> = {
+          Morning: { start: 6, end: 12, default: '09:00' },
+          Afternoon: { start: 12, end: 18, default: '15:00' },
+          Evening: { start: 18, end: 24, default: '21:00' },
+          Dawn: { start: 0, end: 6, default: '03:00' }
+        };
+
+        const bounds = periodBounds[overPeriod];
+        if (bounds) {
+          const isValid = hours >= bounds.start && hours < bounds.end;
+          if (!isValid) {
+            const newTime = bounds.default;
+            setColumns(prev => {
+              const updated = { ...prev };
+              const currentDay = findDay(activeId);
+              if (currentDay) {
+                updated[currentDay] = updated[currentDay].map(t => 
+                  t.id === activeId ? { ...t, time: newTime } : t
+                );
+              }
+              return updated;
+            });
+            toast.info(`Horário ajustado para ${newTime}`);
+          }
+        }
+        setLastMovedTaskId(activeId);
       }
     }
 
