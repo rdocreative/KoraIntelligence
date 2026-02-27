@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Clock, AlertCircle, Calendar, Tag, Repeat, Bell, AlignLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface CreateTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (task: any) => void;
-  selectedDay: string;
+  initialDate: Date;
 }
 
 const PRIORITIES = ['Baixa', 'Média', 'Extrema'] as const;
@@ -27,6 +29,8 @@ const REMINDER_OPTIONS = [
   { label: '1 hora antes', value: '60' }
 ];
 
+const WEEK_DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+
 const priorityStyles = {
   Baixa: {
     active: "bg-gradient-to-br from-sky-500/20 to-sky-500/5 border-sky-500/40 text-sky-400 shadow-[0_0_20px_rgba(14,165,233,0.1)]",
@@ -34,18 +38,18 @@ const priorityStyles = {
   },
   Média: {
     active: "bg-gradient-to-br from-orange-500/20 to-orange-500/5 border-orange-500/40 text-orange-400 shadow-[0_0_20px_rgba(249,115,22,0.1)]",
-    inactive: "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-orange-500/20 hover:text-orange-500/40"
+    inactive: "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-orange-500/20 hover:text-orange-400"
   },
   Extrema: {
     active: "bg-gradient-to-br from-red-500/20 to-red-500/5 border-red-500/40 text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.1)]",
-    inactive: "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-red-500/20 hover:text-red-500/40"
+    inactive: "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-red-500/20 hover:text-red-400"
   }
 };
 
-export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: CreateTaskModalProps) => {
+export const CreateTaskModal = ({ isOpen, onClose, onSave, initialDate }: CreateTaskModalProps) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(format(initialDate, 'yyyy-MM-dd'));
   const [category, setCategory] = useState('');
   const [repetition, setRepetition] = useState('Nunca');
   const [reminder, setReminder] = useState('0');
@@ -54,7 +58,16 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
   const [priority, setPriority] = useState<typeof PRIORITIES[number]>('Baixa');
   const [period, setPeriod] = useState('Morning');
 
+  // Atualiza a data no formulário quando a data selecionada na página muda
+  useEffect(() => {
+    if (isOpen) {
+      setDate(format(initialDate, 'yyyy-MM-dd'));
+    }
+  }, [isOpen, initialDate]);
+
   if (!isOpen) return null;
+
+  const currentDayName = WEEK_DAYS[new Date(date + 'T12:00:00').getDay()];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,7 +90,6 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
     // Reset form
     setName('');
     setDescription('');
-    setDate('');
     setCategory('');
     onClose();
   };
@@ -93,7 +105,9 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-xl font-serif font-medium text-white">Nova Tarefa</h2>
-            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Para {selectedDay}</p>
+            <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">
+              Para {currentDayName}
+            </p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full text-zinc-500 transition-colors">
             <X size={18} />
