@@ -284,38 +284,55 @@ export default function TasksPage() {
     <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0 relative">
       <header className="flex items-center justify-between py-6 shrink-0 px-8">
         <div className="flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <button onClick={handlePrevDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
-            <h2 className="text-4xl font-bold text-white tracking-tight">
-              {dateInfo.month} {viewMode === 'monthly' && dateInfo.year} <span className="text-zinc-600 font-sans text-xl ml-2">— {viewMode === 'monthly' ? 'Mês' : `Semana ${dateInfo.week}`}</span>
+          <div className="flex items-center gap-2">
+            <button onClick={handlePrevDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronLeft size={18} /></button>
+            <h2 className="flex items-baseline gap-2 text-white tracking-tight">
+              <span className="text-[22px] font-semibold">{dateInfo.month} {viewMode === 'monthly' && dateInfo.year}</span>
+              <span className="text-[12px] font-medium text-white/35 tracking-[0.1em] uppercase">
+                — {viewMode === 'monthly' ? 'Mês' : `Semana ${dateInfo.week}`}
+              </span>
             </h2>
-            <button onClick={handleNextDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronRight size={20} /></button>
+            <button onClick={handleNextDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronRight size={18} /></button>
           </div>
-          <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500/80 border border-white/5 px-2 py-0.5 rounded-md">
-            Tempo Real
-          </span>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center bg-white/5 rounded-2xl p-1 border border-white/5">
+          <div 
+            className="flex items-center p-1"
+            style={{ 
+              background: 'rgba(255, 255, 255, 0.04)', 
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '10px'
+            }}
+          >
             <button 
               onClick={() => setViewMode('weekly')}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all",
-                viewMode === 'weekly' ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+                "flex items-center gap-2 px-4 py-1.5 rounded-[8px] text-[12px] font-medium transition-all",
+                viewMode === 'weekly' 
+                  ? "text-white" 
+                  : "text-white/35 hover:text-zinc-300"
               )}
+              style={{
+                background: viewMode === 'weekly' ? 'rgba(255, 255, 255, 0.08)' : 'transparent'
+              }}
             >
-              <LayoutGrid size={16} />
+              <LayoutGrid size={14} />
               <span>Semanal</span>
             </button>
             <button 
               onClick={() => setViewMode('monthly')}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all",
-                viewMode === 'monthly' ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+                "flex items-center gap-2 px-4 py-1.5 rounded-[8px] text-[12px] font-medium transition-all",
+                viewMode === 'monthly' 
+                  ? "text-white" 
+                  : "text-white/35 hover:text-zinc-300"
               )}
+              style={{
+                background: viewMode === 'monthly' ? 'rgba(255, 255, 255, 0.08)' : 'transparent'
+              }}
             >
-              <CalendarDays size={16} />
+              <CalendarDays size={14} />
               <span>Mensal</span>
             </button>
           </div>
