@@ -53,6 +53,7 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.3 : 1,
+    touchAction: 'none', // Impede o scroll do navegador durante o toque/arrasto
   };
 
   const priorityColors = {
@@ -79,6 +80,7 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
       style={style}
       {...attributes}
       {...listeners}
+      data-draggable="true" // Permite que o container pai ignore o scroll horizontal ao clicar aqui
       className="relative group/card"
     >
       <div
