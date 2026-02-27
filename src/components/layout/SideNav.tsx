@@ -28,25 +28,31 @@ export const SideNav = () => {
 
   return (
     <>
-      {/* Botão Flutuante (Visível apenas quando fechado) */}
+      {/* Botão Flutuante Discreto (Aparece suavemente quando a sidebar some) */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed left-0 top-8 z-50 p-2 bg-[#070707] border border-l-0 border-white/10 rounded-r-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-all animate-in slide-in-from-left-full duration-300"
+          className="fixed left-0 top-8 z-50 p-2 bg-[#070707] border border-l-0 border-white/10 rounded-r-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-all animate-in fade-in slide-in-from-left duration-500"
           title="Abrir Menu"
         >
           <PanelLeftOpen size={20} />
         </button>
       )}
 
-      {/* Container da SideNav */}
+      {/* Container Principal da SideNav com transição de largura */}
       <div 
         className={cn(
-          "h-full flex flex-col relative z-30 shrink-0 bg-[#070707] transition-all duration-300 ease-in-out border-none outline-none overflow-hidden",
-          isOpen ? "w-[260px] pt-8 pb-6 px-6" : "w-0 p-0"
+          "h-full flex flex-col relative z-30 shrink-0 bg-[#070707] transition-all duration-500 ease-in-out border-none outline-none overflow-hidden",
+          isOpen ? "w-[260px]" : "w-0"
         )}
       >
-        <div className="flex flex-col h-full min-w-[212px]">
+        {/* Wrapper Interno que faz o efeito de Deslizar (Translate) */}
+        <div 
+          className={cn(
+            "flex flex-col h-full min-w-[260px] p-8 pt-8 pb-6 transition-all duration-500 ease-in-out",
+            isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
+          )}
+        >
           {/* Header */}
           <div className="flex items-center justify-between mb-10">
             <h1 className="text-3xl font-serif font-medium tracking-tight text-white">
