@@ -14,7 +14,6 @@ interface TaskColumnProps {
   isToday?: boolean;
   lastMovedTaskId?: string | null;
   onUpdateTaskTime?: (taskId: string, newTime: string) => void;
-  onUpdateTask?: (taskId: string, updates: any) => void;
 }
 
 const PERIODS = [
@@ -70,8 +69,7 @@ const PeriodContainer = ({
   tasks,
   isToday,
   lastMovedTaskId,
-  onUpdateTaskTime,
-  onUpdateTask
+  onUpdateTaskTime
 }: { 
   dayId: string; 
   period: typeof PERIODS[0]; 
@@ -79,7 +77,6 @@ const PeriodContainer = ({
   isToday?: boolean;
   lastMovedTaskId?: string | null;
   onUpdateTaskTime?: (taskId: string, newTime: string) => void;
-  onUpdateTask?: (taskId: string, updates: any) => void;
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `${dayId}:${period.id}`,
@@ -94,7 +91,7 @@ const PeriodContainer = ({
       className={cn(
         "relative flex flex-col rounded-[24px] transition-all duration-300 ease-in-out border-none",
         isOver ? "bg-white/[0.05] scale-[1.01]" : "",
-        isExpanded ? "p-4" : "p-3 hover:bg-white/[0.03] cursor-default"
+        isExpanded ? "p-3" : "p-3 hover:bg-white/[0.03] cursor-default"
       )}
       style={{ 
         background: period.background,
@@ -111,7 +108,7 @@ const PeriodContainer = ({
           <div className="flex flex-col">
             <span 
               className={cn("font-black uppercase tracking-widest leading-none", isExpanded ? "text-[11px]" : "text-[10px]")}
-              style={{ color: period.color }}
+              style={{ color: period.color, opacity: 0.9 }}
             >
               {period.label}
             </span>
@@ -140,7 +137,6 @@ const PeriodContainer = ({
               task={{ ...task, period: period.id }} 
               isAwaitingTime={lastMovedTaskId === task.id}
               onUpdateTime={(newTime) => onUpdateTaskTime?.(task.id, newTime)}
-              onUpdateTask={onUpdateTask}
               defaultPeriodTime={period.defaultTime}
             />
           ))}
@@ -156,7 +152,7 @@ const PeriodContainer = ({
   );
 };
 
-export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday, lastMovedTaskId, onUpdateTaskTime, onUpdateTask }, ref) => {
+export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday, lastMovedTaskId, onUpdateTaskTime }, ref) => {
   return (
     <div 
       ref={ref} 
@@ -167,7 +163,7 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
         <div className="flex items-center gap-3">
           <h3 className={cn(
             "text-lg font-serif font-medium tracking-tight",
-            isToday ? "text-[#6366f1]" : "text-zinc-100"
+            isToday ? "text-[#6366f1]" : "text-white/70"
           )}>
             {title}
           </h3>
@@ -196,7 +192,6 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
             isToday={isToday}
             lastMovedTaskId={lastMovedTaskId}
             onUpdateTaskTime={onUpdateTaskTime}
-            onUpdateTask={onUpdateTask}
           />
         ))}
       </div>
