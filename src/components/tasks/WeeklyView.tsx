@@ -16,7 +16,7 @@ interface Task {
   name: string;
   time: string;
   priority: 'Extrema' | 'Média' | 'Baixa';
-  period: 'Morning' | 'Afternoon' | 'Evening' | 'LateNight';
+  period: 'Morning' | 'Afternoon' | 'Evening' | 'Dawn' | 'LateNight';
   icon: string;
 }
 
@@ -41,17 +41,19 @@ const WEEK_DAYS_MAP: Record<number, string> = {
   6: 'Sábado'
 };
 
-const getTaskGradient = (period: string) => {
+const getTaskBackground = (period: string) => {
   switch (period) {
     case 'Morning':
-      return "from-orange-500/12 to-transparent";
+      return 'linear-gradient(180deg, rgba(251,146,60,0.12) 0%, rgba(251,146,60,0.02) 100%)';
     case 'Afternoon':
-      return "from-emerald-500/12 to-transparent";
+      return 'linear-gradient(180deg, rgba(74,222,128,0.12) 0%, rgba(74,222,128,0.02) 100%)';
     case 'Evening':
-      return "from-indigo-500/12 to-transparent";
+      return 'linear-gradient(180deg, rgba(129,140,248,0.12) 0%, rgba(129,140,248,0.02) 100%)';
+    case 'Dawn':
     case 'LateNight':
+      return 'linear-gradient(180deg, rgba(96,165,250,0.12) 0%, rgba(96,165,250,0.02) 100%)';
     default:
-      return "from-blue-600/12 to-transparent";
+      return 'rgba(255,255,255,0.03)';
   }
 };
 
@@ -142,10 +144,8 @@ export const WeeklyView = ({ tasksData, currentDate }: WeeklyViewProps) => {
                           {periodTasks.map((task) => (
                             <div 
                               key={task.id}
-                              className={cn(
-                                "p-3 rounded-2xl flex flex-col gap-2 transition-all hover:scale-[1.02] cursor-grab active:cursor-grabbing bg-gradient-to-b",
-                                getTaskGradient(task.period)
-                              )}
+                              style={{ background: getTaskBackground(task.period) }}
+                              className="p-3 rounded-2xl flex flex-col gap-2 transition-all hover:scale-[1.02] cursor-grab active:cursor-grabbing border-none"
                             >
                               <div className="flex items-center justify-between">
                                 <span className="text-base filter drop-shadow-sm">{task.icon}</span>
