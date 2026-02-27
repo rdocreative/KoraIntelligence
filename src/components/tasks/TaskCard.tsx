@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Circle, Clock, Check } from 'lucide-react';
@@ -22,7 +22,6 @@ interface TaskCardProps {
 
 export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime }: TaskCardProps) => {
   const [tempTime, setTempTime] = useState(task.time || defaultPeriodTime || '09:00');
-  const [isPaused, setIsPaused] = useState(false);
 
   const {
     attributes,
@@ -35,15 +34,6 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
     id: task.id,
     disabled: isAwaitingTime 
   });
-
-  useEffect(() => {
-    if (isAwaitingTime && !isPaused) {
-      const timer = setTimeout(() => {
-        onUpdateTime?.(tempTime);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [isAwaitingTime, isPaused, tempTime, onUpdateTime]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -106,12 +96,10 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
           <Circle size={16} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
         </div>
 
-        {/* Time Adjust Overlay */}
+        {/* Time Adjust Overlay - Now stays until confirmed */}
         {isAwaitingTime && (
           <div 
             className="absolute inset-0 bg-[#0C0C0C]/95 backdrop-blur-md z-20 flex flex-col p-4 animate-in fade-in zoom-in-95 duration-200 rounded-[20px]"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
             onPointerDown={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-2 mb-3">
@@ -132,17 +120,6 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
               >
                 <Check size={18} strokeWidth={3} />
               </button>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5 overflow-hidden">
-              <div 
-                className={cn("h-full bg-[#38BDF8]/40 origin-left")} 
-                style={{ 
-                  width: '100%', 
-                  animation: isPaused ? 'none' : 'shrink-width 5s linear forwards' 
-                }} 
-              />
             </div>
           </div>
         )}
