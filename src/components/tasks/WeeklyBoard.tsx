@@ -68,27 +68,33 @@ export const WeeklyBoard = () => {
     const activeId = active.id as string;
     const overId = over.id as string;
 
-    // Format of overId is "dateString:periodId" from TaskColumn
+    // overId format: "yyyy-MM-dd:PeriodID"
+    // Using a safe split since date format is controlled
     const [dateStr, periodId] = overId.split(':');
     
-    if (dateStr && periodId) {
+    // Find the actual Date object corresponding to this string to maintain consistency
+    const targetDay = weekDays.find(d => format(d, 'yyyy-MM-dd') === dateStr);
+
+    if (targetDay && periodId) {
       setTasks(prev => {
         return prev.map(t => {
           if (t.id === activeId) {
-            // Find the target period to get default time
+            // Find the target period definition
             const targetPeriod = PERIODS.find(p => p.id === periodId);
             const [hours] = t.time.split(':').map(Number);
             let newTime = t.time;
             
-            // Check if current time is strictly within the new period's bounds
+            // STRICT VALIDATION: Check if current time fits into the new period
             let isValid = false;
             if (targetPeriod) {
+               // Handle the "Dawn" case (00-06) specifically or use generic range
+               // Since our ranges are contiguous:
                if (hours >= targetPeriod.start && hours < targetPeriod.end) {
                  isValid = true;
                }
             }
 
-            // If time doesn't fit in new period, FORCE update to default time
+            // If time is INVALID for the new period, FORCE update to default time
             if (!isValid && targetPeriod) {
                newTime = targetPeriod.default;
             }
@@ -96,7 +102,7 @@ export const WeeklyBoard = () => {
             return {
               ...t,
               period: periodId,
-              date: new Date(dateStr),
+              date: targetDay,
               time: newTime
             };
           }
@@ -113,7 +119,6 @@ export const WeeklyBoard = () => {
     setTasks(prev => prev.map(t => {
       if (t.id === taskId) {
         // Automatically determine the correct period based on the new time
-        // This forces the task to move to the correct column immediately
         const newPeriod = getPeriodFromTime(newTime);
         return { ...t, time: newTime, period: newPeriod };
       }
@@ -131,13 +136,14 @@ export const WeeklyBoard = () => {
             onDragEnd={handleDragEnd}
           >
             {weekDays.map(day => {
-              const dateStr = day.toISOString();
+              // Use a simplified date string for the ID to avoid colon conflicts in split()
+              const dateId = format(day, 'yyyy-MM-dd');
               const dayTasks = tasks.filter(t => isSameDay(t.date, day));
               
               return (
                 <TaskColumn
                   key={day.toISOString()}
-                  id={dateStr}
+                  id={dateId}
                   title={format(day, 'EEEE', { locale: ptBR })}
                   tasks={dayTasks}
                   isToday={isSameDay(day, new Date())}
