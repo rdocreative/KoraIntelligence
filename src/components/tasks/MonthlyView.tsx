@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   format, 
   startOfMonth, 
@@ -20,8 +20,6 @@ import { cn } from '@/lib/utils';
 interface MonthlyViewProps {
   tasksData: Record<string, any[]>;
   currentDate: Date;
-  selectedDate: Date;
-  onSelectDate: (date: Date) => void;
 }
 
 const WEEK_DAYS_MAP: Record<number, string> = {
@@ -80,7 +78,9 @@ const getPriorityDot = (priority: string) => {
   }
 };
 
-export const MonthlyView = ({ tasksData, currentDate, selectedDate, onSelectDate }: MonthlyViewProps) => {
+export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
   const startDate = startOfWeek(monthStart);
@@ -120,7 +120,7 @@ export const MonthlyView = ({ tasksData, currentDate, selectedDate, onSelectDate
             return (
               <div
                 key={idx}
-                onClick={() => onSelectDate(day)}
+                onClick={() => setSelectedDate(day)}
                 className={cn(
                   "min-h-0 h-full p-2 rounded-[18px] border transition-all cursor-pointer group flex flex-col relative",
                   !isCurrentMonth ? "bg-transparent border-transparent opacity-5 pointer-events-none" : 

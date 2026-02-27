@@ -29,7 +29,7 @@ import {
   LayoutGrid
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { format, getWeek, addMonths, subMonths, getDay } from "date-fns";
+import { format, getWeek, addMonths, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 const INITIAL_DATA: Record<string, any[]> = {
@@ -61,7 +61,6 @@ export default function TasksPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly');
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -74,8 +73,8 @@ export default function TasksPage() {
   );
 
   const currentDayName = useMemo(() => {
-    return WEEK_DAYS[getDay(selectedDate)];
-  }, [selectedDate]);
+    return WEEK_DAYS[new Date().getDay()];
+  }, []);
 
   const dateInfo = useMemo(() => {
     const month = format(currentDate, "MMMM", { locale: ptBR });
@@ -91,8 +90,7 @@ export default function TasksPage() {
     if (viewMode === 'weekly') {
       const timer = setTimeout(() => {
         if (scrollRef.current) {
-          const todayName = WEEK_DAYS[new Date().getDay()];
-          const todayElement = scrollRef.current.querySelector(`[data-day="${todayName}"]`) as HTMLElement;
+          const todayElement = scrollRef.current.querySelector(`[data-day="${currentDayName}"]`) as HTMLElement;
           if (todayElement) {
             const containerWidth = scrollRef.current.clientWidth;
             const elementWidth = todayElement.clientWidth;
@@ -108,7 +106,7 @@ export default function TasksPage() {
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [viewMode]);
+  }, [currentDayName, viewMode]);
 
   const handleNextDate = () => {
     setCurrentDate(prev => viewMode === 'monthly' ? addMonths(prev, 1) : prev);
@@ -119,31 +117,10 @@ export default function TasksPage() {
   };
 
   const handleAddTask = (newTask: any) => {
-    let dayToAdd = currentDayName;
-    
-    // Se a tarefa tem uma data específica no formulário, usamos ela para determinar a coluna
-    if (newTask.date) {
-      const dateParts = newTask.date.split('-');
-      const dateObj = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
-      if (!isNaN(dateObj.getTime())) {
-        dayToAdd = WEEK_DAYS[dateObj.getDay()];
-      }
-    }
-
-    setColumns(prev => {
-      const currentTasks = [...(prev[dayToAdd] || [])];
-      // Adiciona a tarefa e ordena por horário
-      const updatedTasks = [...currentTasks, newTask].sort((a, b) => {
-        if (!a.time) return 1;
-        if (!b.time) return -1;
-        return a.time.localeCompare(b.time);
-      });
-
-      return {
-        ...prev,
-        [dayToAdd]: updatedTasks
-      };
-    });
+    setColumns(prev => ({
+      ...prev,
+      [currentDayName]: [...(prev[currentDayName] || []), newTask]
+    }));
   };
 
   const findDay = (id: string) => {
@@ -326,8 +303,7 @@ export default function TasksPage() {
             >
               <div className="flex gap-5 items-start h-full pr-10">
                 {DISPLAY_ORDER.map((day) => {
-                  const todayName = WEEK_DAYS[new Date().getDay()];
-                  const isToday = day === todayName;
+                  const isToday = day === currentDayName;
 
                   return (
                     <TaskColumn 
@@ -354,8 +330,6 @@ export default function TasksPage() {
           <MonthlyView 
             tasksData={columns} 
             currentDate={currentDate}
-            selectedDate={selectedDate}
-            onSelectDate={setSelectedDate}
           />
         )}
       </div>
@@ -372,7 +346,7 @@ export default function TasksPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleAddTask}
-        initialDate={selectedDate}
+        selectedDay={currentDayName}
       />
     </div>
   );
