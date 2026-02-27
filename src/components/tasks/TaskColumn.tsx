@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, forwardRef } from 'react';
+import React, { useState, useEffect, forwardRef, useRef } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TaskCard } from './TaskCard';
-import { Sun, Moon, Coffee, CloudMoon } from 'lucide-react';
+import { Sun, Moon, Coffee, CloudMoon, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TaskColumnProps {
@@ -73,6 +73,17 @@ const PeriodContainer = ({
   });
 
   const [isActive, setIsActive] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+  const prevIsOver = useRef(isOver);
+
+  useEffect(() => {
+    if (prevIsOver.current === true && isOver === false) {
+      setShowWarning(true);
+      const timer = setTimeout(() => setShowWarning(false), 4000);
+      return () => clearTimeout(timer);
+    }
+    prevIsOver.current = isOver;
+  }, [isOver]);
 
   useEffect(() => {
     if (!isToday) {
@@ -96,7 +107,6 @@ const PeriodContainer = ({
     return () => clearInterval(interval);
   }, [isToday, period]);
 
-  // Active state now focuses on background intensity rather than border color
   const activeStyle = isActive && isToday ? {
     background: `linear-gradient(180deg, ${period.color}15 0%, rgba(0,0,0,0) 100%)`, 
   } : {
@@ -108,11 +118,20 @@ const PeriodContainer = ({
       ref={setNodeRef}
       className={cn(
         "relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 ease-in-out",
-        "border-white/[0.03]", // Subtle neutral border
+        "border-white/[0.03]",
         isOver ? "bg-white/[0.05] border-white/10 scale-[1.01]" : ""
       )}
       style={activeStyle}
     >
+      {showWarning && (
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 px-3 py-1.5 bg-[#0C0C0C]/90 backdrop-blur-md border border-white/10 rounded-full shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300 pointer-events-none">
+          <Clock size={12} className="text-yellow-400" />
+          <span className="text-[9px] text-white font-medium whitespace-nowrap">
+            Lembre de atualizar o horário da tarefa para este período
+          </span>
+        </div>
+      )}
+
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center z-10">
