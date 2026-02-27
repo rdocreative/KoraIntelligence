@@ -325,7 +325,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
             </h3>
           </div>
 
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-5 pb-20 space-y-4 min-h-0 max-h-[580px]">
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-5 pb-32 space-y-4 min-h-0 max-h-[620px]">
             {sideTasks.length > 0 ? (
               sideTasks.map((task, idx) => {
                 const period = getPeriodInfo(task.period);
@@ -335,8 +335,8 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   <div 
                     key={`${task.id}-${idx}`}
                     className={cn(
-                      "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-gradient-to-br bg-zinc-900/40 shrink-0",
-                      "min-h-[120px]", 
+                      "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-zinc-900/40 shrink-0",
+                      "min-h-[115px]", 
                       getPeriodGradient(task.period)
                     )}
                   >
@@ -388,7 +388,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
           </div>
 
           {/* Gradiente Inferior para suavizar o scroll */}
-          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent pointer-events-none z-20 rounded-b-[28px]" />
+          <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-transparent pointer-events-none z-20 rounded-b-[28px]" />
         </div>
       </div>
     </div>
