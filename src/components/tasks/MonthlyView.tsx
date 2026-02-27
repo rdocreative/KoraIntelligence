@@ -101,6 +101,7 @@ type ViewMode = 'day' | 'week' | 'month';
 export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [expandedDate, setExpandedDate] = useState<Date | null>(null);
+  const [popoverPos, setPopoverPos] = useState<{ top: number, left: number, width: number } | null>(null);
   const [activePriorities, setActivePriorities] = useState<string[]>([]);
   const [activeWeekDays, setActiveWeekDays] = useState<number[]>([]);
   const [sideViewMode, setSideViewMode] = useState<ViewMode>('day');
@@ -163,6 +164,16 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
       (PRIORITY_WEIGHT[a.priority] || 99) - (PRIORITY_WEIGHT[b.priority] || 99)
     );
   }, [sideViewMode, selectedDate, currentDate, activePriorities, activeWeekDays, tasksData]);
+
+  const handleOpenPopover = (e: React.MouseEvent, day: Date) => {
+    const rect = (e.currentTarget.closest('.calendar-cell') as HTMLElement).getBoundingClientRect();
+    setPopoverPos({
+      top: rect.top,
+      left: rect.left,
+      width: rect.width
+    });
+    setExpandedDate(day);
+  };
 
   return (
     <div className="flex h-full w-full max-h-screen animate-in fade-in duration-700 overflow-hidden px-6 relative">
@@ -234,7 +245,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
           ))}
         </div>
 
-        <div className="grid grid-cols-7 gap-2 pb-6 overflow-y-auto custom-scrollbar pr-1">
+        <div className="grid grid-cols-7 gap-2 pb-6 overflow-y-auto custom-scrollbar pr-1 relative">
           {calendarDays.map((day, idx) => {
             const tasks = getFilteredTasksForDate(day);
             const isSelected = isSameDay(day, selectedDate);
@@ -246,7 +257,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                 key={idx}
                 onClick={() => setSelectedDate(day)}
                 className={cn(
-                  "min-h-[170px] p-2.5 rounded-[22px] border transition-all cursor-pointer group flex flex-col relative",
+                  "calendar-cell min-h-[170px] p-2.5 rounded-[22px] border transition-all cursor-pointer group flex flex-col relative",
                   !isCurrentMonth ? "bg-transparent border-transparent opacity-5 pointer-events-none" : 
                   isSelected ? "bg-white/[0.06] border-white/20 shadow-lg" : "bg-white/[0.02] border-white/5 hover:border-white/10",
                   isDateToday && !isSelected && "border-[#38BDF8]/40"
@@ -281,7 +292,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
-                        setExpandedDate(day);
+                        handleOpenPopover(e, day);
                       }}
                       className="w-full text-left text-[8px] font-black text-zinc-500 pl-1 hover:text-[#38BDF8] transition-colors mt-0.5"
                     >
@@ -399,52 +410,55 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
         </div>
       </div>
 
-      {/* Popover Detalhado de Tarefas */}
+      {/* Popover Detalhado de Tarefas (Posicionado sobre o Dia) */}
       <AnimatePresence>
-        {expandedDate && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setExpandedDate(null)}>
+        {expandedDate && popoverPos && (
+          <div 
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-[2px]" 
+            onClick={() => { setExpandedDate(null); setPopoverPos(null); }}
+          >
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0, scale: 0.95, y: -10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              exit={{ opacity: 0, scale: 0.95, y: -10 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-[340px] bg-zinc-900 border border-white/10 rounded-[40px] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
+              style={{ 
+                position: 'fixed',
+                top: popoverPos.top - 20, 
+                left: popoverPos.left,
+                width: popoverPos.width,
+              }}
+              className="bg-zinc-900 border border-white/20 rounded-[28px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col z-[101] min-h-[170px]"
             >
-              <div className="p-8 pb-4 flex flex-col items-center relative">
-                <button 
-                  onClick={() => setExpandedDate(null)}
-                  className="absolute right-6 top-6 p-2 rounded-full hover:bg-white/5 transition-colors text-zinc-500"
-                >
-                  <X size={20} />
-                </button>
-                
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 mb-2">
-                  {format(expandedDate, 'EEE.', { locale: ptBR })}
+              <div className="p-4 pb-2 flex items-center justify-between border-b border-white/5">
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#38BDF8]">
+                  {format(expandedDate, 'd MMM', { locale: ptBR })}
                 </span>
-                <h2 className="text-6xl font-serif text-white">
-                  {format(expandedDate, 'd')}
-                </h2>
+                <button 
+                  onClick={() => { setExpandedDate(null); setPopoverPos(null); }}
+                  className="p-1 rounded-full hover:bg-white/5 text-zinc-500 transition-colors"
+                >
+                  <X size={12} />
+                </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto custom-scrollbar px-6 pb-8 pt-2 space-y-2">
+              <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1.5 max-h-[300px]">
                 {getFilteredTasksForDate(expandedDate).map((task) => (
                   <div 
                     key={task.id}
-                    className="flex items-center gap-3 p-3 rounded-2xl hover:bg-white/[0.03] transition-colors group"
+                    className={cn(
+                      "px-2 py-1.5 rounded-xl border flex items-center gap-2 transition-all group",
+                      getPriorityStyles(task.priority)
+                    )}
                   >
-                    <div className={cn(
-                      "w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_10px_rgba(0,0,0,0.5)]",
-                      getPriorityDot(task.priority)
-                    )} />
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-2">
-                         <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-tight">
-                          {task.time}
-                        </span>
-                        <h4 className="text-[14px] font-medium text-white group-hover:text-[#38BDF8] transition-colors">
-                          {task.name}
-                        </h4>
-                      </div>
+                    <div className={cn("w-1.5 h-1.5 rounded-full shrink-0", getPriorityDot(task.priority))} />
+                    <div className="flex flex-col min-w-0">
+                      <h4 className="text-[10px] font-bold text-white truncate leading-tight">
+                        {task.name}
+                      </h4>
+                      <span className="text-[8px] text-zinc-400 font-medium">
+                        {task.time}
+                      </span>
                     </div>
                   </div>
                 ))}
