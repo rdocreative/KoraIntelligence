@@ -46,7 +46,7 @@ const ProtectedRoute = () => {
     <div className="flex h-screen w-full text-white antialiased bg-[#12141A] overflow-hidden border-none outline-none ring-0 p-[10px]">
       <SideNav />
       <div 
-        className="flex-1 flex flex-col relative min-h-0 w-full overflow-hidden border border-l-0 border-white/10" 
+        className="flex-1 flex flex-col relative min-h-0 w-full overflow-hidden border border-white/10" 
         style={{ 
           background: 'radial-gradient(ellipse 80% 60% at 60% 0%, rgba(99,102,241,0.06) 0%, transparent 60%), #0A0C10',
           borderRadius: '20px 10px 10px 20px'
