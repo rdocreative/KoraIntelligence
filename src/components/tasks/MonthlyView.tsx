@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   format, 
   startOfMonth, 
@@ -14,7 +14,7 @@ import {
   getDay
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Clock, X, Hash, Sun, Coffee, Moon } from 'lucide-react';
+import { Clock, X, Hash, Sun, Coffee, Moon, Filter, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MonthlyViewProps {
@@ -31,6 +31,17 @@ const WEEK_DAYS_MAP: Record<number, string> = {
   5: 'Sexta',
   6: 'Sábado'
 };
+
+const PRIORITIES = ['Extrema', 'Média', 'Baixa'];
+const WEEK_DAYS_SHORT = [
+  { label: 'D', value: 0 },
+  { label: 'S', value: 1 },
+  { label: 'T', value: 2 },
+  { label: 'Q', value: 3 },
+  { label: 'Q', value: 4 },
+  { label: 'S', value: 5 },
+  { label: 'S', value: 6 }
+];
 
 const getPriorityStyles = (priority: string) => {
   switch (priority) {
@@ -80,6 +91,8 @@ const getPriorityDot = (priority: string) => {
 
 export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [activePriorities, setActivePriorities] = useState<string[]>([]);
+  const [activeWeekDays, setActiveWeekDays] = useState<number[]>([]);
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
@@ -91,17 +104,94 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
     end: endDate,
   });
 
-  const getTasksForDate = (date: Date) => {
-    const dayName = WEEK_DAYS_MAP[getDay(date)];
-    return tasksData[dayName] || [];
+  const togglePriority = (p: string) => {
+    setActivePriorities(prev => 
+      prev.includes(p) ? prev.filter(item => item !== p) : [...prev, p]
+    );
   };
 
-  const selectedDayTasks = getTasksForDate(selectedDate);
+  const toggleWeekDay = (d: number) => {
+    setActiveWeekDays(prev => 
+      prev.includes(d) ? prev.filter(item => item !== d) : [...prev, d]
+    );
+  };
+
+  const getFilteredTasksForDate = (date: Date) => {
+    const dayOfWeek = getDay(date);
+    const dayName = WEEK_DAYS_MAP[dayOfWeek];
+    const allTasks = tasksData[dayName] || [];
+
+    return allTasks.filter(task => {
+      const matchesPriority = activePriorities.length === 0 || activePriorities.includes(task.priority);
+      const matchesDay = activeWeekDays.length === 0 || activeWeekDays.includes(dayOfWeek);
+      return matchesPriority && matchesDay;
+    });
+  };
+
+  const selectedDayTasks = getFilteredTasksForDate(selectedDate);
 
   return (
     <div className="flex h-full w-full animate-in fade-in duration-700 overflow-hidden bg-[#080808] px-6">
       {/* Grid Principal do Calendário */}
       <div className="flex-1 flex flex-col min-w-0 pr-4">
+        {/* Barra de Filtros Minimalista */}
+        <div className="flex items-center gap-6 mb-6 px-2">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-white/5 rounded-lg">
+              <Filter size={14} className="text-zinc-500" />
+            </div>
+            <div className="flex gap-1.5">
+              {PRIORITIES.map(p => (
+                <button
+                  key={p}
+                  onClick={() => togglePriority(p)}
+                  className={cn(
+                    "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all",
+                    activePriorities.includes(p)
+                      ? p === 'Extrema' ? "bg-red-500/20 border-red-500/40 text-red-400" :
+                        p === 'Média' ? "bg-amber-500/20 border-amber-500/40 text-amber-400" :
+                        "bg-blue-500/20 border-blue-500/40 text-blue-400"
+                      : "bg-white/[0.02] border-white/5 text-zinc-500 hover:text-zinc-300"
+                  )}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="h-4 w-px bg-white/10" />
+
+          <div className="flex items-center gap-2">
+            <span className="text-[9px] font-black uppercase tracking-widest text-zinc-600 mr-1">Dias</span>
+            <div className="flex gap-1">
+              {WEEK_DAYS_SHORT.map(d => (
+                <button
+                  key={d.value}
+                  onClick={() => toggleWeekDay(d.value)}
+                  className={cn(
+                    "w-6 h-6 rounded-md text-[10px] font-bold transition-all border flex items-center justify-center",
+                    activeWeekDays.includes(d.value)
+                      ? "bg-[#38BDF8]/20 border-[#38BDF8]/40 text-[#38BDF8]"
+                      : "bg-white/[0.02] border-white/5 text-zinc-500 hover:text-zinc-300"
+                  )}
+                >
+                  {d.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {(activePriorities.length > 0 || activeWeekDays.length > 0) && (
+            <button 
+              onClick={() => { setActivePriorities([]); setActiveWeekDays([]); }}
+              className="text-[9px] font-black uppercase tracking-widest text-[#38BDF8] hover:underline ml-auto"
+            >
+              Limpar Filtros
+            </button>
+          )}
+        </div>
+
         <div className="grid grid-cols-7 mb-2">
           {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map((d) => (
             <div key={d} className="py-2 text-center text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400">
@@ -112,7 +202,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
 
         <div className="flex-1 grid grid-cols-7 gap-2 pb-6">
           {calendarDays.map((day, idx) => {
-            const tasks = getTasksForDate(day);
+            const tasks = getFilteredTasksForDate(day);
             const isSelected = isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, monthStart);
             const isDateToday = isToday(day);
@@ -137,11 +227,10 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                     {format(day, 'd')}
                   </span>
                   {tasks.length > 0 && isCurrentMonth && (
-                     <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                     <div className="w-1.5 h-1.5 rounded-full bg-[#38BDF8]" />
                   )}
                 </div>
 
-                {/* Removido overflow-hidden para permitir o scale sem cortes */}
                 <div className="flex-1 space-y-1 overflow-visible relative z-10">
                   {isCurrentMonth && tasks.slice(0, 2).map((task) => (
                     <div 
@@ -199,7 +288,6 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                     )}
                   >
                     <div className="relative z-10">
-                      {/* Top: Period Icon & Name */}
                       <div className="flex items-center gap-2 mb-3">
                         <PeriodIcon size={14} className={period.color} />
                         <span className={cn("text-[9px] font-black tracking-widest uppercase", period.color)}>
@@ -207,7 +295,6 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                         </span>
                       </div>
 
-                      {/* Middle: Title & Icon */}
                       <div className="flex items-center gap-3 mb-5">
                         <span className="text-xl filter drop-shadow-md">{task.icon}</span>
                         <h4 className="text-[14px] font-semibold text-white/95 group-hover:text-white transition-colors leading-tight">
@@ -215,7 +302,6 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                         </h4>
                       </div>
                       
-                      {/* Bottom: Priority (Left) & Time (Right) */}
                       <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/[0.03]">
                         <div className={cn(
                           "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest",
@@ -236,7 +322,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-center opacity-20 py-8">
                 <X size={20} className="text-zinc-600 mb-2" />
-                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.1em]">Vazio</p>
+                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.1em]">Vazio ou Filtrado</p>
               </div>
             )}
           </div>
