@@ -42,15 +42,6 @@ const PRIORITY_WEIGHT: Record<string, number> = {
   'Baixa': 3
 };
 
-const getPeriodGradient = (period: string) => {
-  switch (period) {
-    case 'Morning': return "from-orange-500/10 via-orange-500/[0.02] to-transparent";
-    case 'Afternoon': return "from-emerald-500/10 via-emerald-500/[0.02] to-transparent";
-    case 'Evening': return "from-indigo-500/10 via-indigo-500/[0.02] to-transparent";
-    default: return "from-blue-500/10 via-blue-500/[0.02] to-transparent";
-  }
-};
-
 const getPeriodInfo = (period: string) => {
   switch (period) {
     case 'Morning': return { label: 'MANHÃ', icon: Sun, color: 'text-orange-400' };
@@ -114,10 +105,12 @@ export const MonthlyDashboard = ({
 
   return (
     <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2 h-full min-h-0 shrink-0">
-      <div className="bg-[#0b0b0b] border border-white/10 rounded-[32px] flex flex-col h-full shadow-2xl overflow-hidden relative">
-        <div className="p-6 pb-5 border-b border-white/5 shrink-0 space-y-5">
+      <div 
+        className="bg-white/[0.02] border border-white/[0.06] rounded-[16px] flex flex-col h-full shadow-2xl overflow-hidden relative"
+      >
+        <div className="p-6 pb-5 border-b border-white/5 shrink-0 space-y-6">
           <div className="space-y-3">
-            <div className="flex bg-white/5 p-1 rounded-xl w-full">
+            <div className="flex bg-white/[0.04] border border-white/[0.06] p-1 rounded-[10px] w-full">
               {(['day', 'week', 'month'] as ViewMode[]).map((mode) => (
                 <button
                   key={mode}
@@ -125,8 +118,8 @@ export const MonthlyDashboard = ({
                   className={cn(
                     "flex-1 px-2 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
                     sideViewMode === mode 
-                      ? "bg-[#6366f1] text-white shadow-lg" 
-                      : "text-zinc-500 hover:text-zinc-300"
+                      ? "bg-[#6366f1]/20 text-[#a5b4fc]" 
+                      : "text-white/35 hover:text-white/60"
                   )}
                 >
                   {mode === 'day' ? 'Dia' : mode === 'week' ? 'Semana' : 'Mês'}
@@ -135,33 +128,25 @@ export const MonthlyDashboard = ({
             </div>
           </div>
 
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/90">
-                {sideViewMode === 'day' ? format(selectedDate, "EEEE", { locale: ptBR }) : 
-                 sideViewMode === 'week' ? `Semana de ${format(startOfWeek(selectedDate, { weekStartsOn: 1 }), "d", { locale: ptBR })}` : 
-                 format(currentDate, "MMMM", { locale: ptBR })}
-              </span>
-            </div>
+          <div className="space-y-1">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/35">
+              {sideViewMode === 'day' ? format(selectedDate, "EEEE", { locale: ptBR }) : 
+               sideViewMode === 'week' ? `Semana de ${format(startOfWeek(selectedDate, { weekStartsOn: 1 }), "d", { locale: ptBR })}` : 
+               format(currentDate, "MMMM", { locale: ptBR })}
+            </span>
             <h3 className="text-2xl font-bold text-white truncate leading-none">
               Resumo do Dia
             </h3>
           </div>
 
           <div className="grid grid-cols-2 gap-3 pt-2">
-            <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-3 flex flex-col gap-1">
-              <div className="flex items-center gap-2 text-zinc-500">
-                <Target size={12} />
-                <span className="text-[9px] font-black uppercase tracking-widest">Total</span>
-              </div>
-              <span className="text-xl font-black text-white">{summary.total}</span>
+            <div className="bg-white/[0.03] border border-white/[0.06] rounded-[12px] p-4 flex flex-col gap-1">
+              <span className="text-[10px] font-black uppercase tracking-[0.1em] text-white/40">Total</span>
+              <span className="text-[28px] font-bold text-white leading-tight">{summary.total}</span>
             </div>
-            <div className="bg-red-500/[0.03] border border-red-500/10 rounded-2xl p-3 flex flex-col gap-1">
-              <div className="flex items-center gap-2 text-red-500/70">
-                <Zap size={12} />
-                <span className="text-[9px] font-black uppercase tracking-widest">Extrema</span>
-              </div>
-              <span className="text-xl font-black text-red-500">{summary.extreme}</span>
+            <div className="bg-white/[0.03] border border-white/[0.06] rounded-[12px] p-4 flex flex-col gap-1">
+              <span className="text-[10px] font-black uppercase tracking-[0.1em] text-white/40">Extrema</span>
+              <span className="text-[28px] font-bold text-[#f87171] leading-tight">{summary.extreme}</span>
             </div>
           </div>
         </div>
@@ -175,14 +160,10 @@ export const MonthlyDashboard = ({
               return (
                 <div 
                   key={`${task.id}-${idx}`}
-                  className={cn(
-                    "group p-5 rounded-[28px] transition-all relative overflow-hidden border border-white/5 bg-zinc-950/40 shrink-0",
-                    "min-h-[130px] bg-gradient-to-br", 
-                    getPeriodGradient(task.period)
-                  )}
+                  className="group p-4 rounded-[12px] transition-all relative overflow-hidden border border-white/[0.07] bg-white/[0.04] shrink-0"
                 >
                   <div className="relative z-10 h-full flex flex-col">
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <PeriodIcon size={14} className={period.color} />
                         <span className={cn("text-[10px] font-black tracking-widest uppercase", period.color)}>
@@ -196,24 +177,24 @@ export const MonthlyDashboard = ({
                       )}
                     </div>
 
-                    <div className="flex items-center gap-3 mb-6">
-                      <span className="text-2xl filter drop-shadow-md shrink-0">{task.icon}</span>
-                      <h4 className="text-[15px] font-bold text-white/95 group-hover:text-white transition-colors leading-tight line-clamp-2">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="text-xl shrink-0">{task.icon}</span>
+                      <h4 className="text-[15px] font-semibold text-white/90 leading-tight line-clamp-2">
                         {task.name}
                       </h4>
                     </div>
                     
-                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/[0.03]">
+                    <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/[0.03]">
                       <div className={cn(
-                        "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border",
-                        task.priority === 'Extrema' ? "bg-red-500/10 text-red-500 border-red-500/20" :
-                        task.priority === 'Média' ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : 
-                        "bg-blue-500/10 text-blue-500 border-blue-500/20"
+                        "px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest",
+                        task.priority === 'Extrema' ? "text-red-500" :
+                        task.priority === 'Média' ? "text-amber-500" : 
+                        "text-blue-500"
                       )}>
                         {task.priority}
                       </div>
-                      <div className="flex items-center gap-1.5 text-[11px] text-zinc-400 font-bold">
-                        <Clock size={12} className="text-zinc-600" />
+                      <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-bold">
+                        <Clock size={11} className="text-zinc-600" />
                         {task.time}
                       </div>
                     </div>
@@ -232,7 +213,7 @@ export const MonthlyDashboard = ({
           )}
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0b0b0b] via-[#0b0b0b]/80 to-transparent pointer-events-none z-20" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/20 via-black/10 to-transparent pointer-events-none z-20" />
       </div>
     </div>
   );
