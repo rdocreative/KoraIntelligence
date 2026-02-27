@@ -21,9 +21,9 @@ const navItems = [
   { name: 'Configurações', icon: Settings, path: '/configuracoes' },
 ];
 
-const DEFAULT_WIDTH = 256; // w-64 is 256px
+const DEFAULT_WIDTH = 256; 
 const MIN_WIDTH = DEFAULT_WIDTH * 0.7; // -30%
-const MAX_WIDTH = DEFAULT_WIDTH * 1.3; // +30%
+const MAX_WIDTH = DEFAULT_WIDTH * 1.6; // +60% (30% original + 30% extra)
 
 export const SideNav = () => {
   const location = useLocation();
@@ -63,15 +63,15 @@ export const SideNav = () => {
 
   return (
     <div 
-      className="h-full flex flex-col pt-12 pb-6 px-6 relative z-10 shrink-0 bg-transparent transition-none group/sidebar border-r border-white/5"
+      className="h-full flex flex-col pt-12 pb-6 px-6 relative z-20 shrink-0 bg-transparent transition-none group/sidebar border-r border-white/5"
       style={{ width: `${width}px` }}
     >
-      {/* Handle de redimensionamento */}
+      {/* Handle de redimensionamento - Ajustado para não cortar a borda */}
       <div 
         onMouseDown={startResizing}
-        className="absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-[#38BDF8]/30 transition-colors flex items-center justify-center group"
+        className="absolute top-0 -right-[2px] w-[4px] h-full cursor-col-resize hover:bg-[#38BDF8]/30 transition-colors flex items-center justify-center group z-50"
       >
-        <div className="hidden group-hover:flex items-center justify-center w-4 h-8 bg-zinc-800 rounded-full border border-white/10 -mr-0.5">
+        <div className="hidden group-hover:flex items-center justify-center w-4 h-8 bg-zinc-900 rounded-full border border-white/10 shadow-xl">
           <GripVertical size={12} className="text-zinc-500" />
         </div>
       </div>
@@ -83,7 +83,8 @@ export const SideNav = () => {
         </button>
       </div>
 
-      <nav className="flex-1 space-y-2 overflow-hidden">
+      {/* Removido overflow-hidden aqui para evitar corte no stroke dos itens ativos */}
+      <nav className="flex-1 space-y-2">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
@@ -91,9 +92,9 @@ export const SideNav = () => {
               key={item.name}
               to={item.path}
               className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-[24px] transition-all whitespace-nowrap",
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-[24px] transition-all whitespace-nowrap border border-transparent",
                 isActive 
-                  ? "bg-[#38BDF8]/10 text-white font-semibold shadow-sm border border-[#38BDF8]/20" 
+                  ? "bg-[#38BDF8]/10 text-white font-semibold shadow-sm border-[#38BDF8]/20" 
                   : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.02]"
               )}
             >
