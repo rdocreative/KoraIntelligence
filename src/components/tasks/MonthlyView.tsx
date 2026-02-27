@@ -47,12 +47,12 @@ const getPriorityStyles = (priority: string) => {
 const getSidebarCardStyles = (priority: string) => {
   switch (priority) {
     case 'Extrema': 
-      return "bg-gradient-to-r from-red-600/10 via-red-600/5 to-transparent border-l-2 border-red-600/50";
+      return "bg-gradient-to-r from-red-500/15 via-red-500/[0.02] to-transparent border-l-4 border-l-red-500/60 border-y border-r border-white/5";
     case 'Média': 
-      return "bg-gradient-to-r from-amber-600/10 via-amber-600/5 to-transparent border-l-2 border-amber-600/50";
+      return "bg-gradient-to-r from-amber-500/15 via-amber-500/[0.02] to-transparent border-l-4 border-l-amber-500/60 border-y border-r border-white/5";
     case 'Baixa':
     default: 
-      return "bg-gradient-to-r from-sky-600/10 via-sky-600/5 to-transparent border-l-2 border-sky-600/50";
+      return "bg-gradient-to-r from-sky-500/15 via-sky-500/[0.02] to-transparent border-l-4 border-l-sky-500/60 border-y border-r border-white/5";
   }
 };
 
@@ -154,8 +154,8 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
         </div>
       </div>
 
-      {/* Painel Lateral Direito - Mais Compacto */}
-      <div className="w-[300px] flex flex-col animate-in slide-in-from-right duration-500 py-2">
+      {/* Painel Lateral Direito */}
+      <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2">
         <div className="bg-white/[0.03] border border-white/10 rounded-[28px] flex flex-col h-full shadow-2xl overflow-hidden">
           <div className="p-6 pb-4 border-b border-white/5">
             <div className="flex items-center gap-2 mb-1.5">
@@ -175,28 +175,30 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                 <div 
                   key={task.id}
                   className={cn(
-                    "group p-4 rounded-[20px] transition-all border border-white/5 hover:border-white/10",
+                    "group p-4 rounded-[20px] transition-all relative overflow-hidden",
                     getSidebarCardStyles(task.priority)
                   )}
                 >
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-lg">{task.icon}</span>
-                    <h4 className="text-xs font-semibold text-white/90 group-hover:text-[#38BDF8] transition-colors truncate">
-                      {task.name}
-                    </h4>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-medium">
-                      <Clock size={10} className="text-zinc-600" />
-                      {task.time}
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-lg filter drop-shadow-sm">{task.icon}</span>
+                      <h4 className="text-[13px] font-semibold text-white/90 group-hover:text-white transition-colors truncate">
+                        {task.name}
+                      </h4>
                     </div>
-                    <div className={cn(
-                      "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest",
-                      task.priority === 'Extrema' ? "bg-red-500/20 text-red-400" :
-                      task.priority === 'Média' ? "bg-amber-500/20 text-amber-400" : "bg-sky-500/20 text-sky-400"
-                    )}>
-                      {task.priority}
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 font-medium">
+                        <Clock size={10} className="text-zinc-500" />
+                        {task.time}
+                      </div>
+                      <div className={cn(
+                        "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-black/20",
+                        task.priority === 'Extrema' ? "text-red-400" :
+                        task.priority === 'Média' ? "text-amber-400" : "text-sky-400"
+                      )}>
+                        {task.priority}
+                      </div>
                     </div>
                   </div>
                 </div>
