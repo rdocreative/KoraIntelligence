@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   format, 
   startOfMonth, 
@@ -246,13 +246,13 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                 key={idx}
                 onClick={() => setSelectedDate(day)}
                 className={cn(
-                  "aspect-square p-2 rounded-[18px] border transition-all cursor-pointer group flex flex-col relative",
+                  "min-h-[160px] p-2.5 rounded-[22px] border transition-all cursor-pointer group flex flex-col relative",
                   !isCurrentMonth ? "bg-transparent border-transparent opacity-5 pointer-events-none" : 
                   isSelected ? "bg-white/[0.06] border-white/20 shadow-lg" : "bg-white/[0.02] border-white/5 hover:border-white/10",
                   isDateToday && !isSelected && "border-[#38BDF8]/40"
                 )}
               >
-                <div className="flex justify-between items-center mb-1.5 px-0.5">
+                <div className="flex justify-between items-center mb-2 px-0.5">
                   <span className={cn(
                     "text-sm font-bold transition-all",
                     isDateToday ? "text-[#38BDF8]" : "text-zinc-200 group-hover:text-white",
@@ -262,12 +262,12 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   </span>
                 </div>
 
-                <div className="flex-1 space-y-0.5 relative z-10 overflow-hidden">
+                <div className="flex-1 space-y-1 relative z-10">
                   {isCurrentMonth && tasks.slice(0, 5).map((task) => (
                     <div 
                       key={task.id}
                       className={cn(
-                        "px-1.5 py-0.5 rounded-md border flex items-center gap-1 transition-transform hover:scale-[1.04] relative z-20",
+                        "px-2 py-0.5 rounded-md border flex items-center gap-1.5 transition-transform hover:scale-[1.04] relative z-20",
                         getPriorityStyles(task.priority)
                       )}
                     >
@@ -283,7 +283,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                         e.stopPropagation();
                         setExpandedDate(day);
                       }}
-                      className="w-full text-left text-[8px] font-bold text-zinc-500 pl-1 hover:text-[#38BDF8] transition-colors"
+                      className="w-full text-left text-[8px] font-black text-zinc-500 pl-1 hover:text-[#38BDF8] transition-colors mt-0.5"
                     >
                       + {tasks.length - 5} itens
                     </button>
@@ -399,7 +399,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
         </div>
       </div>
 
-      {/* Popover Detalhado de Tarefas (Inspirado na Foto) */}
+      {/* Popover Detalhado de Tarefas */}
       <AnimatePresence>
         {expandedDate && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setExpandedDate(null)}>
