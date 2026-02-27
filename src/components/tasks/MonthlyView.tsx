@@ -141,12 +141,13 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   )}
                 </div>
 
-                <div className="flex-1 space-y-1 overflow-hidden">
+                {/* Removido overflow-hidden para permitir o scale sem cortes */}
+                <div className="flex-1 space-y-1 overflow-visible relative z-10">
                   {isCurrentMonth && tasks.slice(0, 2).map((task) => (
                     <div 
                       key={task.id}
                       className={cn(
-                        "px-2 py-0.5 rounded-md border flex items-center gap-1.5 transition-transform hover:scale-[1.02]",
+                        "px-2 py-0.5 rounded-md border flex items-center gap-1.5 transition-transform hover:scale-[1.04] relative z-20",
                         getPriorityStyles(task.priority)
                       )}
                     >
