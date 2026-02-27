@@ -11,10 +11,11 @@ import {
   isSameMonth, 
   isSameDay, 
   isToday,
-  getDay
+  getDay,
+  isSameWeek
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Clock, X, Hash, Sun, Coffee, Moon, Filter, Check } from 'lucide-react';
+import { Clock, X, Hash, Sun, Coffee, Moon, Filter, Check, CalendarDays, CalendarRange, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MonthlyViewProps {
@@ -89,10 +90,13 @@ const getPriorityDot = (priority: string) => {
   }
 };
 
+type ViewMode = 'day' | 'week' | 'month';
+
 export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [activePriorities, setActivePriorities] = useState<string[]>([]);
   const [activeWeekDays, setActiveWeekDays] = useState<number[]>([]);
+  const [sideViewMode, setSideViewMode] = useState<ViewMode>('day');
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
@@ -128,7 +132,28 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
     });
   };
 
-  const selectedDayTasks = getFilteredTasksForDate(selectedDate);
+  const sideTasks = useMemo(() => {
+    if (sideViewMode === 'day') {
+      return getFilteredTasksForDate(selectedDate).map(t => ({ ...t, date: selectedDate }));
+    }
+
+    let interval: Date[] = [];
+    if (sideViewMode === 'week') {
+      interval = eachDayOfInterval({
+        start: startOfWeek(selectedDate),
+        end: endOfWeek(selectedDate)
+      });
+    } else {
+      interval = eachDayOfInterval({
+        start: startOfMonth(currentDate),
+        end: endOfMonth(currentDate)
+      });
+    }
+
+    return interval.flatMap(date => 
+      getFilteredTasksForDate(date).map(t => ({ ...t, date }))
+    );
+  }, [sideViewMode, selectedDate, currentDate, activePriorities, activeWeekDays, tasksData]);
 
   return (
     <div className="flex h-full w-full animate-in fade-in duration-700 overflow-hidden px-6">
@@ -259,37 +284,67 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
       <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2">
         <div className="bg-white/[0.03] border border-white/10 rounded-[28px] flex flex-col h-full shadow-2xl overflow-hidden">
           <div className="p-6 pb-4 border-b border-white/5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex bg-white/5 p-1 rounded-xl">
+                {(['day', 'week', 'month'] as ViewMode[]).map((mode) => (
+                  <button
+                    key={mode}
+                    onClick={() => setSideViewMode(mode)}
+                    className={cn(
+                      "px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
+                      sideViewMode === mode 
+                        ? "bg-[#38BDF8] text-black shadow-lg" 
+                        : "text-zinc-500 hover:text-zinc-300"
+                    )}
+                  >
+                    {mode === 'day' ? 'Dia' : mode === 'week' ? 'Semana' : 'Mês'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="flex items-center gap-2 mb-1.5">
                <Hash size={12} className="text-[#38BDF8]" />
                <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">
-                {format(selectedDate, "EEEE", { locale: ptBR })}
+                {sideViewMode === 'day' ? format(selectedDate, "EEEE", { locale: ptBR }) : 
+                 sideViewMode === 'week' ? `Semana de ${format(startOfWeek(selectedDate), "d", { locale: ptBR })}` : 
+                 format(currentDate, "MMMM", { locale: ptBR })}
               </span>
             </div>
             <h3 className="text-xl font-serif text-white">
-              {format(selectedDate, "d 'de' MMMM", { locale: ptBR })}
+              {sideViewMode === 'day' ? format(selectedDate, "d 'de' MMMM", { locale: ptBR }) : 
+               sideViewMode === 'week' ? `Visualização Semanal` : 
+               `Resumo do Mês`}
             </h3>
           </div>
 
           <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-4">
-            {selectedDayTasks.length > 0 ? (
-              selectedDayTasks.map((task) => {
+            {sideTasks.length > 0 ? (
+              sideTasks.map((task, idx) => {
                 const period = getPeriodInfo(task.period);
                 const PeriodIcon = period.icon;
 
                 return (
                   <div 
-                    key={task.id}
+                    key={`${task.id}-${idx}`}
                     className={cn(
                       "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-gradient-to-br bg-zinc-900/40",
                       getPeriodGradient(task.period)
                     )}
                   >
                     <div className="relative z-10">
-                      <div className="flex items-center gap-2 mb-3">
-                        <PeriodIcon size={14} className={period.color} />
-                        <span className={cn("text-[9px] font-black tracking-widest uppercase", period.color)}>
-                          {period.label}
-                        </span>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <PeriodIcon size={14} className={period.color} />
+                          <span className={cn("text-[9px] font-black tracking-widest uppercase", period.color)}>
+                            {period.label}
+                          </span>
+                        </div>
+                        {sideViewMode !== 'day' && (
+                          <span className="text-[9px] font-bold text-zinc-500 bg-white/5 px-2 py-0.5 rounded-full">
+                            {format(task.date, "dd/MM")}
+                          </span>
+                        )}
                       </div>
 
                       <div className="flex items-center gap-3 mb-5">
