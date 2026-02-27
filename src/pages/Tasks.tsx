@@ -26,6 +26,8 @@ import {
   Plus
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { format, getWeek } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const INITIAL_DATA: Record<string, any[]> = {
   'Segunda': [
@@ -54,7 +56,6 @@ export default function TasksPage() {
   const [columns, setColumns] = useState(INITIAL_DATA);
   const [activeTask, setActiveTask] = useState<any>(null);
   
-  // Refs para funcionalidade de drag-to-scroll
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -69,9 +70,18 @@ export default function TasksPage() {
     return WEEK_DAYS[new Date().getDay()];
   }, []);
 
-  // Efeito para centralizar o dia atual ao iniciar
+  // Dados dinâmicos do cabeçalho
+  const dateInfo = useMemo(() => {
+    const now = new Date();
+    const month = format(now, "MMMM", { locale: ptBR });
+    const weekNumber = getWeek(now);
+    return {
+      month: month.charAt(0).toUpperCase() + month.slice(1),
+      week: weekNumber.toString().padStart(2, '0')
+    };
+  }, []);
+
   useEffect(() => {
-    // Pequeno delay para garantir que o DOM foi renderizado completamente
     const timer = setTimeout(() => {
       if (scrollRef.current) {
         const todayElement = scrollRef.current.querySelector(`[data-day="${currentDayName}"]`) as HTMLElement;
@@ -79,8 +89,6 @@ export default function TasksPage() {
           const containerWidth = scrollRef.current.clientWidth;
           const elementWidth = todayElement.clientWidth;
           const elementLeft = todayElement.offsetLeft;
-          
-          // Cálculo para centralizar: posição do elemento - metade do container + metade do elemento
           const scrollTo = elementLeft - (containerWidth / 2) + (elementWidth / 2);
           
           scrollRef.current.scrollTo({
@@ -185,10 +193,8 @@ export default function TasksPage() {
     setActiveTask(null);
   };
 
-  // Funções para drag-to-scroll horizontal
   const onMouseDown = (e: React.MouseEvent) => {
     if (!scrollRef.current) return;
-    // Não iniciar scroll se o alvo for um botão ou card (DndContext já cuida deles)
     if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('[data-draggable]')) return;
     
     setIsScrolling(true);
@@ -203,7 +209,7 @@ export default function TasksPage() {
     if (!isScrolling || !scrollRef.current) return;
     e.preventDefault();
     const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5; // Velocidade do scroll
+    const walk = (x - startX) * 1.5; 
     scrollRef.current.scrollLeft = scrollLeft - walk;
   };
 
@@ -213,11 +219,13 @@ export default function TasksPage() {
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
             <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
-            <h2 className="text-4xl font-serif font-medium text-white tracking-tight">Quadro Semanal</h2>
+            <h2 className="text-4xl font-serif font-medium text-white tracking-tight">
+              {dateInfo.month} — Semana {dateInfo.week}
+            </h2>
             <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronRight size={20} /></button>
           </div>
           <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-[#38BDF8]/10 px-4 py-1.5 rounded-full text-[#38BDF8] border border-[#38BDF8]/20">
-            Fevereiro • Semana 08
+            Tempo Real
           </span>
         </div>
 
