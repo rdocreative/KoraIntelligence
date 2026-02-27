@@ -224,7 +224,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
           ))}
         </div>
 
-        <div className="flex-1 grid grid-cols-7 gap-2 pb-6 min-h-0">
+        <div className="grid grid-cols-7 gap-2 pb-6 overflow-y-auto custom-scrollbar pr-1">
           {calendarDays.map((day, idx) => {
             const tasks = getFilteredTasksForDate(day);
             const isSelected = isSameDay(day, selectedDate);
@@ -236,7 +236,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                 key={idx}
                 onClick={() => setSelectedDate(day)}
                 className={cn(
-                  "min-h-0 h-full p-2 rounded-[18px] border transition-all cursor-pointer group flex flex-col relative",
+                  "aspect-square p-2 rounded-[18px] border transition-all cursor-pointer group flex flex-col relative",
                   !isCurrentMonth ? "bg-transparent border-transparent opacity-5 pointer-events-none" : 
                   isSelected ? "bg-white/[0.06] border-white/20 shadow-lg" : "bg-white/[0.02] border-white/5 hover:border-white/10",
                   isDateToday && !isSelected && "border-[#38BDF8]/40"
@@ -280,7 +280,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
       </div>
 
       {/* Painel Lateral Direito */}
-      <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2 h-full min-h-0">
+      <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2 h-full min-h-0 shrink-0">
         <div className="bg-white/[0.03] border border-white/10 rounded-[28px] flex flex-col h-full shadow-2xl overflow-hidden">
           <div className="p-6 pb-4 border-b border-white/5 shrink-0">
             <div className="flex items-center justify-between mb-4">
