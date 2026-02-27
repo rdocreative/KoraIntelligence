@@ -30,14 +30,14 @@ const SideNav = () => {
       className={cn(
         "h-screen flex flex-col border-r border-white/5 transition-all duration-300 relative z-50",
         isCollapsed ? "w-20" : "w-64",
-        "bg-[#0A0C10]"
+        "bg-[#080B14]"
       )}
     >
       <div className="p-6 flex items-center justify-between">
         {!isCollapsed && (
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-[#38BDF8] rounded-xl flex items-center justify-center shadow-lg shadow-[#38BDF8]/20">
-              <Sparkles size={18} className="text-black" />
+            <div className="w-8 h-8 bg-[#6366f1] rounded-xl flex items-center justify-center shadow-lg shadow-[#6366f1]/20">
+              <Sparkles size={18} className="text-white" />
             </div>
             <span className="font-serif text-xl font-medium tracking-tight text-white">Dyad</span>
           </div>
@@ -70,7 +70,7 @@ const SideNav = () => {
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 group relative",
                 isActive 
-                  ? "bg-[#38BDF8]/10 text-[#38BDF8]" 
+                  ? "bg-[#6366f1]/10 text-[#6366f1]" 
                   : "text-zinc-400 hover:bg-white/[0.03] hover:text-zinc-200",
                 isCollapsed && "justify-center px-0"
               )}
@@ -78,7 +78,7 @@ const SideNav = () => {
               <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
               {!isCollapsed && <span className="font-medium">{item.label}</span>}
               {isActive && (
-                <div className="absolute left-0 w-1 h-6 bg-[#38BDF8] rounded-r-full" />
+                <div className="absolute left-0 w-1 h-6 bg-[#6366f1] rounded-r-full" />
               )}
             </Link>
           );

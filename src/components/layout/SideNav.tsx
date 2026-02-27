@@ -28,25 +28,25 @@ export const SideNav = () => {
 
   return (
     <>
-      {/* Botão Flutuante Discreto (Aparece suavemente quando a sidebar some) */}
+      {/* Botão Flutuante Discreto */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed left-0 top-8 z-50 p-2 bg-[#070707] border border-l-0 border-white/10 rounded-r-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-all animate-in fade-in slide-in-from-left duration-500"
+          className="fixed left-0 top-8 z-50 p-2 bg-[#080B14] border border-l-0 border-white/10 rounded-r-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-all animate-in fade-in slide-in-from-left duration-500"
           title="Abrir Menu"
         >
           <PanelLeftOpen size={20} />
         </button>
       )}
 
-      {/* Container Principal da SideNav com transição de largura */}
+      {/* Container Principal da SideNav */}
       <div 
         className={cn(
-          "h-full flex flex-col relative z-30 shrink-0 bg-[#070707] transition-all duration-500 ease-in-out border-none outline-none overflow-hidden",
-          isOpen ? "w-[260px]" : "w-0"
+          "h-full flex flex-col relative z-30 shrink-0 bg-white/[0.02] border-r border-white/[0.05] transition-all duration-500 ease-in-out outline-none overflow-hidden",
+          isOpen ? "w-[260px]" : "w-0 border-r-0"
         )}
       >
-        {/* Wrapper Interno que faz o efeito de Deslizar (Translate) */}
+        {/* Wrapper Interno */}
         <div 
           className={cn(
             "flex flex-col h-full min-w-[260px] p-8 pt-8 pb-6 transition-all duration-500 ease-in-out",
@@ -69,7 +69,7 @@ export const SideNav = () => {
 
           {/* Adicionar Novo */}
           <button className="flex items-center gap-3 w-full p-3 mb-6 rounded-[20px] bg-white/[0.03] border border-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all group">
-            <div className="p-1 rounded-lg bg-[#38BDF8]/10 text-[#38BDF8]">
+            <div className="p-1 rounded-lg bg-[#6366f1]/10 text-[#6366f1]">
               <Plus size={16} />
             </div>
             <span className="text-xs font-semibold">Novo Registro</span>
@@ -86,14 +86,14 @@ export const SideNav = () => {
                   className={cn(
                     "w-full flex items-center gap-3 px-3 py-2.5 rounded-[24px] transition-all whitespace-nowrap border border-transparent",
                     isActive 
-                      ? "bg-[#38BDF8]/10 text-white font-semibold shadow-sm border-[#38BDF8]/20" 
+                      ? "bg-[#6366f1]/10 text-white font-semibold shadow-sm border-[#6366f1]/20" 
                       : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.02]"
                   )}
                 >
                   <item.icon 
                     size={18} 
                     strokeWidth={isActive ? 2 : 1.5} 
-                    style={{ color: isActive ? '#38BDF8' : 'currentColor' }} 
+                    style={{ color: isActive ? '#6366f1' : 'currentColor' }} 
                     className="shrink-0"
                   />
                   <span className="text-[13px]">{item.name}</span>
@@ -104,7 +104,7 @@ export const SideNav = () => {
           
           {/* Footer */}
           <div className="pt-4 mt-auto flex items-center gap-3 border-t border-white/5">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center text-[11px] font-bold bg-[#38BDF8]/20 text-[#38BDF8] shrink-0 border border-[#38BDF8]/10">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center text-[11px] font-bold bg-[#6366f1]/20 text-[#6366f1] shrink-0 border border-[#6366f1]/10">
               RS
             </div>
             <div className="flex flex-col min-w-0">

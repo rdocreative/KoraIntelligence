@@ -109,7 +109,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
                 type="text" 
                 value={icon}
                 onChange={(e) => setIcon(e.target.value)}
-                className="w-12 h-12 bg-white/[0.03] border border-white/10 rounded-xl text-center text-lg focus:outline-none focus:border-[#38BDF8]/50 transition-all"
+                className="w-12 h-12 bg-white/[0.03] border border-white/10 rounded-xl text-center text-lg focus:outline-none focus:border-[#6366f1]/50 transition-all"
                 placeholder="📝"
               />
               <input 
@@ -118,7 +118,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Ex: Reunião de Design"
-                className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#38BDF8]/50 transition-all"
+                className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#6366f1]/50 transition-all"
               />
             </div>
           </div>
@@ -132,7 +132,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Adicione detalhes sobre a tarefa..."
-              className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#38BDF8]/50 transition-all resize-none h-20"
+              className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#6366f1]/50 transition-all resize-none h-20"
             />
           </div>
 
@@ -146,7 +146,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
                 type="date" 
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all [color-scheme:dark]"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white focus:outline-none focus:border-[#6366f1]/50 transition-all [color-scheme:dark]"
               />
             </div>
             <div className="space-y-2">
@@ -158,7 +158,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 placeholder="Ex: Trabalho"
-                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#38BDF8]/50 transition-all"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#6366f1]/50 transition-all"
               />
             </div>
             <div className="space-y-2">
@@ -168,7 +168,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
               <select 
                 value={repetition}
                 onChange={(e) => setRepetition(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all appearance-none cursor-pointer"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white focus:outline-none focus:border-[#6366f1]/50 transition-all appearance-none cursor-pointer"
               >
                 {REPETITION_OPTIONS.map(opt => <option key={opt} value={opt} className="bg-[#0C0C0C]">{opt}</option>)}
               </select>
@@ -180,7 +180,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
               <select 
                 value={reminder}
                 onChange={(e) => setReminder(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all appearance-none cursor-pointer"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white focus:outline-none focus:border-[#6366f1]/50 transition-all appearance-none cursor-pointer"
               >
                 {REMINDER_OPTIONS.map(opt => <option key={opt.value} value={opt.value} className="bg-[#0C0C0C]">{opt.label}</option>)}
               </select>
@@ -197,7 +197,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
                 type="time" 
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all [color-scheme:dark]"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#6366f1]/50 transition-all [color-scheme:dark]"
               />
             </div>
 
@@ -206,7 +206,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
               <select 
                 value={period}
                 onChange={(e) => setPeriod(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all appearance-none cursor-pointer"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#6366f1]/50 transition-all appearance-none cursor-pointer"
               >
                 {PERIODS.map(p => <option key={p.id} value={p.id} className="bg-[#0C0C0C]">{p.label}</option>)}
               </select>
@@ -238,7 +238,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
             <div className="col-span-3">
               <button
                 type="submit"
-                className="w-full bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black font-bold text-xs h-10 rounded-xl transition-all shadow-lg shadow-[#38BDF8]/10 active:scale-95"
+                className="w-full bg-[#6366f1] hover:bg-[#6366f1]/90 text-white font-bold text-xs h-10 rounded-xl transition-all shadow-lg shadow-[#6366f1]/10 active:scale-95"
               >
                 Criar Tarefa
               </button>

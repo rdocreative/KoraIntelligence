@@ -365,7 +365,7 @@ export default function TasksPage() {
 
       <button
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-10 right-10 w-16 h-16 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black rounded-full shadow-2xl shadow-[#38BDF8]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50"
+        className="fixed bottom-10 right-10 w-16 h-16 bg-[#6366f1] hover:bg-[#6366f1]/90 text-white rounded-full shadow-2xl shadow-[#6366f1]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50"
         title="Criar nova tarefa"
       >
         <Plus size={32} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />

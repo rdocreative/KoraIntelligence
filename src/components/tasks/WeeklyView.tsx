@@ -83,7 +83,7 @@ export const WeeklyView = ({ tasksData, currentDate }: WeeklyViewProps) => {
               <div className={cn(
                 "w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-bold transition-all",
                 isDateToday 
-                  ? "bg-[#38BDF8] text-black shadow-[0_0_20px_rgba(56,189,248,0.3)]" 
+                  ? "bg-[#6366f1] text-white shadow-[0_0_20px_rgba(99,102,241,0.3)]" 
                   : "text-zinc-300 bg-white/5"
               )}>
                 {format(day, 'd')}

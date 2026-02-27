@@ -226,7 +226,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   className={cn(
                     "w-6 h-6 rounded-md text-[10px] font-bold transition-all border flex items-center justify-center",
                     activeWeekDays.includes(d.value)
-                      ? "bg-[#38BDF8]/20 border-[#38BDF8]/40 text-[#38BDF8]"
+                      ? "bg-[#6366f1]/20 border-[#6366f1]/40 text-[#6366f1]"
                       : "bg-white/[0.02] border-white/5 text-zinc-500 hover:text-zinc-300"
                   )}
                 >
@@ -239,7 +239,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
           {(activePriorities.length > 0 || activeWeekDays.length > 0) && (
             <button 
               onClick={() => { setActivePriorities([]); setActiveWeekDays([]); }}
-              className="text-[9px] font-black uppercase tracking-widest text-[#38BDF8] hover:underline ml-auto"
+              className="text-[9px] font-black uppercase tracking-widest text-[#6366f1] hover:underline ml-auto"
             >
               Limpar Filtros
             </button>
@@ -269,13 +269,13 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   "calendar-cell min-h-[170px] p-2.5 rounded-[22px] border transition-all cursor-pointer group flex flex-col relative",
                   !isCurrentMonth ? "bg-transparent border-transparent opacity-5 pointer-events-none" : 
                   isSelected ? "bg-white/[0.06] border-white/20 shadow-lg" : "bg-white/[0.02] border-white/5 hover:border-white/10",
-                  isDateToday && !isSelected && "border-[#38BDF8]/40"
+                  isDateToday && !isSelected && "border-[#6366f1]/40"
                 )}
               >
                 <div className="flex justify-between items-center mb-2 px-0.5">
                   <span className={cn(
                     "text-sm font-bold transition-all",
-                    isDateToday ? "text-[#38BDF8]" : "text-zinc-200 group-hover:text-white",
+                    isDateToday ? "text-[#6366f1]" : "text-zinc-200 group-hover:text-white",
                     isSelected && "text-white"
                   )}>
                     {format(day, 'd')}
@@ -303,7 +303,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                         e.stopPropagation();
                         handleOpenPopover(e, day);
                       }}
-                      className="w-full text-left text-[8px] font-black text-zinc-500 pl-1 hover:text-[#38BDF8] transition-colors mt-0.5"
+                      className="w-full text-left text-[8px] font-black text-zinc-500 pl-1 hover:text-[#6366f1] transition-colors mt-0.5"
                     >
                       + {tasks.length - 4} itens
                     </button>
@@ -330,7 +330,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                     className={cn(
                       "flex-1 px-2 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
                       sideViewMode === mode 
-                        ? "bg-[#38BDF8] text-black shadow-lg" 
+                        ? "bg-[#6366f1] text-white shadow-lg" 
                         : "text-zinc-500 hover:text-zinc-300"
                     )}
                   >
@@ -342,7 +342,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
 
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                 <Hash size={14} className="text-[#38BDF8]" />
+                 <Hash size={14} className="text-[#6366f1]" />
                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
                   {sideViewMode === 'day' ? format(selectedDate, "EEEE", { locale: ptBR }) : 
                    sideViewMode === 'week' ? `Semana de ${format(startOfWeek(selectedDate), "d", { locale: ptBR })}` : 
@@ -468,7 +468,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
               className="bg-zinc-900 border border-white/20 rounded-[28px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col z-[101] min-h-[170px]"
             >
               <div className="p-4 pb-2 flex items-center justify-between border-b border-white/5">
-                <span className="text-[10px] font-black uppercase tracking-widest text-[#38BDF8]">
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#6366f1]">
                   {format(expandedDate, 'd MMM', { locale: ptBR })}
                 </span>
                 <button 
