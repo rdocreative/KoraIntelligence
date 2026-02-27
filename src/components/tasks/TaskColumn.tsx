@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, forwardRef } from 'react';
+import React, { useState, useEffect, forwardRef, useRef } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TaskCard } from './TaskCard';
@@ -87,13 +87,13 @@ const TimeWarning = ({
 
   return (
     <div 
-      className="flex flex-col gap-2 p-3 my-1 bg-[#121212] border border-white/10 rounded-2xl shadow-2xl animate-in zoom-in-95 slide-in-from-top-2 duration-300 overflow-hidden relative z-20"
+      className="flex flex-col gap-2 p-3 my-2 bg-[#0C0C0C] border border-white/10 rounded-2xl shadow-xl animate-in zoom-in-95 slide-in-from-top-2 duration-300 overflow-hidden relative"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="flex items-center gap-2 mb-0.5">
-        <Clock size={10} className="text-[#38BDF8]" />
-        <span className="text-[9px] text-zinc-300 font-bold uppercase tracking-widest">
+      <div className="flex items-center gap-2 mb-1">
+        <Clock size={12} className="text-yellow-400" />
+        <span className="text-[10px] text-zinc-100 font-medium whitespace-nowrap">
           Ajustar horário ({periodLabel})
         </span>
       </div>
@@ -103,20 +103,20 @@ const TimeWarning = ({
           type="time" 
           value={time}
           onChange={(e) => setTime(e.target.value)}
-          className="flex-1 bg-white/[0.05] border border-white/10 rounded-lg px-2 py-1 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 [color-scheme:dark]"
+          className="flex-1 bg-white/[0.05] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 [color-scheme:dark]"
         />
         <button 
           onClick={() => onSave(time)}
-          className="px-2.5 py-1 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black text-[9px] font-black uppercase rounded-lg transition-all flex items-center gap-1 active:scale-95 whitespace-nowrap"
+          className="px-3 py-1.5 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black text-[10px] font-bold rounded-lg transition-all flex items-center gap-1.5 active:scale-95 whitespace-nowrap"
         >
-          <Check size={10} />
+          <Check size={12} />
           Salvar
         </button>
       </div>
       
       <div className="absolute bottom-0 left-0 w-full h-0.5 bg-white/5">
          <div 
-           className={cn("h-full bg-[#38BDF8]/40 origin-left transition-all duration-[4000ms] ease-linear", isPaused && "paused")} 
+           className={cn("h-full bg-yellow-400/30 origin-left transition-all duration-[4000ms] ease-linear", isPaused && "paused")} 
            style={{ 
              width: '100%', 
              animation: isPaused ? 'none' : 'shrink-width 4s linear forwards' 
@@ -131,16 +131,12 @@ const PeriodContainer = ({
   dayId, 
   period, 
   tasks,
-  isToday,
-  warningState,
-  onSaveTime
+  isToday
 }: { 
   dayId: string; 
   period: typeof PERIODS[0]; 
   tasks: any[];
   isToday?: boolean;
-  warningState: { taskId: string; periodId: string; defaultTime: string } | null;
-  onSaveTime: (time: string) => void;
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `${dayId}:${period.id}`,
@@ -229,20 +225,11 @@ const PeriodContainer = ({
       
       <div className={cn(
           "relative flex flex-col gap-3 overflow-y-auto custom-scrollbar pr-1 transition-all duration-300 ease-in-out origin-top",
-          isExpanded ? "min-h-[20px] max-h-[400px] opacity-100" : "max-h-0 opacity-0 overflow-hidden min-h-0"
+          isExpanded ? "min-h-[20px] max-h-[300px] opacity-100" : "max-h-0 opacity-0 overflow-hidden min-h-0"
       )}>
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {tasks.map((task) => (
-            <React.Fragment key={task.id}>
-              {warningState?.taskId === task.id && (
-                <TimeWarning 
-                  initialTime={warningState.defaultTime}
-                  periodLabel={period.label}
-                  onSave={onSaveTime}
-                />
-              )}
-              <TaskCard task={{ ...task, period: period.id }} />
-            </React.Fragment>
+            <TaskCard key={task.id} task={{ ...task, period: period.id }} />
           ))}
         </SortableContext>
         
@@ -327,15 +314,21 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
         )}
       >
         {PERIODS.map((period) => (
-          <PeriodContainer 
-            key={period.id}
-            dayId={id}
-            period={period}
-            tasks={tasks.filter(t => t.period === period.id)}
-            isToday={isToday}
-            warningState={warningState?.periodId === period.id ? warningState : null}
-            onSaveTime={handleSaveTime}
-          />
+          <React.Fragment key={period.id}>
+            <PeriodContainer 
+              dayId={id}
+              period={period}
+              tasks={tasks.filter(t => t.period === period.id)}
+              isToday={isToday}
+            />
+            {warningState?.periodId === period.id && (
+              <TimeWarning 
+                initialTime={warningState.defaultTime}
+                periodLabel={period.label}
+                onSave={handleSaveTime}
+              />
+            )}
+          </React.Fragment>
         ))}
       </div>
     </div>
