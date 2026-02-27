@@ -44,15 +44,16 @@ const getPriorityStyles = (priority: string) => {
   }
 };
 
-const getSidebarCardStyles = (priority: string) => {
-  switch (priority) {
-    case 'Extrema': 
-      return "bg-gradient-to-r from-red-500/10 via-red-500/[0.02] to-transparent border-l-4 border-l-red-500/60 border-y border-r border-white/5 shadow-sm";
-    case 'Média': 
-      return "bg-gradient-to-r from-amber-500/10 via-amber-500/[0.02] to-transparent border-l-4 border-l-amber-500/60 border-y border-r border-white/5 shadow-sm";
-    case 'Baixa':
-    default: 
-      return "bg-gradient-to-r from-sky-500/10 via-sky-500/[0.02] to-transparent border-l-4 border-l-sky-500/60 border-y border-r border-white/5 shadow-sm";
+const getPeriodGradient = (period: string) => {
+  switch (period) {
+    case 'Morning':
+      return "from-orange-500/10 via-orange-500/[0.02] to-transparent border-l-orange-500/40";
+    case 'Afternoon':
+      return "from-emerald-500/10 via-emerald-500/[0.02] to-transparent border-l-emerald-500/40";
+    case 'Evening':
+      return "from-indigo-500/10 via-indigo-500/[0.02] to-transparent border-l-indigo-500/40";
+    default:
+      return "from-blue-500/10 via-blue-500/[0.02] to-transparent border-l-blue-500/40";
   }
 };
 
@@ -192,31 +193,28 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   <div 
                     key={task.id}
                     className={cn(
-                      "group p-4 rounded-[24px] transition-all relative overflow-hidden bg-zinc-900/40",
-                      getSidebarCardStyles(task.priority)
+                      "group p-4 rounded-[24px] transition-all relative overflow-hidden bg-zinc-900/40 border-y border-r border-white/5 border-l-4",
+                      getPeriodGradient(task.period)
                     )}
                   >
                     <div className="relative z-10">
-                      {/* Top: Period */}
-                      <div className="flex items-center gap-1.5 mb-3">
-                        <PeriodIcon size={12} className={period.color} />
-                        <span className={cn("text-[10px] font-black tracking-widest", period.color)}>
-                          {period.label}
-                        </span>
+                      {/* Top: Just Period Icon */}
+                      <div className="flex items-center mb-3">
+                        <PeriodIcon size={14} className={period.color} />
                       </div>
 
                       {/* Middle: Title & Icon */}
-                      <div className="flex items-center gap-3 mb-4">
+                      <div className="flex items-center gap-3 mb-5">
                         <span className="text-xl filter drop-shadow-md">{task.icon}</span>
                         <h4 className="text-[14px] font-semibold text-white/95 group-hover:text-white transition-colors leading-tight">
                           {task.name}
                         </h4>
                       </div>
                       
-                      {/* Bottom: Priority & Time */}
-                      <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.03]">
+                      {/* Bottom: Priority (Left) & Time (Right) */}
+                      <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/[0.03]">
                         <div className={cn(
-                          "px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider",
+                          "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest",
                           task.priority === 'Extrema' ? "bg-red-500/10 text-red-500" :
                           task.priority === 'Média' ? "bg-amber-500/10 text-amber-500" : "bg-sky-500/10 text-sky-500"
                         )}>
