@@ -17,6 +17,7 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { TaskColumn } from "@/components/tasks/TaskColumn";
 import { TaskCard } from "@/components/tasks/TaskCard";
+import { CreateTaskModal } from "@/components/tasks/CreateTaskModal";
 import { 
   ChevronLeft, 
   ChevronRight,
@@ -55,6 +56,7 @@ const DISPLAY_ORDER = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábad
 export default function TasksPage() {
   const [columns, setColumns] = useState(INITIAL_DATA);
   const [activeTask, setActiveTask] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -70,7 +72,6 @@ export default function TasksPage() {
     return WEEK_DAYS[new Date().getDay()];
   }, []);
 
-  // Dados dinâmicos do cabeçalho
   const dateInfo = useMemo(() => {
     const now = new Date();
     const month = format(now, "MMMM", { locale: ptBR });
@@ -101,6 +102,14 @@ export default function TasksPage() {
     return () => clearTimeout(timer);
   }, [currentDayName]);
 
+  const handleAddTask = (newTask: any) => {
+    setColumns(prev => ({
+      ...prev,
+      [currentDayName]: [...(prev[currentDayName] || []), newTask]
+    }));
+  };
+
+  // Logica de DND omitida por brevidade mas mantida no arquivo final
   const findDay = (id: string) => {
     if (DISPLAY_ORDER.includes(id)) return id;
     if (id.includes(':')) return id.split(':')[0];
@@ -202,17 +211,6 @@ export default function TasksPage() {
     setScrollLeft(scrollRef.current.scrollLeft);
   };
 
-  const onMouseLeave = () => setIsScrolling(false);
-  const onMouseUp = () => setIsScrolling(false);
-
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!isScrolling || !scrollRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5; 
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
-
   return (
     <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0">
       <header className="flex items-center justify-between py-6 shrink-0">
@@ -246,9 +244,15 @@ export default function TasksPage() {
       <div 
         ref={scrollRef}
         onMouseDown={onMouseDown}
-        onMouseLeave={onMouseLeave}
-        onMouseUp={onMouseUp}
-        onMouseMove={onMouseMove}
+        onMouseLeave={() => setIsScrolling(false)}
+        onMouseUp={() => setIsScrolling(false)}
+        onMouseMove={(e) => {
+          if (!isScrolling || !scrollRef.current) return;
+          e.preventDefault();
+          const x = e.pageX - scrollRef.current.offsetLeft;
+          const walk = (x - startX) * 1.5; 
+          scrollRef.current.scrollLeft = scrollLeft - walk;
+        }}
         className={cn(
           "flex-1 flex min-h-0 pb-8 overflow-x-auto custom-scrollbar cursor-grab select-none",
           isScrolling && "cursor-grabbing"
@@ -287,12 +291,22 @@ export default function TasksPage() {
         </DndContext>
       </div>
 
+      {/* Botão de Criação */}
       <button
+        onClick={() => setIsModalOpen(true)}
         className="fixed bottom-10 right-10 w-16 h-16 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black rounded-full shadow-2xl shadow-[#38BDF8]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50"
         title="Criar nova tarefa"
       >
         <Plus size={32} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
       </button>
+
+      {/* Modal de Criação */}
+      <CreateTaskModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleAddTask}
+        selectedDay={currentDayName}
+      />
     </div>
   );
 }
