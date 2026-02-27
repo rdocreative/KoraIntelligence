@@ -21,7 +21,7 @@ const PERIODS = [
     time: '06:00 — 12:00',
     icon: Sun, 
     color: '#FDBA74',
-    gradient: 'linear-gradient(180deg, rgba(253, 186, 116, 0.08) 0%, rgba(253, 186, 116, 0.01) 100%)',
+    gradient: 'linear-gradient(180deg, rgba(253, 186, 116, 0.05) 0%, rgba(253, 186, 116, 0) 100%)',
     startHour: 6,
     endHour: 12
   },
@@ -31,7 +31,7 @@ const PERIODS = [
     time: '12:00 — 18:00',
     icon: Coffee, 
     color: '#4ADE80',
-    gradient: 'linear-gradient(180deg, rgba(74, 222, 128, 0.08) 0%, rgba(74, 222, 128, 0.01) 100%)',
+    gradient: 'linear-gradient(180deg, rgba(74, 222, 128, 0.05) 0%, rgba(74, 222, 128, 0) 100%)',
     startHour: 12,
     endHour: 18
   },
@@ -41,7 +41,7 @@ const PERIODS = [
     time: '18:00 — 00:00',
     icon: Moon, 
     color: '#A78BFA',
-    gradient: 'linear-gradient(180deg, rgba(167, 139, 250, 0.08) 0%, rgba(167, 139, 250, 0.01) 100%)',
+    gradient: 'linear-gradient(180deg, rgba(167, 139, 250, 0.05) 0%, rgba(167, 139, 250, 0) 100%)',
     startHour: 18,
     endHour: 24
   },
@@ -51,7 +51,7 @@ const PERIODS = [
     time: '00:00 — 06:00',
     icon: CloudMoon, 
     color: '#818CF8',
-    gradient: 'linear-gradient(180deg, rgba(129, 140, 248, 0.08) 0%, rgba(129, 140, 248, 0.01) 100%)',
+    gradient: 'linear-gradient(180deg, rgba(129, 140, 248, 0.05) 0%, rgba(129, 140, 248, 0) 100%)',
     startHour: 0,
     endHour: 6
   },
@@ -96,23 +96,22 @@ const PeriodContainer = ({
     return () => clearInterval(interval);
   }, [isToday, period]);
 
+  // Active state now focuses on background intensity rather than border color
   const activeStyle = isActive && isToday ? {
-    borderColor: `${period.color}30`, 
-    background: `linear-gradient(180deg, ${period.color}0D 0%, transparent 100%)`, 
-  } : {};
+    background: `linear-gradient(180deg, ${period.color}15 0%, rgba(0,0,0,0) 100%)`, 
+  } : {
+    background: period.gradient
+  };
 
   return (
     <div 
       ref={setNodeRef}
       className={cn(
         "relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 ease-in-out",
-        !isActive && !isOver ? "border-white/[0.03]" : "",
-        isOver ? "border-white/20 bg-white/5 scale-[1.01]" : ""
+        "border-white/[0.03]", // Subtle neutral border
+        isOver ? "bg-white/[0.05] border-white/10 scale-[1.01]" : ""
       )}
-      style={{ 
-        background: (!isActive || !isToday) && !isOver ? period.gradient : undefined,
-        ...activeStyle
-      }}
+      style={activeStyle}
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
