@@ -241,10 +241,6 @@ export default function TasksPage() {
       </header>
 
       <div className="flex-1 relative min-h-0 overflow-hidden">
-        {/* Máscaras de Degradê Laterais */}
-        <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-[#030303] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-[#030303] to-transparent z-10 pointer-events-none" />
-
         <div 
           ref={scrollRef}
           onMouseDown={onMouseDown}
@@ -256,6 +252,10 @@ export default function TasksPage() {
             const x = e.pageX - scrollRef.current.offsetLeft;
             const walk = (x - startX) * 1.5; 
             scrollRef.current.scrollLeft = scrollLeft - walk;
+          }}
+          style={{
+            maskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)',
+            WebkitMaskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)'
           }}
           className={cn(
             "h-full flex pb-8 overflow-x-auto custom-scrollbar cursor-grab select-none px-10",
