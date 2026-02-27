@@ -126,7 +126,7 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
               </span>
             )}
             {task.time && !isAwaitingTime && (
-              <div className="flex items-center gap-1 text-[10px] text-zinc-300 font-medium">
+              <div className="flex items-center gap-1 text-[11px] text-white/75 font-medium">
                 <Clock size={10} className="text-zinc-400" />
                 {task.time}
               </div>

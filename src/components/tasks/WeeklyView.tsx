@@ -149,7 +149,7 @@ export const WeeklyView = ({ tasksData, currentDate }: WeeklyViewProps) => {
                             >
                               <div className="flex items-center justify-between">
                                 <span className="text-base filter drop-shadow-sm">{task.icon}</span>
-                                <div className="flex items-center gap-1 text-[8px] font-bold text-zinc-400">
+                                <div className="flex items-center gap-1 text-[11px] font-bold text-white/75">
                                   <Clock size={8} />
                                   {task.time}
                                 </div>
