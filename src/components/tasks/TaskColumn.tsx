@@ -4,7 +4,7 @@ import React, { useState, useEffect, forwardRef, useRef } from 'react';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { TaskCard } from './TaskCard';
-import { Sun, Moon, Coffee, CloudMoon, Clock } from 'lucide-react';
+import { Sun, Moon, Coffee, CloudMoon, Clock, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TaskColumnProps {
@@ -12,6 +12,8 @@ interface TaskColumnProps {
   title: string;
   tasks: any[];
   isToday?: boolean;
+  lastMovedTaskId?: string | null;
+  onUpdateTaskTime?: (taskId: string, newTime: string) => void;
 }
 
 const PERIODS = [
@@ -23,7 +25,8 @@ const PERIODS = [
     color: '#FDBA74',
     gradient: 'linear-gradient(180deg, rgba(253, 186, 116, 0.05) 0%, rgba(253, 186, 116, 0) 100%)',
     startHour: 6,
-    endHour: 12
+    endHour: 12,
+    defaultTime: '09:00'
   },
   { 
     id: 'Afternoon', 
@@ -33,7 +36,8 @@ const PERIODS = [
     color: '#4ADE80',
     gradient: 'linear-gradient(180deg, rgba(74, 222, 128, 0.05) 0%, rgba(74, 222, 128, 0) 100%)',
     startHour: 12,
-    endHour: 18
+    endHour: 18,
+    defaultTime: '15:00'
   },
   { 
     id: 'Evening', 
@@ -43,7 +47,8 @@ const PERIODS = [
     color: '#A78BFA',
     gradient: 'linear-gradient(180deg, rgba(167, 139, 250, 0.05) 0%, rgba(167, 139, 250, 0) 100%)',
     startHour: 18,
-    endHour: 24
+    endHour: 24,
+    defaultTime: '21:00'
   },
   { 
     id: 'Dawn', 
@@ -53,7 +58,8 @@ const PERIODS = [
     color: '#818CF8',
     gradient: 'linear-gradient(180deg, rgba(129, 140, 248, 0.05) 0%, rgba(129, 140, 248, 0) 100%)',
     startHour: 0,
-    endHour: 6
+    endHour: 6,
+    defaultTime: '03:00'
   },
 ];
 
@@ -61,12 +67,16 @@ const PeriodContainer = ({
   dayId, 
   period, 
   tasks,
-  isToday
+  isToday,
+  lastMovedTaskId,
+  onUpdateTaskTime
 }: { 
   dayId: string; 
   period: typeof PERIODS[0]; 
   tasks: any[];
   isToday?: boolean;
+  lastMovedTaskId?: string | null;
+  onUpdateTaskTime?: (taskId: string, newTime: string) => void;
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `${dayId}:${period.id}`,
@@ -74,16 +84,37 @@ const PeriodContainer = ({
 
   const [isActive, setIsActive] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
+  const [tempTime, setTempTime] = useState(period.defaultTime);
   const prevIsOver = useRef(isOver);
+  const hasAppliedDefault = useRef(false);
 
   useEffect(() => {
     if (prevIsOver.current === true && isOver === false) {
-      setShowWarning(true);
-      const timer = setTimeout(() => setShowWarning(false), 4000);
-      return () => clearTimeout(timer);
+      const movedTask = tasks.find(t => t.id === lastMovedTaskId);
+      if (movedTask) {
+        setTempTime(movedTask.time || period.defaultTime);
+        setShowWarning(true);
+        hasAppliedDefault.current = false;
+        
+        const timer = setTimeout(() => {
+          if (!hasAppliedDefault.current && lastMovedTaskId) {
+             onUpdateTaskTime?.(lastMovedTaskId, period.defaultTime);
+             setShowWarning(false);
+          }
+        }, 5000);
+        return () => clearTimeout(timer);
+      }
     }
     prevIsOver.current = isOver;
-  }, [isOver]);
+  }, [isOver, tasks, lastMovedTaskId, period.defaultTime, onUpdateTaskTime]);
+
+  const handleSaveTime = () => {
+    if (lastMovedTaskId) {
+      onUpdateTaskTime?.(lastMovedTaskId, tempTime);
+      hasAppliedDefault.current = true;
+      setShowWarning(false);
+    }
+  };
 
   useEffect(() => {
     if (!isToday) {
@@ -123,12 +154,35 @@ const PeriodContainer = ({
       )}
       style={activeStyle}
     >
+      {/* Aviso flutuante com edição rápida de horário - Usando fixed para não ser cortado */}
       {showWarning && (
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-2 px-3 py-1.5 bg-[#0C0C0C]/90 backdrop-blur-md border border-white/10 rounded-full shadow-2xl animate-in fade-in slide-in-from-top-2 duration-300 pointer-events-none">
-          <Clock size={12} className="text-yellow-400" />
-          <span className="text-[9px] text-white font-medium whitespace-nowrap">
-            Lembre de atualizar o horário da tarefa para este período
-          </span>
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-2 p-3 bg-[#0C0C0C] border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-top-4 duration-500 min-w-[280px]">
+          <div className="flex items-center gap-2 mb-1">
+            <Clock size={12} className="text-yellow-400" />
+            <span className="text-[10px] text-zinc-100 font-medium whitespace-nowrap">
+              Ajustar horário para o período {period.label}
+            </span>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <input 
+              type="time" 
+              value={tempTime}
+              onChange={(e) => setTempTime(e.target.value)}
+              className="flex-1 bg-white/[0.05] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 [color-scheme:dark]"
+            />
+            <button 
+              onClick={handleSaveTime}
+              className="px-3 py-1.5 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black text-[10px] font-bold rounded-lg transition-all flex items-center gap-1.5 active:scale-95"
+            >
+              <Check size={12} />
+              Salvar
+            </button>
+          </div>
+          
+          <div className="h-0.5 bg-white/5 w-full rounded-full overflow-hidden mt-1">
+             <div className="h-full bg-yellow-400/30 animate-shrink-width origin-left" style={{ animationDuration: '5s' }} />
+          </div>
         </div>
       )}
 
@@ -183,7 +237,7 @@ const PeriodContainer = ({
   );
 };
 
-export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday }, ref) => {
+export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday, lastMovedTaskId, onUpdateTaskTime }, ref) => {
   return (
     <div 
       ref={ref} 
@@ -225,6 +279,8 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
             period={period}
             tasks={tasks.filter(t => t.period === period.id)}
             isToday={isToday}
+            lastMovedTaskId={lastMovedTaskId}
+            onUpdateTaskTime={onUpdateTaskTime}
           />
         ))}
       </div>

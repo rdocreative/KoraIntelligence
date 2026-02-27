@@ -61,6 +61,7 @@ export default function TasksPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly');
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [lastMovedTaskId, setLastMovedTaskId] = useState<string | null>(null);
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -121,6 +122,19 @@ export default function TasksPage() {
       ...prev,
       [currentDayName]: [...(prev[currentDayName] || []), newTask]
     }));
+  };
+
+  const handleUpdateTaskTime = (taskId: string, newTime: string) => {
+    setColumns(prev => {
+      const newColumns = { ...prev };
+      Object.keys(newColumns).forEach(day => {
+        newColumns[day] = newColumns[day].map(task => 
+          task.id === taskId ? { ...task, time: newTime } : task
+        );
+      });
+      return newColumns;
+    });
+    setLastMovedTaskId(null);
   };
 
   const findDay = (id: string) => {
@@ -186,6 +200,7 @@ export default function TasksPage() {
       
       if (activeTask) {
         setActiveTask({ ...activeTask, period: overPeriod });
+        setLastMovedTaskId(activeTask.id);
       }
     }
   };
@@ -312,6 +327,8 @@ export default function TasksPage() {
                       title={day} 
                       tasks={columns[day] || []} 
                       isToday={isToday}
+                      lastMovedTaskId={lastMovedTaskId}
+                      onUpdateTaskTime={handleUpdateTaskTime}
                     />
                   );
                 })}
