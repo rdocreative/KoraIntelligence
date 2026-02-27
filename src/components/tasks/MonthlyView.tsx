@@ -246,7 +246,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                 key={idx}
                 onClick={() => setSelectedDate(day)}
                 className={cn(
-                  "min-h-[160px] p-2.5 rounded-[22px] border transition-all cursor-pointer group flex flex-col relative",
+                  "min-h-[170px] p-2.5 rounded-[22px] border transition-all cursor-pointer group flex flex-col relative",
                   !isCurrentMonth ? "bg-transparent border-transparent opacity-5 pointer-events-none" : 
                   isSelected ? "bg-white/[0.06] border-white/20 shadow-lg" : "bg-white/[0.02] border-white/5 hover:border-white/10",
                   isDateToday && !isSelected && "border-[#38BDF8]/40"
@@ -263,7 +263,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                 </div>
 
                 <div className="flex-1 space-y-1 relative z-10">
-                  {isCurrentMonth && tasks.slice(0, 5).map((task) => (
+                  {isCurrentMonth && tasks.slice(0, 4).map((task) => (
                     <div 
                       key={task.id}
                       className={cn(
@@ -277,7 +277,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                       </span>
                     </div>
                   ))}
-                  {tasks.length > 5 && isCurrentMonth && (
+                  {tasks.length > 4 && isCurrentMonth && (
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
@@ -285,7 +285,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                       }}
                       className="w-full text-left text-[8px] font-black text-zinc-500 pl-1 hover:text-[#38BDF8] transition-colors mt-0.5"
                     >
-                      + {tasks.length - 5} itens
+                      + {tasks.length - 4} itens
                     </button>
                   )}
                 </div>
