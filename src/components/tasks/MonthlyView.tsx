@@ -166,7 +166,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
   return (
     <div className="flex h-full w-full max-h-screen animate-in fade-in duration-700 overflow-hidden px-6">
       {/* Grid Principal do Calendário */}
-      <div className="flex-1 flex flex-col min-w-0 pr-4 h-full">
+      <div className="flex-1 flex flex-col min-w-0 pr-4 h-full overflow-hidden">
         {/* Barra de Filtros Minimalista */}
         <div className="flex items-center gap-6 mb-6 px-2 shrink-0">
           <div className="flex items-center gap-3">
@@ -233,58 +233,61 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
           ))}
         </div>
 
-        <div className="grid grid-cols-7 gap-2 pb-6 overflow-y-auto custom-scrollbar pr-1">
-          {calendarDays.map((day, idx) => {
-            const tasks = getFilteredTasksForDate(day);
-            const isSelected = isSameDay(day, selectedDate);
-            const isCurrentMonth = isSameMonth(day, monthStart);
-            const isDateToday = isToday(day);
+        {/* Grade do Calendário com Rolagem Interna Oculta */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 min-h-0">
+          <div className="grid grid-cols-7 gap-2 pb-6">
+            {calendarDays.map((day, idx) => {
+              const tasks = getFilteredTasksForDate(day);
+              const isSelected = isSameDay(day, selectedDate);
+              const isCurrentMonth = isSameMonth(day, monthStart);
+              const isDateToday = isToday(day);
 
-            return (
-              <div
-                key={idx}
-                onClick={() => setSelectedDate(day)}
-                className={cn(
-                  "aspect-square p-2 rounded-[18px] border transition-all cursor-pointer group flex flex-col relative",
-                  !isCurrentMonth ? "bg-transparent border-transparent opacity-5 pointer-events-none" : 
-                  isSelected ? "bg-white/[0.06] border-white/20 shadow-lg" : "bg-white/[0.02] border-white/5 hover:border-white/10",
-                  isDateToday && !isSelected && "border-[#38BDF8]/40"
-                )}
-              >
-                <div className="flex justify-between items-center mb-1.5 px-0.5">
-                  <span className={cn(
-                    "text-sm font-bold transition-all",
-                    isDateToday ? "text-[#38BDF8]" : "text-zinc-200 group-hover:text-white",
-                    isSelected && "text-white"
-                  )}>
-                    {format(day, 'd')}
-                  </span>
-                </div>
-
-                <div className="flex-1 space-y-1 overflow-hidden relative z-10">
-                  {isCurrentMonth && tasks.slice(0, 2).map((task) => (
-                    <div 
-                      key={task.id}
-                      className={cn(
-                        "px-2 py-0.5 rounded-md border flex items-center gap-1.5 transition-transform hover:scale-[1.04] relative z-20",
-                        getPriorityStyles(task.priority)
-                      )}
-                    >
-                      <div className={cn("w-1 h-1 rounded-full shrink-0", getPriorityDot(task.priority))} />
-                      <span className="text-[9px] font-medium truncate">
-                        {task.name}
-                      </span>
-                    </div>
-                  ))}
-                  {tasks.length > 2 && isCurrentMonth && (
-                    <div className="text-[8px] font-bold text-zinc-500 pl-1">
-                      + {tasks.length - 2} itens
-                    </div>
+              return (
+                <div
+                  key={idx}
+                  onClick={() => setSelectedDate(day)}
+                  className={cn(
+                    "aspect-square p-2 rounded-[18px] border transition-all cursor-pointer group flex flex-col relative",
+                    !isCurrentMonth ? "bg-transparent border-transparent opacity-5 pointer-events-none" : 
+                    isSelected ? "bg-white/[0.06] border-white/20 shadow-lg" : "bg-white/[0.02] border-white/5 hover:border-white/10",
+                    isDateToday && !isSelected && "border-[#38BDF8]/40"
                   )}
+                >
+                  <div className="flex justify-between items-center mb-1.5 px-0.5">
+                    <span className={cn(
+                      "text-sm font-bold transition-all",
+                      isDateToday ? "text-[#38BDF8]" : "text-zinc-200 group-hover:text-white",
+                      isSelected && "text-white"
+                    )}>
+                      {format(day, 'd')}
+                    </span>
+                  </div>
+
+                  <div className="flex-1 space-y-1 overflow-hidden relative z-10">
+                    {isCurrentMonth && tasks.slice(0, 2).map((task) => (
+                      <div 
+                        key={task.id}
+                        className={cn(
+                          "px-2 py-0.5 rounded-md border flex items-center gap-1.5 transition-transform hover:scale-[1.04] relative z-20",
+                          getPriorityStyles(task.priority)
+                        )}
+                      >
+                        <div className={cn("w-1 h-1 rounded-full shrink-0", getPriorityDot(task.priority))} />
+                        <span className="text-[9px] font-medium truncate">
+                          {task.name}
+                        </span>
+                      </div>
+                    ))}
+                    {tasks.length > 2 && isCurrentMonth && (
+                      <div className="text-[8px] font-bold text-zinc-500 pl-1">
+                        + {tasks.length - 2} itens
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -326,6 +329,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
             </h3>
           </div>
 
+          {/* Lista de Tarefas com Rolagem e Ordenação por Prioridade */}
           <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-4 min-h-0">
             {sideTasks.length > 0 ? (
               sideTasks.map((task, idx) => {
