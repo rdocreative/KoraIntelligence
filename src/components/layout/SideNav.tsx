@@ -32,20 +32,19 @@ export const SideNav = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed left-0 top-8 z-50 p-2 bg-[#080B14] border border-l-0 border-white/10 rounded-r-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-all animate-in fade-in slide-in-from-left duration-500"
+          className="fixed left-5 top-10 z-50 p-3 bg-white/[0.03] border border-white/10 rounded-2xl text-zinc-500 hover:text-white hover:bg-white/10 transition-all animate-in fade-in slide-in-from-left duration-500 backdrop-blur-md shadow-xl"
           title="Abrir Menu"
         >
           <PanelLeftOpen size={20} />
         </button>
       )}
 
-      {/* Container Principal da SideNav */}
+      {/* Container Principal da SideNav como Card */}
       <div 
         className={cn(
-          "h-full flex flex-col relative z-30 shrink-0 bg-white/[0.02] border-r border-white/[0.05] transition-all duration-500 ease-in-out outline-none overflow-hidden",
-          isOpen ? "w-[260px]" : "w-0 border-r-0"
+          "h-full flex flex-col relative z-30 shrink-0 bg-white/[0.02] border border-white/[0.05] transition-all duration-500 ease-in-out outline-none overflow-hidden rounded-[32px] shadow-2xl backdrop-blur-sm",
+          isOpen ? "w-[260px]" : "w-0 border-none opacity-0"
         )}
-        style={{ borderRadius: '0 20px 20px 0' }}
       >
         {/* Wrapper Interno */}
         <div 

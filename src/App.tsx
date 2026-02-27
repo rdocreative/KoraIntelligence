@@ -43,20 +43,18 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex h-screen w-full text-white antialiased bg-[#080B14] overflow-hidden border-none outline-none ring-0">
+    <div className="flex h-screen w-full text-white antialiased bg-[#080B14] overflow-hidden p-5 gap-5">
       <SideNav />
-      <div className="flex-1 flex flex-col p-4 pl-0 min-w-0 bg-[#080B14]">
-        <div 
-          className="flex-1 flex flex-col rounded-[24px] overflow-hidden relative min-h-0 w-full border-none outline-none shadow-none ring-0" 
-          style={{ 
-            background: 'radial-gradient(ellipse 80% 60% at 60% 0%, rgba(99,102,241,0.08) 0%, transparent 60%), #080B14' 
-          }}
-        >
-          <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-10">
-            <main className="flex-1 flex flex-col">
-              <Outlet />
-            </main>
-          </div>
+      <div 
+        className="flex-1 flex flex-col rounded-[32px] overflow-hidden relative border border-white/[0.05] shadow-2xl" 
+        style={{ 
+          background: 'radial-gradient(ellipse 80% 60% at 60% 0%, rgba(99,102,241,0.08) 0%, transparent 60%), #080B14' 
+        }}
+      >
+        <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-10">
+          <main className="flex-1 flex flex-col">
+            <Outlet />
+          </main>
         </div>
       </div>
     </div>
