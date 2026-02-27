@@ -131,7 +131,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
   const selectedDayTasks = getFilteredTasksForDate(selectedDate);
 
   return (
-    <div className="flex h-full w-full animate-in fade-in duration-700 overflow-hidden bg-[#080808] px-6">
+    <div className="flex h-full w-full animate-in fade-in duration-700 overflow-hidden px-6">
       {/* Grid Principal do Calendário */}
       <div className="flex-1 flex flex-col min-w-0 pr-4">
         {/* Barra de Filtros Minimalista */}
