@@ -75,7 +75,6 @@ export const WeeklyBoard = () => {
     const targetDay = weekDays.find(d => format(d, 'yyyy-MM-dd') === dateStr);
 
     if (targetDay && periodId) {
-      // Check if adjustment is needed to show toast
       const currentTask = tasks.find(t => t.id === activeId);
       const targetPeriod = PERIODS.find(p => p.id === periodId);
 
@@ -84,10 +83,7 @@ export const WeeklyBoard = () => {
         const isValid = hours >= targetPeriod.start && hours < targetPeriod.end;
 
         if (!isValid) {
-          toast.info(`Horário ajustado para ${targetPeriod.default}`, {
-            description: `O horário foi adaptado para o turno da ${targetPeriod.label}.`,
-            duration: 3000,
-          });
+          toast.info(`Horário ajustado para ${targetPeriod.default}`);
         }
       }
 
@@ -98,7 +94,6 @@ export const WeeklyBoard = () => {
             const [hours] = t.time.split(':').map(Number);
             let newTime = t.time;
             
-            // STRICT VALIDATION: Check if current time fits into the new period
             let isValid = false;
             if (targetPeriod) {
                if (hours >= targetPeriod.start && hours < targetPeriod.end) {
@@ -106,7 +101,6 @@ export const WeeklyBoard = () => {
                }
             }
 
-            // If time is INVALID for the new period, FORCE update to default time
             if (!isValid && targetPeriod) {
                newTime = targetPeriod.default;
             }
@@ -130,7 +124,6 @@ export const WeeklyBoard = () => {
   const updateTaskTime = (taskId: string, newTime: string) => {
     setTasks(prev => prev.map(t => {
       if (t.id === taskId) {
-        // Automatically determine the correct period based on the new time
         const newPeriod = getPeriodFromTime(newTime);
         return { ...t, time: newTime, period: newPeriod };
       }
