@@ -10,10 +10,12 @@ import { toast } from "sonner";
 
 interface Task {
   id: string;
-  content: string;
+  name: string;
   time: string;
   period: string;
   date: Date;
+  icon?: string;
+  priority?: 'Baixa' | 'Média' | 'Alta' | 'Extrema';
 }
 
 const PERIODS = [
@@ -33,9 +35,9 @@ const getPeriodFromTime = (time: string) => {
 
 export const WeeklyBoard = () => {
   const [tasks, setTasks] = useState<Task[]>([
-    { id: '1', content: 'Reunião de Design', time: '10:00', period: 'Morning', date: new Date() },
-    { id: '2', content: 'Almoço com equipe', time: '13:00', period: 'Afternoon', date: new Date() },
-    { id: '3', content: 'Revisão de código', time: '19:00', period: 'Evening', date: new Date() },
+    { id: '1', name: 'Reunião de Design', time: '10:00', period: 'Morning', date: new Date(), icon: '🎨', priority: 'Média' },
+    { id: '2', name: 'Almoço com equipe', time: '13:00', period: 'Afternoon', date: new Date(), icon: '🥗', priority: 'Baixa' },
+    { id: '3', name: 'Revisão de código', time: '19:00', period: 'Evening', date: new Date(), icon: '💻', priority: 'Extrema' },
   ]);
   
   const [activeTask, setActiveTask] = useState<Task | null>(null);
@@ -69,24 +71,10 @@ export const WeeklyBoard = () => {
     const activeId = active.id as string;
     const overId = over.id as string;
 
-    // overId format: "yyyy-MM-dd:PeriodID"
     const [dateStr, periodId] = overId.split(':');
-    
     const targetDay = weekDays.find(d => format(d, 'yyyy-MM-dd') === dateStr);
 
     if (targetDay && periodId) {
-      const currentTask = tasks.find(t => t.id === activeId);
-      const targetPeriod = PERIODS.find(p => p.id === periodId);
-
-      if (currentTask && targetPeriod) {
-        const [hours] = currentTask.time.split(':').map(Number);
-        const isValid = hours >= targetPeriod.start && hours < targetPeriod.end;
-
-        if (!isValid) {
-          toast.info(`Horário ajustado para ${targetPeriod.default}`);
-        }
-      }
-
       setTasks(prev => {
         return prev.map(t => {
           if (t.id === activeId) {
@@ -103,6 +91,7 @@ export const WeeklyBoard = () => {
 
             if (!isValid && targetPeriod) {
                newTime = targetPeriod.default;
+               toast.info(`Horário ajustado para ${newTime}`);
             }
 
             return {
@@ -157,7 +146,18 @@ export const WeeklyBoard = () => {
               );
             })}
             <DragOverlay>
-              {activeTask ? <TaskCard task={activeTask} /> : null}
+              {activeTask ? (
+                <TaskCard 
+                  task={{
+                    id: activeTask.id,
+                    name: activeTask.name,
+                    time: activeTask.time,
+                    icon: activeTask.icon,
+                    priority: activeTask.priority,
+                    period: activeTask.period
+                  }} 
+                />
+              ) : null}
             </DragOverlay>
           </DndContext>
         </div>

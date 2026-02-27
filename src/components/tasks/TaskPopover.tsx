@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Clock, AlertCircle, ChevronDown } from 'lucide-react';
+import { X, Clock, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TaskPopoverProps {
@@ -16,7 +16,7 @@ const HOURS = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0')
 const MINUTES = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, '0'));
 
 export const TaskPopover = ({ task, onClose, onSave, position }: TaskPopoverProps) => {
-  const [name, setName] = useState(task.name);
+  const [name, setName] = useState(task.name || "");
   const [icon, setIcon] = useState(task.icon || '📝');
   const [priority, setPriority] = useState(task.priority || 'Baixa');
   const [hour, setHour] = useState(task.time?.split(':')[0] || '09');
