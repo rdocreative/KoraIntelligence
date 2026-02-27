@@ -14,7 +14,7 @@ import {
   getDay
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Clock, X, Hash } from 'lucide-react';
+import { Clock, X, Hash, Sun, Coffee, Moon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MonthlyViewProps {
@@ -47,12 +47,25 @@ const getPriorityStyles = (priority: string) => {
 const getSidebarCardStyles = (priority: string) => {
   switch (priority) {
     case 'Extrema': 
-      return "bg-gradient-to-r from-red-500/15 via-red-500/[0.02] to-transparent border-l-4 border-l-red-500/60 border-y border-r border-white/5";
+      return "bg-gradient-to-r from-red-500/10 via-red-500/[0.02] to-transparent border-l-4 border-l-red-500/60 border-y border-r border-white/5 shadow-sm";
     case 'Média': 
-      return "bg-gradient-to-r from-amber-500/15 via-amber-500/[0.02] to-transparent border-l-4 border-l-amber-500/60 border-y border-r border-white/5";
+      return "bg-gradient-to-r from-amber-500/10 via-amber-500/[0.02] to-transparent border-l-4 border-l-amber-500/60 border-y border-r border-white/5 shadow-sm";
     case 'Baixa':
     default: 
-      return "bg-gradient-to-r from-sky-500/15 via-sky-500/[0.02] to-transparent border-l-4 border-l-sky-500/60 border-y border-r border-white/5";
+      return "bg-gradient-to-r from-sky-500/10 via-sky-500/[0.02] to-transparent border-l-4 border-l-sky-500/60 border-y border-r border-white/5 shadow-sm";
+  }
+};
+
+const getPeriodInfo = (period: string) => {
+  switch (period) {
+    case 'Morning':
+      return { label: 'MANHÃ', icon: Sun, color: 'text-orange-400' };
+    case 'Afternoon':
+      return { label: 'TARDE', icon: Coffee, color: 'text-emerald-400' };
+    case 'Evening':
+      return { label: 'NOITE', icon: Moon, color: 'text-indigo-400' };
+    default:
+      return { label: 'MADRUGADA', icon: Moon, color: 'text-blue-500' };
   }
 };
 
@@ -169,40 +182,55 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
             </h3>
           </div>
 
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-3">
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-4">
             {selectedDayTasks.length > 0 ? (
-              selectedDayTasks.map((task) => (
-                <div 
-                  key={task.id}
-                  className={cn(
-                    "group p-4 rounded-[20px] transition-all relative overflow-hidden",
-                    getSidebarCardStyles(task.priority)
-                  )}
-                >
-                  <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="text-lg filter drop-shadow-sm">{task.icon}</span>
-                      <h4 className="text-[13px] font-semibold text-white/90 group-hover:text-white transition-colors truncate">
-                        {task.name}
-                      </h4>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 font-medium">
-                        <Clock size={10} className="text-zinc-500" />
-                        {task.time}
+              selectedDayTasks.map((task) => {
+                const period = getPeriodInfo(task.period);
+                const PeriodIcon = period.icon;
+
+                return (
+                  <div 
+                    key={task.id}
+                    className={cn(
+                      "group p-4 rounded-[24px] transition-all relative overflow-hidden bg-zinc-900/40",
+                      getSidebarCardStyles(task.priority)
+                    )}
+                  >
+                    <div className="relative z-10">
+                      {/* Top: Period */}
+                      <div className="flex items-center gap-1.5 mb-3">
+                        <PeriodIcon size={12} className={period.color} />
+                        <span className={cn("text-[10px] font-black tracking-widest", period.color)}>
+                          {period.label}
+                        </span>
                       </div>
-                      <div className={cn(
-                        "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-black/20",
-                        task.priority === 'Extrema' ? "text-red-400" :
-                        task.priority === 'Média' ? "text-amber-400" : "text-sky-400"
-                      )}>
-                        {task.priority}
+
+                      {/* Middle: Title & Icon */}
+                      <div className="flex items-center gap-3 mb-4">
+                        <span className="text-xl filter drop-shadow-md">{task.icon}</span>
+                        <h4 className="text-[14px] font-semibold text-white/95 group-hover:text-white transition-colors leading-tight">
+                          {task.name}
+                        </h4>
+                      </div>
+                      
+                      {/* Bottom: Priority & Time */}
+                      <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.03]">
+                        <div className={cn(
+                          "px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider",
+                          task.priority === 'Extrema' ? "bg-red-500/10 text-red-500" :
+                          task.priority === 'Média' ? "bg-amber-500/10 text-amber-500" : "bg-sky-500/10 text-sky-500"
+                        )}>
+                          {task.priority}
+                        </div>
+                        <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-medium">
+                          <Clock size={10} className="text-zinc-600" />
+                          {task.time}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-center opacity-20 py-8">
                 <X size={20} className="text-zinc-600 mb-2" />
