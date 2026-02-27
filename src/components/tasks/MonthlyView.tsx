@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { 
   format, 
   startOfMonth, 
@@ -16,6 +16,7 @@ import {
 import { ptBR } from 'date-fns/locale';
 import { Clock, X, Hash, Sun, Coffee, Moon, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface MonthlyViewProps {
   tasksData: Record<string, any[]>;
@@ -99,6 +100,7 @@ type ViewMode = 'day' | 'week' | 'month';
 
 export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [expandedDate, setExpandedDate] = useState<Date | null>(null);
   const [activePriorities, setActivePriorities] = useState<string[]>([]);
   const [activeWeekDays, setActiveWeekDays] = useState<number[]>([]);
   const [sideViewMode, setSideViewMode] = useState<ViewMode>('day');
@@ -163,7 +165,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
   }, [sideViewMode, selectedDate, currentDate, activePriorities, activeWeekDays, tasksData]);
 
   return (
-    <div className="flex h-full w-full max-h-screen animate-in fade-in duration-700 overflow-hidden px-6">
+    <div className="flex h-full w-full max-h-screen animate-in fade-in duration-700 overflow-hidden px-6 relative">
       {/* Grid Principal do Calendário */}
       <div className="flex-1 flex flex-col min-w-0 pr-4 h-full">
         {/* Barra de Filtros Minimalista */}
@@ -260,25 +262,31 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   </span>
                 </div>
 
-                <div className="flex-1 space-y-1 relative z-10">
-                  {isCurrentMonth && tasks.slice(0, 2).map((task) => (
+                <div className="flex-1 space-y-0.5 relative z-10 overflow-hidden">
+                  {isCurrentMonth && tasks.slice(0, 5).map((task) => (
                     <div 
                       key={task.id}
                       className={cn(
-                        "px-2 py-0.5 rounded-md border flex items-center gap-1.5 transition-transform hover:scale-[1.04] relative z-20",
+                        "px-1.5 py-0.5 rounded-md border flex items-center gap-1 transition-transform hover:scale-[1.04] relative z-20",
                         getPriorityStyles(task.priority)
                       )}
                     >
                       <div className={cn("w-1 h-1 rounded-full shrink-0", getPriorityDot(task.priority))} />
-                      <span className="text-[9px] font-medium truncate">
+                      <span className="text-[8px] font-medium truncate">
                         {task.name}
                       </span>
                     </div>
                   ))}
-                  {tasks.length > 2 && isCurrentMonth && (
-                    <div className="text-[8px] font-bold text-zinc-500 pl-1">
-                      + {tasks.length - 2} itens
-                    </div>
+                  {tasks.length > 5 && isCurrentMonth && (
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setExpandedDate(day);
+                      }}
+                      className="w-full text-left text-[8px] font-bold text-zinc-500 pl-1 hover:text-[#38BDF8] transition-colors"
+                    >
+                      + {tasks.length - 5} itens
+                    </button>
                   )}
                 </div>
               </div>
@@ -335,8 +343,8 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   <div 
                     key={`${task.id}-${idx}`}
                     className={cn(
-                      "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-gradient-to-br bg-zinc-900/40 shrink-0",
-                      "min-h-[115px]", 
+                      "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-zinc-900/40 shrink-0",
+                      "min-h-[115px] bg-gradient-to-br", 
                       getPeriodGradient(task.period)
                     )}
                   >
@@ -387,10 +395,64 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
             )}
           </div>
 
-          {/* Gradiente Inferior para suavizar o scroll */}
           <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-transparent pointer-events-none z-20 rounded-b-[28px]" />
         </div>
       </div>
+
+      {/* Popover Detalhado de Tarefas (Inspirado na Foto) */}
+      <AnimatePresence>
+        {expandedDate && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setExpandedDate(null)}>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-[340px] bg-zinc-900 border border-white/10 rounded-[40px] shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
+            >
+              <div className="p-8 pb-4 flex flex-col items-center relative">
+                <button 
+                  onClick={() => setExpandedDate(null)}
+                  className="absolute right-6 top-6 p-2 rounded-full hover:bg-white/5 transition-colors text-zinc-500"
+                >
+                  <X size={20} />
+                </button>
+                
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 mb-2">
+                  {format(expandedDate, 'EEE.', { locale: ptBR })}
+                </span>
+                <h2 className="text-6xl font-serif text-white">
+                  {format(expandedDate, 'd')}
+                </h2>
+              </div>
+
+              <div className="flex-1 overflow-y-auto custom-scrollbar px-6 pb-8 pt-2 space-y-2">
+                {getFilteredTasksForDate(expandedDate).map((task) => (
+                  <div 
+                    key={task.id}
+                    className="flex items-center gap-3 p-3 rounded-2xl hover:bg-white/[0.03] transition-colors group"
+                  >
+                    <div className={cn(
+                      "w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_10px_rgba(0,0,0,0.5)]",
+                      getPriorityDot(task.priority)
+                    )} />
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2">
+                         <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-tight">
+                          {task.time}
+                        </span>
+                        <h4 className="text-[14px] font-medium text-white group-hover:text-[#38BDF8] transition-colors">
+                          {task.name}
+                        </h4>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
