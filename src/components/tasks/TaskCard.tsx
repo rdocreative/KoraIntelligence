@@ -36,7 +36,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
   const priorityColors = {
     Extrema: 'bg-red-500/20 text-red-400 border-red-500/30',
     Média: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
-    Baixa: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
+    Baixa: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
   };
 
   return (

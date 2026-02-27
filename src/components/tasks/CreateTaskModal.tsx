@@ -29,8 +29,8 @@ const REMINDER_OPTIONS = [
 
 const priorityStyles = {
   Baixa: {
-    active: "bg-gradient-to-br from-sky-500/20 to-sky-500/5 border-sky-500/40 text-sky-400 shadow-[0_0_20px_rgba(14,165,233,0.1)]",
-    inactive: "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-sky-500/20 hover:text-sky-500/40"
+    active: "bg-gradient-to-br from-blue-500/20 to-blue-500/5 border-blue-500/40 text-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.1)]",
+    inactive: "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-blue-500/20 hover:text-blue-500/40"
   },
   Média: {
     active: "bg-gradient-to-br from-orange-500/20 to-orange-500/5 border-orange-500/40 text-orange-400 shadow-[0_0_20px_rgba(249,115,22,0.1)]",

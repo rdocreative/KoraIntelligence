@@ -28,7 +28,7 @@ import {
   Plus,
   LayoutGrid
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 import { format, getWeek, addMonths, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -251,7 +251,7 @@ export default function TasksPage() {
             </h2>
             <button onClick={handleNextDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronRight size={20} /></button>
           </div>
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-[#38BDF8]/10 px-4 py-1.5 rounded-full text-[#38BDF8] border border-[#38BDF8]/20">
+          <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500/80 border border-white/5 px-2 py-0.5 rounded-md">
             Tempo Real
           </span>
         </div>

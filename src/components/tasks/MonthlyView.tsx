@@ -40,7 +40,7 @@ const getPriorityStyles = (priority: string) => {
       return "bg-gradient-to-r from-amber-500/20 to-amber-500/5 border-amber-500/30 text-amber-200";
     case 'Baixa':
     default: 
-      return "bg-gradient-to-r from-sky-500/20 to-sky-500/5 border-sky-500/30 text-sky-200";
+      return "bg-gradient-to-r from-blue-500/20 to-blue-500/5 border-blue-500/30 text-blue-200";
   }
 };
 
@@ -74,7 +74,7 @@ const getPriorityDot = (priority: string) => {
   switch (priority) {
     case 'Extrema': return "bg-red-500";
     case 'Média': return "bg-amber-500";
-    default: return "bg-sky-500";
+    default: return "bg-blue-500";
   }
 };
 
@@ -219,7 +219,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                         <div className={cn(
                           "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest",
                           task.priority === 'Extrema' ? "bg-red-500/10 text-red-500" :
-                          task.priority === 'Média' ? "bg-amber-500/10 text-amber-500" : "bg-sky-500/10 text-sky-500"
+                          task.priority === 'Média' ? "bg-amber-500/10 text-amber-500" : "bg-blue-500/10 text-blue-500"
                         )}>
                           {task.priority}
                         </div>
