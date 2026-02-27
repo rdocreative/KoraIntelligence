@@ -23,7 +23,7 @@ const navItems = [
 
 const DEFAULT_WIDTH = 256; 
 const MIN_WIDTH = DEFAULT_WIDTH * 0.7; // -30%
-const MAX_WIDTH = DEFAULT_WIDTH * 1.6; // +60% (30% original + 30% extra)
+const MAX_WIDTH = DEFAULT_WIDTH * 1.6; // +60%
 
 export const SideNav = () => {
   const location = useLocation();
@@ -63,15 +63,19 @@ export const SideNav = () => {
 
   return (
     <div 
-      className="h-full flex flex-col pt-12 pb-6 px-6 relative z-20 shrink-0 bg-transparent transition-none group/sidebar border-r border-white/5"
+      className="h-full flex flex-col pt-12 pb-6 px-6 relative z-30 shrink-0 bg-transparent transition-none group/sidebar border-r border-white/5"
       style={{ width: `${width}px` }}
     >
-      {/* Handle de redimensionamento - Ajustado para não cortar a borda */}
+      {/* Handle de redimensionamento otimizado */}
       <div 
         onMouseDown={startResizing}
-        className="absolute top-0 -right-[2px] w-[4px] h-full cursor-col-resize hover:bg-[#38BDF8]/30 transition-colors flex items-center justify-center group z-50"
+        className="absolute top-0 -right-[4px] w-[8px] h-full cursor-col-resize z-50 group"
       >
-        <div className="hidden group-hover:flex items-center justify-center w-4 h-8 bg-zinc-900 rounded-full border border-white/10 shadow-xl">
+        {/* Linha visual fina que não corta o fundo */}
+        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-transparent group-hover:bg-[#38BDF8]/40 transition-colors" />
+        
+        {/* Grip pill centralizado */}
+        <div className="hidden group-hover:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center w-4 h-8 bg-zinc-900 rounded-full border border-white/10 shadow-2xl pointer-events-none">
           <GripVertical size={12} className="text-zinc-500" />
         </div>
       </div>
@@ -83,7 +87,6 @@ export const SideNav = () => {
         </button>
       </div>
 
-      {/* Removido overflow-hidden aqui para evitar corte no stroke dos itens ativos */}
       <nav className="flex-1 space-y-2">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
