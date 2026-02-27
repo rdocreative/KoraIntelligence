@@ -61,7 +61,7 @@ export const SideNav = () => {
 
   return (
     <div 
-      className="h-full flex flex-col pt-12 pb-6 px-6 relative z-30 shrink-0 bg-[#070707] transition-none group/sidebar border-none outline-none"
+      className="h-full flex flex-col pt-12 pb-6 px-6 relative z-30 shrink-0 bg-[#070707] transition-none group/sidebar border-none outline-none shadow-none ring-0"
       style={{ width: `${width}px` }}
     >
       {/* Handle de redimensionamento centralizado sobre a junção */}
