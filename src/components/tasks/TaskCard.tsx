@@ -34,7 +34,6 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
   const [popoverPosition, setPopoverPosition] = useState({ top: 0, left: 0 });
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Reset local state if task time changes or when overlay appears
   useEffect(() => {
     if (isAwaitingTime) {
       const currentTime = task.time || defaultPeriodTime || '09:00';

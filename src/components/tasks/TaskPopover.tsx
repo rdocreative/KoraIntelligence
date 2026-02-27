@@ -34,6 +34,16 @@ export const TaskPopover = ({ task, onClose, onSave, position }: TaskPopoverProp
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClose]);
 
+  const handleSave = () => {
+    onSave({
+      name,
+      icon: icon.charAt(0),
+      priority,
+      time: `${hour}:${minute}`
+    });
+    onClose();
+  };
+
   return (
     <div 
       ref={popoverRef}
