@@ -47,13 +47,13 @@ const getPriorityStyles = (priority: string) => {
 const getPeriodGradient = (period: string) => {
   switch (period) {
     case 'Morning':
-      return "from-orange-500/10 via-orange-500/[0.02] to-transparent border-l-orange-500/40";
+      return "from-orange-500/[0.08] via-orange-500/[0.02] to-transparent border-l-orange-500/40";
     case 'Afternoon':
-      return "from-emerald-500/10 via-emerald-500/[0.02] to-transparent border-l-emerald-500/40";
+      return "from-emerald-500/[0.08] via-emerald-500/[0.02] to-transparent border-l-emerald-500/40";
     case 'Evening':
-      return "from-indigo-500/10 via-indigo-500/[0.02] to-transparent border-l-indigo-500/40";
+      return "from-indigo-500/[0.08] via-indigo-500/[0.02] to-transparent border-l-indigo-500/40";
     default:
-      return "from-blue-500/10 via-blue-500/[0.02] to-transparent border-l-blue-500/40";
+      return "from-blue-500/[0.08] via-blue-500/[0.02] to-transparent border-l-blue-500/40";
   }
 };
 
@@ -193,7 +193,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   <div 
                     key={task.id}
                     className={cn(
-                      "group p-4 rounded-[24px] transition-all relative overflow-hidden bg-zinc-900/40 border-y border-r border-white/5 border-l-4",
+                      "group p-4 rounded-[24px] transition-all relative overflow-hidden border-y border-r border-white/5 border-l-4 bg-gradient-to-br bg-zinc-900/40",
                       getPeriodGradient(task.period)
                     )}
                   >
