@@ -116,11 +116,9 @@ const PeriodContainer = ({
           </span>
         </div>
         
-        {isExpanded && (
-          <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight opacity-70">
-            {period.time}
-          </span>
-        )}
+        <span className="text-[11px] font-bold text-white/75 uppercase tracking-tight">
+          {period.time}
+        </span>
       </div>
       
       <div className={cn(
@@ -160,7 +158,7 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
       <div className="flex items-center justify-center mb-4 px-3 relative">
         <div className="flex items-center gap-3">
           <h3 className={cn(
-            "text-[15px] font-serif font-medium tracking-tight",
+            "text-[15px] font-sans font-medium tracking-tight",
             isToday ? "text-[#6366f1] opacity-100" : "text-white opacity-[0.85]"
           )}>
             {title}

@@ -39,7 +39,7 @@ const SideNav = () => {
             <div className="w-8 h-8 bg-[#6366f1] rounded-xl flex items-center justify-center shadow-lg shadow-[#6366f1]/20">
               <Sparkles size={18} className="text-white" />
             </div>
-            <span className="font-serif text-xl font-medium tracking-tight text-white">Dyad</span>
+            <span className="font-sans text-xl font-medium tracking-tight text-white">Dyad</span>
           </div>
         )}
         <button 

@@ -30,7 +30,7 @@ export const TopBar = () => {
   return (
     <header className="mb-14 flex items-center justify-between px-4 lg:px-0">
       <div>
-        <h1 className="text-5xl font-serif italic mb-3 tracking-tight text-[#F9FAFB]">
+        <h1 className="text-5xl font-sans italic mb-3 tracking-tight text-[#F9FAFB]">
           {title}
         </h1>
         <div className="flex items-center gap-3">
