@@ -23,6 +23,7 @@
 
   body {
     background-color: #0A0C10;
+    background-image: none !important;
     color: white;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
