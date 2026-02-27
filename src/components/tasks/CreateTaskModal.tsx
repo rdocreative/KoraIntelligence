@@ -27,6 +27,21 @@ const REMINDER_OPTIONS = [
   { label: '1 hora antes', value: '60' }
 ];
 
+const priorityStyles = {
+  Baixa: {
+    active: "bg-gradient-to-br from-sky-500/20 to-sky-500/5 border-sky-500/40 text-sky-400 shadow-[0_0_20px_rgba(14,165,233,0.1)]",
+    inactive: "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-sky-500/20 hover:text-sky-500/40"
+  },
+  Média: {
+    active: "bg-gradient-to-br from-orange-500/20 to-orange-500/5 border-orange-500/40 text-orange-400 shadow-[0_0_20px_rgba(249,115,22,0.1)]",
+    inactive: "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-orange-500/20 hover:text-orange-500/40"
+  },
+  Extrema: {
+    active: "bg-gradient-to-br from-red-500/20 to-red-500/5 border-red-500/40 text-red-400 shadow-[0_0_20px_rgba(239,68,68,0.1)]",
+    inactive: "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-red-500/20 hover:text-red-500/40"
+  }
+};
+
 export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: CreateTaskModalProps) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -208,10 +223,10 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
                     type="button"
                     onClick={() => setPriority(p)}
                     className={cn(
-                      "flex-1 rounded-xl text-[8px] font-black uppercase tracking-widest border transition-all",
+                      "flex-1 rounded-xl text-[8px] font-black uppercase tracking-widest border transition-all duration-300",
                       priority === p 
-                        ? "bg-[#38BDF8]/10 border-[#38BDF8]/30 text-[#38BDF8]" 
-                        : "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-white/10"
+                        ? priorityStyles[p].active 
+                        : priorityStyles[p].inactive
                     )}
                   >
                     {p}
