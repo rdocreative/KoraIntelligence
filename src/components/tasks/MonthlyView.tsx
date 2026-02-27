@@ -44,6 +44,18 @@ const getPriorityStyles = (priority: string) => {
   }
 };
 
+const getSidebarCardStyles = (priority: string) => {
+  switch (priority) {
+    case 'Extrema': 
+      return "bg-gradient-to-r from-red-600/10 via-red-600/5 to-transparent border-l-2 border-red-600/50";
+    case 'Média': 
+      return "bg-gradient-to-r from-amber-600/10 via-amber-600/5 to-transparent border-l-2 border-amber-600/50";
+    case 'Baixa':
+    default: 
+      return "bg-gradient-to-r from-sky-600/10 via-sky-600/5 to-transparent border-l-2 border-sky-600/50";
+  }
+};
+
 const getPriorityDot = (priority: string) => {
   switch (priority) {
     case 'Extrema': return "bg-red-500";
@@ -162,7 +174,10 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
               selectedDayTasks.map((task) => (
                 <div 
                   key={task.id}
-                  className="group p-4 rounded-[20px] bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all"
+                  className={cn(
+                    "group p-4 rounded-[20px] transition-all border border-white/5 hover:border-white/10",
+                    getSidebarCardStyles(task.priority)
+                  )}
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-lg">{task.icon}</span>
@@ -172,14 +187,17 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-[10px] text-zinc-500">
+                    <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-medium">
                       <Clock size={10} className="text-zinc-600" />
                       {task.time}
                     </div>
                     <div className={cn(
-                      "w-1.5 h-1.5 rounded-full",
-                      getPriorityDot(task.priority)
-                    )} />
+                      "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest",
+                      task.priority === 'Extrema' ? "bg-red-500/20 text-red-400" :
+                      task.priority === 'Média' ? "bg-amber-500/20 text-amber-400" : "bg-sky-500/20 text-sky-400"
+                    )}>
+                      {task.priority}
+                    </div>
                   </div>
                 </div>
               ))
