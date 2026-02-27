@@ -33,6 +33,12 @@ const WEEK_DAYS_MAP: Record<number, string> = {
 };
 
 const PRIORITIES = ['Extrema', 'Média', 'Baixa'];
+const PRIORITY_WEIGHT: Record<string, number> = {
+  'Extrema': 1,
+  'Média': 2,
+  'Baixa': 3
+};
+
 const WEEK_DAYS_SHORT = [
   { label: 'D', value: 0 },
   { label: 'S', value: 1 },
@@ -132,12 +138,10 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
   };
 
   const sideTasks = useMemo(() => {
-    if (sideViewMode === 'day') {
-      return getFilteredTasksForDate(selectedDate).map(t => ({ ...t, date: selectedDate }));
-    }
-
     let interval: Date[] = [];
-    if (sideViewMode === 'week') {
+    if (sideViewMode === 'day') {
+      interval = [selectedDate];
+    } else if (sideViewMode === 'week') {
       interval = eachDayOfInterval({
         start: startOfWeek(selectedDate),
         end: endOfWeek(selectedDate)
@@ -149,8 +153,13 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
       });
     }
 
-    return interval.flatMap(date => 
+    const tasks = interval.flatMap(date => 
       getFilteredTasksForDate(date).map(t => ({ ...t, date }))
+    );
+
+    // Ordenação por prioridade: Extrema (1) -> Média (2) -> Baixa (3)
+    return tasks.sort((a, b) => 
+      (PRIORITY_WEIGHT[a.priority] || 99) - (PRIORITY_WEIGHT[b.priority] || 99)
     );
   }, [sideViewMode, selectedDate, currentDate, activePriorities, activeWeekDays, tasksData]);
 
