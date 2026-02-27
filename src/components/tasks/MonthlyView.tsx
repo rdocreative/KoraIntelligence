@@ -226,9 +226,6 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   )}>
                     {format(day, 'd')}
                   </span>
-                  {tasks.length > 0 && isCurrentMonth && (
-                     <div className="w-1.5 h-1.5 rounded-full bg-[#38BDF8]" />
-                  )}
                 </div>
 
                 <div className="flex-1 space-y-1 overflow-visible relative z-10">
