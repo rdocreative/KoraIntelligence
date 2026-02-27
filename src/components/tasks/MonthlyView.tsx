@@ -335,7 +335,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   <div 
                     key={`${task.id}-${idx}`}
                     className={cn(
-                      "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-zinc-900/40 shrink-0",
+                      "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-gradient-to-br bg-zinc-900/40 shrink-0",
                       "min-h-[115px]", 
                       getPeriodGradient(task.period)
                     )}
