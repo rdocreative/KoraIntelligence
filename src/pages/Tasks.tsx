@@ -23,7 +23,6 @@ import {
   ChevronLeft, 
   ChevronRight,
   CalendarDays,
-  MoreHorizontal,
   Plus,
   LayoutGrid
 } from "lucide-react";
@@ -125,17 +124,18 @@ export default function TasksPage() {
     }));
   };
 
-  const handleUpdateTaskTime = (taskId: string, newTime: string) => {
+  const handleUpdateTask = (taskId: string, updates: any) => {
     setColumns(prev => {
       const newColumns = { ...prev };
       Object.keys(newColumns).forEach(day => {
         newColumns[day] = newColumns[day].map(task => 
-          task.id === taskId ? { ...task, time: newTime } : task
+          task.id === taskId ? { ...task, ...updates } : task
         );
       });
       return newColumns;
     });
     setLastMovedTaskId(null);
+    toast.success("Tarefa atualizada!");
   };
 
   const findDay = (id: string) => {
@@ -320,10 +320,6 @@ export default function TasksPage() {
               <span>Mensal</span>
             </button>
           </div>
-          
-          <button className="w-11 h-11 rounded-2xl border border-white/5 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors">
-             <MoreHorizontal size={20} />
-          </button>
         </div>
       </header>
 
@@ -369,7 +365,8 @@ export default function TasksPage() {
                       tasks={columns[day] || []} 
                       isToday={isToday}
                       lastMovedTaskId={lastMovedTaskId}
-                      onUpdateTaskTime={handleUpdateTaskTime}
+                      onUpdateTaskTime={(taskId, newTime) => handleUpdateTask(taskId, { time: newTime })}
+                      onUpdateTask={handleUpdateTask}
                     />
                   );
                 })}

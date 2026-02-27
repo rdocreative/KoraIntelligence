@@ -14,6 +14,7 @@ interface TaskColumnProps {
   isToday?: boolean;
   lastMovedTaskId?: string | null;
   onUpdateTaskTime?: (taskId: string, newTime: string) => void;
+  onUpdateTask?: (taskId: string, updates: any) => void;
 }
 
 const PERIODS = [
@@ -69,7 +70,8 @@ const PeriodContainer = ({
   tasks,
   isToday,
   lastMovedTaskId,
-  onUpdateTaskTime
+  onUpdateTaskTime,
+  onUpdateTask
 }: { 
   dayId: string; 
   period: typeof PERIODS[0]; 
@@ -77,6 +79,7 @@ const PeriodContainer = ({
   isToday?: boolean;
   lastMovedTaskId?: string | null;
   onUpdateTaskTime?: (taskId: string, newTime: string) => void;
+  onUpdateTask?: (taskId: string, updates: any) => void;
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `${dayId}:${period.id}`,
@@ -137,6 +140,7 @@ const PeriodContainer = ({
               task={{ ...task, period: period.id }} 
               isAwaitingTime={lastMovedTaskId === task.id}
               onUpdateTime={(newTime) => onUpdateTaskTime?.(task.id, newTime)}
+              onUpdateTask={onUpdateTask}
               defaultPeriodTime={period.defaultTime}
             />
           ))}
@@ -152,7 +156,7 @@ const PeriodContainer = ({
   );
 };
 
-export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday, lastMovedTaskId, onUpdateTaskTime }, ref) => {
+export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday, lastMovedTaskId, onUpdateTaskTime, onUpdateTask }, ref) => {
   return (
     <div 
       ref={ref} 
@@ -192,6 +196,7 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
             isToday={isToday}
             lastMovedTaskId={lastMovedTaskId}
             onUpdateTaskTime={onUpdateTaskTime}
+            onUpdateTask={onUpdateTask}
           />
         ))}
       </div>
