@@ -14,7 +14,7 @@ import {
   getDay
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Clock, X, Hash, Sun, Coffee, Moon, Filter, Zap, Target } from 'lucide-react';
+import { Clock, X, Sun, Coffee, Moon, Filter, Zap, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -146,8 +146,8 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
       interval = [selectedDate];
     } else if (sideViewMode === 'week') {
       interval = eachDayOfInterval({
-        start: startOfWeek(selectedDate),
-        end: endOfWeek(selectedDate)
+        start: startOfWeek(selectedDate, { weekStartsOn: 1 }),
+        end: endOfWeek(selectedDate, { weekStartsOn: 1 })
       });
     } else {
       interval = eachDayOfInterval({
@@ -166,13 +166,11 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
   }, [sideViewMode, selectedDate, currentDate, activePriorities, activeWeekDays, tasksData]);
 
   const summary = useMemo(() => {
-    const todayTasks = getFilteredTasksForDate(selectedDate);
-    const extremeCount = todayTasks.filter(t => t.priority === 'Extrema').length;
     return {
-      total: todayTasks.length,
-      extreme: extremeCount
+      total: sideTasks.length,
+      extreme: sideTasks.filter(t => t.priority === 'Extrema').length
     };
-  }, [selectedDate, tasksData, activePriorities, activeWeekDays]);
+  }, [sideTasks]);
 
   const handleOpenPopover = (e: React.MouseEvent, day: Date) => {
     const rect = (e.currentTarget.closest('.calendar-cell') as HTMLElement).getBoundingClientRect();
@@ -342,17 +340,14 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
 
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                 <Hash size={14} className="text-[#6366f1]" />
-                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
+                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/90">
                   {sideViewMode === 'day' ? format(selectedDate, "EEEE", { locale: ptBR }) : 
-                   sideViewMode === 'week' ? `Semana de ${format(startOfWeek(selectedDate), "d", { locale: ptBR })}` : 
+                   sideViewMode === 'week' ? `Semana de ${format(startOfWeek(selectedDate, { weekStartsOn: 1 }), "d", { locale: ptBR })}` : 
                    format(currentDate, "MMMM", { locale: ptBR })}
                 </span>
               </div>
               <h3 className="text-2xl font-serif text-white truncate leading-none">
-                {sideViewMode === 'day' ? format(selectedDate, "d 'de' MMMM", { locale: ptBR }) : 
-                 sideViewMode === 'week' ? `Visualização Semanal` : 
-                 `Resumo do Mês`}
+                Resumo do Dia
               </h3>
             </div>
 
@@ -436,7 +431,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                 <div className="w-16 h-16 rounded-full bg-white/[0.02] border border-white/5 flex items-center justify-center mb-4">
                   <Target size={24} className="text-zinc-700" />
                 </div>
-                <p className="text-sm text-zinc-200 font-medium mb-1">Nenhuma tarefa para este dia</p>
+                <p className="text-sm text-zinc-200 font-medium mb-1">Nenhuma tarefa para este período</p>
                 <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">Relaxe ou adicione algo novo</p>
               </div>
             )}
