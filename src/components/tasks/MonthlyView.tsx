@@ -325,7 +325,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
             </h3>
           </div>
 
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-4 min-h-0">
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-4 min-h-0 max-h-[580px]">
             {sideTasks.length > 0 ? (
               sideTasks.map((task, idx) => {
                 const period = getPeriodInfo(task.period);
@@ -336,7 +336,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                     key={`${task.id}-${idx}`}
                     className={cn(
                       "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-gradient-to-br bg-zinc-900/40 shrink-0",
-                      "min-h-[110px]", // Altura mínima para garantir que 4 caibam bem e o resto role
+                      "min-h-[120px]", 
                       getPeriodGradient(task.period)
                     )}
                   >
