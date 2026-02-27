@@ -184,9 +184,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
 
   return (
     <div className="flex h-full w-full max-h-screen animate-in fade-in duration-700 overflow-hidden px-6 relative">
-      {/* Grid Principal do Calendário */}
       <div className="flex-1 flex flex-col min-w-0 pr-4 h-full">
-        {/* Barra de Filtros Minimalista */}
         <div className="flex items-center gap-6 mb-6 px-2 shrink-0">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/5 rounded-lg">
@@ -313,11 +311,8 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
         </div>
       </div>
 
-      {/* Painel Lateral Direito */}
       <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2 h-full min-h-0 shrink-0">
         <div className="bg-[#0b0b0b] border border-white/10 rounded-[32px] flex flex-col h-full shadow-2xl overflow-hidden relative">
-          
-          {/* Header do Painel com Resumo */}
           <div className="p-6 pb-5 border-b border-white/5 shrink-0 space-y-5">
             <div className="flex items-center justify-between">
               <div className="flex bg-white/5 p-1 rounded-xl w-full">
@@ -346,12 +341,11 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                    format(currentDate, "MMMM", { locale: ptBR })}
                 </span>
               </div>
-              <h3 className="text-2xl font-serif text-white truncate leading-none">
+              <h3 className="text-2xl font-bold text-white truncate leading-none">
                 Resumo do Dia
               </h3>
             </div>
 
-            {/* Resumo de Metas */}
             <div className="grid grid-cols-2 gap-3 pt-2">
               <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-3 flex flex-col gap-1">
                 <div className="flex items-center gap-2 text-zinc-500">
@@ -370,7 +364,6 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
             </div>
           </div>
 
-          {/* Lista de Tarefas */}
           <div className="flex-1 overflow-y-auto custom-scrollbar p-5 pb-32 space-y-4 min-h-0">
             {sideTasks.length > 0 ? (
               sideTasks.map((task, idx) => {
@@ -437,12 +430,10 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
             )}
           </div>
 
-          {/* Efeito de Fade inferior */}
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0b0b0b] via-[#0b0b0b]/80 to-transparent pointer-events-none z-20" />
         </div>
       </div>
 
-      {/* Popover Detalhado de Tarefas (Posicionado sobre o Dia) */}
       <AnimatePresence>
         {expandedDate && popoverPos && (
           <div 

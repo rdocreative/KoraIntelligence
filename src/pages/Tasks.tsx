@@ -221,7 +221,6 @@ export default function TasksPage() {
     const activeDay = findDay(activeId);
     const overDay = findDay(overId);
 
-    // Ajuste automático de horário ao mudar de turno
     if (activeTask && originalTaskState) {
       const overPeriod = activeTask.period;
       if (activeDay !== originalTaskState.day || overPeriod !== originalTaskState.period) {
@@ -287,11 +286,14 @@ export default function TasksPage() {
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
             <button onClick={handlePrevDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
-            <h2 className="text-4xl font-serif font-medium text-white tracking-tight">
+            <h2 className="text-4xl font-bold text-white tracking-tight">
               {dateInfo.month} {viewMode === 'monthly' && dateInfo.year} <span className="text-zinc-600 font-sans text-xl ml-2">— {viewMode === 'monthly' ? 'Mês' : `Semana ${dateInfo.week}`}</span>
             </h2>
             <button onClick={handleNextDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronRight size={20} /></button>
           </div>
+          <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500/80 border border-white/5 px-2 py-0.5 rounded-md">
+            Tempo Real
+          </span>
         </div>
 
         <div className="flex items-center gap-3">

@@ -28,10 +28,6 @@
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
   }
-
-  .font-serif {
-    font-family: 'Newsreader', serif;
-  }
 }
 
 @layer utilities {

@@ -14,6 +14,7 @@ interface TaskColumnProps {
   isToday?: boolean;
   lastMovedTaskId?: string | null;
   onUpdateTaskTime?: (taskId: string, newTime: string) => void;
+  onUpdateTask?: (taskId: string, updates: any) => void;
 }
 
 const PERIODS = [
@@ -69,7 +70,8 @@ const PeriodContainer = ({
   tasks,
   isToday,
   lastMovedTaskId,
-  onUpdateTaskTime
+  onUpdateTaskTime,
+  onUpdateTask
 }: { 
   dayId: string; 
   period: typeof PERIODS[0]; 
@@ -77,6 +79,7 @@ const PeriodContainer = ({
   isToday?: boolean;
   lastMovedTaskId?: string | null;
   onUpdateTaskTime?: (taskId: string, newTime: string) => void;
+  onUpdateTask?: (taskId: string, updates: any) => void;
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `${dayId}:${period.id}`,
@@ -89,13 +92,13 @@ const PeriodContainer = ({
     <div 
       ref={setNodeRef}
       className={cn(
-        "relative flex flex-col rounded-[24px] transition-all duration-300 ease-in-out",
+        "relative flex flex-col rounded-[24px] transition-all duration-300 ease-in-out border-none",
         isOver ? "bg-white/[0.05] scale-[1.01]" : "",
-        isExpanded ? "p-3" : "p-3 hover:bg-white/[0.03] cursor-default"
+        isExpanded ? "p-4" : "p-3 hover:bg-white/[0.03] cursor-default"
       )}
       style={{ 
         background: period.background,
-        border: '1.5px solid rgba(255,255,255,0.08)',
+        border: '1px solid rgba(255,255,255,0.04)',
         boxShadow: 'none'
       }}
     >
@@ -108,7 +111,7 @@ const PeriodContainer = ({
           <div className="flex flex-col">
             <span 
               className={cn("font-black uppercase tracking-widest leading-none", isExpanded ? "text-[11px]" : "text-[10px]")}
-              style={{ color: period.color, opacity: 0.9 }}
+              style={{ color: period.color }}
             >
               {period.label}
             </span>
@@ -137,6 +140,7 @@ const PeriodContainer = ({
               task={{ ...task, period: period.id }} 
               isAwaitingTime={lastMovedTaskId === task.id}
               onUpdateTime={(newTime) => onUpdateTaskTime?.(task.id, newTime)}
+              onUpdateTask={onUpdateTask}
               defaultPeriodTime={period.defaultTime}
             />
           ))}
@@ -152,7 +156,7 @@ const PeriodContainer = ({
   );
 };
 
-export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday, lastMovedTaskId, onUpdateTaskTime }, ref) => {
+export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday, lastMovedTaskId, onUpdateTaskTime, onUpdateTask }, ref) => {
   return (
     <div 
       ref={ref} 
@@ -162,13 +166,13 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
       <div className="flex items-center justify-center mb-4 px-3 relative">
         <div className="flex items-center gap-3">
           <h3 className={cn(
-            "text-[15px] font-serif font-medium tracking-tight",
-            isToday ? "text-[#6366f1] opacity-100" : "text-white opacity-[0.85]"
+            "text-lg font-bold tracking-tight",
+            isToday ? "text-[#6366f1]" : "text-zinc-100"
           )}>
             {title}
           </h3>
           {isToday && (
-            <span className="text-[9px] font-bold uppercase tracking-widest text-[#a5b4fc] bg-[rgba(99,102,241,0.25)] border border-[rgba(99,102,241,0.3)] px-2 py-0.5 rounded-[6px] font-[700]">
+            <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500/80 border-2 border-white/5 px-2 py-0.5 rounded-md">
               Hoje
             </span>
           )}
@@ -177,12 +181,11 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
 
       <div
         className={cn(
-          "flex-1 relative flex flex-col gap-4 p-2 rounded-[28px] custom-scrollbar overflow-y-auto pb-10 transition-all duration-500",
+          "flex-1 relative flex flex-col gap-4 p-2 rounded-[28px] border-[3px] custom-scrollbar overflow-y-auto pb-10 transition-all duration-500",
           isToday 
-            ? "bg-[#6366f1]/[0.02] shadow-[0_0_40px_rgba(99,102,241,0.02)]" 
-            : "bg-white/[0.01]"
+            ? "bg-[#6366f1]/[0.02] border-[#6366f1]/10 shadow-[0_0_40px_rgba(99,102,241,0.02)]" 
+            : "bg-white/[0.01] border-white/10"
         )}
-        style={{ border: '0.5px solid rgba(255,255,255,0.06)' }}
       >
         {PERIODS.map((period) => (
           <PeriodContainer 
@@ -193,6 +196,7 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
             isToday={isToday}
             lastMovedTaskId={lastMovedTaskId}
             onUpdateTaskTime={onUpdateTaskTime}
+            onUpdateTask={onUpdateTask}
           />
         ))}
       </div>

@@ -74,7 +74,6 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
       period,
     });
     
-    // Reset form
     setName('');
     setDescription('');
     setDate('');
@@ -92,7 +91,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
       <div className="relative w-full max-w-2xl bg-[#0C0C0C] border border-white/10 rounded-[32px] p-6 shadow-2xl animate-in zoom-in-95 fade-in duration-300">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-xl font-serif font-medium text-white">Nova Tarefa</h2>
+            <h2 className="text-xl font-bold text-white">Nova Tarefa</h2>
             <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Para {selectedDay}</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full text-zinc-500 transition-colors">
@@ -101,7 +100,6 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Nome e Ícone */}
           <div className="space-y-2">
             <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Tarefa</label>
             <div className="flex gap-3">
@@ -123,7 +121,6 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
             </div>
           </div>
 
-          {/* Descrição */}
           <div className="space-y-2">
             <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
               <AlignLeft size={10} /> Descrição (Opcional)
@@ -136,7 +133,6 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
             />
           </div>
 
-          {/* Grid de Detalhes Adicionais */}
           <div className="grid grid-cols-4 gap-3">
             <div className="space-y-2">
               <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
@@ -187,7 +183,6 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
             </div>
           </div>
 
-          {/* Grid de Ações Inferiores */}
           <div className="grid grid-cols-12 gap-4 items-end pt-2">
             <div className="col-span-2 space-y-2">
               <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">

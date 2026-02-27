@@ -28,7 +28,6 @@ export const SideNav = () => {
 
   return (
     <>
-      {/* Botão Flutuante Discreto */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
@@ -39,23 +38,20 @@ export const SideNav = () => {
         </button>
       )}
 
-      {/* Container Principal da SideNav */}
       <div 
         className={cn(
           "h-full flex flex-col relative z-30 shrink-0 bg-[#12141A] transition-all duration-500 ease-in-out outline-none overflow-hidden",
           isOpen ? "w-[260px]" : "w-0"
         )}
       >
-        {/* Wrapper Interno */}
         <div 
           className={cn(
             "flex flex-col h-full min-w-[260px] p-8 pt-8 pb-6 transition-all duration-500 ease-in-out",
             isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
           )}
         >
-          {/* Header */}
           <div className="flex items-center justify-between mb-10">
-            <h1 className="text-3xl font-serif font-medium tracking-tight text-white">
+            <h1 className="text-3xl font-bold tracking-tight text-white">
               Néctar.
             </h1>
             <button 
@@ -67,7 +63,6 @@ export const SideNav = () => {
             </button>
           </div>
 
-          {/* Adicionar Novo */}
           <button className="flex items-center gap-3 w-full p-3 mb-6 rounded-[20px] bg-white/[0.03] border border-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all group">
             <div className="p-1 rounded-lg bg-[#6366f1]/10 text-[#6366f1]">
               <Plus size={16} />
@@ -75,7 +70,6 @@ export const SideNav = () => {
             <span className="text-xs font-semibold">Novo Registro</span>
           </button>
 
-          {/* Navegação */}
           <nav className="flex-1 space-y-2">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
@@ -102,7 +96,6 @@ export const SideNav = () => {
             })}
           </nav>
           
-          {/* Footer */}
           <div className="pt-4 mt-auto flex items-center gap-3 border-t border-white/5">
             <div className="w-10 h-10 rounded-full flex items-center justify-center text-[11px] font-bold bg-[#6366f1]/20 text-[#6366f1] shrink-0 border border-[#6366f1]/10">
               RS

@@ -79,7 +79,7 @@ export default function HabitsPage() {
   return (
     <div className="flex-1 p-8 text-white max-w-2xl mx-auto">
       <header className="mb-8">
-        <h1 className="text-4xl font-serif font-medium mb-1">Hábitos</h1>
+        <h1 className="text-4xl font-bold mb-1">Hábitos</h1>
         <p className="text-zinc-500 text-sm uppercase tracking-widest">
           {completedToday.length} de {habits.length} concluídos hoje
         </p>

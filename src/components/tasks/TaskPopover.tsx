@@ -50,10 +50,11 @@ export const TaskPopover = ({ task, onClose, onSave }: TaskPopoverProps) => {
         background: '#1a1c24',
         border: '1px solid rgba(255,255,255,0.08)',
         boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-        width: '260px'
+        width: '260px',
+        zIndex: 9999
       }}
-      className="absolute left-[105%] top-0 z-[60] rounded-[16px] p-4 flex flex-col gap-4 animate-in fade-in slide-in-from-left-2 duration-200"
-      onPointerDown={(e) => e.stopPropagation()} // Evita trigger de drag ao clicar no popover
+      className="absolute left-[105%] top-0 rounded-[16px] p-4 flex flex-col gap-4 animate-in fade-in slide-in-from-left-2 duration-200"
+      onPointerDown={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between">
         <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Editar</span>
@@ -63,7 +64,6 @@ export const TaskPopover = ({ task, onClose, onSave }: TaskPopoverProps) => {
       </div>
 
       <div className="space-y-3">
-        {/* Emoji e Nome */}
         <div className="flex gap-2">
           <input 
             type="text" 
@@ -80,7 +80,6 @@ export const TaskPopover = ({ task, onClose, onSave }: TaskPopoverProps) => {
           />
         </div>
 
-        {/* Prioridade */}
         <div className="relative">
           <select 
             value={priority}
@@ -92,7 +91,6 @@ export const TaskPopover = ({ task, onClose, onSave }: TaskPopoverProps) => {
           <ChevronDown size={12} className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
         </div>
 
-        {/* Horário */}
         <div className="flex gap-2 items-center">
           <div className="relative flex-1">
             <select 
