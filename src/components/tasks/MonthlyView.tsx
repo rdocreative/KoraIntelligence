@@ -314,7 +314,10 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
       <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2 h-full min-h-0 shrink-0">
         <div className="bg-[#0b0b0b] border border-white/10 rounded-[32px] flex flex-col h-full shadow-2xl overflow-hidden relative">
           <div className="p-6 pb-5 border-b border-white/5 shrink-0 space-y-5">
-            <div className="flex items-center justify-between">
+            <div className="space-y-3">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#6366f1]/80">
+                Dashboard Mensal
+              </span>
               <div className="flex bg-white/5 p-1 rounded-xl w-full">
                 {(['day', 'week', 'month'] as ViewMode[]).map((mode) => (
                   <button
