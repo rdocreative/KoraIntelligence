@@ -4,12 +4,12 @@
 
 @layer base {
   :root {
-    --background: 0 0% 3%; /* #070707 */
+    --background: 220 23% 5%; /* #0A0C10 */
     --foreground: 0 0% 100%;
   }
 
   body {
-    @apply bg-[#070707] text-white antialiased;
+    @apply bg-[#0A0C10] text-white antialiased;
   }
 }
 

@@ -13,16 +13,16 @@
   }
 
   :root {
-    --background: 0 0% 3%; /* #070707 */
+    --background: 220 23% 5%; /* #0A0C10 */
     --foreground: 0 0% 100%;
     --primary: 199 89% 60%;
-    --surface: 0 0% 4%; /* #0b0b0b */
+    --surface: 220 23% 5%; /* #0A0C10 */
     --border-ui: rgba(255, 255, 255, 0.04);
     --radius: 24px;
   }
 
   body {
-    background-color: #070707;
+    background-color: #0A0C10;
     color: white;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
