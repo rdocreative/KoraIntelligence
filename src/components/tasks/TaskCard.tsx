@@ -62,15 +62,6 @@ export const TaskCard = ({ task }: TaskCardProps) => {
           isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
         )}
       >
-        {/* Subtle Side Accent */}
-        {task.priority && (
-          <div className={cn(
-            "absolute left-0 top-0 bottom-0 w-[3px]",
-            task.priority === 'Extrema' ? 'bg-red-500/40' : 
-            task.priority === 'Média' ? 'bg-orange-500/40' : 'bg-blue-500/40'
-          )} />
-        )}
-
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 flex items-center justify-center text-lg">
