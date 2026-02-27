@@ -90,7 +90,7 @@ const PeriodContainer = ({
       ref={setNodeRef}
       className={cn(
         "relative flex flex-col rounded-[24px] border-[3px] transition-all duration-300 ease-in-out",
-        "border-white/[0.03]",
+        "border-white/10",
         isOver ? "bg-white/[0.05] border-white/10 scale-[1.01]" : "",
         isExpanded ? "p-4" : "p-3 bg-white/[0.01] hover:bg-white/[0.03] cursor-default"
       )}
@@ -177,7 +177,7 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
           "flex-1 relative flex flex-col gap-4 p-2 rounded-[28px] border-[3px] custom-scrollbar overflow-y-auto pb-10 transition-all duration-500",
           isToday 
             ? "bg-[#6366f1]/[0.02] border-[#6366f1]/10 shadow-[0_0_40px_rgba(99,102,241,0.02)]" 
-            : "bg-white/[0.01] border-white/[0.03]"
+            : "bg-white/[0.01] border-white/10"
         )}
       >
         {PERIODS.map((period) => (
