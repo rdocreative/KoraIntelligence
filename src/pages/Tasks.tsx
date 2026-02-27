@@ -74,9 +74,11 @@ export default function TasksPage() {
 
   const dateInfo = useMemo(() => {
     const now = new Date();
+    const fullDate = format(now, "dd/MM/yyyy", { locale: ptBR });
     const month = format(now, "MMMM", { locale: ptBR });
     const weekNumber = getWeek(now);
     return {
+      fullDate,
       month: month.charAt(0).toUpperCase() + month.slice(1),
       week: weekNumber.toString().padStart(2, '0')
     };
@@ -216,9 +218,14 @@ export default function TasksPage() {
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
             <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
-            <h2 className="text-4xl font-serif font-medium text-white tracking-tight">
-              {dateInfo.month} — Semana {dateInfo.week}
-            </h2>
+            <div className="flex flex-col">
+              <h2 className="text-4xl font-serif font-medium text-white tracking-tight">
+                {dateInfo.fullDate}
+              </h2>
+              <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1">
+                {dateInfo.month} — Semana {dateInfo.week}
+              </span>
+            </div>
             <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronRight size={20} /></button>
           </div>
           <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-[#38BDF8]/10 px-4 py-1.5 rounded-full text-[#38BDF8] border border-[#38BDF8]/20">

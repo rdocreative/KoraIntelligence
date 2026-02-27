@@ -3,14 +3,17 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Circle, Clock } from 'lucide-react';
+import { Circle, Clock, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { format, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface TaskCardProps {
   task: {
     id: string;
     name: string;
     time?: string;
+    date?: string;
     icon?: string;
     priority?: 'Extrema' | 'Média' | 'Baixa';
     period?: string;
@@ -39,6 +42,8 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     Baixa: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
   };
 
+  const formattedDate = task.date ? format(parseISO(task.date), "dd/MM/yyyy", { locale: ptBR }) : null;
+
   return (
     <div
       ref={setNodeRef}
@@ -62,21 +67,30 @@ export const TaskCard = ({ task }: TaskCardProps) => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.04]">
-          <div className="flex items-center gap-3">
-            {task.priority && (
-              <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityColors[task.priority])}>
-                {task.priority}
-              </span>
-            )}
-            {task.time && (
-              <div className="flex items-center gap-1 text-[10px] text-zinc-300 font-medium">
-                <Clock size={10} className="text-zinc-400" />
-                {task.time}
-              </div>
-            )}
+        <div className="flex flex-col gap-2 mt-auto pt-2 border-t border-white/[0.04]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {task.priority && (
+                <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityColors[task.priority])}>
+                  {task.priority}
+                </span>
+              )}
+              {task.time && (
+                <div className="flex items-center gap-1 text-[10px] text-zinc-300 font-medium">
+                  <Clock size={10} className="text-zinc-400" />
+                  {task.time}
+                </div>
+              )}
+            </div>
+            <Circle size={14} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
           </div>
-          <Circle size={16} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
+          
+          {formattedDate && (
+            <div className="flex items-center gap-1.5 text-[9px] text-zinc-500 font-bold uppercase tracking-tight">
+              <Calendar size={10} />
+              {formattedDate}
+            </div>
+          )}
         </div>
       </div>
     </div>
