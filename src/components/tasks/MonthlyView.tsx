@@ -157,7 +157,6 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
       getFilteredTasksForDate(date).map(t => ({ ...t, date }))
     );
 
-    // Ordenação por prioridade: Extrema (1) -> Média (2) -> Baixa (3)
     return tasks.sort((a, b) => 
       (PRIORITY_WEIGHT[a.priority] || 99) - (PRIORITY_WEIGHT[b.priority] || 99)
     );
@@ -337,6 +336,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                     key={`${task.id}-${idx}`}
                     className={cn(
                       "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-gradient-to-br bg-zinc-900/40 shrink-0",
+                      "min-h-[110px]", // Altura mínima para garantir que 4 caibam bem e o resto role
                       getPeriodGradient(task.period)
                     )}
                   >
@@ -357,7 +357,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
 
                       <div className="flex items-center gap-3 mb-5">
                         <span className="text-xl filter drop-shadow-md">{task.icon}</span>
-                        <h4 className="text-[14px] font-semibold text-white/95 group-hover:text-white transition-colors leading-tight">
+                        <h4 className="text-[14px] font-semibold text-white/95 group-hover:text-white transition-colors leading-tight line-clamp-1">
                           {task.name}
                         </h4>
                       </div>
