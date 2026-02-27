@@ -23,7 +23,7 @@ const PERIODS = [
     time: '06:00 — 12:00',
     icon: Sun, 
     color: '#FDBA74',
-    gradient: 'linear-gradient(180deg, rgba(249,115,22,0.08) 0%, rgba(249,115,22,0.01) 100%)',
+    gradient: 'linear-gradient(180deg, rgba(249,115,22,0.23) 0%, rgba(249,115,22,0.02) 100%)',
     startHour: 6,
     endHour: 12,
     defaultTime: '09:00'
@@ -34,7 +34,7 @@ const PERIODS = [
     time: '12:00 — 18:00',
     icon: Coffee, 
     color: '#4ADE80',
-    gradient: 'linear-gradient(180deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.01) 100%)',
+    gradient: 'linear-gradient(180deg, rgba(34,197,94,0.23) 0%, rgba(34,197,94,0.02) 100%)',
     startHour: 12,
     endHour: 18,
     defaultTime: '15:00'
@@ -45,7 +45,7 @@ const PERIODS = [
     time: '18:00 — 00:00',
     icon: Moon, 
     color: '#A78BFA',
-    gradient: 'linear-gradient(180deg, rgba(129,140,248,0.08) 0%, rgba(129,140,248,0.01) 100%)',
+    gradient: 'linear-gradient(180deg, rgba(129,140,248,0.23) 0%, rgba(129,140,248,0.02) 100%)',
     startHour: 18,
     endHour: 24,
     defaultTime: '21:00'
@@ -56,7 +56,7 @@ const PERIODS = [
     time: '00:00 — 06:00',
     icon: CloudMoon, 
     color: '#818CF8',
-    gradient: 'linear-gradient(180deg, rgba(56,189,248,0.08) 0%, rgba(56,189,248,0.01) 100%)',
+    gradient: 'linear-gradient(180deg, rgba(56,189,248,0.23) 0%, rgba(56,189,248,0.02) 100%)',
     startHour: 0,
     endHour: 6,
     defaultTime: '03:00'
@@ -89,7 +89,7 @@ const PeriodContainer = ({
     <div 
       ref={setNodeRef}
       className={cn(
-        "relative flex flex-col rounded-[24px] border-2 transition-all duration-300 ease-in-out",
+        "relative flex flex-col rounded-[24px] border-[3px] transition-all duration-300 ease-in-out",
         "border-white/[0.03]",
         isOver ? "bg-white/[0.05] border-white/10 scale-[1.01]" : "",
         isExpanded ? "p-4" : "p-3 bg-white/[0.01] hover:bg-white/[0.03] cursor-default"
@@ -140,7 +140,7 @@ const PeriodContainer = ({
         </SortableContext>
         
         {isOver && tasks.length === 0 && (
-          <div className="h-10 border-2 border-dashed border-white/10 rounded-[20px] flex items-center justify-center">
+          <div className="h-10 border-[3px] border-dashed border-white/10 rounded-[20px] flex items-center justify-center">
              <span className="text-[8px] font-black text-zinc-400 uppercase tracking-tighter">Soltar</span>
           </div>
         )}
@@ -165,7 +165,7 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
             {title}
           </h3>
           {isToday && (
-            <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500/80 border border-white/5 px-2 py-0.5 rounded-md">
+            <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500/80 border-2 border-white/5 px-2 py-0.5 rounded-md">
               Hoje
             </span>
           )}
@@ -174,7 +174,7 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
 
       <div
         className={cn(
-          "flex-1 relative flex flex-col gap-4 p-2 rounded-[28px] border-2 custom-scrollbar overflow-y-auto pb-10 transition-all duration-500",
+          "flex-1 relative flex flex-col gap-4 p-2 rounded-[28px] border-[3px] custom-scrollbar overflow-y-auto pb-10 transition-all duration-500",
           isToday 
             ? "bg-[#6366f1]/[0.02] border-[#6366f1]/10 shadow-[0_0_40px_rgba(99,102,241,0.02)]" 
             : "bg-white/[0.01] border-white/[0.03]"
