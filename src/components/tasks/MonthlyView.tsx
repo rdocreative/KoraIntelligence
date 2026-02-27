@@ -289,7 +289,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
 
       {/* Painel Lateral Direito */}
       <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2 h-full min-h-0 shrink-0">
-        <div className="bg-white/[0.03] border border-white/10 rounded-[28px] flex flex-col h-full shadow-2xl overflow-hidden">
+        <div className="bg-white/[0.03] border border-white/10 rounded-[28px] flex flex-col h-full shadow-2xl overflow-hidden relative">
           <div className="p-6 pb-4 border-b border-white/5 shrink-0">
             <div className="flex items-center justify-between mb-4">
               <div className="flex bg-white/5 p-1 rounded-xl w-full">
@@ -325,66 +325,70 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
             </h3>
           </div>
 
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-4 min-h-0 max-h-[580px]">
-            {sideTasks.length > 0 ? (
-              sideTasks.map((task, idx) => {
-                const period = getPeriodInfo(task.period);
-                const PeriodIcon = period.icon;
+          <div className="flex-1 relative min-h-0 overflow-hidden">
+            <div className="h-full overflow-y-auto custom-scrollbar p-5 pb-12 space-y-4">
+              {sideTasks.length > 0 ? (
+                sideTasks.map((task, idx) => {
+                  const period = getPeriodInfo(task.period);
+                  const PeriodIcon = period.icon;
 
-                return (
-                  <div 
-                    key={`${task.id}-${idx}`}
-                    className={cn(
-                      "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-gradient-to-br bg-zinc-900/40 shrink-0",
-                      "min-h-[120px]", 
-                      getPeriodGradient(task.period)
-                    )}
-                  >
-                    <div className="relative z-10">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <PeriodIcon size={14} className={period.color} />
-                          <span className={cn("text-[9px] font-black tracking-widest uppercase", period.color)}>
-                            {period.label}
-                          </span>
+                  return (
+                    <div 
+                      key={`${task.id}-${idx}`}
+                      className={cn(
+                        "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-zinc-900/40 shrink-0",
+                        "min-h-[120px]", 
+                        getPeriodGradient(task.period)
+                      )}
+                    >
+                      <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-2">
+                            <PeriodIcon size={14} className={period.color} />
+                            <span className={cn("text-[9px] font-black tracking-widest uppercase", period.color)}>
+                              {period.label}
+                            </span>
+                          </div>
+                          {sideViewMode !== 'day' && (
+                            <span className="text-[9px] font-bold text-zinc-500 bg-white/5 px-2 py-0.5 rounded-full">
+                              {format(task.date, "dd/MM")}
+                            </span>
+                          )}
                         </div>
-                        {sideViewMode !== 'day' && (
-                          <span className="text-[9px] font-bold text-zinc-500 bg-white/5 px-2 py-0.5 rounded-full">
-                            {format(task.date, "dd/MM")}
-                          </span>
-                        )}
-                      </div>
 
-                      <div className="flex items-center gap-3 mb-5">
-                        <span className="text-xl filter drop-shadow-md">{task.icon}</span>
-                        <h4 className="text-[14px] font-semibold text-white/95 group-hover:text-white transition-colors leading-tight line-clamp-1">
-                          {task.name}
-                        </h4>
-                      </div>
-                      
-                      <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/[0.03]">
-                        <div className={cn(
-                          "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest",
-                          task.priority === 'Extrema' ? "bg-red-500/10 text-red-500" :
-                          task.priority === 'Média' ? "bg-amber-500/10 text-amber-500" : "bg-blue-500/10 text-blue-500"
-                        )}>
-                          {task.priority}
+                        <div className="flex items-center gap-3 mb-5">
+                          <span className="text-xl filter drop-shadow-md">{task.icon}</span>
+                          <h4 className="text-[14px] font-semibold text-white/95 group-hover:text-white transition-colors leading-tight line-clamp-1">
+                            {task.name}
+                          </h4>
                         </div>
-                        <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-medium">
-                          <Clock size={10} className="text-zinc-600" />
-                          {task.time}
+                        
+                        <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/[0.03]">
+                          <div className={cn(
+                            "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest",
+                            task.priority === 'Extrema' ? "bg-red-500/10 text-red-500" :
+                            task.priority === 'Média' ? "bg-amber-500/10 text-amber-500" : "bg-blue-500/10 text-blue-500"
+                          )}>
+                            {task.priority}
+                          </div>
+                          <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-medium">
+                            <Clock size={10} className="text-zinc-600" />
+                            {task.time}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center opacity-20 py-8">
-                <X size={20} className="text-zinc-600 mb-2" />
-                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.1em]">Vazio ou Filtrado</p>
-              </div>
-            )}
+                  );
+                })
+              ) : (
+                <div className="h-full flex flex-col items-center justify-center text-center opacity-20 py-8">
+                  <X size={20} className="text-zinc-600 mb-2" />
+                  <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.1em]">Vazio ou Filtrado</p>
+                </div>
+              )}
+            </div>
+            {/* Gradiente de Suavização no Fundo */}
+            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#09090b]/80 to-transparent pointer-events-none z-20" />
           </div>
         </div>
       </div>
