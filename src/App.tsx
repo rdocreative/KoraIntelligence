@@ -47,7 +47,7 @@ const ProtectedRoute = () => {
       <SideNav />
       <div className="flex-1 flex flex-col p-4 pl-0 z-10 min-w-0 bg-[#070707]">
         <div 
-          className="flex-1 flex flex-col rounded-[24px] border border-white/[0.06] overflow-hidden relative min-h-0 w-full shadow-none outline-none ring-0" 
+          className="flex-1 flex flex-col rounded-[24px] overflow-hidden relative min-h-0 w-full shadow-none outline-none ring-0 border-none" 
           style={{ backgroundColor: '#0b0b0b' }}
         >
           <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-10">
