@@ -63,58 +63,86 @@ const PERIODS = [
   },
 ];
 
+const TimeWarning = ({ 
+  initialTime, 
+  onSave, 
+  periodLabel 
+}: { 
+  initialTime: string; 
+  onSave: (time: string) => void;
+  periodLabel: string;
+}) => {
+  const [time, setTime] = useState(initialTime);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) return;
+
+    const timer = setTimeout(() => {
+      onSave(time);
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, [time, onSave, isPaused]);
+
+  return (
+    <div 
+      className="flex flex-col gap-2 p-3 my-2 bg-[#0C0C0C] border border-white/10 rounded-2xl shadow-xl animate-in zoom-in-95 slide-in-from-top-2 duration-300 overflow-hidden relative"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <div className="flex items-center gap-2 mb-1">
+        <Clock size={12} className="text-yellow-400" />
+        <span className="text-[10px] text-zinc-100 font-medium whitespace-nowrap">
+          Ajustar horário ({periodLabel})
+        </span>
+      </div>
+      
+      <div className="flex items-center gap-2 relative z-10">
+        <input 
+          type="time" 
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
+          className="flex-1 bg-white/[0.05] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 [color-scheme:dark]"
+        />
+        <button 
+          onClick={() => onSave(time)}
+          className="px-3 py-1.5 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black text-[10px] font-bold rounded-lg transition-all flex items-center gap-1.5 active:scale-95 whitespace-nowrap"
+        >
+          <Check size={12} />
+          Salvar
+        </button>
+      </div>
+      
+      <div className="absolute bottom-0 left-0 w-full h-0.5 bg-white/5">
+         <div 
+           className={cn("h-full bg-yellow-400/30 origin-left transition-all duration-[4000ms] ease-linear", isPaused && "paused")} 
+           style={{ 
+             width: '100%', 
+             animation: isPaused ? 'none' : 'shrink-width 4s linear forwards' 
+            }} 
+         />
+      </div>
+    </div>
+  );
+};
+
 const PeriodContainer = ({ 
   dayId, 
   period, 
   tasks,
-  isToday,
-  lastMovedTaskId,
-  onUpdateTaskTime
+  isToday
 }: { 
   dayId: string; 
   period: typeof PERIODS[0]; 
   tasks: any[];
   isToday?: boolean;
-  lastMovedTaskId?: string | null;
-  onUpdateTaskTime?: (taskId: string, newTime: string) => void;
 }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: `${dayId}:${period.id}`,
   });
 
   const [isActive, setIsActive] = useState(false);
-  const [showWarning, setShowWarning] = useState(false);
-  const [tempTime, setTempTime] = useState(period.defaultTime);
-  const prevIsOver = useRef(isOver);
-  const hasAppliedDefault = useRef(false);
-
-  useEffect(() => {
-    if (prevIsOver.current === true && isOver === false) {
-      const movedTask = tasks.find(t => t.id === lastMovedTaskId);
-      if (movedTask) {
-        setTempTime(movedTask.time || period.defaultTime);
-        setShowWarning(true);
-        hasAppliedDefault.current = false;
-        
-        const timer = setTimeout(() => {
-          if (!hasAppliedDefault.current && lastMovedTaskId) {
-             onUpdateTaskTime?.(lastMovedTaskId, period.defaultTime);
-             setShowWarning(false);
-          }
-        }, 5000);
-        return () => clearTimeout(timer);
-      }
-    }
-    prevIsOver.current = isOver;
-  }, [isOver, tasks, lastMovedTaskId, period.defaultTime, onUpdateTaskTime]);
-
-  const handleSaveTime = () => {
-    if (lastMovedTaskId) {
-      onUpdateTaskTime?.(lastMovedTaskId, tempTime);
-      hasAppliedDefault.current = true;
-      setShowWarning(false);
-    }
-  };
 
   useEffect(() => {
     if (!isToday) {
@@ -185,41 +213,7 @@ const PeriodContainer = ({
       <div className="relative flex flex-col gap-3 min-h-[20px] max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {tasks.map((task) => (
-            <React.Fragment key={task.id}>
-              <TaskCard task={{ ...task, period: period.id }} />
-              
-              {/* Aviso integrado ao fluxo, abaixo da tarefa movida */}
-              {showWarning && lastMovedTaskId === task.id && (
-                <div className="flex flex-col gap-2 p-3 mx-1 bg-[#111] border border-white/10 rounded-xl shadow-lg animate-in zoom-in-95 slide-in-from-top-2 duration-300 relative z-10">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Clock size={12} className="text-yellow-400" />
-                    <span className="text-[10px] text-zinc-100 font-medium whitespace-nowrap">
-                      Atualizar horário
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <input 
-                      type="time" 
-                      value={tempTime}
-                      onChange={(e) => setTempTime(e.target.value)}
-                      className="flex-1 bg-white/[0.05] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 [color-scheme:dark]"
-                    />
-                    <button 
-                      onClick={handleSaveTime}
-                      className="px-3 py-1.5 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black text-[10px] font-bold rounded-lg transition-all flex items-center gap-1.5 active:scale-95 whitespace-nowrap"
-                    >
-                      <Check size={12} />
-                      Salvar
-                    </button>
-                  </div>
-                  
-                  <div className="h-0.5 bg-white/5 w-full rounded-full overflow-hidden mt-1">
-                     <div className="h-full bg-yellow-400/30 animate-shrink-width origin-left" style={{ animationDuration: '5s' }} />
-                  </div>
-                </div>
-              )}
-            </React.Fragment>
+            <TaskCard key={task.id} task={{ ...task, period: period.id }} />
           ))}
         </SortableContext>
         
@@ -240,6 +234,35 @@ const PeriodContainer = ({
 };
 
 export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday, lastMovedTaskId, onUpdateTaskTime }, ref) => {
+  const [warningState, setWarningState] = useState<{
+    taskId: string;
+    periodId: string;
+    defaultTime: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (lastMovedTaskId) {
+      const task = tasks.find(t => t.id === lastMovedTaskId);
+      if (task) {
+        const periodDef = PERIODS.find(p => p.id === task.period);
+        setWarningState({
+          taskId: task.id,
+          periodId: task.period,
+          defaultTime: periodDef?.defaultTime || '00:00'
+        });
+      }
+    } else {
+      setWarningState(null);
+    }
+  }, [lastMovedTaskId, tasks]);
+
+  const handleSaveTime = (newTime: string) => {
+    if (warningState && onUpdateTaskTime) {
+      onUpdateTaskTime(warningState.taskId, newTime);
+      setWarningState(null);
+    }
+  };
+
   return (
     <div 
       ref={ref} 
@@ -275,15 +298,21 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
         )}
       >
         {PERIODS.map((period) => (
-          <PeriodContainer 
-            key={period.id}
-            dayId={id}
-            period={period}
-            tasks={tasks.filter(t => t.period === period.id)}
-            isToday={isToday}
-            lastMovedTaskId={lastMovedTaskId}
-            onUpdateTaskTime={onUpdateTaskTime}
-          />
+          <React.Fragment key={period.id}>
+            <PeriodContainer 
+              dayId={id}
+              period={period}
+              tasks={tasks.filter(t => t.period === period.id)}
+              isToday={isToday}
+            />
+            {warningState?.periodId === period.id && (
+              <TimeWarning 
+                initialTime={warningState.defaultTime}
+                periodLabel={period.label}
+                onSave={handleSaveTime}
+              />
+            )}
+          </React.Fragment>
         ))}
       </div>
     </div>
