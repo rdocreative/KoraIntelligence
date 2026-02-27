@@ -43,7 +43,7 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden text-white antialiased relative bg-[#070707]">
+    <div className="flex h-screen w-screen text-white antialiased relative bg-[#070707] overflow-hidden border-none outline-none">
       <SideNav />
       <div className="flex-1 flex flex-col p-4 pl-0 z-10 min-w-0">
         <div 
@@ -93,26 +93,24 @@ const App = () => (
               <TooltipProvider>
                 <Sonner theme="dark" />
                 <BrowserRouter>
-                  <div className="h-screen w-screen text-white font-sans flex flex-col relative overflow-hidden bg-[#070707]">
-                    <Routes>
-                      <Route element={<PublicRoute />}>
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/cadastro" element={<SignUp />} />
-                        <Route path="/recuperar-senha" element={<ForgotPassword />} />
-                      </Route>
+                  <Routes>
+                    <Route element={<PublicRoute />}>
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/cadastro" element={<SignUp />} />
+                      <Route path="/recuperar-senha" element={<ForgotPassword />} />
+                    </Route>
 
-                      <Route element={<ProtectedRoute />}>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/tarefas" element={<TasksPage />} />
-                        <Route path="/habitos" element={<HabitsPage />} />
-                        <Route path="/missoes" element={<MissionsPage />} />
-                        <Route path="/loja" element={<StorePage />} />
-                        <Route path="/configuracoes" element={<SettingsPage />} />
-                      </Route>
+                    <Route element={<ProtectedRoute />}>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/tarefas" element={<TasksPage />} />
+                      <Route path="/habitos" element={<HabitsPage />} />
+                      <Route path="/missoes" element={<MissionsPage />} />
+                      <Route path="/loja" element={<StorePage />} />
+                      <Route path="/configuracoes" element={<SettingsPage />} />
+                    </Route>
 
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </div>
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
                 </BrowserRouter>
               </TooltipProvider>
             </HabitProvider>
