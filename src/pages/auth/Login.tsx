@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { LogIn, Loader2 } from "lucide-react";
+import { LogIn, Loader2, ArrowRight } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -37,6 +37,11 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSkipLogin = () => {
+    toast.info("Acessando como convidado...");
+    navigate("/");
   };
 
   return (
@@ -84,18 +89,30 @@ export default function Login() {
                 className="bg-[#0a0a0b] border-white/10 focus-visible:ring-primary/50"
               />
             </div>
-            <Button
-              type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold"
-              disabled={loading}
-            >
-              {loading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <LogIn className="mr-2 h-4 w-4" />
-              )}
-              Entrar
-            </Button>
+            
+            <div className="space-y-3 pt-2">
+              <Button
+                type="submit"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold h-11"
+                disabled={loading}
+              >
+                {loading ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <LogIn className="mr-2 h-4 w-4" />
+                )}
+                Entrar
+              </Button>
+
+              <button
+                type="button"
+                onClick={handleSkipLogin}
+                className="w-full flex items-center justify-center gap-2 py-2 text-xs font-bold text-neutral-500 hover:text-white transition-colors group"
+              >
+                Pular login e continuar como convidado
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
           </form>
         </CardContent>
         <CardFooter className="flex justify-center border-t border-white/5 pt-6">
