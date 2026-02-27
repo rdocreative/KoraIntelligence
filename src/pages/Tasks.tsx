@@ -18,17 +18,18 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { TaskColumn } from "@/components/tasks/TaskColumn";
 import { TaskCard } from "@/components/tasks/TaskCard";
 import { CreateTaskModal } from "@/components/tasks/CreateTaskModal";
-import { CalendarModal } from "@/components/tasks/CalendarModal";
+import { MonthlyView } from "@/components/tasks/MonthlyView";
 import { 
   ChevronLeft, 
   ChevronRight,
   CalendarDays,
   MoreHorizontal,
   ChevronDown,
-  Plus
+  Plus,
+  LayoutGrid
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { format, getWeek } from "date-fns";
+import { format, getWeek, addMonths, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 const INITIAL_DATA: Record<string, any[]> = {
@@ -58,7 +59,8 @@ export default function TasksPage() {
   const [columns, setColumns] = useState(INITIAL_DATA);
   const [activeTask, setActiveTask] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly');
+  const [currentDate, setCurrentDate] = useState(new Date());
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -75,34 +77,44 @@ export default function TasksPage() {
   }, []);
 
   const dateInfo = useMemo(() => {
-    const now = new Date();
-    const month = format(now, "MMMM", { locale: ptBR });
-    const weekNumber = getWeek(now);
+    const month = format(currentDate, "MMMM", { locale: ptBR });
+    const weekNumber = getWeek(currentDate);
     return {
       month: month.charAt(0).toUpperCase() + month.slice(1),
+      year: format(currentDate, "yyyy"),
       week: weekNumber.toString().padStart(2, '0')
     };
-  }, []);
+  }, [currentDate]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (scrollRef.current) {
-        const todayElement = scrollRef.current.querySelector(`[data-day="${currentDayName}"]`) as HTMLElement;
-        if (todayElement) {
-          const containerWidth = scrollRef.current.clientWidth;
-          const elementWidth = todayElement.clientWidth;
-          const elementLeft = todayElement.offsetLeft;
-          const scrollTo = elementLeft - (containerWidth / 2) + (elementWidth / 2);
-          
-          scrollRef.current.scrollTo({
-            left: scrollTo,
-            behavior: 'smooth'
-          });
+    if (viewMode === 'weekly') {
+      const timer = setTimeout(() => {
+        if (scrollRef.current) {
+          const todayElement = scrollRef.current.querySelector(`[data-day="${currentDayName}"]`) as HTMLElement;
+          if (todayElement) {
+            const containerWidth = scrollRef.current.clientWidth;
+            const elementWidth = todayElement.clientWidth;
+            const elementLeft = todayElement.offsetLeft;
+            const scrollTo = elementLeft - (containerWidth / 2) + (elementWidth / 2);
+            
+            scrollRef.current.scrollTo({
+              left: scrollTo,
+              behavior: 'smooth'
+            });
+          }
         }
-      }
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [currentDayName]);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [currentDayName, viewMode]);
+
+  const handleNextDate = () => {
+    setCurrentDate(prev => viewMode === 'monthly' ? addMonths(prev, 1) : prev);
+  };
+
+  const handlePrevDate = () => {
+    setCurrentDate(prev => viewMode === 'monthly' ? subMonths(prev, 1) : prev);
+  };
 
   const handleAddTask = (newTask: any) => {
     setColumns(prev => ({
@@ -204,6 +216,7 @@ export default function TasksPage() {
   };
 
   const onMouseDown = (e: React.MouseEvent) => {
+    if (viewMode !== 'weekly') return;
     if (!scrollRef.current) return;
     if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('[data-draggable]')) return;
     
@@ -214,91 +227,111 @@ export default function TasksPage() {
 
   return (
     <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0 relative">
-      <header className="flex items-center justify-between py-6 shrink-0 px-4">
+      <header className="flex items-center justify-between py-6 shrink-0 px-8">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
-            <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
+            <button onClick={handlePrevDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
             <h2 className="text-4xl font-serif font-medium text-white tracking-tight">
-              {dateInfo.month} — Semana {dateInfo.week}
+              {dateInfo.month} {viewMode === 'monthly' && dateInfo.year} <span className="text-zinc-600 font-sans text-xl ml-2">— {viewMode === 'monthly' ? 'Mês' : `Semana ${dateInfo.week}`}</span>
             </h2>
-            <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronRight size={20} /></button>
+            <button onClick={handleNextDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronRight size={20} /></button>
           </div>
           <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-[#38BDF8]/10 px-4 py-1.5 rounded-full text-[#38BDF8] border border-[#38BDF8]/20">
             Tempo Real
           </span>
         </div>
 
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={() => setIsCalendarOpen(true)}
-            className="p-2 border border-white/10 rounded-xl hover:bg-white/5 text-zinc-400 transition-colors"
-          >
-            <CalendarDays size={18} />
-          </button>
-          <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl text-sm font-semibold text-zinc-300 cursor-pointer hover:text-white transition-colors">
-            <span>Visão Semanal</span>
-            <ChevronDown size={14} />
+        <div className="flex items-center gap-3">
+          <div className="flex items-center bg-white/5 rounded-2xl p-1 border border-white/5">
+            <button 
+              onClick={() => setViewMode('weekly')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all",
+                viewMode === 'weekly' ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+              )}
+            >
+              <LayoutGrid size={16} />
+              <span>Semanal</span>
+            </button>
+            <button 
+              onClick={() => setViewMode('monthly')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all",
+                viewMode === 'monthly' ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+              )}
+            >
+              <CalendarDays size={16} />
+              <span>Mensal</span>
+            </button>
           </div>
-          <button className="w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center hover:bg-white/5 text-zinc-400">
-             <MoreHorizontal size={18} />
+          
+          <button className="w-11 h-11 rounded-2xl border border-white/5 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors">
+             <MoreHorizontal size={20} />
           </button>
         </div>
       </header>
 
       <div className="flex-1 relative min-h-0 overflow-hidden">
-        <div 
-          ref={scrollRef}
-          onMouseDown={onMouseDown}
-          onMouseLeave={() => setIsScrolling(false)}
-          onMouseUp={() => setIsScrolling(false)}
-          onMouseMove={(e) => {
-            if (!isScrolling || !scrollRef.current) return;
-            e.preventDefault();
-            const x = e.pageX - scrollRef.current.offsetLeft;
-            const walk = (x - startX) * 1.5; 
-            scrollRef.current.scrollLeft = scrollLeft - walk;
-          }}
-          style={{
-            maskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)'
-          }}
-          className={cn(
-            "h-full flex pb-8 overflow-x-auto custom-scrollbar cursor-grab select-none px-10",
-            isScrolling && "cursor-grabbing"
-          )}
-        >
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCorners}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnd={handleDragEnd}
+        {viewMode === 'weekly' ? (
+          <div 
+            ref={scrollRef}
+            onMouseDown={onMouseDown}
+            onMouseLeave={() => setIsScrolling(false)}
+            onMouseUp={() => setIsScrolling(false)}
+            onMouseMove={(e) => {
+              if (!isScrolling || !scrollRef.current) return;
+              e.preventDefault();
+              const x = e.pageX - scrollRef.current.offsetLeft;
+              const walk = (x - startX) * 1.5; 
+              scrollRef.current.scrollLeft = scrollLeft - walk;
+            }}
+            style={{
+              maskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)'
+            }}
+            className={cn(
+              "h-full flex pb-8 overflow-x-auto custom-scrollbar cursor-grab select-none px-10",
+              isScrolling && "cursor-grabbing"
+            )}
           >
-            <div className="flex gap-5 items-start h-full pr-10">
-              {DISPLAY_ORDER.map((day) => {
-                const isToday = day === currentDayName;
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCorners}
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
+              onDragEnd={handleDragEnd}
+            >
+              <div className="flex gap-5 items-start h-full pr-10">
+                {DISPLAY_ORDER.map((day) => {
+                  const isToday = day === currentDayName;
 
-                return (
-                  <TaskColumn 
-                    key={day} 
-                    id={day} 
-                    title={day} 
-                    tasks={columns[day] || []} 
-                    isToday={isToday}
-                  />
-                );
-              })}
-            </div>
+                  return (
+                    <TaskColumn 
+                      key={day} 
+                      id={day} 
+                      title={day} 
+                      tasks={columns[day] || []} 
+                      isToday={isToday}
+                    />
+                  );
+                })}
+              </div>
 
-            <DragOverlay dropAnimation={{
-              sideEffects: defaultDropAnimationSideEffects({
-                styles: { active: { opacity: '0.5' } },
-              }),
-            }}>
-              {activeTask ? <TaskCard task={activeTask} /> : null}
-            </DragOverlay>
-          </DndContext>
-        </div>
+              <DragOverlay dropAnimation={{
+                sideEffects: defaultDropAnimationSideEffects({
+                  styles: { active: { opacity: '0.5' } },
+                }),
+              }}>
+                {activeTask ? <TaskCard task={activeTask} /> : null}
+              </DragOverlay>
+            </DndContext>
+          </div>
+        ) : (
+          <MonthlyView 
+            tasksData={columns} 
+            currentDate={currentDate}
+          />
+        )}
       </div>
 
       <button
@@ -314,12 +347,6 @@ export default function TasksPage() {
         onClose={() => setIsModalOpen(false)}
         onSave={handleAddTask}
         selectedDay={currentDayName}
-      />
-
-      <CalendarModal 
-        isOpen={isCalendarOpen}
-        onClose={() => setIsCalendarOpen(false)}
-        tasksData={columns}
       />
     </div>
   );
