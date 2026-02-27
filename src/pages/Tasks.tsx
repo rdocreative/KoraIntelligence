@@ -1,15 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Plus, 
-  ChevronLeft, 
-  ChevronRight, 
-  Search,
-  LayoutGrid,
-  Calendar as CalendarIcon,
-  Sparkles
-} from 'lucide-react';
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { 
   DndContext, 
   DragOverlay, 
@@ -22,186 +13,370 @@ import {
   DragOverEvent,
   DragEndEvent,
   defaultDropAnimationSideEffects
-} from '@dnd-kit/core';
+} from "@dnd-kit/core";
+import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { TaskColumn } from "@/components/tasks/TaskColumn";
+import { TaskCard } from "@/components/tasks/TaskCard";
+import { CreateTaskModal } from "@/components/tasks/CreateTaskModal";
+import { MonthlyView } from "@/components/tasks/MonthlyView";
 import { 
-  arrayMove, 
-  sortableKeyboardCoordinates,
-} from '@dnd-kit/sortable';
-import { TaskColumn } from '@/components/tasks/TaskColumn';
-import { TaskCard } from '@/components/tasks/TaskCard';
-import { format, addDays, startOfWeek, isSameDay } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+  ChevronLeft, 
+  ChevronRight,
+  CalendarDays,
+  MoreHorizontal,
+  Plus,
+  LayoutGrid
+} from "lucide-react";
+import { cn } from '@/lib/utils';
+import { format, getWeek, addMonths, subMonths } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
-const INITIAL_TASKS = [
-  { id: '1', name: 'Meditação Matinal', time: '07:30', icon: '🧘', priority: 'Baixa', period: 'Morning', dayId: format(new Date(), 'yyyy-MM-dd') },
-  { id: '2', name: 'Reunião de Alinhamento', time: '10:00', icon: '💼', priority: 'Extrema', period: 'Morning', dayId: format(new Date(), 'yyyy-MM-dd') },
-  { id: '3', name: 'Treino de Pernas', time: '16:00', icon: '💪', priority: 'Média', period: 'Afternoon', dayId: format(new Date(), 'yyyy-MM-dd') },
-  { id: '4', name: 'Leitura: Filosofia', time: '21:30', icon: '📚', priority: 'Baixa', period: 'Evening', dayId: format(new Date(), 'yyyy-MM-dd') },
-];
+const INITIAL_DATA: Record<string, any[]> = {
+  'Segunda': [
+    { id: 't1', name: 'Reunião Semanal', time: '09:00', icon: '🤝', priority: 'Extrema', period: 'Morning' },
+    { id: 't2', name: 'Responder E-mails', time: '10:30', icon: '📧', priority: 'Baixa', period: 'Morning' },
+  ],
+  'Terça': [
+    { id: 't3', name: 'Design Review', time: '14:00', icon: '🎨', priority: 'Média', period: 'Afternoon' }
+  ],
+  'Quarta': [
+    { id: 't4', name: 'Deep Work: Backend', time: '08:00', icon: '💻', priority: 'Extrema', period: 'Morning' },
+    { id: 't5', name: 'Treino de Pernas', time: '18:00', icon: '🏋️‍♂️', priority: 'Média', period: 'Evening' }
+  ],
+  'Quinta': [],
+  'Sexta': [
+    { id: 't6', name: 'Happy Hour', time: '19:00', icon: '🍻', priority: 'Baixa', period: 'Evening' }
+  ],
+  'Sábado': [],
+  'Domingo': []
+};
 
-const TasksPage = () => {
-  const [tasks, setTasks] = useState(INITIAL_TASKS);
-  const [activeId, setActiveId] = useState<string | null>(null);
+const WEEK_DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+const DISPLAY_ORDER = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+
+export default function TasksPage() {
+  const [columns, setColumns] = useState(INITIAL_DATA);
+  const [activeTask, setActiveTask] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly');
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [lastMovedTaskId, setLastMovedTaskId] = useState<string | null>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const days = Array.from({ length: 7 }, (_, i) => {
-    const date = addDays(startOfWeek(new Date(), { weekStartsOn: 1 }), i);
-    return {
-      id: format(date, 'yyyy-MM-dd'),
-      title: format(date, "EEEE, d 'de' MMMM", { locale: ptBR }),
-      shortTitle: format(date, 'EEE, d', { locale: ptBR }),
-      isToday: isSameDay(date, new Date())
-    };
-  });
+  const [originalTaskState, setOriginalTaskState] = useState<{ day: string; period: string } | null>(null);
+  
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string);
+  const currentDayName = useMemo(() => {
+    return WEEK_DAYS[new Date().getDay()];
+  }, []);
+
+  const dateInfo = useMemo(() => {
+    const month = format(currentDate, "MMMM", { locale: ptBR });
+    const weekNumber = getWeek(currentDate);
+    return {
+      month: month.charAt(0).toUpperCase() + month.slice(1),
+      year: format(currentDate, "yyyy"),
+      week: weekNumber.toString().padStart(2, '0')
+    };
+  }, [currentDate]);
+
+  useEffect(() => {
+    if (viewMode === 'weekly') {
+      const timer = setTimeout(() => {
+        if (scrollRef.current) {
+          const todayElement = scrollRef.current.querySelector(`[data-day="${currentDayName}"]`) as HTMLElement;
+          if (todayElement) {
+            const containerWidth = scrollRef.current.clientWidth;
+            const elementWidth = todayElement.clientWidth;
+            const elementLeft = todayElement.offsetLeft;
+            const scrollTo = elementLeft - (containerWidth / 2) + (elementWidth / 2);
+            
+            scrollRef.current.scrollTo({
+              left: scrollTo,
+              behavior: 'smooth'
+            });
+          }
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [currentDayName, viewMode]);
+
+  const handleNextDate = () => {
+    setCurrentDate(prev => viewMode === 'monthly' ? addMonths(prev, 1) : prev);
+  };
+
+  const handlePrevDate = () => {
+    setCurrentDate(prev => viewMode === 'monthly' ? subMonths(prev, 1) : prev);
+  };
+
+  const handleAddTask = (newTask: any) => {
+    setColumns(prev => ({
+      ...prev,
+      [currentDayName]: [...(prev[currentDayName] || []), newTask]
+    }));
+  };
+
+  const handleUpdateTaskTime = (taskId: string, newTime: string) => {
+    setColumns(prev => {
+      const newColumns = { ...prev };
+      Object.keys(newColumns).forEach(day => {
+        newColumns[day] = newColumns[day].map(task => 
+          task.id === taskId ? { ...task, time: newTime } : task
+        );
+      });
+      return newColumns;
+    });
     setLastMovedTaskId(null);
+  };
+
+  const findDay = (id: string) => {
+    if (DISPLAY_ORDER.includes(id)) return id;
+    if (id.includes(':')) return id.split(':')[0];
+    return Object.keys(columns).find((key) => columns[key].find((task) => task.id === id));
+  };
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    const day = findDay(active.id as string);
+    if (day) {
+      const task = columns[day].find((t) => t.id === active.id);
+      setActiveTask(task);
+      setOriginalTaskState({ day, period: task.period });
+      setLastMovedTaskId(null); // Reseta qualquer aviso anterior
+    }
   };
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) return;
 
-    const activeTask = tasks.find(t => t.id === active.id);
-    if (!activeTask) return;
-
+    const activeId = active.id as string;
     const overId = over.id as string;
-    
+
+    const activeDay = findDay(activeId);
+    let overDay = findDay(overId);
+
+    if (!activeDay || !overDay) return;
+
+    let overPeriod = activeTask?.period;
     if (overId.includes(':')) {
-      const [dayId, periodId] = overId.split(':');
-      if (activeTask.dayId !== dayId || activeTask.period !== periodId) {
-        setTasks(prev => prev.map(t => 
-          t.id === active.id ? { ...t, dayId, period: periodId } : t
-        ));
-      }
+      overPeriod = overId.split(':')[1];
     } else {
-      const overTask = tasks.find(t => t.id === over.id);
-      if (overTask && (activeTask.dayId !== overTask.dayId || activeTask.period !== overTask.period)) {
-        setTasks(prev => prev.map(t => 
-          t.id === active.id ? { ...t, dayId: overTask.dayId, period: overTask.period } : t
-        ));
+      const targetTask = columns[overDay].find(t => t.id === overId);
+      if (targetTask) overPeriod = targetTask.period;
+    }
+
+    if (activeDay !== overDay || activeTask?.period !== overPeriod) {
+      setColumns((prev) => {
+        const activeItems = prev[activeDay].filter(i => i.id !== activeId);
+        const overItems = [...prev[overDay]];
+        
+        const taskToMove = { ...activeTask, period: overPeriod };
+        
+        const overIndex = overItems.findIndex(i => i.id === overId);
+        const newIndex = overIndex >= 0 ? overIndex : overItems.length;
+
+        if (activeDay === overDay) {
+          const updatedDayItems = prev[activeDay].filter(i => i.id !== activeId);
+          updatedDayItems.splice(newIndex, 0, taskToMove);
+          return { ...prev, [activeDay]: updatedDayItems };
+        }
+
+        return {
+          ...prev,
+          [activeDay]: activeItems,
+          [overDay]: [
+            ...overItems.slice(0, newIndex),
+            taskToMove,
+            ...overItems.slice(newIndex)
+          ]
+        };
+      });
+      
+      if (activeTask) {
+        setActiveTask({ ...activeTask, period: overPeriod });
       }
     }
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
-    if (over && active.id !== over.id) {
-      const oldIndex = tasks.findIndex(t => t.id === active.id);
-      const newIndex = tasks.findIndex(t => t.id === over.id);
-      
-      if (newIndex !== -1) {
-        setTasks(prev => arrayMove(prev, oldIndex, newIndex));
+    if (!over) {
+      setActiveTask(null);
+      setOriginalTaskState(null);
+      return;
+    }
+
+    const activeDay = findDay(active.id as string);
+    const overDay = findDay(over.id as string);
+
+    // Verifica se a tarefa realmente mudou de dia ou período em relação ao início do drag
+    if (activeTask && originalTaskState) {
+      const currentPeriod = activeTask.period;
+      if (activeDay !== originalTaskState.day || currentPeriod !== originalTaskState.period) {
+        setLastMovedTaskId(activeTask.id);
       }
     }
 
-    const task = tasks.find(t => t.id === active.id);
-    const originalTask = INITIAL_TASKS.find(t => t.id === active.id);
-    
-    if (task && originalTask && (task.dayId !== originalTask.dayId || task.period !== originalTask.period)) {
-      setLastMovedTaskId(active.id as string);
-    } else {
-      setActiveId(null);
+    if (activeDay && overDay && activeDay === overDay) {
+      const activeIndex = columns[activeDay].findIndex((i) => i.id === active.id);
+      const overIndex = columns[overDay].findIndex((i) => i.id === over.id);
+
+      if (activeIndex !== overIndex && overIndex !== -1) {
+        setColumns((prev) => ({
+          ...prev,
+          [activeDay]: arrayMove(prev[activeDay], activeIndex, overIndex)
+        }));
+      }
     }
+
+    setActiveTask(null);
+    setOriginalTaskState(null);
   };
 
-  const handleUpdateTaskTime = (taskId: string, newTime: string) => {
-    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, time: newTime } : t));
-    setLastMovedTaskId(null);
-    setActiveId(null);
+  const onMouseDown = (e: React.MouseEvent) => {
+    if (viewMode !== 'weekly') return;
+    if (!scrollRef.current) return;
+    if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('[data-draggable]')) return;
+    
+    setIsScrolling(true);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
   };
-
-  const activeTask = activeId ? tasks.find(t => t.id === activeId) : null;
 
   return (
-    <div className="flex-1 flex flex-col py-8 h-full relative">
-      <header className="flex items-center justify-between mb-10 shrink-0">
+    <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0 relative">
+      <header className="flex items-center justify-between py-6 shrink-0 px-8">
         <div className="flex items-center gap-6">
-          <div className="flex flex-col">
-            <h1 className="text-4xl font-medium tracking-tight text-white mb-1">Minhas Tarefas</h1>
-            <p className="text-zinc-500 text-sm font-medium">Você tem {tasks.length} tarefas programadas para esta semana</p>
+          <div className="flex items-center gap-3">
+            <button onClick={handlePrevDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
+            <h2 className="text-4xl font-serif font-medium text-white tracking-tight">
+              {dateInfo.month} {viewMode === 'monthly' && dateInfo.year} <span className="text-zinc-600 font-sans text-xl ml-2">— {viewMode === 'monthly' ? 'Mês' : `Semana ${dateInfo.week}`}</span>
+            </h2>
+            <button onClick={handleNextDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronRight size={20} /></button>
           </div>
+          <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500/80 border border-white/5 px-2 py-0.5 rounded-md">
+            Tempo Real
+          </span>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center bg-white/[0.03] border border-white/5 rounded-2xl p-1">
-            <button className="p-2.5 text-zinc-400 hover:text-white transition-colors">
-              <Search size={18} />
+          <div className="flex items-center bg-white/5 rounded-2xl p-1 border border-white/5">
+            <button 
+              onClick={() => setViewMode('weekly')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all",
+                viewMode === 'weekly' ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+              )}
+            >
+              <LayoutGrid size={16} />
+              <span>Semanal</span>
             </button>
-            <div className="w-[1px] h-4 bg-white/10 mx-1" />
-            <button className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-white/5 rounded-xl hover:bg-white/10 transition-all">
-              <CalendarIcon size={16} className="text-[#6366f1]" />
-              Esta Semana
+            <button 
+              onClick={() => setViewMode('monthly')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all",
+                viewMode === 'monthly' ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+              )}
+            >
+              <CalendarDays size={16} />
+              <span>Mensal</span>
             </button>
           </div>
-          <button className="p-3 bg-white/[0.03] border border-white/5 text-zinc-400 hover:text-white rounded-2xl transition-all">
-            <LayoutGrid size={20} />
+          
+          <button className="w-11 h-11 rounded-2xl border border-white/5 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors">
+             <MoreHorizontal size={20} />
           </button>
         </div>
       </header>
 
-      <div className="flex-1 relative min-h-0">
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCorners}
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
-        >
+      <div className="flex-1 relative min-h-0 overflow-hidden">
+        {viewMode === 'weekly' ? (
           <div 
-            ref={scrollContainerRef}
-            className="flex gap-6 overflow-x-auto pb-8 h-full custom-scrollbar snap-x snap-mandatory"
+            ref={scrollRef}
+            onMouseDown={onMouseDown}
+            onMouseLeave={() => setIsScrolling(false)}
+            onMouseUp={() => setIsScrolling(false)}
+            onMouseMove={(e) => {
+              if (!isScrolling || !scrollRef.current) return;
+              e.preventDefault();
+              const x = e.pageX - scrollRef.current.offsetLeft;
+              const walk = (x - startX) * 1.5; 
+              scrollRef.current.scrollLeft = scrollLeft - walk;
+            }}
+            style={{
+              maskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)'
+            }}
+            className={cn(
+              "h-full flex pb-8 overflow-x-auto custom-scrollbar cursor-grab select-none px-10",
+              isScrolling && "cursor-grabbing"
+            )}
           >
-            {days.map((day) => (
-              <TaskColumn
-                key={day.id}
-                id={day.id}
-                title={day.title}
-                isToday={day.isToday}
-                tasks={tasks.filter(t => t.dayId === day.id)}
-                lastMovedTaskId={lastMovedTaskId}
-                onUpdateTaskTime={handleUpdateTaskTime}
-              />
-            ))}
-          </div>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCorners}
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
+              onDragEnd={handleDragEnd}
+            >
+              <div className="flex gap-5 items-start h-full pr-10">
+                {DISPLAY_ORDER.map((day) => {
+                  const isToday = day === currentDayName;
 
-          <DragOverlay dropAnimation={{
-            sideEffects: defaultDropAnimationSideEffects({
-              styles: {
-                active: {
-                  opacity: '0.5',
-                },
-              },
-            }),
-          }}>
-            {activeTask ? (
-              <div className="w-72 scale-105 rotate-2 transition-transform">
-                <TaskCard task={activeTask} />
+                  return (
+                    <TaskColumn 
+                      key={day} 
+                      id={day} 
+                      title={day} 
+                      tasks={columns[day] || []} 
+                      isToday={isToday}
+                      lastMovedTaskId={lastMovedTaskId}
+                      onUpdateTaskTime={handleUpdateTaskTime}
+                    />
+                  );
+                })}
               </div>
-            ) : null}
-          </DragOverlay>
-        </DndContext>
+
+              <DragOverlay dropAnimation={{
+                sideEffects: defaultDropAnimationSideEffects({
+                  styles: { active: { opacity: '0.5' } },
+                }),
+              }}>
+                {activeTask ? <TaskCard task={activeTask} /> : null}
+              </DragOverlay>
+            </DndContext>
+          </div>
+        ) : (
+          <MonthlyView 
+            tasksData={columns} 
+            currentDate={currentDate}
+          />
+        )}
       </div>
 
-      <button className="absolute bottom-8 right-0 w-16 h-16 bg-[#6366f1] text-white rounded-[24px] flex items-center justify-center shadow-2xl shadow-[#6366f1]/40 hover:scale-105 active:scale-95 transition-all group z-30">
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="fixed bottom-10 right-10 w-16 h-16 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black rounded-full shadow-2xl shadow-[#38BDF8]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50"
+        title="Criar nova tarefa"
+      >
         <Plus size={32} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
       </button>
+
+      <CreateTaskModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleAddTask}
+        selectedDay={currentDayName}
+      />
     </div>
   );
-};
-
-export default TasksPage;
+}
