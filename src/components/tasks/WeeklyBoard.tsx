@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useState } from 'react';
-import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor, DragStartEvent, DragEndEvent, DragOverEvent, defaultDropAnimationSideEffects } from '@dnd-kit/core';
-import { arrayMove } from '@dnd-kit/sortable';
+import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor, DragStartEvent, DragEndEvent } from '@dnd-kit/core';
 import { TaskColumn } from './TaskColumn';
 import { TaskCard } from './TaskCard';
 import { format, addDays, startOfWeek, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Plus } from 'lucide-react';
 
 interface Task {
   id: string;
@@ -23,6 +21,14 @@ const PERIODS = [
   { id: 'Evening', start: 18, end: 24, default: '21:00' },
   { id: 'Dawn', start: 0, end: 6, default: '03:00' }
 ];
+
+const getPeriodFromTime = (time: string) => {
+  const [hours] = time.split(':').map(Number);
+  if (hours >= 0 && hours < 6) return 'Dawn';
+  if (hours >= 6 && hours < 12) return 'Morning';
+  if (hours >= 12 && hours < 18) return 'Afternoon';
+  return 'Evening';
+};
 
 export const WeeklyBoard = () => {
   const [tasks, setTasks] = useState<Task[]>([
@@ -71,30 +77,26 @@ export const WeeklyBoard = () => {
           if (t.id === activeId) {
             // Find the target period to get default time
             const targetPeriod = PERIODS.find(p => p.id === periodId);
-            // Check if current time is valid for new period
             const [hours] = t.time.split(':').map(Number);
             let newTime = t.time;
             
-            // If time doesn't fit in new period, update it
+            // Check if current time is strictly within the new period's bounds
+            let isValid = false;
             if (targetPeriod) {
-               const isDawn = targetPeriod.id === 'Dawn';
-               const start = targetPeriod.start;
-               const end = targetPeriod.end;
-               
-               // Logic to check if time is within bounds
-               // Dawn is tricky because it's 00-06, others are straight forward
-               let isValid = false;
-               if (hours >= start && hours < end) isValid = true;
-               
-               if (!isValid) {
-                 newTime = targetPeriod.default;
+               if (hours >= targetPeriod.start && hours < targetPeriod.end) {
+                 isValid = true;
                }
+            }
+
+            // If time doesn't fit in new period, FORCE update to default time
+            if (!isValid && targetPeriod) {
+               newTime = targetPeriod.default;
             }
 
             return {
               ...t,
               period: periodId,
-              date: new Date(dateStr), // simplified for demo
+              date: new Date(dateStr),
               time: newTime
             };
           }
@@ -110,7 +112,10 @@ export const WeeklyBoard = () => {
   const updateTaskTime = (taskId: string, newTime: string) => {
     setTasks(prev => prev.map(t => {
       if (t.id === taskId) {
-        return { ...t, time: newTime };
+        // Automatically determine the correct period based on the new time
+        // This forces the task to move to the correct column immediately
+        const newPeriod = getPeriodFromTime(newTime);
+        return { ...t, time: newTime, period: newPeriod };
       }
       return t;
     }));
