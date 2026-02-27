@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { X, Clock, AlertCircle } from 'lucide-react';
+import { X, Clock, AlertCircle, Calendar, Tag, Repeat, Bell, AlignLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface CreateTaskModalProps {
@@ -19,8 +19,21 @@ const PERIODS = [
   { id: 'Dawn', label: 'Madrugada' }
 ];
 
+const REPETITION_OPTIONS = ['Nunca', 'Diário', 'Semanal', 'Mensal'];
+const REMINDER_OPTIONS = [
+  { label: 'No horário', value: '0' },
+  { label: '15 min antes', value: '15' },
+  { label: '30 min antes', value: '30' },
+  { label: '1 hora antes', value: '60' }
+];
+
 export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: CreateTaskModalProps) => {
   const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [date, setDate] = useState('');
+  const [category, setCategory] = useState('');
+  const [repetition, setRepetition] = useState('Nunca');
+  const [reminder, setReminder] = useState('0');
   const [time, setTime] = useState('09:00');
   const [icon, setIcon] = useState('📝');
   const [priority, setPriority] = useState<typeof PRIORITIES[number]>('Baixa');
@@ -35,6 +48,11 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
     onSave({
       id: Math.random().toString(36).substr(2, 9),
       name,
+      description,
+      date,
+      category,
+      repetition,
+      reminder,
       time,
       icon,
       priority,
@@ -43,6 +61,9 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
     
     // Reset form
     setName('');
+    setDescription('');
+    setDate('');
+    setCategory('');
     onClose();
   };
 
@@ -64,10 +85,10 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Nome e Ícone em largura total */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Nome e Ícone */}
           <div className="space-y-2">
-            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">O que precisa ser feito?</label>
+            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Tarefa</label>
             <div className="flex gap-3">
               <input 
                 type="text" 
@@ -87,8 +108,72 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
             </div>
           </div>
 
+          {/* Descrição */}
+          <div className="space-y-2">
+            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
+              <AlignLeft size={10} /> Descrição (Opcional)
+            </label>
+            <textarea 
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Adicione detalhes sobre a tarefa..."
+              className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#38BDF8]/50 transition-all resize-none h-20"
+            />
+          </div>
+
+          {/* Grid de Detalhes Adicionais */}
+          <div className="grid grid-cols-4 gap-3">
+            <div className="space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
+                <Calendar size={10} /> Data
+              </label>
+              <input 
+                type="date" 
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all [color-scheme:dark]"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
+                <Tag size={10} /> Categoria
+              </label>
+              <input 
+                type="text" 
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                placeholder="Ex: Trabalho"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#38BDF8]/50 transition-all"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
+                <Repeat size={10} /> Repetição
+              </label>
+              <select 
+                value={repetition}
+                onChange={(e) => setRepetition(e.target.value)}
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all appearance-none cursor-pointer"
+              >
+                {REPETITION_OPTIONS.map(opt => <option key={opt} value={opt} className="bg-[#0C0C0C]">{opt}</option>)}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
+                <Bell size={10} /> Lembrete
+              </label>
+              <select 
+                value={reminder}
+                onChange={(e) => setReminder(e.target.value)}
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-[11px] text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all appearance-none cursor-pointer"
+              >
+                {REMINDER_OPTIONS.map(opt => <option key={opt.value} value={opt.value} className="bg-[#0C0C0C]">{opt.label}</option>)}
+              </select>
+            </div>
+          </div>
+
           {/* Grid de Ações Inferiores */}
-          <div className="grid grid-cols-12 gap-4 items-end">
+          <div className="grid grid-cols-12 gap-4 items-end pt-2">
             <div className="col-span-2 space-y-2">
               <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
                 <Clock size={10} /> Horário
