@@ -1,75 +1,87 @@
 "use client";
 
 import React from 'react';
-import { useDroppable } from '@dnd-kit/core';
-import { 
-  SortableContext, 
-  verticalListSortingStrategy 
-} from '@dnd-kit/sortable';
-import { TaskCard } from './TaskCard';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Circle, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Hash } from 'lucide-react';
 
-interface TaskColumnProps {
-  id: string;
-  title: string;
-  tasks: any[];
-  isToday?: boolean;
+interface TaskCardProps {
+  task: {
+    id: string;
+    name: string;
+    time?: string;
+    icon?: string;
+    priority?: 'Extrema' | 'Média' | 'Baixa';
+    period?: string;
+  };
 }
 
-export const TaskColumn = ({ id, title, tasks, isToday }: TaskColumnProps) => {
-  const { setNodeRef } = useDroppable({ id });
+const periodGradients: Record<string, string> = {
+  Morning:   'linear-gradient(180deg, rgba(253,186,116,0.12) 0%, rgba(253,186,116,0.03) 100%)',
+  Afternoon: 'linear-gradient(180deg, rgba(74,222,128,0.12) 0%, rgba(74,222,128,0.03) 100%)',
+  Evening:   'linear-gradient(180deg, rgba(167,139,250,0.12) 0%, rgba(167,139,250,0.03) 100%)',
+  Dawn:      'linear-gradient(180deg, rgba(129,140,248,0.12) 0%, rgba(129,140,248,0.03) 100%)',
+};
+
+const priorityColors: Record<string, string> = {
+  Extrema: 'bg-red-500/20 text-red-400 border-red-500/30',
+  Média:   'bg-orange-500/20 text-orange-400 border-orange-500/30',
+  Baixa:   'bg-sky-500/20 text-sky-400 border-sky-500/30',
+};
+
+export const TaskCard = ({ task }: TaskCardProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({ id: task.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : 1,
+    background: isDragging ? 'rgba(255,255,255,0.08)' : (task.period ? periodGradients[task.period] : 'rgba(255,255,255,0.03)'),
+  };
 
   return (
-    <div 
-      data-day={title}
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
       className={cn(
-        "flex flex-col w-[320px] shrink-0 h-full",
-        isToday && "relative"
+        "group relative flex flex-col p-4 rounded-[20px] border-0 transition-all cursor-grab active:cursor-grabbing overflow-hidden",
+        isDragging && "z-50 shadow-2xl"
       )}
     >
-      {/* Header da Coluna */}
-      <div className="flex items-center justify-between mb-6 px-4">
+      <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Hash size={14} className={cn(isToday ? "text-[#38BDF8]" : "text-zinc-600")} />
-          <h3 className={cn(
-            "text-[11px] font-black uppercase tracking-[0.2em]",
-            isToday ? "text-white" : "text-zinc-500"
-          )}>
-            {title}
-          </h3>
-        </div>
-        {isToday && (
-          <div className="flex items-center gap-2">
-            <span className="text-[8px] font-black text-[#38BDF8] uppercase tracking-tighter">Hoje</span>
-            <div className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] animate-pulse" />
+          <div className="w-6 h-6 flex items-center justify-center text-lg">
+            {task.icon || '📝'}
           </div>
-        )}
+          <h4 className="text-sm font-semibold text-zinc-100 line-clamp-1">{task.name}</h4>
+        </div>
       </div>
 
-      {/* Container de Drop das Tarefas */}
-      <div
-        ref={setNodeRef}
-        className={cn(
-          "flex-1 flex flex-col gap-3 p-3 rounded-[32px] transition-all overflow-y-auto custom-scrollbar pb-20",
-          isToday ? "bg-white/[0.04] border border-white/5 shadow-2xl" : "bg-white/[0.01] border border-transparent"
-        )}
-      >
-        <SortableContext 
-          id={id}
-          items={tasks.map(t => t.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          {tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
-          ))}
-        </SortableContext>
-
-        {tasks.length === 0 && (
-          <div className="flex-1 flex flex-col items-center justify-center opacity-10 py-10 border-2 border-dashed border-white/10 rounded-[24px]">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em]">Sem tarefas</p>
-          </div>
-        )}
+      <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.04]">
+        <div className="flex items-center gap-3">
+          {task.priority && (
+            <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityColors[task.priority])}>
+              {task.priority}
+            </span>
+          )}
+          {task.time && (
+            <div className="flex items-center gap-1 text-[10px] text-zinc-300 font-medium">
+              <Clock size={10} className="text-zinc-400" />
+              {task.time}
+            </div>
+          )}
+        </div>
+        <Circle size={16} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
       </div>
     </div>
   );
