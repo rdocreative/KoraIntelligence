@@ -64,34 +64,59 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex gap-4">
-            <div className="flex-1 space-y-2">
-              <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">O que precisa ser feito?</label>
-              <div className="flex gap-3">
-                <input 
-                  type="text" 
-                  value={icon}
-                  onChange={(e) => setIcon(e.target.value)}
-                  className="w-11 h-11 bg-white/[0.03] border border-white/10 rounded-xl text-center text-lg focus:outline-none focus:border-[#38BDF8]/50 transition-all"
-                  placeholder="📝"
-                />
-                <input 
-                  autoFocus
-                  type="text" 
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Ex: Reunião de Design"
-                  className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#38BDF8]/50 transition-all"
-                />
-              </div>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Nome e Ícone em largura total */}
+          <div className="space-y-2">
+            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">O que precisa ser feito?</label>
+            <div className="flex gap-3">
+              <input 
+                type="text" 
+                value={icon}
+                onChange={(e) => setIcon(e.target.value)}
+                className="w-12 h-12 bg-white/[0.03] border border-white/10 rounded-xl text-center text-lg focus:outline-none focus:border-[#38BDF8]/50 transition-all"
+                placeholder="📝"
+              />
+              <input 
+                autoFocus
+                type="text" 
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Ex: Reunião de Design"
+                className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl px-4 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-[#38BDF8]/50 transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Grid de Ações Inferiores */}
+          <div className="grid grid-cols-12 gap-4 items-end">
+            <div className="col-span-2 space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
+                <Clock size={10} /> Horário
+              </label>
+              <input 
+                type="time" 
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all [color-scheme:dark]"
+              />
             </div>
 
-            <div className="w-1/3 space-y-2">
+            <div className="col-span-2 space-y-2">
+              <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Período</label>
+              <select 
+                value={period}
+                onChange={(e) => setPeriod(e.target.value)}
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all appearance-none cursor-pointer"
+              >
+                {PERIODS.map(p => <option key={p.id} value={p.id} className="bg-[#0C0C0C]">{p.label}</option>)}
+              </select>
+            </div>
+
+            <div className="col-span-5 space-y-2">
               <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
                 <AlertCircle size={10} /> Prioridade
               </label>
-              <div className="flex gap-1.5 h-11">
+              <div className="flex gap-1.5 h-10">
                 {PRIORITIES.map((p) => (
                   <button
                     key={p}
@@ -104,41 +129,20 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
                         : "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-white/10"
                     )}
                   >
-                    {p.charAt(0)}
+                    {p}
                   </button>
                 ))}
               </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-3 gap-4 items-end">
-            <div className="space-y-2">
-              <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
-                <Clock size={10} /> Horário
-              </label>
-              <input 
-                type="time" 
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all [color-scheme:dark]"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Período</label>
-              <select 
-                value={period}
-                onChange={(e) => setPeriod(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all appearance-none cursor-pointer"
+            <div className="col-span-3">
+              <button
+                type="submit"
+                className="w-full bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black font-bold text-xs h-10 rounded-xl transition-all shadow-lg shadow-[#38BDF8]/10 active:scale-95"
               >
-                {PERIODS.map(p => <option key={p.id} value={p.id} className="bg-[#0C0C0C]">{p.label}</option>)}
-              </select>
+                Criar Tarefa
+              </button>
             </div>
-            <button
-              type="submit"
-              className="bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black font-bold text-xs h-10 rounded-xl transition-all shadow-lg shadow-[#38BDF8]/10 active:scale-95 px-6"
-            >
-              Criar Tarefa
-            </button>
           </div>
         </form>
       </div>
