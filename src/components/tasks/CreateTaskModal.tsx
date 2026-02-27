@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Clock, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -12,19 +12,24 @@ interface CreateTaskModalProps {
 }
 
 const PRIORITIES = ['Baixa', 'Média', 'Extrema'] as const;
-const PERIODS = [
-  { id: 'Morning', label: 'Manhã' },
-  { id: 'Afternoon', label: 'Tarde' },
-  { id: 'Evening', label: 'Noite' },
-  { id: 'Dawn', label: 'Madrugada' }
-];
+
+const getPeriodFromTime = (timeStr: string) => {
+  const hour = parseInt(timeStr.split(':')[0]);
+  if (hour >= 6 && hour < 12) return 'Morning';
+  if (hour >= 12 && hour < 18) return 'Afternoon';
+  if (hour >= 18 && hour < 24) return 'Evening';
+  return 'Dawn';
+};
+
+const HOURS = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
+const MINUTES = ['00', '15', '30', '45'];
 
 export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: CreateTaskModalProps) => {
   const [name, setName] = useState('');
-  const [time, setTime] = useState('09:00');
+  const [selectedHour, setSelectedHour] = useState('09');
+  const [selectedMinute, setSelectedMinute] = useState('00');
   const [icon, setIcon] = useState('📝');
   const [priority, setPriority] = useState<typeof PRIORITIES[number]>('Baixa');
-  const [period, setPeriod] = useState('Morning');
 
   if (!isOpen) return null;
 
@@ -32,16 +37,18 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
     e.preventDefault();
     if (!name.trim()) return;
 
+    const finalTime = `${selectedHour}:${selectedMinute}`;
+    const autoPeriod = getPeriodFromTime(finalTime);
+
     onSave({
       id: Math.random().toString(36).substr(2, 9),
       name,
-      time,
+      time: finalTime,
       icon,
       priority,
-      period,
+      period: autoPeriod,
     });
     
-    // Reset form
     setName('');
     onClose();
   };
@@ -54,7 +61,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
       />
       
       <div className="relative w-full max-w-2xl bg-[#0C0C0C] border border-white/10 rounded-[32px] p-6 shadow-2xl animate-in zoom-in-95 fade-in duration-300">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-xl font-serif font-medium text-white">Nova Tarefa</h2>
             <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-bold">Para {selectedDay}</p>
@@ -64,8 +71,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Nome e Ícone em largura total */}
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">O que precisa ser feito?</label>
             <div className="flex gap-3">
@@ -87,58 +93,79 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
             </div>
           </div>
 
-          {/* Grid de Ações Inferiores */}
-          <div className="grid grid-cols-12 gap-4 items-end">
-            <div className="col-span-2 space-y-2">
+          <div className="grid grid-cols-12 gap-6">
+            {/* Seletor de Horas (Estilo Relógio Digital Expandido) */}
+            <div className="col-span-7 space-y-2">
               <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
-                <Clock size={10} /> Horário
+                <Clock size={10} /> Horário ({selectedHour}:{selectedMinute})
               </label>
-              <input 
-                type="time" 
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all [color-scheme:dark]"
-              />
-            </div>
-
-            <div className="col-span-2 space-y-2">
-              <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1">Período</label>
-              <select 
-                value={period}
-                onChange={(e) => setPeriod(e.target.value)}
-                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 transition-all appearance-none cursor-pointer"
-              >
-                {PERIODS.map(p => <option key={p.id} value={p.id} className="bg-[#0C0C0C]">{p.label}</option>)}
-              </select>
-            </div>
-
-            <div className="col-span-5 space-y-2">
-              <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
-                <AlertCircle size={10} /> Prioridade
-              </label>
-              <div className="flex gap-1.5 h-10">
-                {PRIORITIES.map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    onClick={() => setPriority(p)}
-                    className={cn(
-                      "flex-1 rounded-xl text-[8px] font-black uppercase tracking-widest border transition-all",
-                      priority === p 
-                        ? "bg-[#38BDF8]/10 border-[#38BDF8]/30 text-[#38BDF8]" 
-                        : "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-white/10"
-                    )}
-                  >
-                    {p}
-                  </button>
-                ))}
+              <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-3">
+                <div className="grid grid-cols-8 gap-1 mb-3">
+                  {HOURS.map(h => (
+                    <button
+                      key={h}
+                      type="button"
+                      onClick={() => setSelectedHour(h)}
+                      className={cn(
+                        "h-8 flex items-center justify-center rounded-lg text-[10px] font-bold transition-all",
+                        selectedHour === h 
+                          ? "bg-[#38BDF8] text-black shadow-lg shadow-[#38BDF8]/20" 
+                          : "text-zinc-500 hover:bg-white/5 hover:text-zinc-300"
+                      )}
+                    >
+                      {h}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex gap-2 justify-center border-t border-white/5 pt-3">
+                  {MINUTES.map(m => (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => setSelectedMinute(m)}
+                      className={cn(
+                        "px-4 py-1.5 rounded-lg text-[10px] font-bold transition-all",
+                        selectedMinute === m 
+                          ? "bg-[#38BDF8]/20 text-[#38BDF8] border border-[#38BDF8]/30" 
+                          : "text-zinc-600 hover:bg-white/5"
+                      )}
+                    >
+                      :{m}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <div className="col-span-3">
+            {/* Prioridade e Botão */}
+            <div className="col-span-5 flex flex-col justify-between">
+              <div className="space-y-2">
+                <label className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500 ml-1 flex items-center gap-1.5">
+                  <AlertCircle size={10} /> Prioridade
+                </label>
+                <div className="flex flex-col gap-2">
+                  {PRIORITIES.map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => setPriority(p)}
+                      className={cn(
+                        "w-full py-2 rounded-xl text-[8px] font-black uppercase tracking-widest border transition-all text-left px-4 flex items-center justify-between",
+                        priority === p 
+                          ? "bg-[#38BDF8]/10 border-[#38BDF8]/30 text-[#38BDF8]" 
+                          : "bg-white/[0.02] border-white/5 text-zinc-500 hover:border-white/10"
+                      )}
+                    >
+                      {p}
+                      {priority === p && <div className="w-1 h-1 rounded-full bg-[#38BDF8]" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <button
                 type="submit"
-                className="w-full bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black font-bold text-xs h-10 rounded-xl transition-all shadow-lg shadow-[#38BDF8]/10 active:scale-95"
+                className="w-full bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black font-bold text-xs h-12 rounded-xl transition-all shadow-lg shadow-[#38BDF8]/10 active:scale-95 mt-4"
               >
                 Criar Tarefa
               </button>
