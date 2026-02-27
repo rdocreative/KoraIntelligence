@@ -14,7 +14,7 @@ import {
   getDay
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Clock, X, Hash, Sun, Coffee, Moon, Filter } from 'lucide-react';
+import { Clock, X, Hash, Sun, Coffee, Moon, Filter, Zap, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -65,13 +65,13 @@ const getPriorityStyles = (priority: string) => {
 const getPeriodGradient = (period: string) => {
   switch (period) {
     case 'Morning':
-      return "from-orange-500/[0.08] via-orange-500/[0.02] to-transparent";
+      return "from-orange-500/10 via-orange-500/[0.02] to-transparent";
     case 'Afternoon':
-      return "from-emerald-500/[0.08] via-emerald-500/[0.02] to-transparent";
+      return "from-emerald-500/10 via-emerald-500/[0.02] to-transparent";
     case 'Evening':
-      return "from-indigo-500/[0.08] via-indigo-500/[0.02] to-transparent";
+      return "from-indigo-500/10 via-indigo-500/[0.02] to-transparent";
     default:
-      return "from-blue-500/[0.08] via-blue-500/[0.02] to-transparent";
+      return "from-blue-500/10 via-blue-500/[0.02] to-transparent";
   }
 };
 
@@ -164,6 +164,15 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
       (PRIORITY_WEIGHT[a.priority] || 99) - (PRIORITY_WEIGHT[b.priority] || 99)
     );
   }, [sideViewMode, selectedDate, currentDate, activePriorities, activeWeekDays, tasksData]);
+
+  const summary = useMemo(() => {
+    const todayTasks = getFilteredTasksForDate(selectedDate);
+    const extremeCount = todayTasks.filter(t => t.priority === 'Extrema').length;
+    return {
+      total: todayTasks.length,
+      extreme: extremeCount
+    };
+  }, [selectedDate, tasksData, activePriorities, activeWeekDays]);
 
   const handleOpenPopover = (e: React.MouseEvent, day: Date) => {
     const rect = (e.currentTarget.closest('.calendar-cell') as HTMLElement).getBoundingClientRect();
@@ -308,9 +317,11 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
 
       {/* Painel Lateral Direito */}
       <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2 h-full min-h-0 shrink-0">
-        <div className="bg-white/[0.03] border border-white/10 rounded-[28px] flex flex-col h-full shadow-2xl overflow-hidden relative">
-          <div className="p-6 pb-4 border-b border-white/5 shrink-0">
-            <div className="flex items-center justify-between mb-4">
+        <div className="bg-[#0b0b0b] border border-white/10 rounded-[32px] flex flex-col h-full shadow-2xl overflow-hidden relative">
+          
+          {/* Header do Painel com Resumo */}
+          <div className="p-6 pb-5 border-b border-white/5 shrink-0 space-y-5">
+            <div className="flex items-center justify-between">
               <div className="flex bg-white/5 p-1 rounded-xl w-full">
                 {(['day', 'week', 'month'] as ViewMode[]).map((mode) => (
                   <button
@@ -329,22 +340,43 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 mb-1.5">
-               <Hash size={12} className="text-[#38BDF8]" />
-               <span className="text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-500">
-                {sideViewMode === 'day' ? format(selectedDate, "EEEE", { locale: ptBR }) : 
-                 sideViewMode === 'week' ? `Semana de ${format(startOfWeek(selectedDate), "d", { locale: ptBR })}` : 
-                 format(currentDate, "MMMM", { locale: ptBR })}
-              </span>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                 <Hash size={14} className="text-[#38BDF8]" />
+                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500">
+                  {sideViewMode === 'day' ? format(selectedDate, "EEEE", { locale: ptBR }) : 
+                   sideViewMode === 'week' ? `Semana de ${format(startOfWeek(selectedDate), "d", { locale: ptBR })}` : 
+                   format(currentDate, "MMMM", { locale: ptBR })}
+                </span>
+              </div>
+              <h3 className="text-2xl font-serif text-white truncate leading-none">
+                {sideViewMode === 'day' ? format(selectedDate, "d 'de' MMMM", { locale: ptBR }) : 
+                 sideViewMode === 'week' ? `Visualização Semanal` : 
+                 `Resumo do Mês`}
+              </h3>
             </div>
-            <h3 className="text-xl font-serif text-white truncate">
-              {sideViewMode === 'day' ? format(selectedDate, "d 'de' MMMM", { locale: ptBR }) : 
-               sideViewMode === 'week' ? `Visualização Semanal` : 
-               `Resumo do Mês`}
-            </h3>
+
+            {/* Resumo de Metas */}
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-3 flex flex-col gap-1">
+                <div className="flex items-center gap-2 text-zinc-500">
+                  <Target size={12} />
+                  <span className="text-[9px] font-black uppercase tracking-widest">Total</span>
+                </div>
+                <span className="text-xl font-black text-white">{summary.total}</span>
+              </div>
+              <div className="bg-red-500/[0.03] border border-red-500/10 rounded-2xl p-3 flex flex-col gap-1">
+                <div className="flex items-center gap-2 text-red-500/70">
+                  <Zap size={12} />
+                  <span className="text-[9px] font-black uppercase tracking-widest">Extrema</span>
+                </div>
+                <span className="text-xl font-black text-red-500">{summary.extreme}</span>
+              </div>
+            </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-5 pb-32 space-y-4 min-h-0 max-h-[620px]">
+          {/* Lista de Tarefas */}
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-5 pb-32 space-y-4 min-h-0">
             {sideTasks.length > 0 ? (
               sideTasks.map((task, idx) => {
                 const period = getPeriodInfo(task.period);
@@ -354,16 +386,16 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   <div 
                     key={`${task.id}-${idx}`}
                     className={cn(
-                      "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-zinc-900/40 shrink-0",
-                      "min-h-[115px] bg-gradient-to-br", 
+                      "group p-5 rounded-[28px] transition-all relative overflow-hidden border border-white/5 bg-zinc-950/40 shrink-0",
+                      "min-h-[130px] bg-gradient-to-br", 
                       getPeriodGradient(task.period)
                     )}
                   >
-                    <div className="relative z-10">
-                      <div className="flex items-center justify-between mb-3">
+                    <div className="relative z-10 h-full flex flex-col">
+                      <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                           <PeriodIcon size={14} className={period.color} />
-                          <span className={cn("text-[9px] font-black tracking-widest uppercase", period.color)}>
+                          <span className={cn("text-[10px] font-black tracking-widest uppercase", period.color)}>
                             {period.label}
                           </span>
                         </div>
@@ -374,23 +406,24 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                         )}
                       </div>
 
-                      <div className="flex items-center gap-3 mb-5">
-                        <span className="text-xl filter drop-shadow-md">{task.icon}</span>
-                        <h4 className="text-[14px] font-semibold text-white/95 group-hover:text-white transition-colors leading-tight line-clamp-1">
+                      <div className="flex items-center gap-3 mb-6">
+                        <span className="text-2xl filter drop-shadow-md shrink-0">{task.icon}</span>
+                        <h4 className="text-[15px] font-bold text-white/95 group-hover:text-white transition-colors leading-tight line-clamp-2">
                           {task.name}
                         </h4>
                       </div>
                       
-                      <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/[0.03]">
+                      <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/[0.03]">
                         <div className={cn(
-                          "px-2 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest",
-                          task.priority === 'Extrema' ? "bg-red-500/10 text-red-500" :
-                          task.priority === 'Média' ? "bg-amber-500/10 text-amber-500" : "bg-blue-500/10 text-blue-500"
+                          "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border",
+                          task.priority === 'Extrema' ? "bg-red-500/10 text-red-500 border-red-500/20" :
+                          task.priority === 'Média' ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : 
+                          "bg-blue-500/10 text-blue-500 border-blue-500/20"
                         )}>
                           {task.priority}
                         </div>
-                        <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-medium">
-                          <Clock size={10} className="text-zinc-600" />
+                        <div className="flex items-center gap-1.5 text-[11px] text-zinc-400 font-bold">
+                          <Clock size={12} className="text-zinc-600" />
                           {task.time}
                         </div>
                       </div>
@@ -399,14 +432,18 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                 );
               })
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center opacity-20 py-8">
-                <X size={20} className="text-zinc-600 mb-2" />
-                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.1em]">Vazio ou Filtrado</p>
+              <div className="h-full flex flex-col items-center justify-center text-center py-20 px-10">
+                <div className="w-16 h-16 rounded-full bg-white/[0.02] border border-white/5 flex items-center justify-center mb-4">
+                  <Target size={24} className="text-zinc-700" />
+                </div>
+                <p className="text-sm text-zinc-200 font-medium mb-1">Nenhuma tarefa para este dia</p>
+                <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest">Relaxe ou adicione algo novo</p>
               </div>
             )}
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-transparent pointer-events-none z-20 rounded-b-[28px]" />
+          {/* Efeito de Fade inferior */}
+          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0b0b0b] via-[#0b0b0b]/80 to-transparent pointer-events-none z-20" />
         </div>
       </div>
 
