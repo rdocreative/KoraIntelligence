@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,23 +15,25 @@
   }
 
   :root {
-    --background: 0 0% 3%; /* #070707 */
+    --background: 226 42% 6%; /* #080B14 */
     --foreground: 0 0% 100%;
-    --primary: 199 89% 60%;
-    --surface: 0 0% 4%; /* #0b0b0b */
-    --border-ui: rgba(255, 255, 255, 0.04);
+    --primary: 239 84% 67%; /* #6366f1 */
+    --surface: 226 42% 7%;
+    --border-ui: rgba(255, 255, 255, 0.05);
     --radius: 24px;
   }
 
   body {
-    background-color: #070707;
+    background-color: #080B14;
     color: white;
-    font-family: 'Inter', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
+    background-image: radial-gradient(ellipse 80% 60% at 60% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
+    background-attachment: fixed;
   }
 
-  .font-serif {
-    font-family: 'Newsreader', serif;
+  h1, h2, h3, h4, h5, h6, .font-serif {
+    font-family: 'Instrument Serif', serif;
   }
 }
 

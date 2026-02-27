@@ -159,8 +159,8 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
       <div className="flex items-center justify-center mb-4 px-3 relative">
         <div className="flex items-center gap-3">
           <h3 className={cn(
-            "text-lg font-serif font-medium tracking-tight",
-            isToday ? "text-[#38BDF8]" : "text-zinc-100"
+            "text-lg font-medium tracking-tight",
+            isToday ? "text-[#6366f1]" : "text-zinc-100"
           )}>
             {title}
           </h3>
@@ -176,7 +176,7 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
         className={cn(
           "flex-1 relative flex flex-col gap-4 p-2 rounded-[28px] border custom-scrollbar overflow-y-auto pb-10 transition-all duration-500",
           isToday 
-            ? "bg-[#38BDF8]/[0.02] border-[#38BDF8]/10 shadow-[0_0_40px_rgba(56,189,248,0.02)]" 
+            ? "bg-[#6366f1]/[0.02] border-[#6366f1]/10 shadow-[0_0_40px_rgba(99,102,241,0.02)]" 
             : "bg-white/[0.01] border-white/[0.03]"
         )}
       >

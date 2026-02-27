@@ -28,7 +28,6 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
   const [hour, setHour] = useState(initialTime.split(':')[0] || '09');
   const [minute, setMinute] = useState(initialTime.split(':')[1] || '00');
 
-  // Reset local state if task time changes or when overlay appears
   useEffect(() => {
     if (isAwaitingTime) {
       const currentTime = task.time || defaultPeriodTime || '09:00';
@@ -93,7 +92,7 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
         className={cn(
           "group relative flex flex-col p-4 rounded-[20px] border transition-all cursor-grab active:cursor-grabbing overflow-hidden min-h-[90px]",
           task.period ? periodStyles[task.period] : 'border-white/5 hover:border-white/10',
-          isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
+          isDragging && "z-50 border-[#6366f1]/50 shadow-2xl bg-white/[0.08]"
         )}
         style={{
           background: task.period ? periodGradients[task.period] : 'rgba(255,255,255,0.03)'
@@ -125,25 +124,23 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
           <Circle size={16} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
         </div>
 
-        {/* Time Adjust Overlay - Now with custom selects */}
         {isAwaitingTime && (
           <div 
             className="absolute inset-0 bg-[#0C0C0C]/95 backdrop-blur-md z-20 flex flex-col p-4 animate-in fade-in zoom-in-95 duration-200 rounded-[20px]"
             onPointerDown={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-2 mb-3">
-              <Clock size={12} className="text-[#38BDF8]" />
+              <Clock size={12} className="text-[#6366f1]" />
               <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Novo Horário</span>
             </div>
             
             <div className="flex gap-2 flex-1 items-center">
               <div className="flex-1 flex gap-1.5 h-10">
-                {/* Hour Select */}
                 <div className="relative flex-1">
                   <select 
                     value={hour}
                     onChange={(e) => setHour(e.target.value)}
-                    className="w-full h-full bg-white/[0.05] border border-white/10 rounded-xl px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#38BDF8]/50 transition-all text-center"
+                    className="w-full h-full bg-white/[0.05] border border-white/10 rounded-xl px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#6366f1]/50 transition-all text-center"
                   >
                     {HOURS.map(h => (
                       <option key={h} value={h} className="bg-[#0C0C0C]">{h}</option>
@@ -154,12 +151,11 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
 
                 <span className="text-zinc-600 flex items-center">:</span>
 
-                {/* Minute Select */}
                 <div className="relative flex-1">
                   <select 
                     value={minute}
                     onChange={(e) => setMinute(e.target.value)}
-                    className="w-full h-full bg-white/[0.05] border border-white/10 rounded-xl px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#38BDF8]/50 transition-all text-center"
+                    className="w-full h-full bg-white/[0.05] border border-white/10 rounded-xl px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#6366f1]/50 transition-all text-center"
                   >
                     {MINUTES.map(m => (
                       <option key={m} value={m} className="bg-[#0C0C0C]">{m}</option>
@@ -171,7 +167,7 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
 
               <button 
                 onClick={handleConfirm}
-                className="w-10 h-10 bg-[#38BDF8] text-black rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#38BDF8]/20 shrink-0"
+                className="w-10 h-10 bg-[#6366f1] text-white rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#6366f1]/20 shrink-0"
               >
                 <Check size={18} strokeWidth={3} />
               </button>
