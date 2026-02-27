@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Circle, Clock, Check } from 'lucide-react';
@@ -21,7 +21,17 @@ interface TaskCardProps {
 }
 
 export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime }: TaskCardProps) => {
-  const [tempTime, setTempTime] = useState(task.time || defaultPeriodTime || '09:00');
+  const initialTime = task.time || defaultPeriodTime || '09:00';
+  const [hour, setHour] = useState(initialTime.split(':')[0]);
+  const [minute, setMinute] = useState(initialTime.split(':')[1]);
+
+  // Update local state when task time or period changes
+  useEffect(() => {
+    const timeToSplit = task.time || defaultPeriodTime || '09:00';
+    const [h, m] = timeToSplit.split(':');
+    setHour(h);
+    setMinute(m);
+  }, [task.time, defaultPeriodTime]);
 
   const {
     attributes,
@@ -54,6 +64,13 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
   };
 
   const currentCardStyle = task.priority ? cardPriorityStyles[task.priority] : 'bg-white/[0.03] border-white/5 hover:border-white/10';
+
+  const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
+  const minutes = ['00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55'];
+
+  const handleConfirm = () => {
+    onUpdateTime?.(`${hour}:${minute}`);
+  };
 
   return (
     <div
@@ -96,7 +113,7 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
           <Circle size={16} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
         </div>
 
-        {/* Time Adjust Overlay - Now stays until confirmed */}
+        {/* Time Adjust Overlay - Custom Selects */}
         {isAwaitingTime && (
           <div 
             className="absolute inset-0 bg-[#0C0C0C]/95 backdrop-blur-md z-20 flex flex-col p-4 animate-in fade-in zoom-in-95 duration-200 rounded-[20px]"
@@ -107,16 +124,32 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
               <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Novo Horário</span>
             </div>
             
-            <div className="flex gap-3 flex-1 items-center">
-              <input 
-                type="time" 
-                value={tempTime}
-                onChange={(e) => setTempTime(e.target.value)}
-                className="flex-1 bg-white/[0.05] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 [color-scheme:dark] h-10"
-              />
+            <div className="flex gap-2 flex-1 items-center">
+              <div className="flex-1 flex gap-1.5 h-10">
+                <select 
+                  value={hour}
+                  onChange={(e) => setHour(e.target.value)}
+                  className="flex-1 bg-white/[0.05] border border-white/10 rounded-xl px-1 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 cursor-pointer appearance-none text-center"
+                >
+                  {hours.map(h => (
+                    <option key={h} value={h} className="bg-[#0C0C0C]">{h}h</option>
+                  ))}
+                </select>
+                <div className="flex items-center text-zinc-600 font-bold">:</div>
+                <select 
+                  value={minute}
+                  onChange={(e) => setMinute(e.target.value)}
+                  className="flex-1 bg-white/[0.05] border border-white/10 rounded-xl px-1 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 cursor-pointer appearance-none text-center"
+                >
+                  {minutes.map(m => (
+                    <option key={m} value={m} className="bg-[#0C0C0C]">{m}</option>
+                  ))}
+                </select>
+              </div>
+
               <button 
-                onClick={() => onUpdateTime?.(tempTime)}
-                className="w-10 h-10 bg-[#38BDF8] text-black rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#38BDF8]/20"
+                onClick={handleConfirm}
+                className="w-10 h-10 bg-[#38BDF8] text-black rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#38BDF8]/20 shrink-0"
               >
                 <Check size={18} strokeWidth={3} />
               </button>
