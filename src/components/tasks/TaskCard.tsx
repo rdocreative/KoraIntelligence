@@ -5,7 +5,6 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Circle, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { TimeAdjustmentPopup } from './TimeAdjustmentPopup';
 
 interface TaskCardProps {
   task: {
@@ -16,14 +15,9 @@ interface TaskCardProps {
     priority?: 'Extrema' | 'Média' | 'Baixa';
     period?: string;
   };
-  pendingMove?: {
-    targetPeriod: string;
-  };
-  onConfirmMove?: (newTime: string) => void;
-  onCancelMove?: () => void;
 }
 
-export const TaskCard = ({ task, pendingMove, onConfirmMove, onCancelMove }: TaskCardProps) => {
+export const TaskCard = ({ task }: TaskCardProps) => {
   const {
     attributes,
     listeners,
@@ -31,10 +25,7 @@ export const TaskCard = ({ task, pendingMove, onConfirmMove, onCancelMove }: Tas
     transform,
     transition,
     isDragging
-  } = useSortable({ 
-    id: task.id,
-    disabled: !!pendingMove // Desabilita drag enquanto o pop-up está aberto
-  });
+  } = useSortable({ id: task.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -59,19 +50,9 @@ export const TaskCard = ({ task, pendingMove, onConfirmMove, onCancelMove }: Tas
       <div
         className={cn(
           "group relative flex flex-col p-4 rounded-[20px] bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all cursor-grab active:cursor-grabbing overflow-hidden",
-          isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]",
-          pendingMove && "ring-2 ring-[#38BDF8]/40 border-[#38BDF8]/50"
+          isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
         )}
       >
-        {pendingMove && onConfirmMove && onCancelMove && (
-          <TimeAdjustmentPopup 
-            targetPeriod={pendingMove.targetPeriod}
-            currentTime={task.time || "09:00"}
-            onConfirm={onConfirmMove}
-            onCancel={onCancelMove}
-          />
-        )}
-
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 flex items-center justify-center text-lg">

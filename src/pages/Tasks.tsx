@@ -24,6 +24,7 @@ import {
   ChevronRight,
   CalendarDays,
   MoreHorizontal,
+  ChevronDown,
   Plus,
   LayoutGrid
 } from "lucide-react";
@@ -56,14 +57,7 @@ const DISPLAY_ORDER = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábad
 
 export default function TasksPage() {
   const [columns, setColumns] = useState(INITIAL_DATA);
-  const [historyState, setHistoryState] = useState<Record<string, any[]> | null>(null);
   const [activeTask, setActiveTask] = useState<any>(null);
-  const [pendingMove, setPendingMove] = useState<{
-    taskId: string;
-    targetPeriod: string;
-    targetDay: string;
-  } | null>(null);
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly');
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -79,6 +73,10 @@ export default function TasksPage() {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
+  const currentDayName = useMemo(() => {
+    return WEEK_DAYS[getDay(selectedDate)];
+  }, [selectedDate]);
+
   const dateInfo = useMemo(() => {
     const month = format(currentDate, "MMMM", { locale: ptBR });
     const weekNumber = getWeek(currentDate);
@@ -88,6 +86,65 @@ export default function TasksPage() {
       week: weekNumber.toString().padStart(2, '0')
     };
   }, [currentDate]);
+
+  useEffect(() => {
+    if (viewMode === 'weekly') {
+      const timer = setTimeout(() => {
+        if (scrollRef.current) {
+          const todayName = WEEK_DAYS[new Date().getDay()];
+          const todayElement = scrollRef.current.querySelector(`[data-day="${todayName}"]`) as HTMLElement;
+          if (todayElement) {
+            const containerWidth = scrollRef.current.clientWidth;
+            const elementWidth = todayElement.clientWidth;
+            const elementLeft = todayElement.offsetLeft;
+            const scrollTo = elementLeft - (containerWidth / 2) + (elementWidth / 2);
+            
+            scrollRef.current.scrollTo({
+              left: scrollTo,
+              behavior: 'smooth'
+            });
+          }
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [viewMode]);
+
+  const handleNextDate = () => {
+    setCurrentDate(prev => viewMode === 'monthly' ? addMonths(prev, 1) : prev);
+  };
+
+  const handlePrevDate = () => {
+    setCurrentDate(prev => viewMode === 'monthly' ? subMonths(prev, 1) : prev);
+  };
+
+  const handleAddTask = (newTask: any) => {
+    let dayToAdd = currentDayName;
+    
+    // Se a tarefa tem uma data específica no formulário, usamos ela para determinar a coluna
+    if (newTask.date) {
+      const dateParts = newTask.date.split('-');
+      const dateObj = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+      if (!isNaN(dateObj.getTime())) {
+        dayToAdd = WEEK_DAYS[dateObj.getDay()];
+      }
+    }
+
+    setColumns(prev => {
+      const currentTasks = [...(prev[dayToAdd] || [])];
+      // Adiciona a tarefa e ordena por horário
+      const updatedTasks = [...currentTasks, newTask].sort((a, b) => {
+        if (!a.time) return 1;
+        if (!b.time) return -1;
+        return a.time.localeCompare(b.time);
+      });
+
+      return {
+        ...prev,
+        [dayToAdd]: updatedTasks
+      };
+    });
+  };
 
   const findDay = (id: string) => {
     if (DISPLAY_ORDER.includes(id)) return id;
@@ -99,14 +156,13 @@ export default function TasksPage() {
     const { active } = event;
     const day = findDay(active.id as string);
     if (day) {
-      setHistoryState({ ...columns }); // Salva o estado para possível reversão
       setActiveTask(columns[day].find((t) => t.id === active.id));
     }
   };
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
-    if (!over || pendingMove) return;
+    if (!over) return;
 
     const activeId = active.id as string;
     const overId = over.id as string;
@@ -128,7 +184,9 @@ export default function TasksPage() {
       setColumns((prev) => {
         const activeItems = prev[activeDay].filter(i => i.id !== activeId);
         const overItems = [...prev[overDay]];
+        
         const taskToMove = { ...activeTask, period: overPeriod };
+        
         const overIndex = overItems.findIndex(i => i.id === overId);
         const newIndex = overIndex >= 0 ? overIndex : overItems.length;
 
@@ -141,7 +199,11 @@ export default function TasksPage() {
         return {
           ...prev,
           [activeDay]: activeItems,
-          [overDay]: [...overItems.slice(0, newIndex), taskToMove, ...overItems.slice(newIndex)]
+          [overDay]: [
+            ...overItems.slice(0, newIndex),
+            taskToMove,
+            ...overItems.slice(newIndex)
+          ]
         };
       });
       
@@ -161,71 +223,29 @@ export default function TasksPage() {
     const activeDay = findDay(active.id as string);
     const overDay = findDay(over.id as string);
 
-    if (activeDay && overDay) {
-      // Verifica se houve mudança de período
-      const taskInColumns = columns[overDay].find(t => t.id === active.id);
-      const originalTask = historyState?.[findDay(active.id as string) || ""]?.find(t => t.id === active.id);
+    if (activeDay && overDay && activeDay === overDay) {
+      const activeIndex = columns[activeDay].findIndex((i) => i.id === active.id);
+      const overIndex = columns[overDay].findIndex((i) => i.id === over.id);
 
-      if (taskInColumns && originalTask && taskInColumns.period !== originalTask.period) {
-        setPendingMove({
-          taskId: active.id as string,
-          targetPeriod: taskInColumns.period,
-          targetDay: overDay
-        });
-      } else if (activeDay === overDay) {
-        const activeIndex = columns[activeDay].findIndex((i) => i.id === active.id);
-        const overIndex = columns[overDay].findIndex((i) => i.id === over.id);
-
-        if (activeIndex !== overIndex && overIndex !== -1) {
-          setColumns((prev) => ({
-            ...prev,
-            [activeDay]: arrayMove(prev[activeDay], activeIndex, overIndex)
-          }));
-        }
+      if (activeIndex !== overIndex && overIndex !== -1) {
+        setColumns((prev) => ({
+          ...prev,
+          [activeDay]: arrayMove(prev[activeDay], activeIndex, overIndex)
+        }));
       }
     }
 
     setActiveTask(null);
   };
 
-  const confirmMove = (newTime: string) => {
-    if (!pendingMove) return;
-
-    setColumns(prev => {
-      const dayTasks = [...prev[pendingMove.targetDay]];
-      const taskIndex = dayTasks.findIndex(t => t.id === pendingMove.taskId);
-      if (taskIndex === -1) return prev;
-
-      dayTasks[taskIndex] = { ...dayTasks[taskIndex], time: newTime };
-      return { ...prev, [pendingMove.targetDay]: dayTasks };
-    });
-
-    setPendingMove(null);
-    setHistoryState(null);
-  };
-
-  const cancelMove = () => {
-    if (historyState) {
-      setColumns(historyState);
-    }
-    setPendingMove(null);
-    setHistoryState(null);
-  };
-
-  const handleAddTask = (newTask: any) => {
-    const dayToAdd = WEEK_DAYS[new Date(newTask.date + 'T12:00:00').getDay()];
-    setColumns(prev => ({
-      ...prev,
-      [dayToAdd]: [...(prev[dayToAdd] || []), newTask].sort((a, b) => (a.time || "").localeCompare(b.time || ""))
-    }));
-  };
-
   const onMouseDown = (e: React.MouseEvent) => {
-    if (viewMode !== 'weekly' || pendingMove) return;
+    if (viewMode !== 'weekly') return;
+    if (!scrollRef.current) return;
     if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('[data-draggable]')) return;
+    
     setIsScrolling(true);
-    setStartX(e.pageX - scrollRef.current!.offsetLeft);
-    setScrollLeft(scrollRef.current!.scrollLeft);
+    setStartX(e.pageX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
   };
 
   return (
@@ -233,23 +253,41 @@ export default function TasksPage() {
       <header className="flex items-center justify-between py-6 shrink-0 px-8">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
-            <button onClick={() => setCurrentDate(prev => subMonths(prev, 1))} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
+            <button onClick={handlePrevDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
             <h2 className="text-4xl font-serif font-medium text-white tracking-tight">
               {dateInfo.month} {viewMode === 'monthly' && dateInfo.year} <span className="text-zinc-600 font-sans text-xl ml-2">— {viewMode === 'monthly' ? 'Mês' : `Semana ${dateInfo.week}`}</span>
             </h2>
-            <button onClick={() => setCurrentDate(prev => addMonths(prev, 1))} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronRight size={20} /></button>
+            <button onClick={handleNextDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronRight size={20} /></button>
           </div>
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] bg-[#38BDF8]/10 px-4 py-1.5 rounded-full text-[#38BDF8] border border-[#38BDF8]/20">
+            Tempo Real
+          </span>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="flex items-center bg-white/5 rounded-2xl p-1 border border-white/5">
-            <button onClick={() => setViewMode('weekly')} className={cn("flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all", viewMode === 'weekly' ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300")}>
-              <LayoutGrid size={16} /><span>Semanal</span>
+            <button 
+              onClick={() => setViewMode('weekly')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all",
+                viewMode === 'weekly' ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+              )}
+            >
+              <LayoutGrid size={16} />
+              <span>Semanal</span>
             </button>
-            <button onClick={() => setViewMode('monthly')} className={cn("flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all", viewMode === 'monthly' ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300")}>
-              <CalendarDays size={16} /><span>Mensal</span>
+            <button 
+              onClick={() => setViewMode('monthly')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all",
+                viewMode === 'monthly' ? "bg-white/10 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+              )}
+            >
+              <CalendarDays size={16} />
+              <span>Mensal</span>
             </button>
           </div>
+          
           <button className="w-11 h-11 rounded-2xl border border-white/5 flex items-center justify-center hover:bg-white/5 text-zinc-500 transition-colors">
              <MoreHorizontal size={20} />
           </button>
@@ -266,43 +304,76 @@ export default function TasksPage() {
             onMouseMove={(e) => {
               if (!isScrolling || !scrollRef.current) return;
               e.preventDefault();
-              const walk = (e.pageX - scrollRef.current.offsetLeft - startX) * 1.5; 
+              const x = e.pageX - scrollRef.current.offsetLeft;
+              const walk = (x - startX) * 1.5; 
               scrollRef.current.scrollLeft = scrollLeft - walk;
             }}
-            className={cn("h-full flex pb-8 overflow-x-auto custom-scrollbar cursor-grab select-none px-10", isScrolling && "cursor-grabbing")}
+            style={{
+              maskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)'
+            }}
+            className={cn(
+              "h-full flex pb-8 overflow-x-auto custom-scrollbar cursor-grab select-none px-10",
+              isScrolling && "cursor-grabbing"
+            )}
           >
-            <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragOver={handleDragOver} onDragEnd={handleDragEnd}>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCorners}
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
+              onDragEnd={handleDragEnd}
+            >
               <div className="flex gap-5 items-start h-full pr-10">
-                {DISPLAY_ORDER.map((day) => (
-                  <TaskColumn 
-                    key={day} 
-                    id={day} 
-                    title={day} 
-                    tasks={(columns[day] || []).map(t => ({
-                      ...t,
-                      pendingMove: pendingMove?.taskId === t.id ? { targetPeriod: pendingMove.targetPeriod } : undefined,
-                      onConfirmMove: pendingMove?.taskId === t.id ? confirmMove : undefined,
-                      onCancelMove: pendingMove?.taskId === t.id ? cancelMove : undefined
-                    }))} 
-                    isToday={day === WEEK_DAYS[new Date().getDay()]}
-                  />
-                ))}
+                {DISPLAY_ORDER.map((day) => {
+                  const todayName = WEEK_DAYS[new Date().getDay()];
+                  const isToday = day === todayName;
+
+                  return (
+                    <TaskColumn 
+                      key={day} 
+                      id={day} 
+                      title={day} 
+                      tasks={columns[day] || []} 
+                      isToday={isToday}
+                    />
+                  );
+                })}
               </div>
-              <DragOverlay dropAnimation={{ sideEffects: defaultDropAnimationSideEffects({ styles: { active: { opacity: '0.5' } } }) }}>
+
+              <DragOverlay dropAnimation={{
+                sideEffects: defaultDropAnimationSideEffects({
+                  styles: { active: { opacity: '0.5' } },
+                }),
+              }}>
                 {activeTask ? <TaskCard task={activeTask} /> : null}
               </DragOverlay>
             </DndContext>
           </div>
         ) : (
-          <MonthlyView tasksData={columns} currentDate={currentDate} selectedDate={selectedDate} onSelectDate={setSelectedDate} />
+          <MonthlyView 
+            tasksData={columns} 
+            currentDate={currentDate}
+            selectedDate={selectedDate}
+            onSelectDate={setSelectedDate}
+          />
         )}
       </div>
 
-      <button onClick={() => setIsModalOpen(true)} className="fixed bottom-10 right-10 w-16 h-16 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50">
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="fixed bottom-10 right-10 w-16 h-16 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black rounded-full shadow-2xl shadow-[#38BDF8]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50"
+        title="Criar nova tarefa"
+      >
         <Plus size={32} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
       </button>
 
-      <CreateTaskModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSave={handleAddTask} initialDate={selectedDate} />
+      <CreateTaskModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleAddTask}
+        initialDate={selectedDate}
+      />
     </div>
   );
 }
