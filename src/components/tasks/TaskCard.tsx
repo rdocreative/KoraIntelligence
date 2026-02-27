@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Circle, Clock, Check, ChevronDown } from 'lucide-react';
@@ -30,6 +31,8 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
   const [hour, setHour] = useState(initialTime.split(':')[0] || '09');
   const [minute, setMinute] = useState(initialTime.split(':')[1] || '00');
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [popoverPosition, setPopoverPosition] = useState({ top: 0, left: 0 });
+  const cardRef = useRef<HTMLDivElement>(null);
 
   // Reset local state if task time changes or when overlay appears
   useEffect(() => {
@@ -51,6 +54,12 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
     id: task.id,
     disabled: isAwaitingTime || isPopoverOpen
   });
+
+  // Função para setar o nó de referência para o dnd-kit e o cardRef local
+  const setRefs = (node: HTMLDivElement | null) => {
+    setNodeRef(node);
+    (cardRef as any).current = node;
+  };
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -86,12 +95,20 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
 
   const handleCardClick = (e: React.MouseEvent) => {
     if ((e.target as HTMLElement).closest('.checkbox-trigger')) return;
-    setIsPopoverOpen(true);
+    
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      setPopoverPosition({
+        top: rect.top,
+        left: rect.right + 10
+      });
+      setIsPopoverOpen(true);
+    }
   };
 
   return (
     <div
-      ref={setNodeRef}
+      ref={setRefs}
       style={style}
       {...attributes}
       {...listeners}
@@ -190,12 +207,14 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
         )}
       </div>
 
-      {isPopoverOpen && (
+      {isPopoverOpen && createPortal(
         <TaskPopover 
           task={task} 
+          position={popoverPosition}
           onClose={() => setIsPopoverOpen(false)}
           onSave={(updates) => onUpdateTask?.(task.id, updates)}
-        />
+        />,
+        document.body
       )}
     </div>
   );

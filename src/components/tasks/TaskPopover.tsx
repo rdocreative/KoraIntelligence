@@ -8,13 +8,14 @@ interface TaskPopoverProps {
   task: any;
   onClose: () => void;
   onSave: (updates: any) => void;
+  position?: { top: number; left: number };
 }
 
 const PRIORITIES = ['Baixa', 'Média', 'Alta', 'Extrema'] as const;
 const HOURS = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
 const MINUTES = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, '0'));
 
-export const TaskPopover = ({ task, onClose, onSave }: TaskPopoverProps) => {
+export const TaskPopover = ({ task, onClose, onSave, position }: TaskPopoverProps) => {
   const [name, setName] = useState(task.name);
   const [icon, setIcon] = useState(task.icon || '📝');
   const [priority, setPriority] = useState(task.priority || 'Baixa');
@@ -33,16 +34,6 @@ export const TaskPopover = ({ task, onClose, onSave }: TaskPopoverProps) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [onClose]);
 
-  const handleSave = () => {
-    onSave({
-      name,
-      icon: icon.charAt(0),
-      priority,
-      time: `${hour}:${minute}`
-    });
-    onClose();
-  };
-
   return (
     <div 
       ref={popoverRef}
@@ -51,9 +42,12 @@ export const TaskPopover = ({ task, onClose, onSave }: TaskPopoverProps) => {
         border: '1px solid rgba(255,255,255,0.08)',
         boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
         width: '260px',
-        zIndex: 9999
+        zIndex: 9999,
+        position: position ? 'fixed' : 'absolute',
+        top: position ? position.top : 0,
+        left: position ? position.left : '105%',
       }}
-      className="absolute left-[105%] top-0 rounded-[16px] p-4 flex flex-col gap-4 animate-in fade-in slide-in-from-left-2 duration-200"
+      className="rounded-[16px] p-4 flex flex-col gap-4 animate-in fade-in slide-in-from-left-2 duration-200"
       onPointerDown={(e) => e.stopPropagation()}
     >
       <div className="flex items-center justify-between">
