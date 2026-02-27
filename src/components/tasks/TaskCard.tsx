@@ -17,13 +17,6 @@ interface TaskCardProps {
   };
 }
 
-const PERIOD_GRADIENTS: Record<string, string> = {
-  Morning: 'from-orange-500/[0.08] via-orange-500/[0.02] to-transparent',
-  Afternoon: 'from-emerald-500/[0.08] via-emerald-500/[0.02] to-transparent',
-  Evening: 'from-indigo-500/[0.08] via-indigo-500/[0.02] to-transparent',
-  Dawn: 'from-blue-600/[0.08] via-blue-600/[0.02] to-transparent',
-};
-
 export const TaskCard = ({ task }: TaskCardProps) => {
   const {
     attributes,
@@ -46,8 +39,6 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     Baixa: 'bg-sky-500/20 text-sky-400 border-sky-500/30',
   };
 
-  const currentGradient = task.period ? PERIOD_GRADIENTS[task.period] : 'bg-white/[0.03]';
-
   return (
     <div
       ref={setNodeRef}
@@ -58,8 +49,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     >
       <div
         className={cn(
-          "group relative flex flex-col p-4 rounded-[20px] border border-white/5 hover:border-white/10 transition-all cursor-grab active:cursor-grabbing overflow-hidden bg-gradient-to-b",
-          currentGradient,
+          "group relative flex flex-col p-4 rounded-[20px] bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all cursor-grab active:cursor-grabbing overflow-hidden",
           isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
         )}
       >
