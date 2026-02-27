@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Home as HomeIcon,
@@ -9,7 +9,8 @@ import {
   Target,
   Settings,
   Plus,
-  GripVertical
+  PanelLeftClose,
+  PanelLeftOpen
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -21,67 +22,50 @@ const navItems = [
   { name: 'Configurações', icon: Settings, path: '/configuracoes' },
 ];
 
-const DEFAULT_WIDTH = 256; 
-const MIN_WIDTH = DEFAULT_WIDTH * 0.7; 
-const MAX_WIDTH = DEFAULT_WIDTH * 1.6; 
-
 export const SideNav = () => {
   const location = useLocation();
-  const [width, setWidth] = useState(DEFAULT_WIDTH);
-  const isResizing = useRef(false);
-
-  const startResizing = useCallback(() => {
-    isResizing.current = true;
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
-  }, []);
-
-  const stopResizing = useCallback(() => {
-    isResizing.current = false;
-    document.body.style.cursor = 'default';
-    document.body.style.userSelect = 'auto';
-  }, []);
-
-  const resize = useCallback((e: MouseEvent) => {
-    if (!isResizing.current) return;
-    let newWidth = e.clientX;
-    if (newWidth < MIN_WIDTH) newWidth = MIN_WIDTH;
-    if (newWidth > MAX_WIDTH) newWidth = MAX_WIDTH;
-    setWidth(newWidth);
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('mousemove', resize);
-    window.addEventListener('mouseup', stopResizing);
-    return () => {
-      window.removeEventListener('mousemove', resize);
-      window.removeEventListener('mouseup', stopResizing);
-    };
-  }, [resize, stopResizing]);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <div 
-      className="h-full flex flex-col pt-12 pb-6 px-6 relative z-30 shrink-0 bg-[#070707] transition-none group/sidebar border-none outline-none shadow-none ring-0"
-      style={{ width: `${width}px` }}
+      className={cn(
+        "h-full flex flex-col pt-8 pb-6 relative z-30 shrink-0 bg-[#070707] transition-all duration-300 ease-in-out border-none outline-none overflow-hidden",
+        isCollapsed ? "w-[80px] px-3" : "w-[260px] px-6"
+      )}
     >
-      {/* Handle de redimensionamento centralizado sobre a junção */}
-      <div 
-        onMouseDown={startResizing}
-        className="absolute top-0 -right-[4px] w-[8px] h-full cursor-col-resize z-50 group"
-      >
-        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-transparent group-hover:bg-[#38BDF8]/20 transition-colors" />
-        <div className="hidden group-hover:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center w-4 h-8 bg-zinc-900 rounded-full border border-white/10 shadow-2xl pointer-events-none">
-          <GripVertical size={12} className="text-zinc-500" />
-        </div>
-      </div>
-
-      <div className="flex items-center justify-between mb-10 whitespace-nowrap">
-        <h1 className="text-3xl font-serif font-medium tracking-tight text-white">Néctar.</h1>
-        <button className="p-1.5 rounded-[24px] hover:bg-white/10 text-zinc-400 transition-colors border border-white/5 shrink-0">
-          <Plus size={18} />
+      {/* Botão de Toggle e Header */}
+      <div className={cn(
+        "flex items-center mb-10 transition-all duration-300",
+        isCollapsed ? "justify-center" : "justify-between"
+      )}>
+        {!isCollapsed && (
+          <h1 className="text-3xl font-serif font-medium tracking-tight text-white animate-in fade-in duration-500">
+            Néctar.
+          </h1>
+        )}
+        <button 
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className={cn(
+            "p-2 rounded-xl hover:bg-white/10 text-zinc-400 transition-colors border border-white/5",
+            isCollapsed && "mx-auto"
+          )}
+          title={isCollapsed ? "Expandir" : "Recolher"}
+        >
+          {isCollapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
         </button>
       </div>
 
+      {/* Adicionar Novo (Opcional, escondido se colapsado ou adaptado) */}
+      {!isCollapsed && (
+        <button className="flex items-center gap-3 w-full p-3 mb-6 rounded-[20px] bg-white/[0.03] border border-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all group">
+          <div className="p-1 rounded-lg bg-[#38BDF8]/10 text-[#38BDF8]">
+            <Plus size={16} />
+          </div>
+          <span className="text-xs font-semibold">Novo Registro</span>
+        </button>
+      )}
+
+      {/* Navegação */}
       <nav className="flex-1 space-y-2">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
@@ -90,11 +74,13 @@ export const SideNav = () => {
               key={item.name}
               to={item.path}
               className={cn(
-                "w-full flex items-center gap-3 px-3 py-2.5 rounded-[24px] transition-all whitespace-nowrap border border-transparent",
+                "w-full flex items-center transition-all whitespace-nowrap border border-transparent",
+                isCollapsed ? "justify-center p-3 rounded-xl" : "gap-3 px-3 py-2.5 rounded-[24px]",
                 isActive 
                   ? "bg-[#38BDF8]/10 text-white font-semibold shadow-sm border-[#38BDF8]/20" 
                   : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.02]"
               )}
+              title={isCollapsed ? item.name : ""}
             >
               <item.icon 
                 size={18} 
@@ -102,19 +88,32 @@ export const SideNav = () => {
                 style={{ color: isActive ? '#38BDF8' : 'currentColor' }} 
                 className="shrink-0"
               />
-              <span className="text-[13px]">{item.name}</span>
+              {!isCollapsed && (
+                <span className="text-[13px] animate-in fade-in slide-in-from-left-2 duration-300">
+                  {item.name}
+                </span>
+              )}
             </NavLink>
           );
         })}
       </nav>
       
-      <div className="pt-4 mt-auto flex items-center gap-3 cursor-pointer border-t border-white/5 whitespace-nowrap">
-        <div className="w-8 h-8 rounded-[24px] flex items-center justify-center text-[10px] font-bold bg-[#38BDF8]/20 text-[#38BDF8] shrink-0">
+      {/* Footer / Perfil */}
+      <div className={cn(
+        "pt-4 mt-auto flex items-center gap-3 border-t border-white/5",
+        isCollapsed ? "justify-center" : "px-1"
+      )}>
+        <div className="w-10 h-10 rounded-full flex items-center justify-center text-[11px] font-bold bg-[#38BDF8]/20 text-[#38BDF8] shrink-0 border border-[#38BDF8]/10">
           RS
         </div>
-        <span className="text-xs font-semibold text-zinc-300 hover:text-white transition-colors truncate">
-          Ricardo S.
-        </span>
+        {!isCollapsed && (
+          <div className="flex flex-col min-w-0 animate-in fade-in duration-500">
+            <span className="text-xs font-semibold text-zinc-200 truncate">
+              Ricardo S.
+            </span>
+            <span className="text-[10px] text-zinc-500 font-medium">Nível 12</span>
+          </div>
+        )}
       </div>
     </div>
   );
