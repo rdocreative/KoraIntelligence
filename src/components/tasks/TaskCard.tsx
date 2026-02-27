@@ -1,9 +1,9 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Circle, Clock } from 'lucide-react';
+import { Circle, Clock, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TaskCardProps {
@@ -15,9 +15,15 @@ interface TaskCardProps {
     priority?: 'Extrema' | 'Média' | 'Baixa';
     period?: string;
   };
+  isAwaitingTime?: boolean;
+  onUpdateTime?: (newTime: string) => void;
+  defaultPeriodTime?: string;
 }
 
-export const TaskCard = ({ task }: TaskCardProps) => {
+export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime }: TaskCardProps) => {
+  const [tempTime, setTempTime] = useState(task.time || defaultPeriodTime || '09:00');
+  const [isPaused, setIsPaused] = useState(false);
+
   const {
     attributes,
     listeners,
@@ -25,7 +31,19 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     transform,
     transition,
     isDragging
-  } = useSortable({ id: task.id });
+  } = useSortable({ 
+    id: task.id,
+    disabled: isAwaitingTime // Desativa drag enquanto ajusta horário
+  });
+
+  useEffect(() => {
+    if (isAwaitingTime && !isPaused) {
+      const timer = setTimeout(() => {
+        onUpdateTime?.(tempTime);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [isAwaitingTime, isPaused, tempTime, onUpdateTime]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -57,7 +75,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
     >
       <div
         className={cn(
-          "group relative flex flex-col p-4 rounded-[20px] border transition-all cursor-grab active:cursor-grabbing overflow-hidden",
+          "group relative flex flex-col p-4 rounded-[20px] border transition-all cursor-grab active:cursor-grabbing overflow-hidden min-h-[90px]",
           currentCardStyle,
           isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
         )}
@@ -78,7 +96,7 @@ export const TaskCard = ({ task }: TaskCardProps) => {
                 {task.priority}
               </span>
             )}
-            {task.time && (
+            {task.time && !isAwaitingTime && (
               <div className="flex items-center gap-1 text-[10px] text-zinc-300 font-medium">
                 <Clock size={10} className="text-zinc-400" />
                 {task.time}
@@ -87,6 +105,47 @@ export const TaskCard = ({ task }: TaskCardProps) => {
           </div>
           <Circle size={16} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
         </div>
+
+        {/* Time Adjust Overlay */}
+        {isAwaitingTime && (
+          <div 
+            className="absolute inset-0 bg-[#0C0C0C]/95 backdrop-blur-sm z-20 flex flex-col p-3 animate-in fade-in zoom-in-95 duration-200"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onPointerDown={(e) => e.stopPropagation()} // Impede drag ao interagir
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <Clock size={12} className="text-[#38BDF8]" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Novo Horário</span>
+            </div>
+            
+            <div className="flex gap-2 flex-1 items-center">
+              <input 
+                type="time" 
+                value={tempTime}
+                onChange={(e) => setTempTime(e.target.value)}
+                className="flex-1 bg-white/[0.05] border border-white/10 rounded-xl px-2 py-1.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 [color-scheme:dark]"
+              />
+              <button 
+                onClick={() => onUpdateTime?.(tempTime)}
+                className="w-8 h-8 bg-[#38BDF8] text-black rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#38BDF8]/20"
+              >
+                <Check size={16} strokeWidth={3} />
+              </button>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5">
+              <div 
+                className={cn("h-full bg-[#38BDF8]/40 origin-left")} 
+                style={{ 
+                  width: '100%', 
+                  animation: isPaused ? 'none' : 'shrink-width 5s linear forwards' 
+                }} 
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
