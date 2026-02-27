@@ -143,6 +143,7 @@ const PeriodContainer = ({
   });
 
   const [isActive, setIsActive] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (!isToday) {
@@ -166,39 +167,51 @@ const PeriodContainer = ({
     return () => clearInterval(interval);
   }, [isToday, period]);
 
+  const hasTasks = tasks.length > 0;
+  const isExpanded = hasTasks || isOver || isHovered;
+
   const activeStyle = isActive && isToday ? {
     background: `linear-gradient(180deg, ${period.color}15 0%, rgba(0,0,0,0) 100%)`, 
-  } : {
+  } : isExpanded ? {
     background: period.gradient
-  };
+  } : {};
 
   return (
     <div 
       ref={setNodeRef}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        "relative flex flex-col p-4 rounded-[24px] border transition-all duration-300 ease-in-out",
+        "relative flex flex-col rounded-[24px] border transition-all duration-300 ease-in-out",
         "border-white/[0.03]",
-        isOver ? "bg-white/[0.05] border-white/10 scale-[1.01]" : ""
+        isOver ? "bg-white/[0.05] border-white/10 scale-[1.01]" : "",
+        isExpanded ? "p-4" : "p-3 bg-white/[0.01] hover:bg-white/[0.03] cursor-default"
       )}
       style={activeStyle}
     >
-      <div className="flex items-center justify-between mb-4">
+      <div className={cn("flex items-center justify-between transition-all", isExpanded ? "mb-4" : "mb-0")}>
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center z-10">
             <period.icon 
-              size={16} 
+              size={isExpanded ? 16 : 14} 
               style={{ color: period.color }} 
               className="transition-all duration-500" 
             />
           </div>
           <div className="flex flex-col">
             <span 
-              className="text-[11px] font-black uppercase tracking-widest leading-none transition-all duration-500" 
+              className={cn(
+                "font-black uppercase tracking-widest leading-none transition-all duration-500",
+                isExpanded ? "text-[11px]" : "text-[10px]"
+              )}
               style={{ color: period.color }}
             >
               {period.label}
             </span>
-            <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight opacity-70 mt-0.5">
+            <span className={cn(
+                "text-[9px] font-bold text-zinc-400 uppercase tracking-tight opacity-70 mt-0.5 transition-all duration-300",
+                !isExpanded && "h-0 overflow-hidden opacity-0 mt-0"
+            )}>
               {period.time}
             </span>
           </div>
@@ -210,7 +223,10 @@ const PeriodContainer = ({
         )}
       </div>
       
-      <div className="relative flex flex-col gap-3 min-h-[20px] max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
+      <div className={cn(
+          "relative flex flex-col gap-3 overflow-y-auto custom-scrollbar pr-1 transition-all duration-300 ease-in-out origin-top",
+          isExpanded ? "min-h-[20px] max-h-[300px] opacity-100" : "max-h-0 opacity-0 overflow-hidden min-h-0"
+      )}>
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {tasks.map((task) => (
             <TaskCard key={task.id} task={{ ...task, period: period.id }} />
