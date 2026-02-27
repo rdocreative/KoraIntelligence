@@ -5,6 +5,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Circle, Clock, Check, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { TaskPopover } from './TaskPopover';
 
 interface TaskCardProps {
   task: {
@@ -12,21 +13,23 @@ interface TaskCardProps {
     name: string;
     time?: string;
     icon?: string;
-    priority?: 'Extrema' | 'Média' | 'Baixa';
+    priority?: 'Extrema' | 'Alta' | 'Média' | 'Baixa';
     period?: string;
   };
   isAwaitingTime?: boolean;
   onUpdateTime?: (newTime: string) => void;
+  onUpdateTask?: (taskId: string, updates: any) => void;
   defaultPeriodTime?: string;
 }
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
 const MINUTES = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, '0'));
 
-export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime }: TaskCardProps) => {
+export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, defaultPeriodTime }: TaskCardProps) => {
   const initialTime = task.time || defaultPeriodTime || '09:00';
   const [hour, setHour] = useState(initialTime.split(':')[0] || '09');
   const [minute, setMinute] = useState(initialTime.split(':')[1] || '00');
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   // Reset local state if task time changes or when overlay appears
   useEffect(() => {
@@ -46,7 +49,7 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
     isDragging
   } = useSortable({ 
     id: task.id,
-    disabled: isAwaitingTime 
+    disabled: isAwaitingTime || isPopoverOpen
   });
 
   const style = {
@@ -58,7 +61,8 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
 
   const priorityColors = {
     Extrema: 'bg-red-500/20 text-red-400 border-red-500/30',
-    Média: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+    Alta: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+    Média: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
     Baixa: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
   };
 
@@ -80,6 +84,11 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
     onUpdateTime?.(`${hour}:${minute}`);
   };
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('.checkbox-trigger')) return;
+    setIsPopoverOpen(true);
+  };
+
   return (
     <div
       ref={setNodeRef}
@@ -88,6 +97,7 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
       {...listeners}
       data-draggable="true"
       className="relative group/card"
+      onClick={handleCardClick}
     >
       <div
         className={cn(
@@ -122,10 +132,12 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
               </div>
             )}
           </div>
-          <Circle size={16} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
+          <div className="checkbox-trigger">
+            <Circle size={16} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
+          </div>
         </div>
 
-        {/* Time Adjust Overlay - Now with custom selects */}
+        {/* Time Adjust Overlay */}
         {isAwaitingTime && (
           <div 
             className="absolute inset-0 bg-[#0C0C0C]/95 backdrop-blur-md z-20 flex flex-col p-4 animate-in fade-in zoom-in-95 duration-200 rounded-[20px]"
@@ -138,7 +150,6 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
             
             <div className="flex gap-2 flex-1 items-center">
               <div className="flex-1 flex gap-1.5 h-10">
-                {/* Hour Select */}
                 <div className="relative flex-1">
                   <select 
                     value={hour}
@@ -154,7 +165,6 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
 
                 <span className="text-zinc-600 flex items-center">:</span>
 
-                {/* Minute Select */}
                 <div className="relative flex-1">
                   <select 
                     value={minute}
@@ -179,6 +189,14 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
           </div>
         )}
       </div>
+
+      {isPopoverOpen && (
+        <TaskPopover 
+          task={task} 
+          onClose={() => setIsPopoverOpen(false)}
+          onSave={(updates) => onUpdateTask?.(task.id, updates)}
+        />
+      )}
     </div>
   );
 };
