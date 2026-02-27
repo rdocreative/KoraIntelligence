@@ -102,29 +102,23 @@ const PeriodContainer = ({
         boxShadow: 'none'
       }}
     >
-      <div className={cn("flex items-center justify-between transition-all", isExpanded ? "mb-4" : "mb-0")}>
+      <div className={cn("flex items-center justify-between transition-all w-full", isExpanded ? "mb-4" : "mb-0")}>
         <div className="flex items-center gap-3">
           <period.icon 
             size={isExpanded ? 16 : 14} 
             style={{ color: period.color }} 
           />
-          <div className="flex flex-col">
-            <span 
-              className={cn("font-black uppercase tracking-widest leading-none", isExpanded ? "text-[11px]" : "text-[10px]")}
-              style={{ color: period.color, opacity: 0.9 }}
-            >
-              {period.label}
-            </span>
-            {isExpanded && (
-              <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight opacity-70 mt-0.5">
-                {period.time}
-              </span>
-            )}
-          </div>
+          <span 
+            className={cn("font-black uppercase tracking-widest leading-none", isExpanded ? "text-[11px]" : "text-[10px]")}
+            style={{ color: period.color, opacity: 0.9 }}
+          >
+            {period.label}
+          </span>
         </div>
-        {tasks.length > 0 && (
-          <span className="text-[9px] font-bold text-zinc-200 bg-white/10 px-2 py-0.5 rounded-full">
-            {tasks.length}
+        
+        {isExpanded && (
+          <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-tight opacity-70">
+            {period.time}
           </span>
         )}
       </div>
