@@ -32,7 +32,7 @@ const ProtectedRoute = () => {
 
   if (loading) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-[#0A0C10]">
+      <div className="h-screen w-full flex items-center justify-center bg-[#070707]">
         <div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-[24px] animate-spin"></div>
       </div>
     );
@@ -43,14 +43,12 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex h-screen w-full text-white antialiased bg-[#0A0C10] overflow-hidden border-none outline-none ring-0">
+    <div className="flex h-screen w-full text-white antialiased bg-[#070707] overflow-hidden border-none outline-none ring-0">
       <SideNav />
-      <div className="flex-1 flex flex-col p-4 pl-0 min-w-0 bg-[#0A0C10]">
+      <div className="flex-1 flex flex-col p-4 pl-0 min-w-0 bg-[#070707]">
         <div 
           className="flex-1 flex flex-col rounded-[24px] overflow-hidden relative min-h-0 w-full border-none outline-none shadow-none ring-0" 
-          style={{ 
-            background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(100,120,160,0.06) 0%, transparent 60%), #0A0C10'
-          }}
+          style={{ backgroundColor: '#0b0b0b' }}
         >
           <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-10">
             <main className="flex-1 flex flex-col">
@@ -65,7 +63,7 @@ const ProtectedRoute = () => {
 
 const PublicRoute = () => {
   const { session, loading } = useAuth();
-  if (loading) return <div className="h-screen w-full bg-[#0A0C10]" />;
+  if (loading) return <div className="h-screen w-full bg-[#070707]" />;
   if (session) return <Navigate to="/" replace />;
   return <Outlet />;
 };
