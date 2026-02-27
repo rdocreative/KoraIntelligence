@@ -22,8 +22,8 @@ const navItems = [
 ];
 
 const DEFAULT_WIDTH = 256; 
-const MIN_WIDTH = DEFAULT_WIDTH * 0.7; // -30%
-const MAX_WIDTH = DEFAULT_WIDTH * 1.6; // +60%
+const MIN_WIDTH = DEFAULT_WIDTH * 0.7; 
+const MAX_WIDTH = DEFAULT_WIDTH * 1.6; 
 
 export const SideNav = () => {
   const location = useLocation();
@@ -44,11 +44,9 @@ export const SideNav = () => {
 
   const resize = useCallback((e: MouseEvent) => {
     if (!isResizing.current) return;
-
     let newWidth = e.clientX;
     if (newWidth < MIN_WIDTH) newWidth = MIN_WIDTH;
     if (newWidth > MAX_WIDTH) newWidth = MAX_WIDTH;
-
     setWidth(newWidth);
   }, []);
 
@@ -63,25 +61,23 @@ export const SideNav = () => {
 
   return (
     <div 
-      className="h-full flex flex-col pt-12 pb-6 px-6 relative z-30 shrink-0 bg-zinc-950/20 backdrop-blur-sm transition-none group/sidebar border-r border-white/5 rounded-tr-[40px] rounded-br-[40px]"
+      className="h-full flex flex-col pt-12 pb-6 px-6 relative z-30 shrink-0 bg-[#070707] transition-none group/sidebar border-none outline-none"
       style={{ width: `${width}px` }}
     >
-      {/* Handle de redimensionamento - Ajustado para respeitar os cantos arredondados */}
+      {/* Handle de redimensionamento centralizado sobre a junção */}
       <div 
         onMouseDown={startResizing}
-        className="absolute top-10 bottom-10 -right-[4px] w-[8px] cursor-col-resize z-50 group"
+        className="absolute top-0 -right-[4px] w-[8px] h-full cursor-col-resize z-50 group"
       >
-        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-transparent group-hover:bg-[#38BDF8]/40 transition-colors" />
-        
+        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[1px] bg-transparent group-hover:bg-[#38BDF8]/20 transition-colors" />
         <div className="hidden group-hover:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center w-4 h-8 bg-zinc-900 rounded-full border border-white/10 shadow-2xl pointer-events-none">
           <GripVertical size={12} className="text-zinc-500" />
         </div>
       </div>
 
-      {/* Header sem overflow-hidden para não cortar o stroke do botão Plus */}
       <div className="flex items-center justify-between mb-10 whitespace-nowrap">
         <h1 className="text-3xl font-serif font-medium tracking-tight text-white">Néctar.</h1>
-        <button className="p-1.5 rounded-[24px] hover:bg-white/10 text-zinc-400 transition-colors border border-white/5 shrink-0 shadow-sm">
+        <button className="p-1.5 rounded-[24px] hover:bg-white/10 text-zinc-400 transition-colors border border-white/5 shrink-0">
           <Plus size={18} />
         </button>
       </div>
@@ -112,9 +108,8 @@ export const SideNav = () => {
         })}
       </nav>
       
-      {/* Footer sem overflow-hidden para garantir que o avatar e o texto respirem */}
       <div className="pt-4 mt-auto flex items-center gap-3 cursor-pointer border-t border-white/5 whitespace-nowrap">
-        <div className="w-8 h-8 rounded-[24px] flex items-center justify-center text-[10px] font-bold bg-[#38BDF8]/20 text-[#38BDF8] shrink-0 border border-[#38BDF8]/10">
+        <div className="w-8 h-8 rounded-[24px] flex items-center justify-center text-[10px] font-bold bg-[#38BDF8]/20 text-[#38BDF8] shrink-0">
           RS
         </div>
         <span className="text-xs font-semibold text-zinc-300 hover:text-white transition-colors truncate">
