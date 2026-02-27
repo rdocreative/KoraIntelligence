@@ -23,7 +23,7 @@ const PERIODS = [
     time: '06:00 — 12:00',
     icon: Sun, 
     color: '#FDBA74',
-    gradient: 'linear-gradient(180deg, rgba(249,115,22,0.23) 0%, rgba(249,115,22,0.02) 100%)',
+    background: 'rgba(249,115,22,0.06)',
     startHour: 6,
     endHour: 12,
     defaultTime: '09:00'
@@ -34,7 +34,7 @@ const PERIODS = [
     time: '12:00 — 18:00',
     icon: Coffee, 
     color: '#4ADE80',
-    gradient: 'linear-gradient(180deg, rgba(34,197,94,0.23) 0%, rgba(34,197,94,0.02) 100%)',
+    background: 'rgba(34,197,94,0.06)',
     startHour: 12,
     endHour: 18,
     defaultTime: '15:00'
@@ -45,7 +45,7 @@ const PERIODS = [
     time: '18:00 — 00:00',
     icon: Moon, 
     color: '#A78BFA',
-    gradient: 'linear-gradient(180deg, rgba(129,140,248,0.23) 0%, rgba(129,140,248,0.02) 100%)',
+    background: 'rgba(129,140,248,0.06)',
     startHour: 18,
     endHour: 24,
     defaultTime: '21:00'
@@ -56,7 +56,7 @@ const PERIODS = [
     time: '00:00 — 06:00',
     icon: CloudMoon, 
     color: '#818CF8',
-    gradient: 'linear-gradient(180deg, rgba(56,189,248,0.23) 0%, rgba(56,189,248,0.02) 100%)',
+    background: 'rgba(56,189,248,0.06)',
     startHour: 0,
     endHour: 6,
     defaultTime: '03:00'
@@ -90,11 +90,11 @@ const PeriodContainer = ({
       ref={setNodeRef}
       className={cn(
         "relative flex flex-col rounded-[24px] border-[3px] transition-all duration-300 ease-in-out",
-        "border-white/10",
+        "border-white/5", 
         isOver ? "bg-white/[0.05] border-white/10 scale-[1.01]" : "",
-        isExpanded ? "p-4" : "p-3 bg-white/[0.01] hover:bg-white/[0.03] cursor-default"
+        isExpanded ? "p-4" : "p-3 hover:bg-white/[0.03] cursor-default"
       )}
-      style={{ background: period.gradient }}
+      style={{ backgroundColor: period.background }}
     >
       <div className={cn("flex items-center justify-between transition-all", isExpanded ? "mb-4" : "mb-0")}>
         <div className="flex items-center gap-3">
