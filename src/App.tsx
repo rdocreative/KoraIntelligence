@@ -43,7 +43,7 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex h-screen w-full text-white antialiased bg-[#12141A] overflow-hidden border-none outline-none ring-0">
+    <div className="flex h-screen w-full text-white antialiased bg-[#12141A] overflow-hidden border-none outline-none ring-0 p-[10px]">
       <SideNav />
       <div 
         className="flex-1 flex flex-col relative min-h-0 w-full overflow-hidden" 
