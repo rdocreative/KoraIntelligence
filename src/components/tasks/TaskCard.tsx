@@ -53,7 +53,7 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.3 : 1,
-    touchAction: 'none', // Impede o scroll do navegador durante o toque/arrasto
+    touchAction: 'none',
   };
 
   const priorityColors = {
@@ -62,13 +62,19 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
     Baixa: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
   };
 
-  const cardPriorityStyles = {
-    Extrema: 'bg-red-500/[0.04] border-red-500/10 hover:border-red-500/30',
-    Média: 'bg-orange-500/[0.04] border-orange-500/10 hover:border-orange-500/30',
-    Baixa: 'bg-blue-500/[0.04] border-blue-500/10 hover:border-blue-500/30',
+  const periodStyles: Record<string, string> = {
+    Morning: "border-orange-500/10 hover:border-orange-500/30",
+    Afternoon: "border-green-500/10 hover:border-green-500/30",
+    Evening: "border-indigo-500/10 hover:border-indigo-500/30",
+    Dawn: "border-sky-500/10 hover:border-sky-500/30",
   };
 
-  const currentCardStyle = task.priority ? cardPriorityStyles[task.priority] : 'bg-white/[0.03] border-white/5 hover:border-white/10';
+  const periodGradients: Record<string, string> = {
+    Morning: "linear-gradient(180deg, rgba(249,115,22,0.13) 0%, rgba(249,115,22,0.02) 100%)",
+    Afternoon: "linear-gradient(180deg, rgba(34,197,94,0.13) 0%, rgba(34,197,94,0.02) 100%)",
+    Evening: "linear-gradient(180deg, rgba(129,140,248,0.13) 0%, rgba(129,140,248,0.02) 100%)",
+    Dawn: "linear-gradient(180deg, rgba(56,189,248,0.13) 0%, rgba(56,189,248,0.02) 100%)",
+  };
 
   const handleConfirm = () => {
     onUpdateTime?.(`${hour}:${minute}`);
@@ -80,15 +86,18 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
       style={style}
       {...attributes}
       {...listeners}
-      data-draggable="true" // Permite que o container pai ignore o scroll horizontal ao clicar aqui
+      data-draggable="true"
       className="relative group/card"
     >
       <div
         className={cn(
           "group relative flex flex-col p-4 rounded-[20px] border transition-all cursor-grab active:cursor-grabbing overflow-hidden min-h-[90px]",
-          currentCardStyle,
+          task.period ? periodStyles[task.period] : 'border-white/5 hover:border-white/10',
           isDragging && "z-50 border-[#38BDF8]/50 shadow-2xl bg-white/[0.08]"
         )}
+        style={{
+          background: task.period ? periodGradients[task.period] : 'rgba(255,255,255,0.03)'
+        }}
       >
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
