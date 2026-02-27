@@ -1,68 +1,121 @@
 "use client";
 
-import React from 'react';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, CheckSquare, Target, Settings, LogOut, ShoppingBag, Plus } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useAuth } from '../providers/AuthProvider';
+import React, { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import {
+  Home as HomeIcon,
+  CheckCircle2,
+  Activity,
+  Target,
+  Settings,
+  Plus,
+  PanelLeftClose,
+  PanelLeftOpen
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const navItems = [
+  { name: 'Início', icon: HomeIcon, path: '/' },
+  { name: 'Tarefas', icon: CheckCircle2, path: '/tarefas' },
+  { name: 'Hábitos', icon: Activity, path: '/habitos' },
+  { name: 'Missões', icon: Target, path: '/missoes' },
+  { name: 'Configurações', icon: Settings, path: '/configuracoes' },
+];
 
 export const SideNav = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { signOut, session } = useAuth();
-
-  const isActive = (path: string) => location.pathname === path;
-
-  const navItems = [
-    { icon: LayoutDashboard, label: 'Painel', path: '/' },
-    { icon: CheckSquare, label: 'Tarefas', path: '/tarefas' },
-    { icon: Target, label: 'Hábitos', path: '/habitos' },
-    { icon: ShoppingBag, label: 'Loja', path: '/loja' },
-    { icon: Settings, label: 'Ajustes', path: '/configuracoes' },
-  ];
+  const [isOpen, setIsOpen] = useState(true);
 
   return (
-    <aside className="w-20 h-full flex flex-col items-center py-6 bg-transparent z-50">
-      <div className="mb-8">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#38BDF8] to-[#0EA5E9] flex items-center justify-center shadow-lg shadow-[#38BDF8]/20">
-            <span className="text-white font-serif font-bold text-xl italic">N</span>
+    <>
+      {/* Botão Flutuante Discreto (Aparece suavemente quando a sidebar some) */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed left-0 top-8 z-50 p-2 bg-[#070707] border border-l-0 border-white/10 rounded-r-xl text-zinc-500 hover:text-white hover:bg-white/5 transition-all animate-in fade-in slide-in-from-left duration-500"
+          title="Abrir Menu"
+        >
+          <PanelLeftOpen size={20} />
+        </button>
+      )}
+
+      {/* Container Principal da SideNav com transição de largura */}
+      <div 
+        className={cn(
+          "h-full flex flex-col relative z-30 shrink-0 bg-[#070707] transition-all duration-500 ease-in-out border-none outline-none overflow-hidden",
+          isOpen ? "w-[260px]" : "w-0"
+        )}
+      >
+        {/* Wrapper Interno que faz o efeito de Deslizar (Translate) */}
+        <div 
+          className={cn(
+            "flex flex-col h-full min-w-[260px] p-8 pt-8 pb-6 transition-all duration-500 ease-in-out",
+            isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
+          )}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between mb-10">
+            <h1 className="text-3xl font-serif font-medium tracking-tight text-white">
+              Néctar.
+            </h1>
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="p-2 rounded-xl hover:bg-white/10 text-zinc-400 transition-colors border border-white/5"
+              title="Fechar Menu"
+            >
+              <PanelLeftClose size={20} />
+            </button>
+          </div>
+
+          {/* Adicionar Novo */}
+          <button className="flex items-center gap-3 w-full p-3 mb-6 rounded-[20px] bg-white/[0.03] border border-white/5 text-zinc-400 hover:text-white hover:bg-white/10 transition-all group">
+            <div className="p-1 rounded-lg bg-[#38BDF8]/10 text-[#38BDF8]">
+              <Plus size={16} />
+            </div>
+            <span className="text-xs font-semibold">Novo Registro</span>
+          </button>
+
+          {/* Navegação */}
+          <nav className="flex-1 space-y-2">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <NavLink
+                  key={item.name}
+                  to={item.path}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-[24px] transition-all whitespace-nowrap border border-transparent",
+                    isActive 
+                      ? "bg-[#38BDF8]/10 text-white font-semibold shadow-sm border-[#38BDF8]/20" 
+                      : "text-zinc-500 hover:text-zinc-300 hover:bg-white/[0.02]"
+                  )}
+                >
+                  <item.icon 
+                    size={18} 
+                    strokeWidth={isActive ? 2 : 1.5} 
+                    style={{ color: isActive ? '#38BDF8' : 'currentColor' }} 
+                    className="shrink-0"
+                  />
+                  <span className="text-[13px]">{item.name}</span>
+                </NavLink>
+              );
+            })}
+          </nav>
+          
+          {/* Footer */}
+          <div className="pt-4 mt-auto flex items-center gap-3 border-t border-white/5">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center text-[11px] font-bold bg-[#38BDF8]/20 text-[#38BDF8] shrink-0 border border-[#38BDF8]/10">
+              RS
+            </div>
+            <div className="flex flex-col min-w-0">
+              <span className="text-xs font-semibold text-zinc-200 truncate">
+                Ricardo S.
+              </span>
+              <span className="text-[10px] text-zinc-500 font-medium">Nível 12</span>
+            </div>
+          </div>
         </div>
       </div>
-
-      <nav className="flex-1 flex flex-col gap-4 w-full px-4">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) => cn(
-              "w-12 h-12 flex items-center justify-center rounded-[18px] transition-all duration-300 group relative",
-              isActive 
-                ? "bg-white/[0.08] text-white shadow-inner border border-white/5" 
-                : "text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.04]"
-            )}
-          >
-            <item.icon 
-              size={20} 
-              strokeWidth={2}
-              className={cn("transition-transform duration-300", isActive(item.path) ? "scale-100" : "group-hover:scale-110")} 
-            />
-            
-            {/* Tooltip */}
-            <div className="absolute left-14 bg-[#1A1A1A] text-white text-[10px] font-medium px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-white/10 z-50 translate-x-[-5px] group-hover:translate-x-0 duration-200">
-              {item.label}
-            </div>
-          </NavLink>
-        ))}
-      </nav>
-
-      <div className="mt-auto flex flex-col gap-4 w-full px-4">
-        <button 
-          onClick={() => signOut()}
-          className="w-12 h-12 flex items-center justify-center rounded-[18px] text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300"
-        >
-          <LogOut size={20} strokeWidth={2} />
-        </button>
-      </div>
-    </aside>
+    </>
   );
 };
