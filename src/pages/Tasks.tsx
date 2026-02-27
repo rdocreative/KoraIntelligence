@@ -18,6 +18,7 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { TaskColumn } from "@/components/tasks/TaskColumn";
 import { TaskCard } from "@/components/tasks/TaskCard";
 import { CreateTaskModal } from "@/components/tasks/CreateTaskModal";
+import { CalendarModal } from "@/components/tasks/CalendarModal";
 import { 
   ChevronLeft, 
   ChevronRight,
@@ -57,6 +58,7 @@ export default function TasksPage() {
   const [columns, setColumns] = useState(INITIAL_DATA);
   const [activeTask, setActiveTask] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -227,7 +229,10 @@ export default function TasksPage() {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="p-2 border border-white/10 rounded-xl hover:bg-white/5 text-zinc-400 transition-colors">
+          <button 
+            onClick={() => setIsCalendarOpen(true)}
+            className="p-2 border border-white/10 rounded-xl hover:bg-white/5 text-zinc-400 transition-colors"
+          >
             <CalendarDays size={18} />
           </button>
           <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl text-sm font-semibold text-zinc-300 cursor-pointer hover:text-white transition-colors">
@@ -309,6 +314,12 @@ export default function TasksPage() {
         onClose={() => setIsModalOpen(false)}
         onSave={handleAddTask}
         selectedDay={currentDayName}
+      />
+
+      <CalendarModal 
+        isOpen={isCalendarOpen}
+        onClose={() => setIsCalendarOpen(false)}
+        tasksData={columns}
       />
     </div>
   );
