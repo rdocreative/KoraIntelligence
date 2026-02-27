@@ -292,9 +292,6 @@ export default function TasksPage() {
             </h2>
             <button onClick={handleNextDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronRight size={20} /></button>
           </div>
-          <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500/80 border border-white/5 px-2 py-0.5 rounded-md">
-            Tempo Real
-          </span>
         </div>
 
         <div className="flex items-center gap-3">
