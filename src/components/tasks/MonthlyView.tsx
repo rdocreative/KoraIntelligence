@@ -11,11 +11,10 @@ import {
   isSameMonth, 
   isSameDay, 
   isToday,
-  getDay,
-  isSameWeek
+  getDay
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Clock, X, Hash, Sun, Coffee, Moon, Filter, Check, CalendarDays, CalendarRange, Calendar } from 'lucide-react';
+import { Clock, X, Hash, Sun, Coffee, Moon, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MonthlyViewProps {
@@ -156,11 +155,11 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
   }, [sideViewMode, selectedDate, currentDate, activePriorities, activeWeekDays, tasksData]);
 
   return (
-    <div className="flex h-full w-full animate-in fade-in duration-700 overflow-hidden px-6">
+    <div className="flex h-full w-full max-h-screen animate-in fade-in duration-700 overflow-hidden px-6">
       {/* Grid Principal do Calendário */}
-      <div className="flex-1 flex flex-col min-w-0 pr-4">
+      <div className="flex-1 flex flex-col min-w-0 pr-4 h-full">
         {/* Barra de Filtros Minimalista */}
-        <div className="flex items-center gap-6 mb-6 px-2">
+        <div className="flex items-center gap-6 mb-6 px-2 shrink-0">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/5 rounded-lg">
               <Filter size={14} className="text-zinc-500" />
@@ -217,7 +216,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
           )}
         </div>
 
-        <div className="grid grid-cols-7 mb-2">
+        <div className="grid grid-cols-7 mb-2 shrink-0">
           {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map((d) => (
             <div key={d} className="py-2 text-center text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400">
               {d}
@@ -225,7 +224,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
           ))}
         </div>
 
-        <div className="flex-1 grid grid-cols-7 gap-2 pb-6">
+        <div className="flex-1 grid grid-cols-7 gap-2 pb-6 min-h-0">
           {calendarDays.map((day, idx) => {
             const tasks = getFilteredTasksForDate(day);
             const isSelected = isSameDay(day, selectedDate);
@@ -253,7 +252,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   </span>
                 </div>
 
-                <div className="flex-1 space-y-1 overflow-visible relative z-10">
+                <div className="flex-1 space-y-1 overflow-hidden relative z-10">
                   {isCurrentMonth && tasks.slice(0, 2).map((task) => (
                     <div 
                       key={task.id}
@@ -281,17 +280,17 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
       </div>
 
       {/* Painel Lateral Direito */}
-      <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2">
+      <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2 h-full min-h-0">
         <div className="bg-white/[0.03] border border-white/10 rounded-[28px] flex flex-col h-full shadow-2xl overflow-hidden">
-          <div className="p-6 pb-4 border-b border-white/5">
+          <div className="p-6 pb-4 border-b border-white/5 shrink-0">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex bg-white/5 p-1 rounded-xl">
+              <div className="flex bg-white/5 p-1 rounded-xl w-full">
                 {(['day', 'week', 'month'] as ViewMode[]).map((mode) => (
                   <button
                     key={mode}
                     onClick={() => setSideViewMode(mode)}
                     className={cn(
-                      "px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
+                      "flex-1 px-2 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
                       sideViewMode === mode 
                         ? "bg-[#38BDF8] text-black shadow-lg" 
                         : "text-zinc-500 hover:text-zinc-300"
@@ -311,14 +310,14 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                  format(currentDate, "MMMM", { locale: ptBR })}
               </span>
             </div>
-            <h3 className="text-xl font-serif text-white">
+            <h3 className="text-xl font-serif text-white truncate">
               {sideViewMode === 'day' ? format(selectedDate, "d 'de' MMMM", { locale: ptBR }) : 
                sideViewMode === 'week' ? `Visualização Semanal` : 
                `Resumo do Mês`}
             </h3>
           </div>
 
-          <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-4">
+          <div className="flex-1 overflow-y-auto custom-scrollbar p-5 space-y-4 min-h-0">
             {sideTasks.length > 0 ? (
               sideTasks.map((task, idx) => {
                 const period = getPeriodInfo(task.period);
@@ -328,7 +327,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   <div 
                     key={`${task.id}-${idx}`}
                     className={cn(
-                      "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-gradient-to-br bg-zinc-900/40",
+                      "group p-4 rounded-[24px] transition-all relative overflow-hidden border border-white/5 bg-gradient-to-br bg-zinc-900/40 shrink-0",
                       getPeriodGradient(task.period)
                     )}
                   >
