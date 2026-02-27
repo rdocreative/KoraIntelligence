@@ -42,7 +42,7 @@ export const SideNav = () => {
       {/* Container Principal da SideNav */}
       <div 
         className={cn(
-          "h-full flex flex-col relative z-30 shrink-0 bg-white/[0.02] border-r border-white/[0.05] transition-all duration-500 ease-in-out outline-none overflow-hidden",
+          "h-full flex flex-col relative z-30 shrink-0 bg-[#12141A] border-r border-white/[0.05] transition-all duration-500 ease-in-out outline-none overflow-hidden",
           isOpen ? "w-[260px]" : "w-0 border-r-0"
         )}
         style={{ borderRadius: '0 20px 20px 0' }}
