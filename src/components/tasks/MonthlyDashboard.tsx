@@ -116,7 +116,7 @@ export const MonthlyDashboard = ({
                   key={mode}
                   onClick={() => setSideViewMode(mode)}
                   className={cn(
-                    "flex-1 px-2 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
+                    "flex-1 px-2 py-1.5 rounded-[8px] text-[9px] font-black uppercase tracking-widest transition-all",
                     sideViewMode === mode 
                       ? "bg-[#6366f1]/20 text-[#a5b4fc]" 
                       : "text-white/35 hover:text-white/60"

@@ -54,7 +54,6 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
     disabled: isAwaitingTime || isPopoverOpen
   });
 
-  // Função para setar o nó de referência para o dnd-kit e o cardRef local
   const setRefs = (node: HTMLDivElement | null) => {
     setNodeRef(node);
     (cardRef as any).current = node;
@@ -153,15 +152,15 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
           </div>
         </div>
 
-        {/* Time Adjust Overlay */}
+        {/* Time Adjust Overlay - Redesenhado */}
         {isAwaitingTime && (
           <div 
-            className="absolute inset-0 bg-[#0C0C0C]/95 backdrop-blur-md z-20 flex flex-col p-4 animate-in fade-in zoom-in-95 duration-200 rounded-[20px]"
+            className="absolute inset-0 bg-[#13151f] border border-white/10 z-20 flex flex-col p-4 animate-in fade-in zoom-in-95 duration-150 ease-out rounded-[16px]"
             onPointerDown={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-2 mb-3">
               <Clock size={12} className="text-[#6366f1]" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Novo Horário</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-white/50">Novo Horário</span>
             </div>
             
             <div className="flex gap-2 flex-1 items-center">
@@ -170,34 +169,34 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
                   <select 
                     value={hour}
                     onChange={(e) => setHour(e.target.value)}
-                    className="w-full h-full bg-white/[0.05] border border-white/10 rounded-xl px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#6366f1]/50 transition-all text-center"
+                    className="w-full h-full bg-white/5 border border-white/10 rounded-[10px] px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#6366f1]/50 transition-all text-center"
                   >
                     {HOURS.map(h => (
-                      <option key={h} value={h} className="bg-[#0C0C0C]">{h}</option>
+                      <option key={h} value={h} className="bg-[#13151f]">{h}</option>
                     ))}
                   </select>
-                  <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+                  <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
                 </div>
 
-                <span className="text-zinc-600 flex items-center">:</span>
+                <span className="text-white/20 flex items-center font-bold">:</span>
 
                 <div className="relative flex-1">
                   <select 
                     value={minute}
                     onChange={(e) => setMinute(e.target.value)}
-                    className="w-full h-full bg-white/[0.05] border border-white/10 rounded-xl px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#6366f1]/50 transition-all text-center"
+                    className="w-full h-full bg-white/5 border border-white/10 rounded-[10px] px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#6366f1]/50 transition-all text-center"
                   >
                     {MINUTES.map(m => (
-                      <option key={m} value={m} className="bg-[#0C0C0C]">{m}</option>
+                      <option key={m} value={m} className="bg-[#13151f]">{m}</option>
                     ))}
                   </select>
-                  <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+                  <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
                 </div>
               </div>
 
               <button 
                 onClick={handleConfirm}
-                className="w-10 h-10 bg-[#6366f1] text-white rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#6366f1]/20 shrink-0"
+                className="w-10 h-10 bg-[#6366f1] text-white rounded-[10px] flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#6366f1]/20 shrink-0"
               >
                 <Check size={18} strokeWidth={3} />
               </button>
