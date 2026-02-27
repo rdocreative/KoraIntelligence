@@ -106,12 +106,11 @@ export const MonthlyDashboard = ({
   return (
     <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2 h-full min-h-0 shrink-0">
       <div 
-        className="bg-white/[0.02] border border-white/[0.06] flex flex-col h-full shadow-2xl overflow-hidden relative"
-        style={{ borderRadius: '12px' }}
+        className="bg-white/[0.02] border border-white/[0.06] rounded-[16px] flex flex-col h-full shadow-2xl overflow-hidden relative"
       >
         <div className="p-6 pb-5 border-b border-white/5 shrink-0 space-y-6">
           <div className="space-y-3">
-            <div className="flex bg-white/[0.04] border border-white/[0.06] p-1 w-full" style={{ borderRadius: '10px' }}>
+            <div className="flex bg-white/[0.04] border border-white/[0.06] p-1 rounded-[10px] w-full">
               {(['day', 'week', 'month'] as ViewMode[]).map((mode) => (
                 <button
                   key={mode}
@@ -141,11 +140,11 @@ export const MonthlyDashboard = ({
           </div>
 
           <div className="grid grid-cols-2 gap-3 pt-2">
-            <div className="bg-white/[0.03] border border-white/[0.06] p-4 flex flex-col gap-1" style={{ borderRadius: '12px' }}>
+            <div className="bg-white/[0.03] border border-white/[0.06] rounded-[12px] p-4 flex flex-col gap-1">
               <span className="text-[10px] font-black uppercase tracking-[0.1em] text-white/40">Total</span>
               <span className="text-[28px] font-bold text-white leading-tight">{summary.total}</span>
             </div>
-            <div className="bg-white/[0.03] border border-white/[0.06] p-4 flex flex-col gap-1" style={{ borderRadius: '12px' }}>
+            <div className="bg-white/[0.03] border border-white/[0.06] rounded-[12px] p-4 flex flex-col gap-1">
               <span className="text-[10px] font-black uppercase tracking-[0.1em] text-white/40">Extrema</span>
               <span className="text-[28px] font-bold text-[#f87171] leading-tight">{summary.extreme}</span>
             </div>
@@ -161,8 +160,7 @@ export const MonthlyDashboard = ({
               return (
                 <div 
                   key={`${task.id}-${idx}`}
-                  className="group p-4 transition-all relative overflow-hidden border border-white/[0.07] bg-white/[0.04] shrink-0"
-                  style={{ borderRadius: '12px' }}
+                  className="group p-4 rounded-[12px] transition-all relative overflow-hidden border border-white/[0.07] bg-white/[0.04] shrink-0"
                 >
                   <div className="relative z-10 h-full flex flex-col">
                     <div className="flex items-center justify-between mb-3">
