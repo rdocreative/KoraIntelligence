@@ -24,6 +24,7 @@ const PERIODS = [
     time: '06:00 — 12:00',
     icon: Sun, 
     color: '#FDBA74',
+    timeColor: 'rgba(249,115,22,0.7)',
     background: 'linear-gradient(180deg, rgba(249,115,22,0.08) 0%, rgba(249,115,22,0.01) 100%)',
     startHour: 6,
     endHour: 12,
@@ -35,6 +36,7 @@ const PERIODS = [
     time: '12:00 — 18:00',
     icon: Coffee, 
     color: '#4ADE80',
+    timeColor: 'rgba(34,197,94,0.7)',
     background: 'linear-gradient(180deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.01) 100%)',
     startHour: 12,
     endHour: 18,
@@ -46,6 +48,7 @@ const PERIODS = [
     time: '18:00 — 00:00',
     icon: Moon, 
     color: '#A78BFA',
+    timeColor: 'rgba(129,140,248,0.7)',
     background: 'linear-gradient(180deg, rgba(129,140,248,0.08) 0%, rgba(129,140,248,0.01) 100%)',
     startHour: 18,
     endHour: 24,
@@ -57,6 +60,7 @@ const PERIODS = [
     time: '00:00 — 06:00',
     icon: CloudMoon, 
     color: '#818CF8',
+    timeColor: 'rgba(56,189,248,0.7)',
     background: 'linear-gradient(180deg, rgba(56,189,248,0.08) 0%, rgba(56,189,248,0.01) 100%)',
     startHour: 0,
     endHour: 6,
@@ -116,7 +120,10 @@ const PeriodContainer = ({
           </span>
         </div>
         
-        <span className="text-[11px] font-bold text-white/75 uppercase tracking-tight">
+        <span 
+          className="text-[11px] font-bold uppercase tracking-tight"
+          style={{ color: period.timeColor }}
+        >
           {period.time}
         </span>
       </div>
