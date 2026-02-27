@@ -5,11 +5,10 @@ import {
   format, 
   startOfWeek, 
   addDays, 
-  isToday, 
-  isSameDay 
+  isToday 
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Sun, Coffee, Moon, Plus, Clock, Hash } from 'lucide-react';
+import { Sun, Coffee, Moon, Plus, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Task {
@@ -17,7 +16,7 @@ interface Task {
   name: string;
   time: string;
   priority: 'Extrema' | 'Média' | 'Baixa';
-  period: 'Morning' | 'Afternoon' | 'Evening';
+  period: 'Morning' | 'Afternoon' | 'Evening' | 'LateNight';
   icon: string;
 }
 
@@ -42,11 +41,25 @@ const WEEK_DAYS_MAP: Record<number, string> = {
   6: 'Sábado'
 };
 
-const getPriorityStyles = (priority: string) => {
+const getTaskGradient = (period: string) => {
+  switch (period) {
+    case 'Morning':
+      return "from-orange-500/12 to-transparent";
+    case 'Afternoon':
+      return "from-emerald-500/12 to-transparent";
+    case 'Evening':
+      return "from-indigo-500/12 to-transparent";
+    case 'LateNight':
+    default:
+      return "from-blue-600/12 to-transparent";
+  }
+};
+
+const getPriorityColor = (priority: string) => {
   switch (priority) {
-    case 'Extrema': return "bg-red-500/10 border-red-500/20 text-red-400";
-    case 'Média': return "bg-amber-500/10 border-amber-500/20 text-amber-400";
-    default: return "bg-blue-500/10 border-blue-500/20 text-blue-400";
+    case 'Extrema': return "text-red-400";
+    case 'Média': return "text-amber-400";
+    default: return "text-blue-400";
   }
 };
 
@@ -123,31 +136,37 @@ export const WeeklyView = ({ tasksData, currentDate }: WeeklyViewProps) => {
                         )}
                       </div>
 
-                      {/* Lista de Tarefas (apenas se houver) */}
+                      {/* Lista de Tarefas */}
                       {hasTasks && (
                         <div className="space-y-2">
                           {periodTasks.map((task) => (
                             <div 
                               key={task.id}
                               className={cn(
-                                "p-2.5 rounded-xl border flex flex-col gap-1.5 transition-all hover:scale-[1.02] cursor-grab active:cursor-grabbing",
-                                getPriorityStyles(task.priority)
+                                "p-3 rounded-2xl flex flex-col gap-2 transition-all hover:scale-[1.02] cursor-grab active:cursor-grabbing bg-gradient-to-b",
+                                getTaskGradient(task.period)
                               )}
                             >
                               <div className="flex items-center justify-between">
-                                <span className="text-sm">{task.icon}</span>
-                                <div className="flex items-center gap-1 text-[8px] font-bold opacity-60">
+                                <span className="text-base filter drop-shadow-sm">{task.icon}</span>
+                                <div className="flex items-center gap-1 text-[8px] font-bold text-zinc-400">
                                   <Clock size={8} />
                                   {task.time}
                                 </div>
                               </div>
-                              <h4 className="text-[11px] font-bold leading-tight line-clamp-2">
+                              <h4 className="text-[11px] font-bold leading-tight line-clamp-2 text-white/90">
                                 {task.name}
                               </h4>
+                              <div className={cn(
+                                "text-[7px] font-black uppercase tracking-widest",
+                                getPriorityColor(task.priority)
+                              )}>
+                                {task.priority}
+                              </div>
                             </div>
                           ))}
                           
-                          <button className="w-full py-2 rounded-xl border border-dashed border-white/5 hover:border-white/10 hover:bg-white/5 transition-all flex items-center justify-center gap-2 text-zinc-500 hover:text-zinc-300">
+                          <button className="w-full py-2.5 rounded-xl border border-dashed border-white/5 hover:border-white/10 hover:bg-white/5 transition-all flex items-center justify-center gap-2 text-zinc-500 hover:text-zinc-300 mt-1">
                             <Plus size={12} />
                             <span className="text-[9px] font-bold uppercase tracking-wider">Novo</span>
                           </button>
