@@ -33,7 +33,7 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
     isDragging
   } = useSortable({ 
     id: task.id,
-    disabled: isAwaitingTime // Desativa drag enquanto ajusta horário
+    disabled: isAwaitingTime 
   });
 
   useEffect(() => {
@@ -109,33 +109,33 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, defaultPeriodTime
         {/* Time Adjust Overlay */}
         {isAwaitingTime && (
           <div 
-            className="absolute inset-0 bg-[#0C0C0C]/95 backdrop-blur-sm z-20 flex flex-col p-3 animate-in fade-in zoom-in-95 duration-200"
+            className="absolute inset-0 bg-[#0C0C0C]/95 backdrop-blur-md z-20 flex flex-col p-4 animate-in fade-in zoom-in-95 duration-200 rounded-[20px]"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
-            onPointerDown={(e) => e.stopPropagation()} // Impede drag ao interagir
+            onPointerDown={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-2 mb-3">
               <Clock size={12} className="text-[#38BDF8]" />
               <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Novo Horário</span>
             </div>
             
-            <div className="flex gap-2 flex-1 items-center">
+            <div className="flex gap-3 flex-1 items-center">
               <input 
                 type="time" 
                 value={tempTime}
                 onChange={(e) => setTempTime(e.target.value)}
-                className="flex-1 bg-white/[0.05] border border-white/10 rounded-xl px-2 py-1.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 [color-scheme:dark]"
+                className="flex-1 bg-white/[0.05] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 [color-scheme:dark] h-10"
               />
               <button 
                 onClick={() => onUpdateTime?.(tempTime)}
-                className="w-8 h-8 bg-[#38BDF8] text-black rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#38BDF8]/20"
+                className="w-10 h-10 bg-[#38BDF8] text-black rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#38BDF8]/20"
               >
-                <Check size={16} strokeWidth={3} />
+                <Check size={18} strokeWidth={3} />
               </button>
             </div>
 
             {/* Progress Bar */}
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5">
+            <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5 overflow-hidden">
               <div 
                 className={cn("h-full bg-[#38BDF8]/40 origin-left")} 
                 style={{ 
