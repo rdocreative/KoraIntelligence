@@ -109,7 +109,6 @@ export default function TasksPage() {
     }));
   };
 
-  // Logica de DND omitida por brevidade mas mantida no arquivo final
   const findDay = (id: string) => {
     if (DISPLAY_ORDER.includes(id)) return id;
     if (id.includes(':')) return id.split(':')[0];
@@ -212,8 +211,8 @@ export default function TasksPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0">
-      <header className="flex items-center justify-between py-6 shrink-0">
+    <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0 relative">
+      <header className="flex items-center justify-between py-6 shrink-0 px-4">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
             <button className="p-1 text-gray-400 hover:text-white transition-colors"><ChevronLeft size={20} /></button>
@@ -241,57 +240,62 @@ export default function TasksPage() {
         </div>
       </header>
 
-      <div 
-        ref={scrollRef}
-        onMouseDown={onMouseDown}
-        onMouseLeave={() => setIsScrolling(false)}
-        onMouseUp={() => setIsScrolling(false)}
-        onMouseMove={(e) => {
-          if (!isScrolling || !scrollRef.current) return;
-          e.preventDefault();
-          const x = e.pageX - scrollRef.current.offsetLeft;
-          const walk = (x - startX) * 1.5; 
-          scrollRef.current.scrollLeft = scrollLeft - walk;
-        }}
-        className={cn(
-          "flex-1 flex min-h-0 pb-8 overflow-x-auto custom-scrollbar cursor-grab select-none",
-          isScrolling && "cursor-grabbing"
-        )}
-      >
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCorners}
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
+      <div className="flex-1 relative min-h-0 overflow-hidden">
+        {/* Máscaras de Degradê Laterais */}
+        <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-[#030303] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-[#030303] to-transparent z-10 pointer-events-none" />
+
+        <div 
+          ref={scrollRef}
+          onMouseDown={onMouseDown}
+          onMouseLeave={() => setIsScrolling(false)}
+          onMouseUp={() => setIsScrolling(false)}
+          onMouseMove={(e) => {
+            if (!isScrolling || !scrollRef.current) return;
+            e.preventDefault();
+            const x = e.pageX - scrollRef.current.offsetLeft;
+            const walk = (x - startX) * 1.5; 
+            scrollRef.current.scrollLeft = scrollLeft - walk;
+          }}
+          className={cn(
+            "h-full flex pb-8 overflow-x-auto custom-scrollbar cursor-grab select-none px-10",
+            isScrolling && "cursor-grabbing"
+          )}
         >
-          <div className="flex gap-5 items-start h-full pr-10">
-            {DISPLAY_ORDER.map((day) => {
-              const isToday = day === currentDayName;
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCorners}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+          >
+            <div className="flex gap-5 items-start h-full pr-10">
+              {DISPLAY_ORDER.map((day) => {
+                const isToday = day === currentDayName;
 
-              return (
-                <TaskColumn 
-                  key={day} 
-                  id={day} 
-                  title={day} 
-                  tasks={columns[day] || []} 
-                  isToday={isToday}
-                />
-              );
-            })}
-          </div>
+                return (
+                  <TaskColumn 
+                    key={day} 
+                    id={day} 
+                    title={day} 
+                    tasks={columns[day] || []} 
+                    isToday={isToday}
+                  />
+                );
+              })}
+            </div>
 
-          <DragOverlay dropAnimation={{
-            sideEffects: defaultDropAnimationSideEffects({
-              styles: { active: { opacity: '0.5' } },
-            }),
-          }}>
-            {activeTask ? <TaskCard task={activeTask} /> : null}
-          </DragOverlay>
-        </DndContext>
+            <DragOverlay dropAnimation={{
+              sideEffects: defaultDropAnimationSideEffects({
+                styles: { active: { opacity: '0.5' } },
+              }),
+            }}>
+              {activeTask ? <TaskCard task={activeTask} /> : null}
+            </DragOverlay>
+          </DndContext>
+        </div>
       </div>
 
-      {/* Botão de Criação */}
       <button
         onClick={() => setIsModalOpen(true)}
         className="fixed bottom-10 right-10 w-16 h-16 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black rounded-full shadow-2xl shadow-[#38BDF8]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50"
@@ -300,7 +304,6 @@ export default function TasksPage() {
         <Plus size={32} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
       </button>
 
-      {/* Modal de Criação */}
       <CreateTaskModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
