@@ -44,7 +44,7 @@ export const TaskPopover = ({ task, onClose, onSave, position }: TaskPopoverProp
     onClose();
   };
 
-  const inputBaseClasses = "bg-white/[0.05] border border-white/[0.08] rounded-[10px] text-white focus:outline-none focus:border-[#6366f1]/50 transition-all";
+  const inputBaseClasses = "bg-white/[0.05] border border-white/[0.08] rounded-[10px] text-white focus:outline-none focus:border-[#6366f1]/50 transition-all placeholder:text-white/20";
 
   return (
     <div 
@@ -60,16 +60,16 @@ export const TaskPopover = ({ task, onClose, onSave, position }: TaskPopoverProp
         left: position ? position.left : '50%',
         transform: position ? 'none' : 'translate(-50%, -50%)',
       }}
-      className="rounded-[16px] p-5 flex flex-col gap-4 animate-in fade-in slide-in-from-top-1 duration-150 ease-out"
+      className="rounded-[10px] p-4 flex flex-col gap-3 animate-in fade-in slide-in-from-top-1 duration-150 ease-out"
       onPointerDown={(e) => e.stopPropagation()}
     >
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-[11px] font-black uppercase tracking-[0.15em] text-white/50">Editar Tarefa</span>
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-white/30">Editar Tarefa</span>
         <button 
           onClick={onClose} 
           className="p-1 hover:bg-white/5 rounded-full text-white/30 transition-colors"
         >
-          <X size={16} />
+          <X size={14} />
         </button>
       </div>
 
@@ -86,7 +86,7 @@ export const TaskPopover = ({ task, onClose, onSave, position }: TaskPopoverProp
           type="text" 
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className={cn(inputBaseClasses, "flex-1 px-3 text-sm")}
+          className={cn(inputBaseClasses, "flex-1 px-3 py-2 text-sm")}
           placeholder="Nome da tarefa"
         />
       </div>
@@ -96,11 +96,11 @@ export const TaskPopover = ({ task, onClose, onSave, position }: TaskPopoverProp
         <select 
           value={priority}
           onChange={(e) => setPriority(e.target.value as any)}
-          className={cn(inputBaseClasses, "w-full h-10 px-3 text-[11px] font-bold uppercase tracking-wider appearance-none cursor-pointer")}
+          className={cn(inputBaseClasses, "w-full h-10 px-3 text-xs font-medium appearance-none cursor-pointer")}
         >
-          {PRIORITIES.map(p => <option key={p} value={p} className="bg-[#0f1117]">{p}</option>)}
+          {PRIORITIES.map(p => <option key={p} value={p} className="bg-[#0f1117] text-white">{p}</option>)}
         </select>
-        <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
+        <ChevronDown size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 pointer-events-none" />
       </div>
 
       {/* Linha 3: Horário */}
@@ -111,27 +111,27 @@ export const TaskPopover = ({ task, onClose, onSave, position }: TaskPopoverProp
             onChange={(e) => setHour(e.target.value)}
             className={cn(inputBaseClasses, "w-full h-10 px-3 text-sm appearance-none cursor-pointer text-center")}
           >
-            {HOURS.map(h => <option key={h} value={h} className="bg-[#0f1117]">{h}</option>)}
+            {HOURS.map(h => <option key={h} value={h} className="bg-[#0f1117] text-white">{h}</option>)}
           </select>
-          <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
+          <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/20 pointer-events-none" />
         </div>
-        <span className="text-white/20 font-bold">:</span>
+        <span className="text-white/20 font-medium">:</span>
         <div className="relative flex-1">
           <select 
             value={minute}
             onChange={(e) => setMinute(e.target.value)}
             className={cn(inputBaseClasses, "w-full h-10 px-3 text-sm appearance-none cursor-pointer text-center")}
           >
-            {MINUTES.map(m => <option key={m} value={m} className="bg-[#0f1117]">{m}</option>)}
+            {MINUTES.map(m => <option key={m} value={m} className="bg-[#0f1117] text-white">{m}</option>)}
           </select>
-          <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
+          <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/20 pointer-events-none" />
         </div>
       </div>
 
       {/* Linha 4: Botão Salvar */}
       <button
         onClick={handleSave}
-        className="w-full py-2.5 rounded-[10px] bg-[#6366f1] text-white font-semibold text-sm hover:bg-[#6366f1]/90 transition-all shadow-lg shadow-[#6366f1]/20 mt-1"
+        className="w-full py-2.5 rounded-[10px] bg-[#6366f1] text-white font-semibold text-sm hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-[#6366f1]/20 mt-1"
       >
         Salvar
       </button>
