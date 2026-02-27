@@ -260,7 +260,7 @@ export const MonthlyView = ({ tasksData, currentDate }: MonthlyViewProps) => {
                   </span>
                 </div>
 
-                <div className="flex-1 space-y-1 overflow-hidden relative z-10">
+                <div className="flex-1 space-y-1 relative z-10">
                   {isCurrentMonth && tasks.slice(0, 2).map((task) => (
                     <div 
                       key={task.id}
