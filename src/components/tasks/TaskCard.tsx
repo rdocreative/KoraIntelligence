@@ -66,25 +66,30 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
     touchAction: 'none',
   };
 
-  const priorityColors = {
+  const priorityLabelColors = {
     Extrema: 'bg-red-500/20 text-red-400 border-red-500/30',
     Alta: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
     Média: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
     Baixa: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
   };
 
-  const periodStyles: Record<string, string> = {
-    Morning: "border-orange-500/10 hover:border-orange-500/30",
-    Afternoon: "border-green-500/10 hover:border-green-500/30",
-    Evening: "border-indigo-500/10 hover:border-indigo-500/30",
-    Dawn: "border-sky-500/10 hover:border-sky-500/30",
-  };
-
-  const periodGradients: Record<string, string> = {
-    Morning: "linear-gradient(180deg, rgba(249,115,22,0.13) 0%, rgba(249,115,22,0.02) 100%)",
-    Afternoon: "linear-gradient(180deg, rgba(34,197,94,0.13) 0%, rgba(34,197,94,0.02) 100%)",
-    Evening: "linear-gradient(180deg, rgba(129,140,248,0.13) 0%, rgba(129,140,248,0.02) 100%)",
-    Dawn: "linear-gradient(180deg, rgba(56,189,248,0.13) 0%, rgba(56,189,248,0.02) 100%)",
+  const priorityCardStyles = {
+    Extrema: {
+      background: 'linear-gradient(160deg, rgba(239,68,68,0.12) 0%, rgba(239,68,68,0.02) 100%)',
+      border: '1px solid rgba(239,68,68,0.15)'
+    },
+    Alta: {
+      background: 'linear-gradient(160deg, rgba(249,115,22,0.12) 0%, rgba(249,115,22,0.02) 100%)',
+      border: '1px solid rgba(249,115,22,0.15)'
+    },
+    Média: {
+      background: 'linear-gradient(160deg, rgba(234,179,8,0.1) 0%, rgba(234,179,8,0.02) 100%)',
+      border: '1px solid rgba(234,179,8,0.12)'
+    },
+    Baixa: {
+      background: 'linear-gradient(160deg, rgba(56,189,248,0.08) 0%, rgba(56,189,248,0.02) 100%)',
+      border: '1px solid rgba(56,189,248,0.1)'
+    }
   };
 
   const handleConfirm = () => {
@@ -116,12 +121,11 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
     >
       <div
         className={cn(
-          "group relative flex flex-col p-4 rounded-[20px] border transition-all cursor-grab active:cursor-grabbing overflow-hidden min-h-[90px]",
-          task.period ? periodStyles[task.period] : 'border-white/5 hover:border-white/10',
+          "group relative flex flex-col p-4 rounded-[20px] transition-all cursor-grab active:cursor-grabbing overflow-hidden min-h-[90px]",
           isDragging && "z-50 border-[#6366f1]/50 shadow-2xl bg-white/[0.08]"
         )}
         style={{
-          background: task.period ? periodGradients[task.period] : 'rgba(255,255,255,0.03)'
+          ...(task.priority ? priorityCardStyles[task.priority] : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' })
         }}
       >
         <div className="flex items-start justify-between mb-3">
@@ -136,7 +140,7 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.04]">
           <div className="flex items-center gap-3">
             {task.priority && (
-              <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityColors[task.priority])}>
+              <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityLabelColors[task.priority])}>
                 {task.priority}
               </span>
             )}
