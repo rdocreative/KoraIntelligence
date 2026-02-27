@@ -154,38 +154,6 @@ const PeriodContainer = ({
       )}
       style={activeStyle}
     >
-      {/* Aviso flutuante com edição rápida de horário - Usando fixed para não ser cortado */}
-      {showWarning && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[9999] flex flex-col gap-2 p-3 bg-[#0C0C0C] border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] animate-in fade-in slide-in-from-top-4 duration-500 min-w-[280px]">
-          <div className="flex items-center gap-2 mb-1">
-            <Clock size={12} className="text-yellow-400" />
-            <span className="text-[10px] text-zinc-100 font-medium whitespace-nowrap">
-              Ajustar horário para o período {period.label}
-            </span>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <input 
-              type="time" 
-              value={tempTime}
-              onChange={(e) => setTempTime(e.target.value)}
-              className="flex-1 bg-white/[0.05] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 [color-scheme:dark]"
-            />
-            <button 
-              onClick={handleSaveTime}
-              className="px-3 py-1.5 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black text-[10px] font-bold rounded-lg transition-all flex items-center gap-1.5 active:scale-95"
-            >
-              <Check size={12} />
-              Salvar
-            </button>
-          </div>
-          
-          <div className="h-0.5 bg-white/5 w-full rounded-full overflow-hidden mt-1">
-             <div className="h-full bg-yellow-400/30 animate-shrink-width origin-left" style={{ animationDuration: '5s' }} />
-          </div>
-        </div>
-      )}
-
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center z-10">
@@ -217,7 +185,41 @@ const PeriodContainer = ({
       <div className="relative flex flex-col gap-3 min-h-[20px] max-h-[300px] overflow-y-auto custom-scrollbar pr-1">
         <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
           {tasks.map((task) => (
-            <TaskCard key={task.id} task={{ ...task, period: period.id }} />
+            <React.Fragment key={task.id}>
+              <TaskCard task={{ ...task, period: period.id }} />
+              
+              {/* Aviso integrado ao fluxo, abaixo da tarefa movida */}
+              {showWarning && lastMovedTaskId === task.id && (
+                <div className="flex flex-col gap-2 p-3 mx-1 bg-[#111] border border-white/10 rounded-xl shadow-lg animate-in zoom-in-95 slide-in-from-top-2 duration-300 relative z-10">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Clock size={12} className="text-yellow-400" />
+                    <span className="text-[10px] text-zinc-100 font-medium whitespace-nowrap">
+                      Atualizar horário
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="time" 
+                      value={tempTime}
+                      onChange={(e) => setTempTime(e.target.value)}
+                      className="flex-1 bg-white/[0.05] border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:border-[#38BDF8]/50 [color-scheme:dark]"
+                    />
+                    <button 
+                      onClick={handleSaveTime}
+                      className="px-3 py-1.5 bg-[#38BDF8] hover:bg-[#38BDF8]/90 text-black text-[10px] font-bold rounded-lg transition-all flex items-center gap-1.5 active:scale-95 whitespace-nowrap"
+                    >
+                      <Check size={12} />
+                      Salvar
+                    </button>
+                  </div>
+                  
+                  <div className="h-0.5 bg-white/5 w-full rounded-full overflow-hidden mt-1">
+                     <div className="h-full bg-yellow-400/30 animate-shrink-width origin-left" style={{ animationDuration: '5s' }} />
+                  </div>
+                </div>
+              )}
+            </React.Fragment>
           ))}
         </SortableContext>
         
