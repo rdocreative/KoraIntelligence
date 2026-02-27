@@ -24,7 +24,6 @@ import {
   ChevronRight,
   CalendarDays,
   MoreHorizontal,
-  ChevronDown,
   Plus,
   LayoutGrid
 } from "lucide-react";
@@ -62,6 +61,7 @@ export default function TasksPage() {
   const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [lastMovedTaskId, setLastMovedTaskId] = useState<string | null>(null);
+  const [originalTaskState, setOriginalTaskState] = useState<{ day: string; period: string } | null>(null);
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -147,7 +147,10 @@ export default function TasksPage() {
     const { active } = event;
     const day = findDay(active.id as string);
     if (day) {
-      setActiveTask(columns[day].find((t) => t.id === active.id));
+      const task = columns[day].find((t) => t.id === active.id);
+      setActiveTask(task);
+      setOriginalTaskState({ day, period: task.period });
+      setLastMovedTaskId(null); // Reseta qualquer aviso anterior
     }
   };
 
@@ -200,7 +203,6 @@ export default function TasksPage() {
       
       if (activeTask) {
         setActiveTask({ ...activeTask, period: overPeriod });
-        setLastMovedTaskId(activeTask.id);
       }
     }
   };
@@ -209,11 +211,20 @@ export default function TasksPage() {
     const { active, over } = event;
     if (!over) {
       setActiveTask(null);
+      setOriginalTaskState(null);
       return;
     }
 
     const activeDay = findDay(active.id as string);
     const overDay = findDay(over.id as string);
+
+    // Verifica se a tarefa realmente mudou de dia ou período em relação ao início do drag
+    if (activeTask && originalTaskState) {
+      const currentPeriod = activeTask.period;
+      if (activeDay !== originalTaskState.day || currentPeriod !== originalTaskState.period) {
+        setLastMovedTaskId(activeTask.id);
+      }
+    }
 
     if (activeDay && overDay && activeDay === overDay) {
       const activeIndex = columns[activeDay].findIndex((i) => i.id === active.id);
@@ -228,6 +239,7 @@ export default function TasksPage() {
     }
 
     setActiveTask(null);
+    setOriginalTaskState(null);
   };
 
   const onMouseDown = (e: React.MouseEvent) => {
