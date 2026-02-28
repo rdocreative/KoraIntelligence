@@ -62,12 +62,22 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     }
   }, [startDate, endDate]);
 
-  // Busca inicial e busca ao mudar de mês
   useEffect(() => { 
     fetchMonthlyTasks(true); 
   }, [fetchMonthlyTasks]);
 
-  // Filtros aplicados via useMemo para evitar re-calculo desnecessário
+  // Função de normalização e ordenação
+  const sortTasksByPriority = (taskList: any[]) => {
+    const peso: Record<string, number> = { 'Extrema': 0, 'Alta': 1, 'Média': 2, 'Media': 2, 'Baixa': 3 };
+    const normalize = (s: string) => s ? s.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : "";
+    
+    return [...taskList].sort((a, b) => {
+      const pA = normalize(a.prioridade || a.priority);
+      const pB = normalize(b.prioridade || b.priority);
+      return (peso[pA] ?? 99) - (peso[pB] ?? 99);
+    });
+  };
+
   const filteredTasks = useMemo(() => {
     return tasks.filter(t => {
       const priority = t.prioridade === 'Media' ? 'Média' : t.prioridade;
@@ -80,7 +90,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     });
   }, [tasks, activePriorities, activeWeekDays]);
 
-  // Agrupamento de tarefas por dia memoizado (Elimina flickering nas células)
   const tasksByDay = useMemo(() => {
     const map: Record<string, any[]> = {};
     filteredTasks.forEach(task => {
@@ -89,15 +98,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
       map[dateKey].push(task);
     });
     return map;
-  }, [filteredTasks]);
-
-  const tasksDataForDashboard = useMemo(() => {
-    return filteredTasks.reduce((acc: any, t) => {
-      const dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][getDay(new Date(t.data + 'T12:00:00'))];
-      if (!acc[dayName]) acc[dayName] = [];
-      acc[dayName].push({ id: t.id, name: t.nome, priority: t.prioridade === 'Media' ? 'Média' : t.prioridade, period: t.periodo, time: t.horario, icon: t.emoji });
-      return acc;
-    }, {});
   }, [filteredTasks]);
 
   const getPriorityColor = (p: string) => {
@@ -121,13 +121,8 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
   };
 
   const weekDays = [
-    { label: 'D', value: 0 },
-    { label: 'S', value: 1 },
-    { label: 'T', value: 2 },
-    { label: 'Q', value: 3 },
-    { label: 'Q', value: 4 },
-    { label: 'S', value: 5 },
-    { label: 'S', value: 6 },
+    { label: 'D', value: 0 }, { label: 'S', value: 1 }, { label: 'T', value: 2 },
+    { label: 'Q', value: 3 }, { label: 'Q', value: 4 }, { label: 'S', value: 5 }, { label: 'S', value: 6 },
   ];
 
   const priorities = [
@@ -143,13 +138,12 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
       x: rect.left,
       y: rect.bottom + 8,
       date,
-      tasks
+      tasks: sortTasksByPriority(tasks)
     });
   };
 
   return (
     <div className="flex h-full w-full px-6 relative overflow-hidden">
-      {/* Popover */}
       {popoverData && (
         <>
           <div className="fixed inset-0 z-[9998]" onClick={() => setPopoverData(null)} />
@@ -174,7 +168,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
       )}
 
       <div className="flex-1 flex flex-col pr-4">
-        {/* Filtros */}
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-center gap-2">
             <Filter size={14} className="text-white/20 mr-1" />
@@ -194,9 +187,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
               );
             })}
           </div>
-          
           <div className="w-px h-6 bg-white/[0.06]" />
-
           <div className="flex items-center gap-1.5">
             {weekDays.map((d, i) => {
               const isActive = activeWeekDays.includes(d.value);
@@ -206,9 +197,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                   onClick={() => setActiveWeekDays(prev => isActive ? prev.filter(x => x !== d.value) : [...prev, d.value])}
                   className={cn(
                     "w-7 h-7 flex items-center justify-center rounded-lg text-[11px] font-medium border transition-all",
-                    isActive 
-                      ? "bg-[#6366f1]/15 border-[#6366f1]/30 text-[#a5b4fc]" 
-                      : "bg-white/[0.03] border-white/[0.06] text-white/40 hover:bg-white/[0.05]"
+                    isActive ? "bg-[#6366f1]/15 border-[#6366f1]/30 text-[#a5b4fc]" : "bg-white/[0.03] border-white/[0.06] text-white/40 hover:bg-white/[0.05]"
                   )}
                 >
                   {d.label}
@@ -224,8 +213,10 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
             const dateTasks = tasksByDay[dateStr] || [];
             const isSelected = isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentDate);
-            
             const hiddenCount = dateTasks.length - 4;
+            
+            // Ordenação para o grid
+            const sortedDateTasks = sortTasksByPriority(dateTasks);
 
             return (
               <div
@@ -233,11 +224,12 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                 onClick={() => setSelectedDate(day)}
                 className={cn(
                   "min-h-[170px] p-2.5 rounded-[22px] border transition-all cursor-pointer flex flex-col group relative",
-                  !isCurrentMonth ? "opacity-30 grayscale pointer-events-none" : isSelected ? "bg-white/[0.06] border-white/20" : "bg-white/[0.02] border-white/5 hover:border-white/10",
+                  !isCurrentMonth ? "opacity-30 grayscale pointer-events-none" : isSelected ? "bg-white/[0.06] border-transparent" : "bg-white/[0.02] border-white/5 hover:border-white/10",
                   isToday(day) && !isSelected && "border-[#6366f1]/40"
                 )}
                 style={{
-                  border: isCurrentMonth ? '1px solid rgba(255, 255, 255, 0.05)' : undefined
+                  boxShadow: isSelected ? '0 0 0 2px #6366f1' : undefined,
+                  border: (isCurrentMonth && !isSelected) ? '1px solid rgba(255, 255, 255, 0.05)' : undefined
                 }}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -253,7 +245,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                 </div>
                 
                 <div className="flex flex-col">
-                  {dateTasks.slice(0, 4).map((task) => (
+                  {sortedDateTasks.slice(0, 4).map((task) => (
                     <div
                       key={task.id}
                       style={{
@@ -269,25 +261,8 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                         cursor: 'pointer'
                       }}
                     >
-                      {/* Ponto Colorido da Prioridade */}
-                      <div 
-                        style={{
-                          width: '6px',
-                          height: '6px',
-                          borderRadius: '50%',
-                          backgroundColor: getPriorityColor(task.prioridade),
-                          flexShrink: 0
-                        }} 
-                      />
-                      
-                      {/* Nome da Tarefa */}
-                      <span style={{ 
-                        fontSize: '10px', 
-                        color: 'rgba(255, 255, 255, 0.9)',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                      }}>
+                      <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: getPriorityColor(task.prioridade), flexShrink: 0 }} />
+                      <span style={{ fontSize: '10px', color: 'rgba(255, 255, 255, 0.9)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {task.nome}
                       </span>
                     </div>
@@ -298,7 +273,13 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
           })}
         </div>
       </div>
-      <MonthlyDashboard selectedDate={selectedDate} currentDate={currentDate} tasksData={tasksDataForDashboard} activePriorities={activePriorities} activeWeekDays={activeWeekDays} sideViewMode={sideViewMode} setSideViewMode={setSideViewMode} />
+      <MonthlyDashboard 
+        selectedDate={selectedDate} 
+        currentDate={currentDate} 
+        tasks={filteredTasks} 
+        sideViewMode={sideViewMode} 
+        setSideViewMode={setSideViewMode} 
+      />
     </div>
   );
 };
