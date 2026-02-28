@@ -62,10 +62,12 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     }
   }, [startDate, endDate]);
 
+  // Busca inicial e busca ao mudar de mês
   useEffect(() => { 
     fetchMonthlyTasks(true); 
   }, [fetchMonthlyTasks]);
 
+  // Filtros aplicados via useMemo para evitar re-calculo desnecessário
   const filteredTasks = useMemo(() => {
     return tasks.filter(t => {
       const priority = t.prioridade === 'Media' ? 'Média' : t.prioridade;
@@ -78,6 +80,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     });
   }, [tasks, activePriorities, activeWeekDays]);
 
+  // Agrupamento de tarefas por dia memoizado (Elimina flickering nas células)
   const tasksByDay = useMemo(() => {
     const map: Record<string, any[]> = {};
     filteredTasks.forEach(task => {
@@ -101,21 +104,9 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     const priority = p === 'Media' || p === 'Média' ? 'Média' : p;
     switch(priority) {
       case 'Extrema': return '#ef4444';
-      case 'Alta': return '#ef4444'; // Adicionado suporte para Alta
       case 'Média': return '#f97316';
       case 'Baixa': return '#38bdf8';
       default: return '#cbd5e1';
-    }
-  };
-
-  const getPriorityBorderColor = (p: string) => {
-    const priority = p === 'Media' || p === 'Média' ? 'Média' : p;
-    switch(priority) {
-      case 'Extrema': return 'rgba(239, 68, 68, 0.3)';
-      case 'Alta': return 'rgba(239, 68, 68, 0.3)';
-      case 'Média': return 'rgba(249, 115, 22, 0.3)';
-      case 'Baixa': return 'rgba(56, 189, 248, 0.3)';
-      default: return 'rgba(255, 255, 255, 0.1)';
     }
   };
 
@@ -138,18 +129,11 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
   const handleShowMore = (e: React.MouseEvent, date: Date, tasks: any[]) => {
     e.stopPropagation();
     const rect = (e.target as HTMLElement).getBoundingClientRect();
-    
-    // Ordenar tarefas do popover também
-    const sortedPopoverTasks = [...tasks].sort((a, b) => {
-      const order: Record<string, number> = { 'Extrema': 0, 'Alta': 1, 'Media': 2, 'Média': 2, 'Baixa': 3 };
-      return (order[a.prioridade] ?? 4) - (order[b.prioridade] ?? 4);
-    });
-
     setPopoverData({
       x: rect.left,
       y: rect.bottom + 8,
       date,
-      tasks: sortedPopoverTasks
+      tasks
     });
   };
 
@@ -231,13 +215,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
             const isSelected = isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentDate);
             
-            // Ordenação das tarefas por prioridade
-            const sortedTasks = [...dateTasks].sort((a, b) => {
-              const order: Record<string, number> = { 'Extrema': 0, 'Alta': 1, 'Media': 2, 'Média': 2, 'Baixa': 3 };
-              return (order[a.prioridade] ?? 4) - (order[b.prioridade] ?? 4);
-            });
-
-            const hiddenCount = sortedTasks.length - 4;
+            const hiddenCount = dateTasks.length - 4;
 
             return (
               <div
@@ -245,12 +223,11 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                 onClick={() => setSelectedDate(day)}
                 className={cn(
                   "min-h-[170px] p-2.5 rounded-[22px] border transition-all cursor-pointer flex flex-col group relative",
-                  !isCurrentMonth ? "opacity-30 grayscale pointer-events-none" : "",
+                  !isCurrentMonth ? "opacity-30 grayscale pointer-events-none" : isSelected ? "bg-white/[0.06] border-white/20" : "bg-white/[0.02] border-white/5 hover:border-white/10",
                   isToday(day) && !isSelected && "border-[#6366f1]/40"
                 )}
                 style={{
-                  border: isSelected ? '1.5px solid #6366f1' : '1px solid rgba(255, 255, 255, 0.05)',
-                  backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.06)' : isCurrentMonth ? 'rgba(255, 255, 255, 0.02)' : 'transparent'
+                  border: isCurrentMonth ? '1px solid rgba(255, 255, 255, 0.05)' : undefined
                 }}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -265,8 +242,8 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                   )}
                 </div>
                 
-                <div className="flex flex-col">
-                  {sortedTasks.slice(0, 4).map((task) => (
+                <div className="flex flex-col gap-1">
+                  {dateTasks.slice(0, 4).map((task) => (
                     <div
                       key={task.id}
                       style={{
@@ -274,27 +251,31 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                         alignItems: 'center',
                         gap: '6px',
                         background: 'rgba(255, 255, 255, 0.03)',
-                        border: `1px solid ${getPriorityBorderColor(task.prioridade)}`,
-                        borderRadius: '20px',
-                        padding: '2px 8px',
-                        marginBottom: '4px',
+                        borderLeft: `2px solid ${getPriorityColor(task.prioridade)}`,
+                        borderRadius: '4px',
+                        padding: '2px 6px',
                         width: '100%',
-                        cursor: 'pointer'
+                        cursor: 'pointer',
+                        transition: 'background 0.2s ease'
                       }}
+                      className="hover:bg-white/[0.06]"
                     >
+                      {/* Ponto Colorido da Prioridade (Indicator) */}
                       <div 
                         style={{
-                          width: '6px',
-                          height: '6px',
+                          width: '4px',
+                          height: '4px',
                           borderRadius: '50%',
                           backgroundColor: getPriorityColor(task.prioridade),
                           flexShrink: 0
                         }} 
                       />
                       
+                      {/* Nome da Tarefa */}
                       <span style={{ 
-                        fontSize: '10px', 
-                        color: 'rgba(255, 255, 255, 0.9)',
+                        fontSize: '9px', 
+                        fontWeight: '500',
+                        color: 'rgba(255, 255, 255, 0.85)',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis'
