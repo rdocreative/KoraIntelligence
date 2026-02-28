@@ -104,7 +104,13 @@ const PeriodContainer = ({ dayId, period, tasks, lastMovedTaskId, onUpdateTaskSt
       
       <div 
         className={cn("relative flex flex-col gap-3 transition-all custom-scrollbar", isExpanded ? "opacity-100" : "max-h-0 opacity-0 overflow-hidden")}
-        style={isExpanded ? { maxHeight: '280px', overflowY: 'auto' } : {}}
+        style={isExpanded ? { 
+          maxHeight: '320px', 
+          overflowY: 'auto', 
+          paddingBottom: '40px', 
+          maskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)', 
+          WebkitMaskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)' 
+        } : {}}
       >
         {isLoading ? (
           <div className="space-y-3">
