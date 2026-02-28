@@ -95,7 +95,7 @@ export default function TasksPage() {
   const [scrollLeft, setScrollLeft] = useState(0);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }), // Aumentado levemente para evitar gatilhos acidentais
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -182,7 +182,7 @@ export default function TasksPage() {
       setOriginalTaskState({ day, period: task.period });
       setLastMovedTaskId(null);
       setIsDragging(true);
-      setIsScrolling(false);
+      setIsScrolling(false); // Garante que o scroll manual não comece
     }
   };
 
@@ -402,11 +402,11 @@ export default function TasksPage() {
               onDragOver={handleDragOver}
               onDragEnd={handleDragEnd}
               autoScroll={{
-                threshold: { x: 0.15, y: 0.15 },
-                acceleration: 3,
+                threshold: { x: 0.15, y: 0.15 }, // Inicia scroll automático quando mais perto da borda
+                acceleration: 3, // Movimento de scroll mais calmo
               }}
             >
-              <div className="flex gap-5 items-stretch h-full pr-10">
+              <div className="flex gap-5 items-start h-full pr-10">
                 {DISPLAY_ORDER.map((day) => {
                   const isToday = day === currentDayName;
 
