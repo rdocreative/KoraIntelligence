@@ -67,7 +67,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     fetchMonthlyTasks(true); 
   }, [fetchMonthlyTasks]);
 
-  // Filtros aplicados via useMemo para evitar re-calculo desnecessário
+  // Filtros aplicados via useMemo
   const filteredTasks = useMemo(() => {
     return tasks.filter(t => {
       const priority = t.prioridade === 'Media' ? 'Média' : t.prioridade;
@@ -80,7 +80,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     });
   }, [tasks, activePriorities, activeWeekDays]);
 
-  // Agrupamento de tarefas por dia memoizado (Elimina flickering nas células)
+  // Agrupamento de tarefas por dia memoizado
   const tasksByDay = useMemo(() => {
     const map: Record<string, any[]> = {};
     filteredTasks.forEach(task => {
@@ -91,15 +91,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     return map;
   }, [filteredTasks]);
 
-  const tasksDataForDashboard = useMemo(() => {
-    return filteredTasks.reduce((acc: any, t) => {
-      const dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][getDay(new Date(t.data + 'T12:00:00'))];
-      if (!acc[dayName]) acc[dayName] = [];
-      acc[dayName].push({ id: t.id, name: t.nome, priority: t.prioridade === 'Media' ? 'Média' : t.prioridade, period: t.periodo, time: t.horario, icon: t.emoji });
-      return acc;
-    }, {});
-  }, [filteredTasks]);
-
   const getPriorityColor = (p: string) => {
     const priority = p === 'Media' || p === 'Média' ? 'Média' : p;
     switch(priority) {
@@ -107,6 +98,16 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
       case 'Média': return '#f97316';
       case 'Baixa': return '#38bdf8';
       default: return '#cbd5e1';
+    }
+  };
+
+  const getPriorityBorderColor = (p: string) => {
+    const priority = p === 'Media' || p === 'Média' ? 'Média' : p;
+    switch(priority) {
+      case 'Extrema': return 'rgba(239, 68, 68, 0.3)';
+      case 'Média': return 'rgba(249, 115, 22, 0.3)';
+      case 'Baixa': return 'rgba(56, 189, 248, 0.3)';
+      default: return 'rgba(255, 255, 255, 0.1)';
     }
   };
 
@@ -242,7 +243,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                   )}
                 </div>
                 
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col">
                   {dateTasks.slice(0, 4).map((task) => (
                     <div
                       key={task.id}
@@ -251,20 +252,19 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                         alignItems: 'center',
                         gap: '6px',
                         background: 'rgba(255, 255, 255, 0.03)',
-                        borderLeft: `2px solid ${getPriorityColor(task.prioridade)}`,
-                        borderRadius: '4px',
-                        padding: '2px 6px',
+                        border: `1px solid ${getPriorityBorderColor(task.prioridade)}`,
+                        borderRadius: '20px',
+                        padding: '2px 8px',
+                        marginBottom: '4px',
                         width: '100%',
-                        cursor: 'pointer',
-                        transition: 'background 0.2s ease'
+                        cursor: 'pointer'
                       }}
-                      className="hover:bg-white/[0.06]"
                     >
-                      {/* Ponto Colorido da Prioridade (Indicator) */}
+                      {/* Ponto Colorido da Prioridade */}
                       <div 
                         style={{
-                          width: '4px',
-                          height: '4px',
+                          width: '6px',
+                          height: '6px',
                           borderRadius: '50%',
                           backgroundColor: getPriorityColor(task.prioridade),
                           flexShrink: 0
@@ -273,9 +273,8 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                       
                       {/* Nome da Tarefa */}
                       <span style={{ 
-                        fontSize: '9px', 
-                        fontWeight: '500',
-                        color: 'rgba(255, 255, 255, 0.85)',
+                        fontSize: '10px', 
+                        color: 'rgba(255, 255, 255, 0.9)',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis'
@@ -290,7 +289,13 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
           })}
         </div>
       </div>
-      <MonthlyDashboard selectedDate={selectedDate} currentDate={currentDate} tasksData={tasksDataForDashboard} activePriorities={activePriorities} activeWeekDays={activeWeekDays} sideViewMode={sideViewMode} setSideViewMode={setSideViewMode} />
+      <MonthlyDashboard 
+        selectedDate={selectedDate} 
+        currentDate={currentDate} 
+        tasks={filteredTasks} 
+        sideViewMode={sideViewMode} 
+        setSideViewMode={setSideViewMode} 
+      />
     </div>
   );
 };
