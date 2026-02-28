@@ -53,7 +53,7 @@ const ProtectedRoute = () => {
       }}
     >
       <div
-        className="flex h-screen text-white antialiased overflow-hidden border-none outline-none ring-0 p-[10px] items-stretch gap-0"
+        className="flex h-screen text-white antialiased overflow-hidden border-none outline-none ring-0 p-[10px]"
         style={{ width: '100%', maxWidth: '1920px', display: 'flex' }}
       >
         <SideNav />
@@ -61,8 +61,7 @@ const ProtectedRoute = () => {
           className="flex-1 flex flex-col relative min-h-0 w-full overflow-hidden border border-white/10"
           style={{
             background: 'radial-gradient(ellipse 80% 60% at 60% 0%, rgba(99,102,241,0.06) 0%, transparent 60%), #0A0C10',
-            borderRadius: '20px 10px 10px 20px',
-            marginLeft: 0
+            borderRadius: '20px 10px 10px 20px'
           }}
         >
           <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-10 pt-4">
