@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Circle, Clock, Check, ChevronDown } from 'lucide-react';
+import { Circle, Clock, Check, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TaskPopover } from './TaskPopover';
 
@@ -14,11 +14,12 @@ interface TaskCardProps {
     name: string;
     time?: string;
     icon?: string;
-    priority?: 'Extrema' | 'Alta' | 'Média' | 'Baixa';
+    priority?: 'Extrema' | 'Alta' | 'Média' | 'Baixa' | 'Media';
     period?: string;
+    status?: 'pendente' | 'concluido';
   };
   isAwaitingTime?: boolean;
-  onUpdateTime?: (newTime: string) => void;
+  onUpdateStatus?: (status: 'pendente' | 'concluido') => void;
   onUpdateTask?: (taskId: string, updates: any) => void;
   defaultPeriodTime?: string;
 }
@@ -26,13 +27,15 @@ interface TaskCardProps {
 const HOURS = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
 const MINUTES = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, '0'));
 
-export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, defaultPeriodTime }: TaskCardProps) => {
+export const TaskCard = ({ task, isAwaitingTime, onUpdateStatus, onUpdateTask, defaultPeriodTime }: TaskCardProps) => {
   const initialTime = task.time || defaultPeriodTime || '09:00';
   const [hour, setHour] = useState(initialTime.split(':')[0] || '09');
   const [minute, setMinute] = useState(initialTime.split(':')[1] || '00');
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [popoverPosition, setPopoverPosition] = useState({ top: 0, left: 0 });
   const cardRef = useRef<HTMLDivElement>(null);
+
+  const isCompleted = task.status === 'concluido';
 
   useEffect(() => {
     if (isAwaitingTime) {
@@ -66,6 +69,8 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
     touchAction: 'none',
   };
 
+  const normalizedPriority = (task.priority === 'Media' ? 'Média' : task.priority) || 'Baixa';
+
   const priorityLabelColors = {
     Extrema: 'bg-red-500/20 text-red-400 border-red-500/30',
     Alta: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
@@ -74,26 +79,14 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
   };
 
   const priorityCardStyles = {
-    Extrema: {
-      background: 'linear-gradient(160deg, rgba(239,68,68,0.12) 0%, rgba(239,68,68,0.02) 100%)',
-      border: '1px solid rgba(239,68,68,0.15)'
-    },
-    Alta: {
-      background: 'linear-gradient(160deg, rgba(249,115,22,0.12) 0%, rgba(249,115,22,0.02) 100%)',
-      border: '1px solid rgba(249,115,22,0.15)'
-    },
-    Média: {
-      background: 'linear-gradient(160deg, rgba(234,179,8,0.1) 0%, rgba(234,179,8,0.02) 100%)',
-      border: '1px solid rgba(234,179,8,0.12)'
-    },
-    Baixa: {
-      background: 'linear-gradient(160deg, rgba(56,189,248,0.08) 0%, rgba(56,189,248,0.02) 100%)',
-      border: '1px solid rgba(56,189,248,0.1)'
-    }
+    Extrema: { background: 'linear-gradient(160deg, rgba(239,68,68,0.12) 0%, rgba(239,68,68,0.02) 100%)', border: '1px solid rgba(239,68,68,0.15)' },
+    Alta: { background: 'linear-gradient(160deg, rgba(249,115,22,0.12) 0%, rgba(249,115,22,0.02) 100%)', border: '1px solid rgba(249,115,22,0.15)' },
+    Média: { background: 'linear-gradient(160deg, rgba(234,179,8,0.1) 0%, rgba(234,179,8,0.02) 100%)', border: '1px solid rgba(234,179,8,0.12)' },
+    Baixa: { background: 'linear-gradient(160deg, rgba(56,189,248,0.08) 0%, rgba(56,189,248,0.02) 100%)', border: '1px solid rgba(56,189,248,0.1)' }
   };
 
   const handleConfirm = () => {
-    onUpdateTime?.(`${hour}:${minute}`);
+    onUpdateTask?.(task.id, { ...task, name: task.name, icon: task.icon, priority: task.priority, time: `${hour}:${minute}` });
   };
 
   const handleCardClick = (e: React.MouseEvent) => {
@@ -101,49 +94,38 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
     
     if (cardRef.current) {
       const rect = cardRef.current.getBoundingClientRect();
-      setPopoverPosition({
-        top: rect.top,
-        left: rect.right + 10
-      });
+      setPopoverPosition({ top: rect.top, left: rect.right + 10 });
       setIsPopoverOpen(true);
     }
   };
 
+  const toggleStatus = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onUpdateStatus?.(isCompleted ? 'pendente' : 'concluido');
+  };
+
   return (
-    <div
-      ref={setRefs}
-      style={style}
-      {...attributes}
-      {...listeners}
-      data-draggable="true"
-      className="relative group/card"
-      onClick={handleCardClick}
-    >
+    <div ref={setRefs} style={style} {...attributes} {...listeners} className="relative group/card" onClick={handleCardClick}>
       <div
         className={cn(
           "group relative flex flex-col p-4 rounded-[20px] transition-all cursor-grab active:cursor-grabbing overflow-hidden min-h-[90px]",
-          isDragging && "z-50 border-[#6366f1]/50 shadow-2xl bg-white/[0.08]"
+          isDragging && "z-50 border-[#6366f1]/50 shadow-2xl bg-white/[0.08]",
+          isCompleted && "opacity-50 grayscale-[0.3]"
         )}
-        style={{
-          ...(task.priority ? priorityCardStyles[task.priority] : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' })
-        }}
+        style={{ ...(task.priority ? priorityCardStyles[normalizedPriority as keyof typeof priorityCardStyles] : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }) }}
       >
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 flex items-center justify-center text-lg">
-              {task.icon || '📝'}
-            </div>
-            <h4 className="text-[13px] font-semibold text-zinc-100 line-clamp-1">{task.name}</h4>
+            <div className="w-6 h-6 flex items-center justify-center text-lg">{task.icon || '📝'}</div>
+            <h4 className={cn("text-[13px] font-semibold text-zinc-100 line-clamp-1", isCompleted && "line-through text-zinc-500")}>{task.name}</h4>
           </div>
         </div>
 
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.04]">
           <div className="flex items-center gap-3">
-            {task.priority && (
-              <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityLabelColors[task.priority])}>
-                {task.priority}
-              </span>
-            )}
+            <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityLabelColors[normalizedPriority as keyof typeof priorityLabelColors])}>
+              {normalizedPriority}
+            </span>
             {task.time && !isAwaitingTime && (
               <div className="flex items-center gap-1 text-[11px] text-white/75 font-medium">
                 <Clock size={10} className="text-zinc-400" />
@@ -151,57 +133,34 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
               </div>
             )}
           </div>
-          <div className="checkbox-trigger">
-            <Circle size={16} className="text-zinc-500 hover:text-zinc-200 transition-colors" />
-          </div>
+          <button onClick={toggleStatus} className="checkbox-trigger p-1 hover:bg-white/5 rounded-full transition-colors">
+            {isCompleted ? <CheckCircle2 size={16} className="text-[#6366f1]" /> : <Circle size={16} className="text-zinc-500 hover:text-zinc-200" />}
+          </button>
         </div>
 
-        {/* Time Adjust Overlay - Redesenhado */}
         {isAwaitingTime && (
-          <div 
-            className="absolute inset-0 bg-[#13151f] border border-white/10 z-20 flex flex-col p-4 animate-in fade-in zoom-in-95 duration-150 ease-out rounded-[16px]"
-            onPointerDown={(e) => e.stopPropagation()}
-          >
+          <div className="absolute inset-0 bg-[#13151f] border border-white/10 z-20 flex flex-col p-4 animate-in fade-in zoom-in-95 rounded-[16px]" onPointerDown={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-2 mb-3">
               <Clock size={12} className="text-[#6366f1]" />
               <span className="text-[10px] font-black uppercase tracking-widest text-white/50">Novo Horário</span>
             </div>
-            
             <div className="flex gap-2 flex-1 items-center">
               <div className="flex-1 flex gap-1.5 h-10">
                 <div className="relative flex-1">
-                  <select 
-                    value={hour}
-                    onChange={(e) => setHour(e.target.value)}
-                    className="w-full h-full bg-white/5 border border-white/10 rounded-[10px] px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#6366f1]/50 transition-all text-center"
-                  >
-                    {HOURS.map(h => (
-                      <option key={h} value={h} className="bg-[#13151f]">{h}</option>
-                    ))}
+                  <select value={hour} onChange={(e) => setHour(e.target.value)} className="w-full h-full bg-white/5 border border-white/10 rounded-[10px] px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#6366f1]/50 transition-all text-center">
+                    {HOURS.map(h => <option key={h} value={h} className="bg-[#13151f]">{h}</option>)}
                   </select>
                   <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
                 </div>
-
                 <span className="text-white/20 flex items-center font-bold">:</span>
-
                 <div className="relative flex-1">
-                  <select 
-                    value={minute}
-                    onChange={(e) => setMinute(e.target.value)}
-                    className="w-full h-full bg-white/5 border border-white/10 rounded-[10px] px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#6366f1]/50 transition-all text-center"
-                  >
-                    {MINUTES.map(m => (
-                      <option key={m} value={m} className="bg-[#13151f]">{m}</option>
-                    ))}
+                  <select value={minute} onChange={(e) => setMinute(e.target.value)} className="w-full h-full bg-white/5 border border-white/10 rounded-[10px] px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#6366f1]/50 transition-all text-center">
+                    {MINUTES.map(m => <option key={m} value={m} className="bg-[#13151f]">{m}</option>)}
                   </select>
                   <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
                 </div>
               </div>
-
-              <button 
-                onClick={handleConfirm}
-                className="w-10 h-10 bg-[#6366f1] text-white rounded-[10px] flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#6366f1]/20 shrink-0"
-              >
+              <button onClick={handleConfirm} className="w-10 h-10 bg-[#6366f1] text-white rounded-[10px] flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#6366f1]/20 shrink-0">
                 <Check size={18} strokeWidth={3} />
               </button>
             </div>
@@ -210,12 +169,7 @@ export const TaskCard = ({ task, isAwaitingTime, onUpdateTime, onUpdateTask, def
       </div>
 
       {isPopoverOpen && createPortal(
-        <TaskPopover 
-          task={task} 
-          position={popoverPosition}
-          onClose={() => setIsPopoverOpen(false)}
-          onSave={(updates) => onUpdateTask?.(task.id, updates)}
-        />,
+        <TaskPopover task={task} position={popoverPosition} onClose={() => setIsPopoverOpen(false)} onSave={(updates) => onUpdateTask?.(task.id, updates)} />,
         document.body
       )}
     </div>
