@@ -30,6 +30,7 @@ import { cn } from '@/lib/utils';
 import { format, getWeek, addMonths, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const INITIAL_DATA: Record<string, any[]> = {
   'Segunda': [
@@ -55,7 +56,30 @@ const WEEK_DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 
 const DISPLAY_ORDER = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
 
 export default function TasksPage() {
-  const [columns, setColumns] = useState(INITIAL_DATA);
+  const [columns, setColumns] = useState<Record<string, any[]>>({ 'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': [] });
+
+useEffect(() => {
+  (async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const hoje = new Date();
+    const diaSemana = hoje.getDay();
+    const inicioSemana = new Date(hoje);
+    inicioSemana.setDate(hoje.getDate() - diaSemana);
+    const fimSemana = new Date(inicioSemana);
+    fimSemana.setDate(inicioSemana.getDate() + 6);
+    const { data } = await supabase.from('tasks').select('*').eq('user_id', user.id).gte('data', inicioSemana.toISOString().split('T')[0]).lte('data', fimSemana.toISOString().split('T')[0]);
+    if (!data) return;
+    const dayMap: Record<number, string> = { 0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado' };
+    const newColumns: Record<string, any[]> = { 'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': [] };
+    data.forEach(task => {
+      const d = new Date(task.data + 'T12:00:00');
+      const dayName = dayMap[d.getDay()];
+      if (dayName) newColumns[dayName].push({ id: task.id, name: task.nome, time: task.horario, icon: task.emoji || '📝', priority: task.prioridade === 'Media' ? 'Média' : task.prioridade, period: task.periodo, status: task.status, date: task.data });
+    });
+    setColumns(newColumns);
+  })();
+}, []);
   const [activeTask, setActiveTask] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly');
@@ -120,7 +144,7 @@ export default function TasksPage() {
   const handleAddTask = (newTask: any) => {
     setColumns(prev => ({
       ...prev,
-      [currentDayName]: [...(prev[currentDayName] || []), newTask]
+      [newTask.date ? (() => { const d = new Date(newTask.date + 'T12:00:00'); return ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'][d.getDay()]; })() : currentDayName]: [...(prev[newTask.date ? (() => { const d = new Date(newTask.date + 'T12:00:00'); return ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'][d.getDay()]; })() : currentDayName] || []), newTask]
     }));
   };
 
