@@ -62,43 +62,47 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     }
   }, [startDate, endDate]);
 
-  // Busca inicial e busca ao mudar de mês
   useEffect(() => { 
     fetchMonthlyTasks(true); 
   }, [fetchMonthlyTasks]);
 
-  // Filtros aplicados via useMemo para evitar re-calculo desnecessário
-  const filteredTasks = useMemo(() => {
-    return tasks.filter(t => {
-      const priority = t.prioridade === 'Media' ? 'Média' : t.prioridade;
-      const dayOfWeek = getDay(new Date(t.data + 'T12:00:00'));
+  // 1. Prepare os dados (Indexação por data para alta performance)
+  const tasksByDay = useMemo(() => {
+    const map: Record<string, any[]> = {};
+    tasks.forEach(task => {
+      // Aplicando filtros de prioridade e dia da semana na indexação
+      const priority = task.prioridade === 'Media' ? 'Média' : task.prioridade;
+      const d = new Date(task.data + 'T12:00:00');
+      const dayOfWeek = getDay(d);
 
       const priorityMatch = activePriorities.length === 0 || activePriorities.includes(priority);
       const dayMatch = activeWeekDays.length === 0 || activeWeekDays.includes(dayOfWeek);
 
-      return priorityMatch && dayMatch;
-    });
-  }, [tasks, activePriorities, activeWeekDays]);
-
-  // Agrupamento de tarefas por dia memoizado (Elimina flickering nas células)
-  const tasksByDay = useMemo(() => {
-    const map: Record<string, any[]> = {};
-    filteredTasks.forEach(task => {
-      const dateKey = task.data;
-      if (!map[dateKey]) map[dateKey] = [];
-      map[dateKey].push(task);
+      if (priorityMatch && dayMatch) {
+        const dateKey = task.data; // Formato YYYY-MM-DD vindo do banco
+        if (!map[dateKey]) map[dateKey] = [];
+        map[dateKey].push(task);
+      }
     });
     return map;
-  }, [filteredTasks]);
+  }, [tasks, activePriorities, activeWeekDays]);
 
   const tasksDataForDashboard = useMemo(() => {
-    return filteredTasks.reduce((acc: any, t) => {
+    const dashboardData: Record<string, any[]> = {};
+    Object.values(tasksByDay).flat().forEach(t => {
       const dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][getDay(new Date(t.data + 'T12:00:00'))];
-      if (!acc[dayName]) acc[dayName] = [];
-      acc[dayName].push({ id: t.id, name: t.nome, priority: t.prioridade === 'Media' ? 'Média' : t.prioridade, period: t.periodo, time: t.horario, icon: t.emoji });
-      return acc;
-    }, {});
-  }, [filteredTasks]);
+      if (!dashboardData[dayName]) dashboardData[dayName] = [];
+      dashboardData[dayName].push({ 
+        id: t.id, 
+        name: t.nome, 
+        priority: t.prioridade === 'Media' ? 'Média' : t.prioridade, 
+        period: t.periodo, 
+        time: t.horario, 
+        icon: t.emoji 
+      });
+    });
+    return dashboardData;
+  }, [tasksByDay]);
 
   const getPriorityColor = (p: string) => {
     const priority = p === 'Media' || p === 'Média' ? 'Média' : p;
@@ -120,22 +124,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     }
   };
 
-  const weekDays = [
-    { label: 'D', value: 0 },
-    { label: 'S', value: 1 },
-    { label: 'T', value: 2 },
-    { label: 'Q', value: 3 },
-    { label: 'Q', value: 4 },
-    { label: 'S', value: 5 },
-    { label: 'S', value: 6 },
-  ];
-
-  const priorities = [
-    { label: 'Extrema', value: 'Extrema', activeClass: 'bg-red-500/15 border-red-500/30 text-red-300' },
-    { label: 'Média', value: 'Média', activeClass: 'bg-orange-500/15 border-orange-500/30 text-orange-300' },
-    { label: 'Baixa', value: 'Baixa', activeClass: 'bg-sky-500/15 border-sky-500/30 text-sky-300' },
-  ];
-
   const handleShowMore = (e: React.MouseEvent, date: Date, tasks: any[]) => {
     e.stopPropagation();
     const rect = (e.target as HTMLElement).getBoundingClientRect();
@@ -147,9 +135,17 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     });
   };
 
+  // Loading Global Sutil
+  if (isLoading && tasks.length === 0) {
+    return (
+      <div className="flex-1 flex items-center justify-center h-[500px]">
+         <div className="w-8 h-8 border-2 border-[#6366f1]/20 border-t-[#6366f1] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full w-full px-6 relative overflow-hidden">
-      {/* Popover */}
       {popoverData && (
         <>
           <div className="fixed inset-0 z-[9998]" onClick={() => setPopoverData(null)} />
@@ -178,7 +174,11 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-center gap-2">
             <Filter size={14} className="text-white/20 mr-1" />
-            {priorities.map(p => {
+            {[
+              { label: 'Extrema', value: 'Extrema', activeClass: 'bg-red-500/15 border-red-500/30 text-red-300' },
+              { label: 'Média', value: 'Média', activeClass: 'bg-orange-500/15 border-orange-500/30 text-orange-300' },
+              { label: 'Baixa', value: 'Baixa', activeClass: 'bg-sky-500/15 border-sky-500/30 text-sky-300' },
+            ].map(p => {
               const isActive = activePriorities.includes(p.value);
               return (
                 <button
@@ -198,7 +198,10 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
           <div className="w-px h-6 bg-white/[0.06]" />
 
           <div className="flex items-center gap-1.5">
-            {weekDays.map((d, i) => {
+            {[
+              { label: 'D', value: 0 }, { label: 'S', value: 1 }, { label: 'T', value: 2 }, 
+              { label: 'Q', value: 3 }, { label: 'Q', value: 4 }, { label: 'S', value: 5 }, { label: 'S', value: 6 }
+            ].map((d, i) => {
               const isActive = activeWeekDays.includes(d.value);
               return (
                 <button
@@ -221,6 +224,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
         <div className="grid grid-cols-7 gap-2 pb-6 overflow-y-auto custom-scrollbar relative">
           {calendarDays.map((day) => {
             const dateStr = format(day, 'yyyy-MM-dd');
+            // 2. Filtro Infalível: Usando o objeto indexado preparado no useMemo
             const dateTasks = tasksByDay[dateStr] || [];
             const isSelected = isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentDate);
@@ -253,6 +257,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                 </div>
                 
                 <div className="flex flex-col">
+                  {/* 3. Renderização: Pílulas minimalistas aprovadas */}
                   {dateTasks.slice(0, 4).map((task) => (
                     <div
                       key={task.id}
@@ -269,7 +274,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                         cursor: 'pointer'
                       }}
                     >
-                      {/* Ponto Colorido da Prioridade */}
                       <div 
                         style={{
                           width: '6px',
@@ -279,8 +283,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                           flexShrink: 0
                         }} 
                       />
-                      
-                      {/* Nome da Tarefa */}
                       <span style={{ 
                         fontSize: '10px', 
                         color: 'rgba(255, 255, 255, 0.9)',
