@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from "@/integrations/supabase/client";
+import { useSession } from '@supabase/auth-helpers-react';
 import { toast } from 'sonner';
 
 interface Habit {
@@ -24,19 +25,7 @@ const HabitContext = createContext<HabitContextType | undefined>(undefined);
 export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [loading, setLoading] = useState(true);
-  const [session, setSession] = useState<any>(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  const session = useSession();
 
   const fetchHabits = async () => {
     if (!session?.user?.id) return;
@@ -61,9 +50,6 @@ export const HabitProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     if (session?.user?.id) {
       fetchHabits();
-    } else {
-      setHabits([]);
-      setLoading(false);
     }
   }, [session?.user?.id]);
 

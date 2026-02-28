@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { supabase } from "@/integrations/supabase/client";
 import { HabitProvider } from '@/components/habits/HabitProvider';
 import SideNav from './components/SideNav';
@@ -10,59 +11,51 @@ import TasksPage from './pages/Tasks';
 import { Toaster } from 'sonner';
 
 function App() {
-  const [session, setSession] = useState<any>(null);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
   return (
-    <HabitProvider>
-      <BrowserRouter>
-        {/* Container Pai: Fundo #12141A e Gap 0 */}
-        <div className="flex h-screen overflow-hidden bg-[#12141A]">
-          <SideNav />
-          
-          {/* Container do Conteúdo: Efeito de Card #0A0C10 */}
-          <main 
-            style={{ 
-              background: '#0A0C10', 
-              borderRadius: '20px 0 0 20px', 
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              height: '100%',
-              overflow: 'hidden',
-              position: 'relative'
-            }}
-          >
-            {/* Miolo Centralizado: Trava de 1400px */}
-            <div 
+    <SessionContextProvider supabaseClient={supabase}>
+      <HabitProvider>
+        <BrowserRouter>
+          {/* Container Pai: Fundo #12141A e Gap 0 */}
+          <div className="flex h-screen overflow-hidden bg-[#12141A]">
+            <SideNav />
+            
+            {/* Container do Conteúdo: Efeito de Card #0A0C10 */}
+            <main 
               style={{ 
-                width: '100%', 
-                maxWidth: '1400px', 
-                margin: '0 auto', 
-                height: '100%', 
-                display: 'flex', 
+                background: '#0A0C10', 
+                borderRadius: '20px 0 0 20px', 
+                flex: 1,
+                display: 'flex',
                 flexDirection: 'column',
+                height: '100%',
+                overflow: 'hidden',
                 position: 'relative'
               }}
             >
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/tasks" element={<TasksPage />} />
-                <Route path="/calendar" element={<TasksPage />} />
-              </Routes>
-            </div>
-          </main>
-        </div>
-        <Toaster position="top-right" expand={false} richColors theme="dark" />
-      </BrowserRouter>
-    </HabitProvider>
+              {/* Miolo Centralizado: Trava de 1400px */}
+              <div 
+                style={{ 
+                  width: '100%', 
+                  maxWidth: '1400px', 
+                  margin: '0 auto', 
+                  height: '100%', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  position: 'relative'
+                }}
+              >
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/tasks" element={<TasksPage />} />
+                  <Route path="/calendar" element={<TasksPage />} />
+                </Routes>
+              </div>
+            </main>
+          </div>
+          <Toaster position="top-right" expand={false} richColors theme="dark" />
+        </BrowserRouter>
+      </HabitProvider>
+    </SessionContextProvider>
   );
 }
 
