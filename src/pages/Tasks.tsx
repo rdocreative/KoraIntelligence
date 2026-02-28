@@ -142,9 +142,11 @@ useEffect(() => {
   };
 
   const handleAddTask = (newTask: any) => {
+    const dayMap: Record<number, string> = { 0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado' };
+    const targetDay = newTask.date ? dayMap[new Date(newTask.date + 'T12:00:00').getDay()] : currentDayName;
     setColumns(prev => ({
       ...prev,
-      [newTask.date ? (() => { const d = new Date(newTask.date + 'T12:00:00'); return ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'][d.getDay()]; })() : currentDayName]: [...(prev[newTask.date ? (() => { const d = new Date(newTask.date + 'T12:00:00'); return ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'][d.getDay()]; })() : currentDayName] || []), newTask]
+      [targetDay]: [...(prev[targetDay] || []), newTask]
     }));
   };
 
