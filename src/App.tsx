@@ -21,29 +21,16 @@ function App() {
             
             {/* Container do Conteúdo: Efeito de Card #0A0C10 */}
             <main 
+              className="flex-1 flex justify-center"
               style={{ 
                 background: '#0A0C10', 
                 borderRadius: '20px 0 0 20px', 
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
                 height: '100%',
                 overflow: 'hidden',
                 position: 'relative'
               }}
             >
-              {/* Miolo Centralizado: Trava de 1400px */}
-              <div 
-                style={{ 
-                  width: '100%', 
-                  maxWidth: '1400px', 
-                  margin: '0 auto', 
-                  height: '100%', 
-                  display: 'flex', 
-                  flexDirection: 'column',
-                  position: 'relative'
-                }}
-              >
+              <div className="w-full max-w-[1500px]">
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/tasks" element={<TasksPage />} />
