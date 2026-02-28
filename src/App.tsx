@@ -9,7 +9,7 @@ import { SettingsProvider } from "./hooks/useSettings";
 import { HabitProvider } from "./hooks/useHabitTracker";
 import { AuthProvider, useAuth } from "./components/providers/AuthProvider";
 import { ColorProvider } from "./components/providers/ColorProvider";
-import SideNav from "./components/SideNav";
+import { SideNav } from "./components/layout/SideNav";
 
 // Pages
 import Index from "./pages/Index";
@@ -43,7 +43,7 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex h-screen w-full max-w-[1800px] mx-auto text-white antialiased bg-[#12141A] overflow-hidden border-none outline-none ring-0 p-[10px]">
+    <div className="flex h-screen w-full text-white antialiased bg-[#12141A] overflow-hidden border-none outline-none ring-0 p-[10px]">
       <SideNav />
       <div 
         className="flex-1 flex flex-col relative min-h-0 w-full overflow-hidden border border-white/10" 
