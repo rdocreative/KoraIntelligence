@@ -1,424 +1,194 @@
 "use client";
 
-import React, { useState, useMemo, useRef, useEffect } from "react";
-import { 
-  DndContext, 
-  DragOverlay, 
-  closestCorners, 
-  KeyboardSensor, 
-  PointerSensor, 
-  useSensor, 
-  useSensors,
-  DragStartEvent,
-  DragOverEvent,
-  DragEndEvent,
-  defaultDropAnimationSideEffects
-} from "@dnd-kit/core";
-import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { TaskColumn } from "@/components/tasks/TaskColumn";
-import { TaskCard } from "@/components/tasks/TaskCard";
-import { CreateTaskModal } from "@/components/tasks/CreateTaskModal";
-import { MonthlyView } from "@/components/tasks/MonthlyView";
-import { 
-  ChevronLeft, 
-  ChevronRight,
-  CalendarDays,
-  Plus,
-  LayoutGrid
-} from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { supabase } from "@/integrations/supabase/client";
+import { WeeklyBoard } from '@/components/tasks/WeeklyBoard';
+import { MonthlyView } from '@/components/tasks/MonthlyView';
+import { CreateTaskModal } from '@/components/tasks/CreateTaskModal';
+import { Plus, Calendar, LayoutGrid, Search, Bell, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { format, getWeek, addMonths, subMonths } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
-
-const INITIAL_DATA: Record<string, any[]> = {
-  'Segunda': [
-    { id: 't1', name: 'Reunião Semanal', time: '09:00', icon: '🤝', priority: 'Extrema', period: 'Morning' },
-    { id: 't2', name: 'Responder E-mails', time: '10:30', icon: '📧', priority: 'Baixa', period: 'Morning' },
-  ],
-  'Terça': [
-    { id: 't3', name: 'Design Review', time: '14:00', icon: '🎨', priority: 'Média', period: 'Afternoon' }
-  ],
-  'Quarta': [
-    { id: 't4', name: 'Deep Work: Backend', time: '08:00', icon: '💻', priority: 'Extrema', period: 'Morning' },
-    { id: 't5', name: 'Treino de Pernas', time: '18:00', icon: '🏋️‍♂️', priority: 'Média', period: 'Evening' }
-  ],
-  'Quinta': [],
-  'Sexta': [
-    { id: 't6', name: 'Happy Hour', time: '19:00', icon: '🍻', priority: 'Baixa', period: 'Evening' }
-  ],
-  'Sábado': [],
-  'Domingo': []
-};
-
-const WEEK_DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-const DISPLAY_ORDER = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+import { format, startOfWeek, endOfWeek, addDays, isSameDay } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 export default function TasksPage() {
-  const [columns, setColumns] = useState(INITIAL_DATA);
-  const [activeTask, setActiveTask] = useState<any>(null);
+  const [view, setView] = useState<'weekly' | 'monthly'>('weekly');
+  const [columns, setColumns] = useState<Record<string, any[]>>({
+    'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': []
+  });
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly');
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [lastMovedTaskId, setLastMovedTaskId] = useState<string | null>(null);
-  const [originalTaskState, setOriginalTaskState] = useState<{ day: string; period: string } | null>(null);
-  
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  );
-
-  const currentDayName = useMemo(() => {
-    return WEEK_DAYS[new Date().getDay()];
-  }, []);
-
-  const dateInfo = useMemo(() => {
-    const month = format(currentDate, "MMMM", { locale: ptBR });
-    const weekNumber = getWeek(currentDate);
-    return {
-      month: month.charAt(0).toUpperCase() + month.slice(1),
-      year: format(currentDate, "yyyy"),
-      week: weekNumber.toString().padStart(2, '0')
-    };
-  }, [currentDate]);
 
   useEffect(() => {
-    if (viewMode === 'weekly') {
-      const timer = setTimeout(() => {
-        if (scrollRef.current) {
-          const todayElement = scrollRef.current.querySelector(`[data-day="${currentDayName}"]`) as HTMLElement;
-          if (todayElement) {
-            const containerWidth = scrollRef.current.clientWidth;
-            const elementWidth = todayElement.clientWidth;
-            const elementLeft = todayElement.offsetLeft;
-            const scrollTo = elementLeft - (containerWidth / 2) + (elementWidth / 2);
-            
-            scrollRef.current.scrollTo({
-              left: scrollTo,
-              behavior: 'smooth'
-            });
-          }
-        }
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [currentDayName, viewMode]);
+    fetchTasks();
+  }, [currentDate]);
 
-  const handleNextDate = () => {
-    setCurrentDate(prev => viewMode === 'monthly' ? addMonths(prev, 1) : prev);
-  };
-
-  const handlePrevDate = () => {
-    setCurrentDate(prev => viewMode === 'monthly' ? subMonths(prev, 1) : prev);
-  };
-
-  const handleAddTask = (newTask: any) => {
-    setColumns(prev => ({
-      ...prev,
-      [currentDayName]: [...(prev[currentDayName] || []), newTask]
-    }));
-  };
-
-  const handleUpdateTask = (taskId: string, updates: any) => {
-    setColumns(prev => {
-      const newColumns = { ...prev };
-      Object.keys(newColumns).forEach(day => {
-        newColumns[day] = newColumns[day].map(task => 
-          task.id === taskId ? { ...task, ...updates } : task
-        );
-      });
-      return newColumns;
-    });
-    setLastMovedTaskId(null);
-    toast.success("Tarefa atualizada!");
-  };
-
-  const findDay = (id: string) => {
-    if (DISPLAY_ORDER.includes(id)) return id;
-    if (id.includes(':')) return id.split(':')[0];
-    return Object.keys(columns).find((key) => columns[key].find((task) => task.id === id));
-  };
-
-  const handleDragStart = (event: DragStartEvent) => {
-    const { active } = event;
-    const day = findDay(active.id as string);
-    if (day) {
-      const task = columns[day].find((t) => t.id === active.id);
-      setActiveTask(task);
-      setOriginalTaskState({ day, period: task.period });
-      setLastMovedTaskId(null);
-    }
-  };
-
-  const handleDragOver = (event: DragOverEvent) => {
-    const { active, over } = event;
-    if (!over) return;
-
-    const activeId = active.id as string;
-    const overId = over.id as string;
-
-    const activeDay = findDay(activeId);
-    let overDay = findDay(overId);
-
-    if (!activeDay || !overDay) return;
-
-    let overPeriod = activeTask?.period;
-    if (overId.includes(':')) {
-      overPeriod = overId.split(':')[1];
-    } else {
-      const targetTask = columns[overDay].find(t => t.id === overId);
-      if (targetTask) overPeriod = targetTask.period;
-    }
-
-    if (activeDay !== overDay || activeTask?.period !== overPeriod) {
-      setColumns((prev) => {
-        const activeItems = prev[activeDay].filter(i => i.id !== activeId);
-        const overItems = [...prev[overDay]];
-        
-        const taskToMove = { ...activeTask, period: overPeriod };
-        
-        const overIndex = overItems.findIndex(i => i.id === overId);
-        const newIndex = overIndex >= 0 ? overIndex : overItems.length;
-
-        if (activeDay === overDay) {
-          const updatedDayItems = prev[activeDay].filter(i => i.id !== activeId);
-          updatedDayItems.splice(newIndex, 0, taskToMove);
-          return { ...prev, [activeDay]: updatedDayItems };
-        }
-
-        return {
-          ...prev,
-          [activeDay]: activeItems,
-          [overDay]: [
-            ...overItems.slice(0, newIndex),
-            taskToMove,
-            ...overItems.slice(newIndex)
-          ]
-        };
-      });
-      
-      if (activeTask) {
-        setActiveTask({ ...activeTask, period: overPeriod });
-      }
-    }
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over) {
-      setActiveTask(null);
-      setOriginalTaskState(null);
+  async function fetchTasks() {
+    setIsLoading(true);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setIsLoading(false);
       return;
     }
 
-    const activeId = active.id as string;
-    const overId = over.id as string;
-    const activeDay = findDay(activeId);
-    const overDay = findDay(overId);
+    const sOfWeek = startOfWeek(currentDate, { weekStartsOn: 1 });
+    const eOfWeek = endOfWeek(currentDate, { weekStartsOn: 1 });
 
-    if (activeTask && originalTaskState) {
-      const overPeriod = activeTask.period;
-      if (activeDay !== originalTaskState.day || overPeriod !== originalTaskState.period) {
-        const [hours] = (activeTask.time || "09:00").split(':').map(Number);
-        const periodBounds: Record<string, { start: number; end: number; default: string }> = {
-          Morning: { start: 6, end: 12, default: '09:00' },
-          Afternoon: { start: 12, end: 18, default: '15:00' },
-          Evening: { start: 18, end: 24, default: '21:00' },
-          Dawn: { start: 0, end: 6, default: '03:00' }
-        };
+    const { data, error } = await supabase
+      .from('tasks')
+      .select('*')
+      .eq('user_id', user.id)
+      .gte('data', format(sOfWeek, 'yyyy-MM-dd'))
+      .lte('data', format(eOfWeek, 'yyyy-MM-dd'));
 
-        const bounds = periodBounds[overPeriod];
-        if (bounds) {
-          const isValid = hours >= bounds.start && hours < bounds.end;
-          if (!isValid) {
-            const newTime = bounds.default;
-            setColumns(prev => {
-              const updated = { ...prev };
-              const currentDay = findDay(activeId);
-              if (currentDay) {
-                updated[currentDay] = updated[currentDay].map(t => 
-                  t.id === activeId ? { ...t, time: newTime } : t
-                );
-              }
-              return updated;
-            });
-            toast.info(`Horário ajustado para ${newTime}`);
-          }
-        }
-        setLastMovedTaskId(activeId);
-      }
+    if (error) {
+      toast.error("Erro ao carregar tarefas");
+      setIsLoading(false);
+      return;
     }
 
-    if (activeDay && overDay && activeDay === overDay) {
-      const activeIndex = columns[activeDay].findIndex((i) => i.id === active.id);
-      const overIndex = columns[overDay].findIndex((i) => i.id === over.id);
+    const newColumns: Record<string, any[]> = {
+      'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': []
+    };
 
-      if (activeIndex !== overIndex && overIndex !== -1) {
-        setColumns((prev) => ({
-          ...prev,
-          [activeDay]: arrayMove(prev[activeDay], activeIndex, overIndex)
-        }));
+    const dayMap: Record<number, string> = { 0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado' };
+
+    (data || []).forEach(task => {
+      const date = new Date(task.data + 'T12:00:00');
+      const dayName = dayMap[date.getDay()];
+      if (dayName && newColumns[dayName]) {
+        newColumns[dayName].push({
+          id: task.id,
+          name: task.nome,
+          time: task.horario,
+          icon: task.emoji || '📝',
+          priority: task.prioridade === 'Media' ? 'Média' : task.prioridade,
+          period: task.periodo,
+          status: task.status,
+          date: task.data
+        });
+      }
+    });
+
+    setColumns(newColumns);
+    setIsLoading(false);
+  }
+
+  const handleUpdateTask = async (taskId: string, updates: any) => {
+    // Atualização local imediata
+    setColumns(prev => {
+      const next = { ...prev };
+      Object.keys(next).forEach(day => {
+        next[day] = next[day].map(t => t.id === taskId ? { ...t, ...updates } : t);
+      });
+      return next;
+    });
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { error } = await supabase.from('tasks').update({
+        nome: updates.name,
+        horario: updates.time,
+        prioridade: updates.priority === 'Média' ? 'Media' : updates.priority,
+        periodo: updates.period,
+        status: updates.status,
+        emoji: updates.icon
+      }).eq('id', taskId).eq('user_id', user.id);
+
+      if (error) {
+        toast.error("Erro ao salvar alterações");
+        fetchTasks();
       }
     }
-
-    setActiveTask(null);
-    setOriginalTaskState(null);
   };
 
-  const onMouseDown = (e: React.MouseEvent) => {
-    if (viewMode !== 'weekly') return;
-    if (!scrollRef.current) return;
-    if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('[data-draggable]')) return;
-    
-    setIsScrolling(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
+  const handleDragEnd = async (taskId: string, dateStr: string, periodId: string, time: string) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { error } = await supabase.from('tasks').update({
+        periodo: periodId,
+        horario: time,
+        data: dateStr
+      }).eq('id', taskId).eq('user_id', user.id);
+
+      if (error) {
+        toast.error("Erro ao sincronizar movimento");
+        fetchTasks();
+      }
+    }
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0 relative">
-      <header className="flex items-center justify-between py-6 shrink-0 px-8">
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
-            <button onClick={handlePrevDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronLeft size={18} /></button>
-            <h2 className="flex items-baseline gap-2 text-white tracking-tight">
-              <span className="text-[22px] font-semibold">{dateInfo.month} {viewMode === 'monthly' && dateInfo.year}</span>
-              <span className="text-[12px] font-medium text-white/35 tracking-[0.1em] uppercase">
-                — {viewMode === 'monthly' ? 'Mês' : `Semana ${dateInfo.week}`}
-              </span>
-            </h2>
-            <button onClick={handleNextDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronRight size={18} /></button>
+    <div className="flex flex-col h-screen bg-[#050505] text-white selection:bg-[#6366f1]/30">
+      <header className="h-20 shrink-0 border-b border-white/[0.04] px-8 flex items-center justify-between bg-[#050505]/80 backdrop-blur-xl z-30">
+        <div className="flex items-center gap-8">
+          <h1 className="text-xl font-bold tracking-tight">Tarefas</h1>
+          <div className="flex bg-white/5 p-1 rounded-xl">
+            <button 
+              onClick={() => setView('weekly')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                view === 'weekly' ? "bg-[#6366f1] text-white" : "text-zinc-500 hover:text-zinc-300"
+              )}
+            >
+              <Calendar size={12} />
+              Semana
+            </button>
+            <button 
+              onClick={() => setView('monthly')}
+              className={cn(
+                "flex items-center gap-2 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all",
+                view === 'monthly' ? "bg-[#6366f1] text-white" : "text-zinc-500 hover:text-zinc-300"
+              )}
+            >
+              <LayoutGrid size={12} />
+              Mês
+            </button>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div 
-            className="flex items-center p-1"
-            style={{ 
-              background: 'rgba(255, 255, 255, 0.04)', 
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              borderRadius: '10px'
-            }}
-          >
-            <button 
-              onClick={() => setViewMode('weekly')}
-              className={cn(
-                "flex items-center gap-2 px-4 py-1.5 rounded-[8px] text-[12px] font-medium transition-all",
-                viewMode === 'weekly' 
-                  ? "text-white" 
-                  : "text-white/35 hover:text-zinc-300"
-              )}
-              style={{
-                background: viewMode === 'weekly' ? 'rgba(255, 255, 255, 0.08)' : 'transparent'
-              }}
-            >
-              <LayoutGrid size={14} />
-              <span>Semanal</span>
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-2xl border border-white/[0.03]">
+            <button onClick={() => setCurrentDate(addDays(currentDate, -7))} className="p-1 hover:bg-white/5 rounded-lg text-zinc-500 transition-colors">
+              <ChevronLeft size={16} />
             </button>
-            <button 
-              onClick={() => setViewMode('monthly')}
-              className={cn(
-                "flex items-center gap-2 px-4 py-1.5 rounded-[8px] text-[12px] font-medium transition-all",
-                viewMode === 'monthly' 
-                  ? "text-white" 
-                  : "text-white/35 hover:text-zinc-300"
-              )}
-              style={{
-                background: viewMode === 'monthly' ? 'rgba(255, 255, 255, 0.08)' : 'transparent'
-              }}
-            >
-              <CalendarDays size={14} />
-              <span>Mensal</span>
+            <span className="text-[11px] font-black uppercase tracking-widest min-w-[120px] text-center">
+              {format(startOfWeek(currentDate, { weekStartsOn: 1 }), "dd MMM", { locale: ptBR })} - {format(endOfWeek(currentDate, { weekStartsOn: 1 }), "dd MMM", { locale: ptBR })}
+            </span>
+            <button onClick={() => setCurrentDate(addDays(currentDate, 7))} className="p-1 hover:bg-white/5 rounded-lg text-zinc-500 transition-colors">
+              <ChevronRight size={16} />
             </button>
           </div>
         </div>
       </header>
 
-      <div className="flex-1 relative min-h-0 overflow-hidden">
-        {viewMode === 'weekly' ? (
-          <div 
-            ref={scrollRef}
-            onMouseDown={onMouseDown}
-            onMouseLeave={() => setIsScrolling(false)}
-            onMouseUp={() => setIsScrolling(false)}
-            onMouseMove={(e) => {
-              if (!isScrolling || !scrollRef.current) return;
-              e.preventDefault();
-              const x = e.pageX - scrollRef.current.offsetLeft;
-              const walk = (x - startX) * 1.5; 
-              scrollRef.current.scrollLeft = scrollLeft - walk;
-            }}
-            style={{
-              maskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)'
-            }}
-            className={cn(
-              "h-full flex pb-8 overflow-x-auto custom-scrollbar cursor-grab select-none px-10",
-              isScrolling && "cursor-grabbing"
-            )}
-          >
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCorners}
-              onDragStart={handleDragStart}
-              onDragOver={handleDragOver}
-              onDragEnd={handleDragEnd}
-            >
-              <div className="flex gap-5 items-start h-full pr-10">
-                {DISPLAY_ORDER.map((day) => {
-                  const isToday = day === currentDayName;
-
-                  return (
-                    <TaskColumn 
-                      key={day} 
-                      id={day} 
-                      title={day} 
-                      tasks={columns[day] || []} 
-                      isToday={isToday}
-                      lastMovedTaskId={lastMovedTaskId}
-                      onUpdateTaskTime={(taskId, newTime) => handleUpdateTask(taskId, { time: newTime })}
-                      onUpdateTask={handleUpdateTask}
-                    />
-                  );
-                })}
-              </div>
-
-              <DragOverlay dropAnimation={{
-                sideEffects: defaultDropAnimationSideEffects({
-                  styles: { active: { opacity: '0.5' } },
-                }),
-              }}>
-                {activeTask ? <TaskCard task={activeTask} /> : null}
-              </DragOverlay>
-            </DndContext>
-          </div>
-        ) : (
-          <MonthlyView 
-            tasksData={columns} 
-            currentDate={currentDate}
+      <main className="flex-1 overflow-hidden relative">
+        {view === 'weekly' ? (
+          <WeeklyBoard 
+            tasks={Object.values(columns).flat()} 
+            isLoading={isLoading} 
+            onUpdateTask={handleUpdateTask}
+            onDragEndCallback={handleDragEnd}
           />
+        ) : (
+          <MonthlyView currentDate={currentDate} />
         )}
-      </div>
-
-      <button
-        onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-10 right-10 w-16 h-16 bg-[#6366f1] hover:bg-[#6366f1]/90 text-white rounded-full shadow-2xl shadow-[#6366f1]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50"
-        title="Criar nova tarefa"
-      >
-        <Plus size={32} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
-      </button>
+      </main>
 
       <CreateTaskModal 
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleAddTask}
-        selectedDay={currentDayName}
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSave={() => fetchTasks()} 
+        selectedDay={format(new Date(), 'EEEE', { locale: ptBR })} 
       />
+
+      <button 
+        onClick={() => setIsModalOpen(true)}
+        className="fixed bottom-10 right-10 w-16 h-16 bg-[#6366f1] rounded-3xl flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all z-50 group hover:shadow-[#6366f1]/40"
+      >
+        <Plus size={28} className="group-hover:rotate-90 transition-transform duration-500" />
+      </button>
     </div>
   );
 }
