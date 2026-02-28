@@ -53,6 +53,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.4
         version: 1.2.0(@types/react-dom@19.2.3(@types/react@19.2.8))(@types/react@19.2.8)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@supabase/auth-helpers-react':
+        specifier: ^0.15.0
+        version: 0.15.0(@supabase/supabase-js@2.97.0)
       '@supabase/supabase-js':
         specifier: ^2.97.0
         version: 2.97.0
@@ -997,6 +1000,12 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@supabase/auth-helpers-react@0.15.0':
+    resolution: {integrity: sha512-ddyCelBWeOtBNJiJ1x947ZxVEbjydIvpo9hIQ/J/uf+ozLj2buOal+P273rfUIyUf5mIfOtWo9l2hnAqsP/x0w==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+    peerDependencies:
+      '@supabase/supabase-js': ^2.76.1
+
   '@supabase/auth-js@2.97.0':
     resolution: {integrity: sha512-2Og/1lqp+AIavr8qS2X04aSl8RBY06y4LrtIAGxat06XoXYiDxKNQMQzWDAKm1EyZFZVRNH48DO5YvIZ7la5fQ==}
     engines: {node: '>=20.0.0'}
@@ -1331,6 +1340,10 @@ packages:
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+
+  cookie@1.1.1:
+    resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
+    engines: {node: '>=18'}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -2986,6 +2999,11 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.40.0':
     optional: true
 
+  '@supabase/auth-helpers-react@0.15.0(@supabase/supabase-js@2.97.0)':
+    dependencies:
+      '@supabase/supabase-js': 2.97.0
+      cookie: 1.1.1
+
   '@supabase/auth-js@2.97.0':
     dependencies:
       tslib: 2.8.1
@@ -3335,6 +3353,8 @@ snapshots:
   commander@4.1.1: {}
 
   concat-map@0.0.1: {}
+
+  cookie@1.1.1: {}
 
   cross-spawn@7.0.6:
     dependencies:
