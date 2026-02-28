@@ -13,7 +13,7 @@ import { SideNav } from "./components/layout/SideNav";
 
 // Pages
 import Index from "./pages/Index";
-import HabitsPage from "./pages/Habits";
+import HabitsPage from "./pages/HabitsPage";
 import TasksPage from "./pages/Tasks";
 import SettingsPage from "./pages/Settings";
 import MissionsPage from "./pages/Missions";
