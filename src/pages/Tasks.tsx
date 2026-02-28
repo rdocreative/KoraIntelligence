@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
+import { Sidebar } from '@/components/layout/Sidebar';
+import { Header } from '@/components/layout/Header';
 import { WeeklyView } from '@/components/tasks/WeeklyView';
 import { MonthlyView } from '@/components/tasks/MonthlyView';
 import { Calendar, LayoutGrid } from 'lucide-react';
@@ -12,11 +14,12 @@ const Tasks = () => {
 
   return (
     <div className="flex h-screen bg-[#090a0f] text-white overflow-hidden">
-      {/* Removido Sidebar e Header que causavam erro de importação */}
+      <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
+        <Header title="Minhas Tarefas" />
+        
         <main className="flex-1 flex flex-col overflow-hidden pt-6">
           <div className="px-8 mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-bold">Minhas Tarefas</h1>
             <div className="flex items-center gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/[0.06]">
               <button
                 onClick={() => setView('weekly')}
@@ -43,7 +46,6 @@ const Tasks = () => {
 
           <div className="flex-1 overflow-hidden">
             {view === 'weekly' ? (
-              /* Certifique-se de que o componente WeeklyView existe ou remova-o se necessário */
               <WeeklyView currentDate={currentDate} />
             ) : (
               <MonthlyView currentDate={currentDate} />

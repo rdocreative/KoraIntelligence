@@ -7,9 +7,8 @@ import {
   endOfWeek, 
   startOfMonth, 
   endOfMonth, 
-  isSameDay,
-  isSameWeek,
-  isSameMonth
+  eachDayOfInterval, 
+  getDay 
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Clock, Sun, Coffee, Moon, Zap, Target } from 'lucide-react';
@@ -20,10 +19,22 @@ type ViewMode = 'day' | 'week' | 'month';
 interface MonthlyDashboardProps {
   selectedDate: Date;
   currentDate: Date;
-  tasks: any[];
+  tasksData: Record<string, any[]>;
+  activePriorities: string[];
+  activeWeekDays: number[];
   sideViewMode: ViewMode;
   setSideViewMode: (mode: ViewMode) => void;
 }
+
+const WEEK_DAYS_MAP: Record<number, string> = {
+  0: 'Domingo',
+  1: 'Segunda',
+  2: 'Terça',
+  3: 'Quarta',
+  4: 'Quinta',
+  5: 'Sexta',
+  6: 'Sábado'
+};
 
 const PRIORITY_WEIGHT: Record<string, number> = {
   'Extrema': 1,
@@ -62,31 +73,54 @@ const getPeriodInfo = (period: string) => {
 export const MonthlyDashboard = ({ 
   selectedDate, 
   currentDate, 
-  tasks,
+  tasksData, 
+  activePriorities, 
+  activeWeekDays,
   sideViewMode,
   setSideViewMode
 }: MonthlyDashboardProps) => {
 
   const sideTasks = useMemo(() => {
-    return tasks.filter(task => {
-      const taskDate = new Date(task.data + 'T12:00:00');
-      
-      if (sideViewMode === 'day') {
-        return isSameDay(taskDate, selectedDate);
-      } else if (sideViewMode === 'week') {
-        return isSameWeek(taskDate, selectedDate, { weekStartsOn: 0 });
-      } else {
-        // Modo Mês: Considera todas as tarefas do mês da currentDate
-        return isSameMonth(taskDate, currentDate);
-      }
-    }).sort((a, b) => 
-      (PRIORITY_WEIGHT[a.prioridade] || 99) - (PRIORITY_WEIGHT[b.prioridade] || 99)
-    );
-  }, [tasks, sideViewMode, selectedDate, currentDate]);
+    let interval: Date[] = [];
+    if (sideViewMode === 'day') {
+      interval = [selectedDate];
+    } else if (sideViewMode === 'week') {
+      interval = eachDayOfInterval({
+        start: startOfWeek(selectedDate, { weekStartsOn: 1 }),
+        end: endOfWeek(selectedDate, { weekStartsOn: 1 })
+      });
+    } else {
+      interval = eachDayOfInterval({
+        start: startOfMonth(currentDate),
+        end: endOfMonth(currentDate)
+      });
+    }
 
-  // Variáveis solicitadas para contagem real
-  const totalTasks = sideTasks.length;
-  const extremeTasks = sideTasks.filter(t => t.prioridade === 'Extrema').length;
+    const tasks = interval.flatMap(date => {
+      const dayOfWeek = getDay(date);
+      const dayName = WEEK_DAYS_MAP[dayOfWeek];
+      const allTasks = tasksData[dayName] || [];
+
+      return allTasks
+        .filter(task => {
+          const matchesPriority = activePriorities.length === 0 || activePriorities.includes(task.priority);
+          const matchesDay = activeWeekDays.length === 0 || activeWeekDays.includes(dayOfWeek);
+          return matchesPriority && matchesDay;
+        })
+        .map(t => ({ ...t, date }));
+    });
+
+    return tasks.sort((a, b) => 
+      (PRIORITY_WEIGHT[a.priority] || 99) - (PRIORITY_WEIGHT[b.priority] || 99)
+    );
+  }, [sideViewMode, selectedDate, currentDate, activePriorities, activeWeekDays, tasksData]);
+
+  const summary = useMemo(() => {
+    return {
+      total: sideTasks.length,
+      extreme: sideTasks.filter(t => t.priority === 'Extrema').length
+    };
+  }, [sideTasks]);
 
   return (
     <div className="w-[320px] flex flex-col animate-in slide-in-from-right duration-500 py-2 h-full min-h-0 shrink-0">
@@ -121,12 +155,12 @@ export const MonthlyDashboard = ({
             <div className="flex items-center gap-2">
                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/90">
                 {sideViewMode === 'day' ? format(selectedDate, "EEEE", { locale: ptBR }) : 
-                 sideViewMode === 'week' ? `Semana de ${format(startOfWeek(selectedDate, { weekStartsOn: 0 }), "d 'de' MMM", { locale: ptBR })}` : 
-                 format(currentDate, "MMMM 'de' yyyy", { locale: ptBR })}
+                 sideViewMode === 'week' ? `Semana de ${format(startOfWeek(selectedDate, { weekStartsOn: 1 }), "d", { locale: ptBR })}` : 
+                 format(currentDate, "MMMM", { locale: ptBR })}
               </span>
             </div>
             <h3 className="text-2xl font-bold text-white truncate leading-none">
-              Resumo do {sideViewMode === 'day' ? 'Dia' : sideViewMode === 'week' ? 'Período' : 'Mês'}
+              Resumo do Dia
             </h3>
           </div>
 
@@ -136,14 +170,14 @@ export const MonthlyDashboard = ({
                 <Target size={12} />
                 <span className="text-[9px] font-black uppercase tracking-widest">Total</span>
               </div>
-              <span className="text-xl font-black text-white">{totalTasks}</span>
+              <span className="text-xl font-black text-white">{summary.total}</span>
             </div>
             <div className="bg-red-500/[0.03] border border-red-500/10 rounded-2xl p-3 flex flex-col gap-1">
               <div className="flex items-center gap-2 text-red-500/70">
                 <Zap size={12} />
                 <span className="text-[9px] font-black uppercase tracking-widest">Extrema</span>
               </div>
-              <span className="text-xl font-black text-red-500">{extremeTasks}</span>
+              <span className="text-xl font-black text-red-500">{summary.extreme}</span>
             </div>
           </div>
         </div>
@@ -151,9 +185,9 @@ export const MonthlyDashboard = ({
         <div className="flex-1 overflow-y-auto custom-scrollbar p-5 pb-32 space-y-4 min-h-0">
           {sideTasks.length > 0 ? (
             sideTasks.map((task, idx) => {
-              const periodInfo = getPeriodInfo(task.periodo);
+              const periodInfo = getPeriodInfo(task.period);
               const PeriodIcon = periodInfo.icon;
-              const styles = PERIOD_STYLES[task.periodo] || PERIOD_STYLES.Dawn;
+              const styles = PERIOD_STYLES[task.period] || PERIOD_STYLES.Dawn;
 
               return (
                 <div 
@@ -174,30 +208,30 @@ export const MonthlyDashboard = ({
                       </div>
                       {sideViewMode !== 'day' && (
                         <span className="text-[9px] font-bold text-zinc-500 bg-white/5 px-2 py-0.5 rounded-full">
-                          {format(new Date(task.data + 'T12:00:00'), "dd/MM")}
+                          {format(task.date, "dd/MM")}
                         </span>
                       )}
                     </div>
 
                     <div className="flex items-center gap-3 mb-6">
-                      <span className="text-2xl filter drop-shadow-md shrink-0">{task.emoji}</span>
+                      <span className="text-2xl filter drop-shadow-md shrink-0">{task.icon}</span>
                       <h4 className="text-[15px] font-bold text-white/95 group-hover:text-white transition-colors leading-tight line-clamp-2">
-                        {task.nome}
+                        {task.name}
                       </h4>
                     </div>
                     
                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/[0.03]">
                       <div className={cn(
                         "px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border",
-                        task.prioridade === 'Extrema' ? "bg-red-500/10 text-red-500 border-red-500/20" :
-                        task.prioridade === 'Média' ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : 
+                        task.priority === 'Extrema' ? "bg-red-500/10 text-red-500 border-red-500/20" :
+                        task.priority === 'Média' ? "bg-amber-500/10 text-amber-500 border-amber-500/20" : 
                         "bg-blue-500/10 text-blue-500 border-blue-500/20"
                       )}>
-                        {task.prioridade}
+                        {task.priority}
                       </div>
                       <div className="flex items-center gap-1.5 text-[11px] text-zinc-400 font-bold">
                         <Clock size={12} className="text-zinc-600" />
-                        {task.horario}
+                        {task.time}
                       </div>
                     </div>
                   </div>
