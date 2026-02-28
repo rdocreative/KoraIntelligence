@@ -9,7 +9,7 @@ import { SettingsProvider } from "./hooks/useSettings";
 import { HabitProvider } from "./hooks/useHabitTracker";
 import { AuthProvider, useAuth } from "./components/providers/AuthProvider";
 import { ColorProvider } from "./components/providers/ColorProvider";
-import { SideNav } from "./components/layout/SideNav";
+import SideNav from "./components/SideNav";
 
 // Pages
 import Index from "./pages/Index";
@@ -43,19 +43,21 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex h-screen w-full text-white antialiased bg-[#12141A] overflow-hidden border-none outline-none ring-0 p-[10px]">
-      <SideNav />
-      <div 
-        className="flex-1 flex flex-col relative min-h-0 w-full overflow-hidden border border-white/10" 
-        style={{ 
-          background: 'radial-gradient(ellipse 80% 60% at 60% 0%, rgba(99,102,241,0.06) 0%, transparent 60%), #0A0C10',
-          borderRadius: '20px 10px 10px 20px'
-        }}
-      >
-        <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-10 pt-4">
-          <main className="flex-1 flex flex-col">
-            <Outlet />
-          </main>
+    <div className="h-screen w-full bg-[#0A0C10] flex items-center justify-center overflow-hidden">
+      <div className="flex h-full w-full max-w-[1600px] mx-auto text-white antialiased bg-transparent overflow-hidden border-none outline-none ring-0 p-[10px]">
+        <SideNav />
+        <div 
+          className="flex-1 flex flex-col relative min-h-0 w-full overflow-hidden border border-white/10" 
+          style={{ 
+            background: 'radial-gradient(ellipse 80% 60% at 60% 0%, rgba(99,102,241,0.06) 0%, transparent 60%), #0A0C10',
+            borderRadius: '20px 10px 10px 20px'
+          }}
+        >
+          <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-10 pt-4">
+            <main className="flex-1 flex flex-col">
+              <Outlet />
+            </main>
+          </div>
         </div>
       </div>
     </div>
