@@ -32,14 +32,56 @@ import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
+const INITIAL_DATA: Record<string, any[]> = {
+  'Segunda': [
+    { id: 't1', name: 'Reunião Semanal', time: '09:00', icon: '🤝', priority: 'Extrema', period: 'Morning' },
+    { id: 't2', name: 'Responder E-mails', time: '10:30', icon: '📧', priority: 'Baixa', period: 'Morning' },
+  ],
+  'Terça': [
+    { id: 't3', name: 'Design Review', time: '14:00', icon: '🎨', priority: 'Média', period: 'Afternoon' }
+  ],
+  'Quarta': [
+    { id: 't4', name: 'Deep Work: Backend', time: '08:00', icon: '💻', priority: 'Extrema', period: 'Morning' },
+    { id: 't5', name: 'Treino de Pernas', time: '18:00', icon: '🏋️‍♂️', priority: 'Média', period: 'Evening' }
+  ],
+  'Quinta': [],
+  'Sexta': [
+    { id: 't6', name: 'Happy Hour', time: '19:00', icon: '🍻', priority: 'Baixa', period: 'Evening' }
+  ],
+  'Sábado': [],
+  'Domingo': []
+};
+
 const WEEK_DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 const DISPLAY_ORDER = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
 
 export default function TasksPage() {
   const [columns, setColumns] = useState<Record<string, any[]>>({ 'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': [] });
+
+useEffect(() => {
+  (async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const hoje = new Date();
+    const diaSemana = hoje.getDay();
+    const inicioSemana = new Date(hoje);
+    inicioSemana.setDate(hoje.getDate() - diaSemana);
+    const fimSemana = new Date(inicioSemana);
+    fimSemana.setDate(inicioSemana.getDate() + 6);
+    const { data } = await supabase.from('tasks').select('*').eq('user_id', user.id).gte('data', inicioSemana.toISOString().split('T')[0]).lte('data', fimSemana.toISOString().split('T')[0]);
+    if (!data) return;
+    const dayMap: Record<number, string> = { 0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado' };
+    const newColumns: Record<string, any[]> = { 'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': [] };
+    data.forEach(task => {
+      const d = new Date(task.data + 'T12:00:00');
+      const dayName = dayMap[d.getDay()];
+      if (dayName) newColumns[dayName].push({ id: task.id, name: task.nome, time: task.horario, icon: task.emoji || '📝', priority: task.prioridade === 'Media' ? 'Média' : task.prioridade, period: task.periodo, status: task.status, date: task.data });
+    });
+    setColumns(newColumns);
+  })();
+}, []);
   const [activeTask, setActiveTask] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState<any>(null);
   const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [lastMovedTaskId, setLastMovedTaskId] = useState<string | null>(null);
@@ -49,45 +91,6 @@ export default function TasksPage() {
   const [isScrolling, setIsScrolling] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
-
-  const fetchTasks = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-    
-    const hoje = new Date();
-    const diaSemana = hoje.getDay();
-    const inicioSemana = new Date(hoje);
-    inicioSemana.setDate(hoje.getDate() - diaSemana);
-    const fimSemana = new Date(inicioSemana);
-    fimSemana.setDate(inicioSemana.getDate() + 6);
-    
-    const { data } = await supabase.from('tasks').select('*').eq('user_id', user.id).gte('data', inicioSemana.toISOString().split('T')[0]).lte('data', fimSemana.toISOString().split('T')[0]);
-    if (!data) return;
-    
-    const dayMap: Record<number, string> = { 0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado' };
-    const newColumns: Record<string, any[]> = { 'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': [] };
-    
-    data.forEach(task => {
-      const d = new Date(task.data + 'T12:00:00');
-      const dayName = dayMap[d.getDay()];
-      if (dayName) newColumns[dayName].push({ 
-        id: task.id, 
-        name: task.nome, 
-        time: task.horario, 
-        icon: task.emoji || '📝', 
-        priority: task.prioridade === 'Media' ? 'Média' : task.prioridade, 
-        period: task.periodo, 
-        status: task.status, 
-        date: task.data,
-        description: task.descricao
-      });
-    });
-    setColumns(newColumns);
-  };
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -138,64 +141,27 @@ export default function TasksPage() {
     setCurrentDate(prev => viewMode === 'monthly' ? subMonths(prev, 1) : prev);
   };
 
-  const handleAddTask = () => {
-    fetchTasks();
-    setIsModalOpen(false);
-    setEditingTask(null);
+  const handleAddTask = (newTask: any) => {
+    const dayMap: Record<number, string> = { 0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado' };
+    const targetDay = newTask.date ? dayMap[new Date(newTask.date + 'T12:00:00').getDay()] : currentDayName;
+    setColumns(prev => ({
+      ...prev,
+      [targetDay]: [...(prev[targetDay] || []), newTask]
+    }));
   };
 
-  const handleEditTask = (task: any) => {
-    setEditingTask(task);
-    setIsModalOpen(true);
-  };
-
-  const handleDeleteTask = async (taskId: string) => {
-    try {
-      const { error } = await supabase.from('tasks').delete().eq('id', taskId);
-      if (error) throw error;
-      
-      setColumns(prev => {
-        const newColumns = { ...prev };
-        Object.keys(newColumns).forEach(day => {
-          newColumns[day] = newColumns[day].filter(task => task.id !== taskId);
-        });
-        return newColumns;
+  const handleUpdateTask = (taskId: string, updates: any) => {
+    setColumns(prev => {
+      const newColumns = { ...prev };
+      Object.keys(newColumns).forEach(day => {
+        newColumns[day] = newColumns[day].map(task => 
+          task.id === taskId ? { ...task, ...updates } : task
+        );
       });
-      toast.success("Tarefa excluída com sucesso!");
-    } catch (error) {
-      console.error("Erro ao excluir tarefa:", error);
-      toast.error("Erro ao excluir tarefa.");
-    }
-  };
-
-  const handleUpdateTask = async (taskId: string, updates: any) => {
-    try {
-      const { error } = await supabase.from('tasks').update({
-        nome: updates.name,
-        horario: updates.time,
-        prioridade: updates.priority === 'Média' ? 'Media' : updates.priority,
-        periodo: updates.period,
-        status: updates.status,
-        emoji: updates.icon
-      }).eq('id', taskId);
-      
-      if (error) throw error;
-
-      setColumns(prev => {
-        const newColumns = { ...prev };
-        Object.keys(newColumns).forEach(day => {
-          newColumns[day] = newColumns[day].map(task => 
-            task.id === taskId ? { ...task, ...updates } : task
-          );
-        });
-        return newColumns;
-      });
-      setLastMovedTaskId(null);
-      toast.success("Tarefa atualizada!");
-    } catch (error) {
-      console.error("Erro ao atualizar tarefa:", error);
-      toast.error("Erro ao atualizar tarefa.");
-    }
+      return newColumns;
+    });
+    setLastMovedTaskId(null);
+    toast.success("Tarefa atualizada!");
   };
 
   const findDay = (id: string) => {
@@ -268,7 +234,7 @@ export default function TasksPage() {
     }
   };
 
-  const handleDragEnd = async (event: DragEndEvent) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) {
       setActiveTask(null);
@@ -284,17 +250,32 @@ export default function TasksPage() {
     if (activeTask && originalTaskState) {
       const overPeriod = activeTask.period;
       if (activeDay !== originalTaskState.day || overPeriod !== originalTaskState.period) {
-        // Sync with database if moved to different day or period
-        const dayMap: Record<string, number> = { 'Domingo': 0, 'Segunda': 1, 'Terça': 2, 'Quarta': 3, 'Quinta': 4, 'Sexta': 5, 'Sábado': 6 };
-        const dayDiff = dayMap[activeDay!] - dayMap[originalTaskState.day];
-        const newDate = new Date(activeTask.date);
-        newDate.setDate(newDate.getDate() + dayDiff);
-        
-        await supabase.from('tasks').update({
-          data: newDate.toISOString().split('T')[0],
-          periodo: overPeriod
-        }).eq('id', activeId);
+        const [hours] = (activeTask.time || "09:00").split(':').map(Number);
+        const periodBounds: Record<string, { start: number; end: number; default: string }> = {
+          Morning: { start: 6, end: 12, default: '09:00' },
+          Afternoon: { start: 12, end: 18, default: '15:00' },
+          Evening: { start: 18, end: 24, default: '21:00' },
+          Dawn: { start: 0, end: 6, default: '03:00' }
+        };
 
+        const bounds = periodBounds[overPeriod];
+        if (bounds) {
+          const isValid = hours >= bounds.start && hours < bounds.end;
+          if (!isValid) {
+            const newTime = bounds.default;
+            setColumns(prev => {
+              const updated = { ...prev };
+              const currentDay = findDay(activeId);
+              if (currentDay) {
+                updated[currentDay] = updated[currentDay].map(t => 
+                  t.id === activeId ? { ...t, time: newTime } : t
+                );
+              }
+              return updated;
+            });
+            toast.info(`Horário ajustado para ${newTime}`);
+          }
+        }
         setLastMovedTaskId(activeId);
       }
     }
@@ -428,8 +409,6 @@ export default function TasksPage() {
                       lastMovedTaskId={lastMovedTaskId}
                       onUpdateTaskTime={(taskId, newTime) => handleUpdateTask(taskId, { time: newTime })}
                       onUpdateTask={handleUpdateTask}
-                      onEditTask={handleEditTask}
-                      onDeleteTask={handleDeleteTask}
                     />
                   );
                 })}
@@ -453,10 +432,7 @@ export default function TasksPage() {
       </div>
 
       <button
-        onClick={() => {
-          setEditingTask(null);
-          setIsModalOpen(true);
-        }}
+        onClick={() => setIsModalOpen(true)}
         className="fixed bottom-10 right-10 w-16 h-16 bg-[#6366f1] hover:bg-[#6366f1]/90 text-white rounded-full shadow-2xl shadow-[#6366f1]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50"
         title="Criar nova tarefa"
       >
@@ -465,13 +441,9 @@ export default function TasksPage() {
 
       <CreateTaskModal 
         isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setEditingTask(null);
-        }}
+        onClose={() => setIsModalOpen(false)}
         onSave={handleAddTask}
         selectedDay={currentDayName}
-        editTask={editingTask}
       />
     </div>
   );
