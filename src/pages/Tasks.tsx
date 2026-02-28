@@ -95,7 +95,7 @@ export default function TasksPage() {
   const [scrollLeft, setScrollLeft] = useState(0);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }), // Aumentado levemente para evitar gatilhos acidentais
+    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -192,7 +192,7 @@ export default function TasksPage() {
       setOriginalTaskState({ day, period: task.period });
       setLastMovedTaskId(null);
       setIsDragging(true);
-      setIsScrolling(false); // Garante que o scroll manual não comece
+      setIsScrolling(false);
     }
   };
 
@@ -325,13 +325,13 @@ export default function TasksPage() {
 
   return (
     <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0 relative">
-      <header className="flex items-center justify-between py-6 shrink-0 px-8">
+      <header className="flex items-center justify-between py-4 shrink-0 px-6">
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
             <button onClick={handlePrevDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronLeft size={18} /></button>
             <h2 className="flex items-baseline gap-2 text-white tracking-tight">
-              <span className="text-[22px] font-semibold">{dateInfo.month} {viewMode === 'monthly' && dateInfo.year}</span>
-              <span className="text-[12px] font-medium text-white/35 tracking-[0.1em] uppercase">
+              <span className="text-[20px] font-semibold">{dateInfo.month} {viewMode === 'monthly' && dateInfo.year}</span>
+              <span className="text-[11px] font-medium text-white/35 tracking-[0.1em] uppercase">
                 — {viewMode === 'monthly' ? 'Mês' : `Semana ${dateInfo.week}`}
               </span>
             </h2>
@@ -351,7 +351,7 @@ export default function TasksPage() {
             <button 
               onClick={() => setViewMode('weekly')}
               className={cn(
-                "flex items-center gap-2 px-4 py-1.5 rounded-[8px] text-[12px] font-medium transition-all",
+                "flex items-center gap-2 px-3 py-1.5 rounded-[8px] text-[11px] font-medium transition-all",
                 viewMode === 'weekly' 
                   ? "text-white" 
                   : "text-white/35 hover:text-zinc-300"
@@ -360,13 +360,13 @@ export default function TasksPage() {
                 background: viewMode === 'weekly' ? 'rgba(255, 255, 255, 0.08)' : 'transparent'
               }}
             >
-              <LayoutGrid size={14} />
+              <LayoutGrid size={13} />
               <span>Semanal</span>
             </button>
             <button 
               onClick={() => setViewMode('monthly')}
               className={cn(
-                "flex items-center gap-2 px-4 py-1.5 rounded-[8px] text-[12px] font-medium transition-all",
+                "flex items-center gap-2 px-3 py-1.5 rounded-[8px] text-[11px] font-medium transition-all",
                 viewMode === 'monthly' 
                   ? "text-white" 
                   : "text-white/35 hover:text-zinc-300"
@@ -375,7 +375,7 @@ export default function TasksPage() {
                 background: viewMode === 'monthly' ? 'rgba(255, 255, 255, 0.08)' : 'transparent'
               }}
             >
-              <CalendarDays size={14} />
+              <CalendarDays size={13} />
               <span>Mensal</span>
             </button>
           </div>
@@ -397,11 +397,11 @@ export default function TasksPage() {
               scrollRef.current.scrollLeft = scrollLeft - walk;
             }}
             style={{
-              maskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent, black 80px, black calc(100% - 80px), transparent)'
+              maskImage: 'linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent)'
             }}
             className={cn(
-              "h-full flex pb-8 overflow-x-auto custom-scrollbar cursor-grab select-none px-10",
+              "h-full flex pb-6 overflow-x-auto custom-scrollbar cursor-grab select-none px-6",
               isScrolling && "cursor-grabbing"
             )}
           >
@@ -412,11 +412,11 @@ export default function TasksPage() {
               onDragOver={handleDragOver}
               onDragEnd={handleDragEnd}
               autoScroll={{
-                threshold: { x: 0.15, y: 0.15 }, // Inicia scroll automático quando mais perto da borda
-                acceleration: 3, // Movimento de scroll mais calmo
+                threshold: { x: 0.1, y: 0.1 },
+                acceleration: 3,
               }}
             >
-              <div className="flex gap-5 items-start h-full pr-10">
+              <div className="flex gap-4 items-start h-full pr-10">
                 {DISPLAY_ORDER.map((day) => {
                   const isToday = day === currentDayName;
 
@@ -455,10 +455,10 @@ export default function TasksPage() {
 
       <button
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-10 right-10 w-16 h-16 bg-[#6366f1] hover:bg-[#6366f1]/90 text-white rounded-full shadow-2xl shadow-[#6366f1]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50"
+        className="fixed bottom-8 right-8 w-14 h-14 bg-[#6366f1] hover:bg-[#6366f1]/90 text-white rounded-full shadow-2xl shadow-[#6366f1]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50"
         title="Criar nova tarefa"
       >
-        <Plus size={32} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
+        <Plus size={28} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
       </button>
 
       <CreateTaskModal 
