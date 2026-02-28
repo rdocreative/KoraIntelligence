@@ -22,10 +22,46 @@ interface TaskColumnProps {
 }
 
 const PERIODS = [
-  { id: 'Morning', label: 'Manhã', time: '06:00 — 12:00', icon: Sun, color: '#FDBA74', timeColor: 'rgba(249,115,22,0.7)', background: 'linear-gradient(180deg, rgba(249,115,22,0.08) 0%, rgba(249,115,22,0.01) 100%)', defaultTime: '09:00' },
-  { id: 'Afternoon', label: 'Tarde', time: '12:00 — 18:00', icon: Coffee, color: '#4ADE80', timeColor: 'rgba(34,197,94,0.7)', background: 'linear-gradient(180deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.01) 100%)', defaultTime: '15:00' },
-  { id: 'Evening', label: 'Noite', time: '18:00 — 00:00', icon: Moon, color: '#A78BFA', timeColor: 'rgba(129,140,248,0.7)', background: 'linear-gradient(180deg, rgba(129,140,248,0.08) 0%, rgba(129,140,248,0.01) 100%)', defaultTime: '21:00' },
-  { id: 'Dawn', label: 'Madrugada', time: '00:00 — 06:00', icon: CloudMoon, color: '#818CF8', timeColor: 'rgba(56,189,248,0.7)', background: 'linear-gradient(180deg, rgba(56,189,248,0.08) 0%, rgba(56,189,248,0.01) 100%)', defaultTime: '03:00' },
+  { 
+    id: 'Morning', 
+    label: 'Manhã', 
+    time: '06:00 — 12:00', 
+    icon: Sun, 
+    color: '#FDBA74', 
+    timeColor: 'rgba(249,115,22,0.7)', 
+    background: 'linear-gradient(180deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0.03) 40%, transparent 100%)', 
+    defaultTime: '09:00' 
+  },
+  { 
+    id: 'Afternoon', 
+    label: 'Tarde', 
+    time: '12:00 — 18:00', 
+    icon: Coffee, 
+    color: '#4ADE80', 
+    timeColor: 'rgba(34,197,94,0.7)', 
+    background: 'linear-gradient(180deg, rgba(34, 197, 94, 0.1) 0%, rgba(34, 197, 94, 0.03) 40%, transparent 100%)', 
+    defaultTime: '15:00' 
+  },
+  { 
+    id: 'Evening', 
+    label: 'Noite', 
+    time: '18:00 — 00:00', 
+    icon: Moon, 
+    color: '#A78BFA', 
+    timeColor: 'rgba(129,140,248,0.7)', 
+    background: 'linear-gradient(180deg, rgba(129, 140, 248, 0.1) 0%, rgba(129, 140, 248, 0.03) 40%, transparent 100%)', 
+    defaultTime: '21:00' 
+  },
+  { 
+    id: 'Dawn', 
+    label: 'Madrugada', 
+    time: '00:00 — 06:00', 
+    icon: CloudMoon, 
+    color: '#818CF8', 
+    timeColor: 'rgba(56,189,248,0.7)', 
+    background: 'linear-gradient(180deg, rgba(56, 189, 248, 0.1) 0%, rgba(56, 189, 248, 0.03) 40%, transparent 100%)', 
+    defaultTime: '03:00' 
+  },
 ];
 
 const PeriodContainer = ({ dayId, period, tasks, lastMovedTaskId, onUpdateTaskStatus, onUpdateTask, onDeleteTask, isLoading }: any) => {
@@ -49,8 +85,12 @@ const PeriodContainer = ({ dayId, period, tasks, lastMovedTaskId, onUpdateTaskSt
   return (
     <div 
       ref={setNodeRef}
-      className={cn("relative flex flex-col rounded-[24px] transition-all duration-300", isOver ? "bg-white/[0.05] scale-[1.01]" : "", isExpanded ? "p-3" : "p-3 hover:bg-white/[0.03]")}
-      style={{ background: period.background, border: '1.5px solid rgba(255,255,255,0.08)' }}
+      className={cn(
+        "relative flex flex-col rounded-[24px] transition-all duration-300", 
+        isOver ? "bg-white/[0.05] scale-[1.01]" : "", 
+        isExpanded ? "p-3" : "p-3 hover:bg-white/[0.03]"
+      )}
+      style={{ background: period.background, border: 'none' }}
     >
       <div className={cn("flex items-center justify-between transition-all w-full", isExpanded ? "mb-4" : "mb-0")}>
         <div className="flex items-center gap-3">
