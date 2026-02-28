@@ -28,6 +28,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
   const [sideViewMode, setSideViewMode] = useState<'day' | 'week' | 'month'>('day');
   const [isLoading, setIsLoading] = useState(true);
 
+  // Popover State
   const [popoverData, setPopoverData] = useState<{
     x: number;
     y: number;
@@ -61,10 +62,12 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     }
   }, [startDate, endDate]);
 
+  // Busca inicial e busca ao mudar de mês
   useEffect(() => { 
     fetchMonthlyTasks(true); 
   }, [fetchMonthlyTasks]);
 
+  // Filtros aplicados via useMemo para evitar re-calculo desnecessário
   const filteredTasks = useMemo(() => {
     return tasks.filter(t => {
       const priority = t.prioridade === 'Media' ? 'Média' : t.prioridade;
@@ -77,6 +80,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     });
   }, [tasks, activePriorities, activeWeekDays]);
 
+  // Agrupamento de tarefas por dia memoizado (Elimina flickering nas células)
   const tasksByDay = useMemo(() => {
     const map: Record<string, any[]> = {};
     filteredTasks.forEach(task => {
@@ -144,23 +148,24 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
   };
 
   return (
-    <div className="flex h-full w-full px-4 relative overflow-hidden">
+    <div className="flex h-full w-full px-6 relative overflow-hidden">
+      {/* Popover */}
       {popoverData && (
         <>
           <div className="fixed inset-0 z-[9998]" onClick={() => setPopoverData(null)} />
           <div 
-            className="fixed z-[9999] bg-[#13151f] border border-white/[0.08] rounded-xl p-3 min-w-[180px] shadow-2xl flex flex-col gap-1.5 animate-in fade-in zoom-in-95 duration-200"
+            className="fixed z-[9999] bg-[#13151f] border border-white/[0.08] rounded-xl p-4 min-w-[200px] shadow-2xl flex flex-col gap-2 animate-in fade-in zoom-in-95 duration-200"
             style={{ top: popoverData.y, left: popoverData.x }}
           >
-            <span className="text-[9px] uppercase font-bold text-white/40 tracking-wider">
+            <span className="text-[10px] uppercase font-bold text-white/40 tracking-wider">
               {format(popoverData.date, "dd 'de' MMMM", { locale: ptBR })}
             </span>
-            <div className="flex flex-col gap-1 max-h-[160px] overflow-y-auto custom-scrollbar">
+            <div className="flex flex-col gap-1.5 max-h-[200px] overflow-y-auto custom-scrollbar">
               {popoverData.tasks.map(t => (
-                <div key={t.id} className="flex items-center gap-2 text-[11px] text-zinc-300">
-                  <div className="w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: getPriorityColor(t.prioridade) }} />
+                <div key={t.id} className="flex items-center gap-2 text-xs text-zinc-300">
+                  <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: getPriorityColor(t.prioridade) }} />
                   <span className="truncate flex-1">{t.nome}</span>
-                  <span className="text-[9px] text-white/30 font-mono">{t.horario}</span>
+                  <span className="text-[10px] text-white/30 font-mono">{t.horario}</span>
                 </div>
               ))}
             </div>
@@ -168,10 +173,11 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
         </>
       )}
 
-      <div className="flex-1 flex flex-col pr-3">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="flex items-center gap-1.5">
-            <Filter size={13} className="text-white/20 mr-1" />
+      <div className="flex-1 flex flex-col pr-4">
+        {/* Filtros */}
+        <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-2">
+            <Filter size={14} className="text-white/20 mr-1" />
             {priorities.map(p => {
               const isActive = activePriorities.includes(p.value);
               return (
@@ -179,7 +185,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                   key={p.value}
                   onClick={() => setActivePriorities(prev => isActive ? prev.filter(x => x !== p.value) : [...prev, p.value])}
                   className={cn(
-                    "px-2 py-0.5 rounded-lg text-[10px] font-medium border transition-all",
+                    "px-2.5 py-1 rounded-lg text-[11px] font-medium border transition-all",
                     isActive ? p.activeClass : "bg-white/[0.03] border-white/[0.06] text-white/40 hover:bg-white/[0.05]"
                   )}
                 >
@@ -189,9 +195,9 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
             })}
           </div>
           
-          <div className="w-px h-4 bg-white/[0.06]" />
+          <div className="w-px h-6 bg-white/[0.06]" />
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             {weekDays.map((d, i) => {
               const isActive = activeWeekDays.includes(d.value);
               return (
@@ -199,7 +205,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                   key={i}
                   onClick={() => setActiveWeekDays(prev => isActive ? prev.filter(x => x !== d.value) : [...prev, d.value])}
                   className={cn(
-                    "w-6 h-6 flex items-center justify-center rounded-lg text-[10px] font-medium border transition-all",
+                    "w-7 h-7 flex items-center justify-center rounded-lg text-[11px] font-medium border transition-all",
                     isActive 
                       ? "bg-[#6366f1]/15 border-[#6366f1]/30 text-[#a5b4fc]" 
                       : "bg-white/[0.03] border-white/[0.06] text-white/40 hover:bg-white/[0.05]"
@@ -212,46 +218,78 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-7 gap-1.5 pb-4 overflow-y-auto custom-scrollbar relative">
+        <div className="grid grid-cols-7 gap-2 pb-6 overflow-y-auto custom-scrollbar relative">
           {calendarDays.map((day) => {
             const dateStr = format(day, 'yyyy-MM-dd');
             const dateTasks = tasksByDay[dateStr] || [];
             const isSelected = isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentDate);
             
-            const hiddenCount = dateTasks.length - 3;
+            const hiddenCount = dateTasks.length - 4;
 
             return (
               <div
                 key={dateStr}
                 onClick={() => setSelectedDate(day)}
                 className={cn(
-                  "min-h-[90px] p-2 rounded-[16px] border transition-all cursor-pointer flex flex-col group relative",
-                  !isCurrentMonth ? "opacity-20 grayscale pointer-events-none" : isSelected ? "bg-white/[0.06] border-white/20" : "bg-white/[0.02] border-white/5 hover:border-white/10",
-                  isToday(day) && !isSelected && "border-[#6366f1]/30"
+                  "min-h-[170px] p-2.5 rounded-[22px] border transition-all cursor-pointer flex flex-col group relative",
+                  !isCurrentMonth ? "opacity-30 grayscale pointer-events-none" : isSelected ? "bg-white/[0.06] border-white/20" : "bg-white/[0.02] border-white/5 hover:border-white/10",
+                  isToday(day) && !isSelected && "border-[#6366f1]/40"
                 )}
+                style={{
+                  border: isCurrentMonth ? '1px solid rgba(255, 255, 255, 0.05)' : undefined
+                }}
               >
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className={cn("text-[12px] font-bold", isToday(day) ? "text-[#6366f1]" : "text-zinc-200/60")}>{format(day, 'd')}</span>
+                <div className="flex items-center justify-between mb-2">
+                  <span className={cn("text-sm font-bold", isToday(day) ? "text-[#6366f1]" : "text-zinc-200")}>{format(day, 'd')}</span>
                   {hiddenCount > 0 && isCurrentMonth && (
                      <button 
                        onClick={(e) => handleShowMore(e, day, dateTasks)}
-                       className="text-[9px] font-bold text-[#6366f1] hover:text-[#818cf8] transition-colors"
+                       className="text-[10px] font-semibold text-[#6366f1] hover:text-[#818cf8] transition-colors px-1"
                      >
                        +{hiddenCount}
                      </button>
                   )}
                 </div>
                 
-                <div className="flex flex-col gap-1">
-                  {dateTasks.slice(0, 3).map((task) => (
+                <div className="flex flex-col">
+                  {dateTasks.slice(0, 4).map((task) => (
                     <div
                       key={task.id}
-                      className="flex items-center gap-1.5 bg-white/[0.03] border rounded-[20px] px-2 py-0.5 w-full truncate"
-                      style={{ borderColor: getPriorityBorderColor(task.prioridade) }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: `1px solid ${getPriorityBorderColor(task.prioridade)}`,
+                        borderRadius: '20px',
+                        padding: '2px 8px',
+                        marginBottom: '4px',
+                        width: '100%',
+                        cursor: 'pointer'
+                      }}
                     >
-                      <div className="w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: getPriorityColor(task.prioridade) }} />
-                      <span className="text-[10px] text-white/80 truncate leading-none">{task.nome}</span>
+                      {/* Ponto Colorido da Prioridade */}
+                      <div 
+                        style={{
+                          width: '6px',
+                          height: '6px',
+                          borderRadius: '50%',
+                          backgroundColor: getPriorityColor(task.prioridade),
+                          flexShrink: 0
+                        }} 
+                      />
+                      
+                      {/* Nome da Tarefa */}
+                      <span style={{ 
+                        fontSize: '10px', 
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}>
+                        {task.nome}
+                      </span>
                     </div>
                   ))}
                 </div>

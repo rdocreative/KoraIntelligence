@@ -1,26 +1,50 @@
 "use client";
 
-import React from "react";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { cn } from "@/lib/utils";
-import { Clock, MoreHorizontal, CheckCircle2, Circle, Trash2, Edit3 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Circle, Clock, Check, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { TaskPopover } from './TaskPopover';
 
 interface TaskCardProps {
-  task: any;
-  isHighlighted?: boolean;
-  onUpdateStatus?: (status: string) => void;
-  onUpdateTask?: (updates: any) => void;
-  onDelete?: () => void;
+  task: {
+    id: string;
+    name: string;
+    time?: string;
+    icon?: string;
+    priority?: 'Extrema' | 'Alta' | 'Média' | 'Baixa' | 'Media';
+    period?: string;
+    status?: 'pendente' | 'concluido';
+  };
+  isAwaitingTime?: boolean;
+  onUpdateStatus?: (status: 'pendente' | 'concluido') => void;
+  onUpdateTask?: (taskId: string, updates: any) => void;
+  defaultPeriodTime?: string;
 }
 
-export function TaskCard({ task, isHighlighted, onUpdateStatus, onDelete }: TaskCardProps) {
+const HOURS = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
+const MINUTES = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, '0'));
+
+export const TaskCard = ({ task, isAwaitingTime, onUpdateStatus, onUpdateTask, defaultPeriodTime }: TaskCardProps) => {
+  const initialTime = task.time || defaultPeriodTime || '09:00';
+  const [hour, setHour] = useState(initialTime.split(':')[0] || '09');
+  const [minute, setMinute] = useState(initialTime.split(':')[1] || '00');
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [popoverPosition, setPopoverPosition] = useState({ top: 0, left: 0 });
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const isCompleted = task.status === 'concluido';
+
+  useEffect(() => {
+    if (isAwaitingTime) {
+      const currentTime = task.time || defaultPeriodTime || '09:00';
+      setHour(currentTime.split(':')[0]);
+      setMinute(currentTime.split(':')[1]);
+    }
+  }, [isAwaitingTime, task.time, defaultPeriodTime]);
+
   const {
     attributes,
     listeners,
@@ -28,92 +52,126 @@ export function TaskCard({ task, isHighlighted, onUpdateStatus, onDelete }: Task
     transform,
     transition,
     isDragging
-  } = useSortable({ id: task.id });
+  } = useSortable({ 
+    id: task.id,
+    disabled: isAwaitingTime || isPopoverOpen
+  });
+
+  const setRefs = (node: HTMLDivElement | null) => {
+    setNodeRef(node);
+    (cardRef as any).current = node;
+  };
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    opacity: isDragging ? 0.3 : 1,
+    touchAction: 'none',
   };
 
-  const getPriorityColor = (p: string) => {
-    switch(p) {
-      case 'Extrema': return 'bg-red-500';
-      case 'Média': return 'bg-orange-500';
-      case 'Baixa': return 'bg-sky-500';
-      default: return 'bg-zinc-500';
+  const normalizedPriority = (task.priority === 'Media' ? 'Média' : task.priority) || 'Baixa';
+
+  const priorityLabelColors = {
+    Extrema: 'bg-red-500/20 text-red-400 border-red-500/30',
+    Alta: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+    Média: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+    Baixa: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+  };
+
+  const priorityCardStyles = {
+    Extrema: { background: 'linear-gradient(160deg, rgba(239,68,68,0.12) 0%, rgba(239,68,68,0.02) 100%)', border: '1px solid rgba(239,68,68,0.15)' },
+    Alta: { background: 'linear-gradient(160deg, rgba(249,115,22,0.12) 0%, rgba(249,115,22,0.02) 100%)', border: '1px solid rgba(249,115,22,0.15)' },
+    Média: { background: 'linear-gradient(160deg, rgba(234,179,8,0.1) 0%, rgba(234,179,8,0.02) 100%)', border: '1px solid rgba(234,179,8,0.12)' },
+    Baixa: { background: 'linear-gradient(160deg, rgba(56,189,248,0.08) 0%, rgba(56,189,248,0.02) 100%)', border: '1px solid rgba(56,189,248,0.1)' }
+  };
+
+  const handleConfirm = () => {
+    onUpdateTask?.(task.id, { ...task, name: task.name, icon: task.icon, priority: task.priority, time: `${hour}:${minute}` });
+  };
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('.checkbox-trigger')) return;
+    
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      setPopoverPosition({ top: rect.top, left: rect.right + 10 });
+      setIsPopoverOpen(true);
     }
   };
 
-  const isCompleted = task.status === 'concluida';
+  const toggleStatus = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onUpdateStatus?.(isCompleted ? 'pendente' : 'concluido');
+  };
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={cn(
-        "group relative bg-[#1c1e29] border border-white/[0.06] rounded-xl p-3 flex flex-col gap-2.5 transition-all duration-300",
-        isDragging && "opacity-40 scale-95 z-50 ring-2 ring-[#6366f1]/50",
-        isHighlighted && "ring-2 ring-[#6366f1] animate-pulse",
-        !isDragging && "hover:border-white/20 hover:shadow-xl hover:shadow-black/20 hover:-translate-y-0.5",
-        isCompleted && "opacity-60 grayscale-[0.5]"
-      )}
-      {...attributes}
-      {...listeners}
-      data-draggable="true"
-    >
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2 flex-1 min-w-0">
-          <button 
-            onClick={(e) => {
-              e.stopPropagation();
-              onUpdateStatus?.(isCompleted ? 'pendente' : 'concluida');
-            }}
-            className={cn(
-              "shrink-0 transition-colors",
-              isCompleted ? "text-emerald-400" : "text-white/20 hover:text-white/40"
-            )}
-          >
-            {isCompleted ? <CheckCircle2 size={16} /> : <Circle size={16} />}
-          </button>
-          <span className={cn(
-            "text-[13px] font-medium text-white truncate transition-all",
-            isCompleted && "line-through text-white/40"
-          )}>
-            {task.name}
-          </span>
+    <div ref={setRefs} style={style} {...attributes} {...listeners} className="relative group/card" onClick={handleCardClick}>
+      <div
+        className={cn(
+          "group relative flex flex-col p-4 rounded-[20px] transition-all cursor-grab active:cursor-grabbing overflow-hidden min-h-[90px]",
+          isDragging && "z-50 border-[#6366f1]/50 shadow-2xl bg-white/[0.08]",
+          isCompleted && "opacity-50 grayscale-[0.3]"
+        )}
+        style={{ ...(task.priority ? priorityCardStyles[normalizedPriority as keyof typeof priorityCardStyles] : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }) }}
+      >
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 flex items-center justify-center text-lg">{task.icon || '📝'}</div>
+            <h4 className={cn("text-[13px] font-semibold text-zinc-100 line-clamp-1", isCompleted && "line-through text-zinc-500")}>{task.name}</h4>
+          </div>
         </div>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-            <button className="p-1 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-white/5 text-white/30 transition-all">
-              <MoreHorizontal size={14} />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-36 bg-[#13151f] border-white/[0.08] text-white">
-            <DropdownMenuItem className="gap-2 text-xs focus:bg-white/5 cursor-pointer">
-              <Edit3 size={14} /> Editar
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={(e) => { e.stopPropagation(); onDelete?.(); }}
-              className="gap-2 text-xs focus:bg-red-500/10 text-red-400 focus:text-red-400 cursor-pointer"
-            >
-              <Trash2 size={14} /> Excluir
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+
+        <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/[0.04]">
+          <div className="flex items-center gap-3">
+            <span className={cn("text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border", priorityLabelColors[normalizedPriority as keyof typeof priorityLabelColors])}>
+              {normalizedPriority}
+            </span>
+            {task.time && !isAwaitingTime && (
+              <div className="flex items-center gap-1 text-[11px] text-white/75 font-medium">
+                <Clock size={10} className="text-zinc-400" />
+                {task.time}
+              </div>
+            )}
+          </div>
+          <button onClick={toggleStatus} className="checkbox-trigger p-1 hover:bg-white/5 rounded-full transition-colors">
+            {isCompleted ? <CheckCircle2 size={16} className="text-[#6366f1]" /> : <Circle size={16} className="text-zinc-500 hover:text-zinc-200" />}
+          </button>
+        </div>
+
+        {isAwaitingTime && (
+          <div className="absolute inset-0 bg-[#13151f] border border-white/10 z-20 flex flex-col p-4 animate-in fade-in zoom-in-95 rounded-[16px]" onPointerDown={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-2 mb-3">
+              <Clock size={12} className="text-[#6366f1]" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-white/50">Novo Horário</span>
+            </div>
+            <div className="flex gap-2 flex-1 items-center">
+              <div className="flex-1 flex gap-1.5 h-10">
+                <div className="relative flex-1">
+                  <select value={hour} onChange={(e) => setHour(e.target.value)} className="w-full h-full bg-white/5 border border-white/10 rounded-[10px] px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#6366f1]/50 transition-all text-center">
+                    {HOURS.map(h => <option key={h} value={h} className="bg-[#13151f]">{h}</option>)}
+                  </select>
+                  <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
+                </div>
+                <span className="text-white/20 flex items-center font-bold">:</span>
+                <div className="relative flex-1">
+                  <select value={minute} onChange={(e) => setMinute(e.target.value)} className="w-full h-full bg-white/5 border border-white/10 rounded-[10px] px-2 text-xs text-white appearance-none cursor-pointer focus:outline-none focus:border-[#6366f1]/50 transition-all text-center">
+                    {MINUTES.map(m => <option key={m} value={m} className="bg-[#13151f]">{m}</option>)}
+                  </select>
+                  <ChevronDown size={10} className="absolute right-2 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
+                </div>
+              </div>
+              <button onClick={handleConfirm} className="w-10 h-10 bg-[#6366f1] text-white rounded-[10px] flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#6366f1]/20 shrink-0">
+                <Check size={18} strokeWidth={3} />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      <div className="flex items-center justify-between mt-auto pt-1">
-        <div className="flex items-center gap-1.5 text-white/30">
-          <Clock size={11} />
-          <span className="text-[10px] font-bold font-mono tracking-tight">{task.time}</span>
-        </div>
-        
-        <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-bold text-white/20 uppercase tracking-[0.05em]">{task.priority}</span>
-          <div className={cn("w-1 h-1 rounded-full", getPriorityColor(task.priority))} />
-        </div>
-      </div>
+      {isPopoverOpen && createPortal(
+        <TaskPopover task={task} position={popoverPosition} onClose={() => setIsPopoverOpen(false)} onSave={(updates) => onUpdateTask?.(task.id, updates)} />,
+        document.body
+      )}
     </div>
   );
-}
+};
