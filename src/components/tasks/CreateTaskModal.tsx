@@ -75,7 +75,7 @@ export const CreateTaskModal = ({ isOpen, onClose, onSave, selectedDay }: Create
         id: data.id,
         name: data.nome,
         description: data.descricao,
-        date: new Date(data.data + 'T12:00:00'),
+        date: data.data,
         category: data.categoria,
         time: data.horario,
         icon: data.emoji,
