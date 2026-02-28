@@ -110,6 +110,16 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     }
   };
 
+  const getPriorityBorderColor = (p: string) => {
+    const priority = p === 'Media' || p === 'Média' ? 'Média' : p;
+    switch(priority) {
+      case 'Extrema': return 'rgba(239, 68, 68, 0.3)';
+      case 'Média': return 'rgba(249, 115, 22, 0.3)';
+      case 'Baixa': return 'rgba(56, 189, 248, 0.3)';
+      default: return 'rgba(255, 255, 255, 0.1)';
+    }
+  };
+
   const weekDays = [
     { label: 'D', value: 0 },
     { label: 'S', value: 1 },
@@ -242,7 +252,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                   )}
                 </div>
                 
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col">
                   {dateTasks.slice(0, 4).map((task) => (
                     <div
                       key={task.id}
@@ -251,20 +261,19 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                         alignItems: 'center',
                         gap: '6px',
                         background: 'rgba(255, 255, 255, 0.03)',
-                        borderLeft: `2px solid ${getPriorityColor(task.prioridade)}`,
-                        borderRadius: '4px',
-                        padding: '2px 6px',
+                        border: `1px solid ${getPriorityBorderColor(task.prioridade)}`,
+                        borderRadius: '20px',
+                        padding: '2px 8px',
+                        marginBottom: '4px',
                         width: '100%',
-                        cursor: 'pointer',
-                        transition: 'background 0.2s ease'
+                        cursor: 'pointer'
                       }}
-                      className="hover:bg-white/[0.06]"
                     >
-                      {/* Ponto Colorido da Prioridade (Indicator) */}
+                      {/* Ponto Colorido da Prioridade */}
                       <div 
                         style={{
-                          width: '4px',
-                          height: '4px',
+                          width: '6px',
+                          height: '6px',
                           borderRadius: '50%',
                           backgroundColor: getPriorityColor(task.prioridade),
                           flexShrink: 0
@@ -273,9 +282,8 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                       
                       {/* Nome da Tarefa */}
                       <span style={{ 
-                        fontSize: '9px', 
-                        fontWeight: '500',
-                        color: 'rgba(255, 255, 255, 0.85)',
+                        fontSize: '10px', 
+                        color: 'rgba(255, 255, 255, 0.9)',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis'
