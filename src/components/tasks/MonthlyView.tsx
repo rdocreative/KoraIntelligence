@@ -203,7 +203,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
             const isSelected = isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentDate);
             
-            const visibleTasks = dateTasks.slice(0, 4);
             const hiddenCount = dateTasks.length - 4;
 
             return (
@@ -215,6 +214,9 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                   !isCurrentMonth ? "opacity-30 grayscale pointer-events-none" : isSelected ? "bg-white/[0.06] border-white/20" : "bg-white/[0.02] border-white/5 hover:border-white/10",
                   isToday(day) && !isSelected && "border-[#6366f1]/40"
                 )}
+                style={{
+                  border: isCurrentMonth ? '1px solid rgba(255, 255, 255, 0.05)' : undefined
+                }}
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className={cn("text-sm font-bold", isToday(day) ? "text-[#6366f1]" : "text-zinc-200")}>{format(day, 'd')}</span>
@@ -230,10 +232,29 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                 
                 <div className="space-y-1">
                   {isLoading ? <div className="h-1 bg-white/5 animate-pulse rounded" /> : 
-                    visibleTasks.map(t => (
-                      <div key={t.id} className="px-2 py-1 rounded-md bg-white/5 border border-white/5 text-[10px] truncate flex items-center gap-1.5 hover:bg-white/10 transition-colors">
-                        <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: getPriorityColor(t.prioridade) }} />
-                        <span className="truncate text-zinc-300">{t.nome}</span>
+                    dateTasks.slice(0, 4).map((task) => (
+                      <div
+                        key={task.id}
+                        style={{
+                          background: task.prioridade === 'Extrema' 
+                            ? 'linear-gradient(90deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.05) 100%)' 
+                            : (task.prioridade === 'Media' || task.prioridade === 'Média')
+                            ? 'linear-gradient(90deg, rgba(249, 115, 22, 0.2) 0%, rgba(249, 115, 22, 0.05) 100%)'
+                            : 'linear-gradient(90deg, rgba(56, 189, 248, 0.2) 0%, rgba(56, 189, 248, 0.05) 100%)',
+                          borderLeft: `2px solid ${
+                            task.prioridade === 'Extrema' ? '#ef4444' : (task.prioridade === 'Media' || task.prioridade === 'Média') ? '#f97316' : '#38bdf8'
+                          }`,
+                          borderRadius: '4px',
+                          padding: '2px 6px',
+                          marginBottom: '2px',
+                          fontSize: '10px',
+                          color: 'white',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis'
+                        }}
+                      >
+                        {task.emoji || '📝'} {task.nome}
                       </div>
                     ))
                   }
