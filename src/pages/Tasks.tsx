@@ -37,65 +37,60 @@ const DISPLAY_ORDER = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábad
 
 export default function TasksPage() {
   const [columns, setColumns] = useState<Record<string, any[]>>({ 'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': [] });
-
-  useEffect(() => {
-    (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-      const hoje = new Date();
-      const diaSemana = hoje.getDay();
-      const inicioSemana = new Date(hoje);
-      inicioSemana.setDate(hoje.getDate() - diaSemana);
-      const fimSemana = new Date(inicioSemana);
-      fimSemana.setDate(inicioSemana.getDate() + 6);
-      
-      const { data } = await supabase
-        .from('tasks')
-        .select('*')
-        .eq('user_id', user.id)
-        .gte('data', inicioSemana.toISOString().split('T')[0])
-        .lte('data', fimSemana.toISOString().split('T')[0]);
-        
-      if (!data) return;
-      
-      const dayMap: Record<number, string> = { 0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado' };
-      const newColumns: Record<string, any[]> = { 'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': [] };
-      
-      data.forEach(task => {
-        const d = new Date(task.data + 'T12:00:00');
-        const dayName = dayMap[d.getDay()];
-        if (dayName) {
-          newColumns[dayName].push({ 
-            id: task.id, 
-            name: task.nome, 
-            time: task.horario, 
-            icon: task.emoji || '📝', 
-            priority: task.prioridade === 'Media' ? 'Média' : task.prioridade, 
-            period: task.periodo, 
-            status: task.status, 
-            date: task.data 
-          });
-        }
-      });
-      setColumns(newColumns);
-    })();
-  }, []);
-
   const [activeTask, setActiveTask] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<any>(null);
   const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [lastMovedTaskId, setLastMovedTaskId] = useState<string | null>(null);
   const [originalTaskState, setOriginalTaskState] = useState<{ day: string; period: string } | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
+  const fetchTasks = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    
+    const hoje = new Date();
+    const diaSemana = hoje.getDay();
+    const inicioSemana = new Date(hoje);
+    inicioSemana.setDate(hoje.getDate() - diaSemana);
+    const fimSemana = new Date(inicioSemana);
+    fimSemana.setDate(inicioSemana.getDate() + 6);
+    
+    const { data } = await supabase.from('tasks').select('*').eq('user_id', user.id).gte('data', inicioSemana.toISOString().split('T')[0]).lte('data', fimSemana.toISOString().split('T')[0]);
+    if (!data) return;
+    
+    const dayMap: Record<number, string> = { 0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado' };
+    const newColumns: Record<string, any[]> = { 'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': [] };
+    
+    data.forEach(task => {
+      const d = new Date(task.data + 'T12:00:00');
+      const dayName = dayMap[d.getDay()];
+      if (dayName) newColumns[dayName].push({ 
+        id: task.id, 
+        name: task.nome, 
+        time: task.horario, 
+        icon: task.emoji || '📝', 
+        priority: task.prioridade === 'Media' ? 'Média' : task.prioridade, 
+        period: task.periodo, 
+        status: task.status, 
+        date: task.data,
+        description: task.descricao
+      });
+    });
+    setColumns(newColumns);
+  };
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }), // Aumentado levemente para evitar gatilhos acidentais
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -143,28 +138,64 @@ export default function TasksPage() {
     setCurrentDate(prev => viewMode === 'monthly' ? subMonths(prev, 1) : prev);
   };
 
-  const handleAddTask = (newTask: any) => {
-    const dayIndex = newTask.date ? new Date(newTask.date + 'T12:00:00').getDay() : new Date().getDay();
-    const dayName = WEEK_DAYS[dayIndex];
-    
-    setColumns(prev => ({
-      ...prev,
-      [dayName]: [...(prev[dayName] || []), newTask]
-    }));
+  const handleAddTask = () => {
+    fetchTasks();
+    setIsModalOpen(false);
+    setEditingTask(null);
   };
 
-  const handleUpdateTask = (taskId: string, updates: any) => {
-    setColumns(prev => {
-      const newColumns = { ...prev };
-      Object.keys(newColumns).forEach(day => {
-        newColumns[day] = newColumns[day].map(task => 
-          task.id === taskId ? { ...task, ...updates } : task
-        );
+  const handleEditTask = (task: any) => {
+    setEditingTask(task);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      const { error } = await supabase.from('tasks').delete().eq('id', taskId);
+      if (error) throw error;
+      
+      setColumns(prev => {
+        const newColumns = { ...prev };
+        Object.keys(newColumns).forEach(day => {
+          newColumns[day] = newColumns[day].filter(task => task.id !== taskId);
+        });
+        return newColumns;
       });
-      return newColumns;
-    });
-    setLastMovedTaskId(null);
-    toast.success("Tarefa atualizada!");
+      toast.success("Tarefa excluída com sucesso!");
+    } catch (error) {
+      console.error("Erro ao excluir tarefa:", error);
+      toast.error("Erro ao excluir tarefa.");
+    }
+  };
+
+  const handleUpdateTask = async (taskId: string, updates: any) => {
+    try {
+      const { error } = await supabase.from('tasks').update({
+        nome: updates.name,
+        horario: updates.time,
+        prioridade: updates.priority === 'Média' ? 'Media' : updates.priority,
+        periodo: updates.period,
+        status: updates.status,
+        emoji: updates.icon
+      }).eq('id', taskId);
+      
+      if (error) throw error;
+
+      setColumns(prev => {
+        const newColumns = { ...prev };
+        Object.keys(newColumns).forEach(day => {
+          newColumns[day] = newColumns[day].map(task => 
+            task.id === taskId ? { ...task, ...updates } : task
+          );
+        });
+        return newColumns;
+      });
+      setLastMovedTaskId(null);
+      toast.success("Tarefa atualizada!");
+    } catch (error) {
+      console.error("Erro ao atualizar tarefa:", error);
+      toast.error("Erro ao atualizar tarefa.");
+    }
   };
 
   const findDay = (id: string) => {
@@ -181,8 +212,6 @@ export default function TasksPage() {
       setActiveTask(task);
       setOriginalTaskState({ day, period: task.period });
       setLastMovedTaskId(null);
-      setIsDragging(true);
-      setIsScrolling(false); // Garante que o scroll manual não comece
     }
   };
 
@@ -239,10 +268,8 @@ export default function TasksPage() {
     }
   };
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
-    setIsDragging(false);
-    
     if (!over) {
       setActiveTask(null);
       setOriginalTaskState(null);
@@ -257,32 +284,17 @@ export default function TasksPage() {
     if (activeTask && originalTaskState) {
       const overPeriod = activeTask.period;
       if (activeDay !== originalTaskState.day || overPeriod !== originalTaskState.period) {
-        const [hours] = (activeTask.time || "09:00").split(':').map(Number);
-        const periodBounds: Record<string, { start: number; end: number; default: string }> = {
-          Morning: { start: 6, end: 12, default: '09:00' },
-          Afternoon: { start: 12, end: 18, default: '15:00' },
-          Evening: { start: 18, end: 24, default: '21:00' },
-          Dawn: { start: 0, end: 6, default: '03:00' }
-        };
+        // Sync with database if moved to different day or period
+        const dayMap: Record<string, number> = { 'Domingo': 0, 'Segunda': 1, 'Terça': 2, 'Quarta': 3, 'Quinta': 4, 'Sexta': 5, 'Sábado': 6 };
+        const dayDiff = dayMap[activeDay!] - dayMap[originalTaskState.day];
+        const newDate = new Date(activeTask.date);
+        newDate.setDate(newDate.getDate() + dayDiff);
+        
+        await supabase.from('tasks').update({
+          data: newDate.toISOString().split('T')[0],
+          periodo: overPeriod
+        }).eq('id', activeId);
 
-        const bounds = periodBounds[overPeriod];
-        if (bounds) {
-          const isValid = hours >= bounds.start && hours < bounds.end;
-          if (!isValid) {
-            const newTime = bounds.default;
-            setColumns(prev => {
-              const updated = { ...prev };
-              const currentDay = findDay(activeId);
-              if (currentDay) {
-                updated[currentDay] = updated[currentDay].map(t => 
-                  t.id === activeId ? { ...t, time: newTime } : t
-                );
-              }
-              return updated;
-            });
-            toast.info(`Horário ajustado para ${newTime}`);
-          }
-        }
         setLastMovedTaskId(activeId);
       }
     }
@@ -304,7 +316,7 @@ export default function TasksPage() {
   };
 
   const onMouseDown = (e: React.MouseEvent) => {
-    if (viewMode !== 'weekly' || isDragging) return;
+    if (viewMode !== 'weekly') return;
     if (!scrollRef.current) return;
     if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('[data-draggable]')) return;
     
@@ -380,7 +392,7 @@ export default function TasksPage() {
             onMouseLeave={() => setIsScrolling(false)}
             onMouseUp={() => setIsScrolling(false)}
             onMouseMove={(e) => {
-              if (!isScrolling || !scrollRef.current || isDragging) return;
+              if (!isScrolling || !scrollRef.current) return;
               e.preventDefault();
               const x = e.pageX - scrollRef.current.offsetLeft;
               const walk = (x - startX) * 1.5; 
@@ -401,10 +413,6 @@ export default function TasksPage() {
               onDragStart={handleDragStart}
               onDragOver={handleDragOver}
               onDragEnd={handleDragEnd}
-              autoScroll={{
-                threshold: { x: 0.15, y: 0.15 }, // Inicia scroll automático quando mais perto da borda
-                acceleration: 3, // Movimento de scroll mais calmo
-              }}
             >
               <div className="flex gap-5 items-start h-full pr-10">
                 {DISPLAY_ORDER.map((day) => {
@@ -420,6 +428,8 @@ export default function TasksPage() {
                       lastMovedTaskId={lastMovedTaskId}
                       onUpdateTaskTime={(taskId, newTime) => handleUpdateTask(taskId, { time: newTime })}
                       onUpdateTask={handleUpdateTask}
+                      onEditTask={handleEditTask}
+                      onDeleteTask={handleDeleteTask}
                     />
                   );
                 })}
@@ -443,7 +453,10 @@ export default function TasksPage() {
       </div>
 
       <button
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => {
+          setEditingTask(null);
+          setIsModalOpen(true);
+        }}
         className="fixed bottom-10 right-10 w-16 h-16 bg-[#6366f1] hover:bg-[#6366f1]/90 text-white rounded-full shadow-2xl shadow-[#6366f1]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50"
         title="Criar nova tarefa"
       >
@@ -452,9 +465,13 @@ export default function TasksPage() {
 
       <CreateTaskModal 
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingTask(null);
+        }}
         onSave={handleAddTask}
         selectedDay={currentDayName}
+        editTask={editingTask}
       />
     </div>
   );
