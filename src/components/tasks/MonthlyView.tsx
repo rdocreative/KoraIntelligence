@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
   format, 
   startOfMonth, 
@@ -16,7 +16,6 @@ import {
 import { ptBR } from 'date-fns/locale';
 import { X, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
 import { MonthlyDashboard } from './MonthlyDashboard';
 import { supabase } from "@/integrations/supabase/client";
 
@@ -39,11 +38,11 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
 
   const startDate = startOfWeek(startOfMonth(currentDate));
   const endDate = endOfWeek(endOfMonth(currentDate));
-  const calendarDays = eachDayOfInterval({ start: startDate, end: endDate });
+  const calendarDays = useMemo(() => eachDayOfInterval({ start: startDate, end: endDate }), [startDate, endDate]);
 
-  const fetchMonthlyTasks = useCallback(async () => {
+  const fetchMonthlyTasks = useCallback(async (showLoading = true) => {
     try {
-      setIsLoading(true);
+      if (showLoading) setIsLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -61,12 +60,15 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [currentDate, startDate, endDate]);
+  }, [startDate, endDate]);
 
-  useEffect(() => { fetchMonthlyTasks(); }, [fetchMonthlyTasks]);
+  // Busca inicial e busca ao mudar de mês
+  useEffect(() => { 
+    fetchMonthlyTasks(true); 
+  }, [fetchMonthlyTasks]);
 
-  // Filtering Logic
-  const getFilteredTasks = () => {
+  // Filtros aplicados via useMemo para evitar re-calculo desnecessário
+  const filteredTasks = useMemo(() => {
     return tasks.filter(t => {
       const priority = t.prioridade === 'Media' ? 'Média' : t.prioridade;
       const dayOfWeek = getDay(new Date(t.data + 'T12:00:00'));
@@ -76,16 +78,27 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
 
       return priorityMatch && dayMatch;
     });
-  };
+  }, [tasks, activePriorities, activeWeekDays]);
 
-  const filteredTasks = getFilteredTasks();
+  // Agrupamento de tarefas por dia memoizado (Elimina flickering nas células)
+  const tasksByDay = useMemo(() => {
+    const map: Record<string, any[]> = {};
+    filteredTasks.forEach(task => {
+      const dateKey = task.data;
+      if (!map[dateKey]) map[dateKey] = [];
+      map[dateKey].push(task);
+    });
+    return map;
+  }, [filteredTasks]);
 
-  const tasksDataForDashboard = filteredTasks.reduce((acc: any, t) => {
-    const dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][getDay(new Date(t.data + 'T12:00:00'))];
-    if (!acc[dayName]) acc[dayName] = [];
-    acc[dayName].push({ id: t.id, name: t.nome, priority: t.prioridade === 'Media' ? 'Média' : t.prioridade, period: t.periodo, time: t.horario, icon: t.emoji });
-    return acc;
-  }, {});
+  const tasksDataForDashboard = useMemo(() => {
+    return filteredTasks.reduce((acc: any, t) => {
+      const dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][getDay(new Date(t.data + 'T12:00:00'))];
+      if (!acc[dayName]) acc[dayName] = [];
+      acc[dayName].push({ id: t.id, name: t.nome, priority: t.prioridade === 'Media' ? 'Média' : t.prioridade, period: t.periodo, time: t.horario, icon: t.emoji });
+      return acc;
+    }, {});
+  }, [filteredTasks]);
 
   const getPriorityColor = (p: string) => {
     const priority = p === 'Media' ? 'Média' : p;
@@ -199,7 +212,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
         <div className="grid grid-cols-7 gap-2 pb-6 overflow-y-auto custom-scrollbar relative">
           {calendarDays.map((day, idx) => {
             const dateStr = format(day, 'yyyy-MM-dd');
-            const dateTasks = filteredTasks.filter(t => t.data === dateStr);
+            const dateTasks = tasksByDay[dateStr] || [];
             const isSelected = isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentDate);
             
@@ -207,7 +220,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
 
             return (
               <div
-                key={idx}
+                key={dateStr}
                 onClick={() => setSelectedDate(day)}
                 className={cn(
                   "min-h-[170px] p-2.5 rounded-[22px] border transition-all cursor-pointer flex flex-col group relative",
@@ -231,33 +244,31 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                 </div>
                 
                 <div className="space-y-1">
-                  {isLoading ? <div className="h-1 bg-white/5 animate-pulse rounded" /> : 
-                    dateTasks.slice(0, 4).map((task) => (
-                      <div
-                        key={task.id}
-                        style={{
-                          background: task.prioridade === 'Extrema' 
-                            ? 'linear-gradient(90deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.05) 100%)' 
-                            : (task.prioridade === 'Media' || task.prioridade === 'Média')
-                            ? 'linear-gradient(90deg, rgba(249, 115, 22, 0.2) 0%, rgba(249, 115, 22, 0.05) 100%)'
-                            : 'linear-gradient(90deg, rgba(56, 189, 248, 0.2) 0%, rgba(56, 189, 248, 0.05) 100%)',
-                          borderLeft: `2px solid ${
-                            task.prioridade === 'Extrema' ? '#ef4444' : (task.prioridade === 'Media' || task.prioridade === 'Média') ? '#f97316' : '#38bdf8'
-                          }`,
-                          borderRadius: '4px',
-                          padding: '2px 6px',
-                          marginBottom: '2px',
-                          fontSize: '10px',
-                          color: 'white',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }}
-                      >
-                        {task.emoji || '📝'} {task.nome}
-                      </div>
-                    ))
-                  }
+                  {dateTasks.slice(0, 4).map((task) => (
+                    <div
+                      key={task.id}
+                      style={{
+                        background: task.prioridade === 'Extrema' 
+                          ? 'linear-gradient(90deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.05) 100%)' 
+                          : (task.prioridade === 'Media' || task.prioridade === 'Média')
+                          ? 'linear-gradient(90deg, rgba(249, 115, 22, 0.2) 0%, rgba(249, 115, 22, 0.05) 100%)'
+                          : 'linear-gradient(90deg, rgba(56, 189, 248, 0.2) 0%, rgba(56, 189, 248, 0.05) 100%)',
+                        borderLeft: `2px solid ${
+                          task.prioridade === 'Extrema' ? '#ef4444' : (task.prioridade === 'Media' || task.prioridade === 'Média') ? '#f97316' : '#38bdf8'
+                        }`,
+                        borderRadius: '4px',
+                        padding: '2px 6px',
+                        marginBottom: '2px',
+                        fontSize: '10px',
+                        color: 'white',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }}
+                    >
+                      {task.emoji || '📝'} {task.nome}
+                    </div>
+                  ))}
                 </div>
               </div>
             );
