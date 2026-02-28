@@ -14,7 +14,7 @@ import {
   getDay
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Filter } from 'lucide-react';
+import { Filter, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MonthlyDashboard } from './MonthlyDashboard';
 import { supabase } from "@/integrations/supabase/client";
@@ -22,7 +22,6 @@ import { supabase } from "@/integrations/supabase/client";
 export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  
   const [activePriorities, setActivePriorities] = useState<string[]>([]);
   const [activeWeekDays, setActiveWeekDays] = useState<number[]>([]);
   const [sideViewMode, setSideViewMode] = useState<'day' | 'week' | 'month'>('day');
@@ -39,9 +38,9 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
   const endDate = endOfWeek(endOfMonth(currentDate));
   const calendarDays = useMemo(() => eachDayOfInterval({ start: startDate, end: endDate }), [startDate, endDate]);
 
-  const fetchMonthlyTasks = useCallback(async (showLoading = true) => {
+  const fetchMonthlyTasks = useCallback(async () => {
     try {
-      if (showLoading) setIsLoading(true);
+      setIsLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -62,13 +61,14 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
   }, [startDate, endDate]);
 
   useEffect(() => { 
-    fetchMonthlyTasks(true); 
+    fetchMonthlyTasks(); 
   }, [fetchMonthlyTasks]);
 
   const filteredTasks = useMemo(() => {
     return tasks.filter(t => {
       const priority = t.prioridade === 'Media' ? 'Média' : t.prioridade;
-      const dayOfWeek = getDay(new Date(t.data + 'T12:00:00'));
+      const d = new Date(t.data + 'T12:00:00');
+      const dayOfWeek = getDay(d);
 
       const priorityMatch = activePriorities.length === 0 || activePriorities.includes(priority);
       const dayMatch = activeWeekDays.length === 0 || activeWeekDays.includes(dayOfWeek);
@@ -77,21 +77,13 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     });
   }, [tasks, activePriorities, activeWeekDays]);
 
-  const tasksByDay = useMemo(() => {
-    const map: Record<string, any[]> = {};
-    filteredTasks.forEach(task => {
-      const dateKey = task.data;
-      if (!map[dateKey]) map[dateKey] = [];
-      map[dateKey].push(task);
-    });
-    return map;
-  }, [filteredTasks]);
-
+  // Dashboard logic: needs mapping by day name
   const tasksDataForDashboard = useMemo(() => {
     return filteredTasks.reduce((acc: any, t) => {
-      const dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][getDay(new Date(t.data + 'T12:00:00'))];
+      const d = new Date(t.data + 'T12:00:00');
+      const dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][getDay(d)];
       if (!acc[dayName]) acc[dayName] = [];
-      acc[dayName].push({ id: t.id, name: t.nome, priority: t.prioridade === 'Media' ? 'Média' : t.prioridade, period: t.periodo, time: t.horario, icon: t.emoji });
+      acc[dayName].push({ id: t.id, name: t.nome, priority: t.prioridade === 'Media' ? 'Média' : t.prioridade, period: t.periodo, time: t.horario, icon: t.emoji, date: t.data });
       return acc;
     }, {});
   }, [filteredTasks]);
@@ -102,76 +94,23 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
       case 'Extrema': return '#ef4444';
       case 'Média': return '#f97316';
       case 'Baixa': return '#38bdf8';
-      default: return '#cbd5e1';
+      default: return '#64748b';
     }
   };
 
-  const getPriorityBorderColor = (p: string) => {
-    const priority = p === 'Media' || p === 'Média' ? 'Média' : p;
-    switch(priority) {
-      case 'Extrema': return 'rgba(239, 68, 68, 0.3)';
-      case 'Média': return 'rgba(249, 115, 22, 0.3)';
-      case 'Baixa': return 'rgba(56, 189, 248, 0.3)';
-      default: return 'rgba(255, 255, 255, 0.1)';
-    }
-  };
-
-  const weekDays = [
-    { label: 'D', value: 0 },
-    { label: 'S', value: 1 },
-    { label: 'T', value: 2 },
-    { label: 'Q', value: 3 },
-    { label: 'Q', value: 4 },
-    { label: 'S', value: 5 },
-    { label: 'S', value: 6 },
-  ];
+  const weekDaysLabels = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 
   const priorities = [
-    { label: 'Extrema', value: 'Extrema', activeClass: 'bg-red-500/15 border-red-500/30 text-red-300' },
-    { label: 'Média', value: 'Média', activeClass: 'bg-orange-500/15 border-orange-500/30 text-orange-300' },
-    { label: 'Baixa', value: 'Baixa', activeClass: 'bg-sky-500/15 border-sky-500/30 text-sky-300' },
+    { label: 'Extrema', value: 'Extrema', activeClass: 'bg-red-500/10 border-red-500/20 text-red-400' },
+    { label: 'Média', value: 'Média', activeClass: 'bg-orange-500/10 border-orange-500/20 text-orange-400' },
+    { label: 'Baixa', value: 'Baixa', activeClass: 'bg-sky-500/10 border-sky-500/20 text-sky-400' },
   ];
 
-  const handleShowMore = (e: React.MouseEvent, date: Date, tasks: any[]) => {
-    e.stopPropagation();
-    const rect = (e.target as HTMLElement).getBoundingClientRect();
-    setPopoverData({
-      x: rect.left,
-      y: rect.bottom + 8,
-      date,
-      tasks
-    });
-  };
-
   return (
-    <div className="flex h-full w-full px-4 relative overflow-hidden">
-      {popoverData && (
-        <>
-          <div className="fixed inset-0 z-[9998]" onClick={() => setPopoverData(null)} />
-          <div 
-            className="fixed z-[9999] bg-[#13151f] border border-white/[0.08] rounded-xl p-3 min-w-[180px] shadow-2xl flex flex-col gap-1.5 animate-in fade-in zoom-in-95 duration-200"
-            style={{ top: popoverData.y, left: popoverData.x }}
-          >
-            <span className="text-[9px] uppercase font-bold text-white/40 tracking-wider">
-              {format(popoverData.date, "dd 'de' MMMM", { locale: ptBR })}
-            </span>
-            <div className="flex flex-col gap-1 max-h-[160px] overflow-y-auto custom-scrollbar">
-              {popoverData.tasks.map(t => (
-                <div key={t.id} className="flex items-center gap-2 text-[11px] text-zinc-300">
-                  <div className="w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: getPriorityColor(t.prioridade) }} />
-                  <span className="truncate flex-1">{t.nome}</span>
-                  <span className="text-[9px] text-white/30 font-mono">{t.horario}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-
-      <div className="flex-1 flex flex-col pr-3">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="flex items-center gap-1.5">
-            <Filter size={13} className="text-white/20 mr-1" />
+    <div className="flex h-full w-full relative overflow-hidden">
+      <div className="flex-1 flex flex-col pr-2">
+        <div className="flex items-center gap-3 mb-2 px-1">
+          <div className="flex items-center gap-1">
             {priorities.map(p => {
               const isActive = activePriorities.includes(p.value);
               return (
@@ -179,8 +118,8 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                   key={p.value}
                   onClick={() => setActivePriorities(prev => isActive ? prev.filter(x => x !== p.value) : [...prev, p.value])}
                   className={cn(
-                    "px-2 py-0.5 rounded-lg text-[10px] font-medium border transition-all",
-                    isActive ? p.activeClass : "bg-white/[0.03] border-white/[0.06] text-white/40 hover:bg-white/[0.05]"
+                    "px-2 py-0.5 rounded-md text-[9px] font-bold border transition-all",
+                    isActive ? p.activeClass : "bg-white/[0.02] border-white/[0.05] text-white/30 hover:bg-white/[0.04]"
                   )}
                 >
                   {p.label}
@@ -188,79 +127,83 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
               );
             })}
           </div>
-          
-          <div className="w-px h-4 bg-white/[0.06]" />
-
+          <div className="w-px h-3 bg-white/[0.05]" />
           <div className="flex items-center gap-1">
-            {weekDays.map((d, i) => {
-              const isActive = activeWeekDays.includes(d.value);
+            {weekDaysLabels.map((d, i) => {
+              const isActive = activeWeekDays.includes(i);
               return (
                 <button
                   key={i}
-                  onClick={() => setActiveWeekDays(prev => isActive ? prev.filter(x => x !== d.value) : [...prev, d.value])}
+                  onClick={() => setActiveWeekDays(prev => isActive ? prev.filter(x => x !== i) : [...prev, i])}
                   className={cn(
-                    "w-6 h-6 flex items-center justify-center rounded-lg text-[10px] font-medium border transition-all",
+                    "w-5 h-5 flex items-center justify-center rounded-md text-[9px] font-bold border transition-all",
                     isActive 
-                      ? "bg-[#6366f1]/15 border-[#6366f1]/30 text-[#a5b4fc]" 
-                      : "bg-white/[0.03] border-white/[0.06] text-white/40 hover:bg-white/[0.05]"
+                      ? "bg-[#6366f1]/10 border-[#6366f1]/20 text-[#a5b4fc]" 
+                      : "bg-white/[0.02] border-white/[0.05] text-white/30 hover:bg-white/[0.04]"
                   )}
                 >
-                  {d.label}
+                  {d}
                 </button>
               );
             })}
           </div>
         </div>
 
-        <div className="grid grid-cols-7 gap-1.5 pb-4 overflow-y-auto custom-scrollbar relative">
-          {calendarDays.map((day) => {
-            const dateStr = format(day, 'yyyy-MM-dd');
-            const dateTasks = tasksByDay[dateStr] || [];
-            const isSelected = isSameDay(day, selectedDate);
-            const isCurrentMonth = isSameMonth(day, currentDate);
-            
-            const hiddenCount = dateTasks.length - 3;
+        {isLoading ? (
+          <div className="flex-1 flex items-center justify-center">
+            <Loader2 className="animate-spin text-[#6366f1]/40" size={24} />
+          </div>
+        ) : (
+          <div className="grid grid-cols-7 gap-1 pb-4 overflow-y-auto custom-scrollbar">
+            {calendarDays.map((day) => {
+              const dateStr = format(day, 'yyyy-MM-dd');
+              const dateTasks = filteredTasks.filter(t => t.data === dateStr);
+              const isSelected = isSameDay(day, selectedDate);
+              const isCurrentMonth = isSameMonth(day, currentDate);
 
-            return (
-              <div
-                key={dateStr}
-                onClick={() => setSelectedDate(day)}
-                className={cn(
-                  "min-h-[90px] p-2 rounded-[16px] border transition-all cursor-pointer flex flex-col group relative",
-                  !isCurrentMonth ? "opacity-20 grayscale pointer-events-none" : isSelected ? "bg-white/[0.06] border-white/20" : "bg-white/[0.02] border-white/5 hover:border-white/10",
-                  isToday(day) && !isSelected && "border-[#6366f1]/30"
-                )}
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className={cn("text-[12px] font-bold", isToday(day) ? "text-[#6366f1]" : "text-zinc-200/60")}>{format(day, 'd')}</span>
-                  {hiddenCount > 0 && isCurrentMonth && (
-                     <button 
-                       onClick={(e) => handleShowMore(e, day, dateTasks)}
-                       className="text-[9px] font-bold text-[#6366f1] hover:text-[#818cf8] transition-colors"
-                     >
-                       +{hiddenCount}
-                     </button>
+              return (
+                <div
+                  key={dateStr}
+                  onClick={() => setSelectedDate(day)}
+                  className={cn(
+                    "min-h-[85px] p-2 rounded-xl border transition-all cursor-pointer flex flex-col relative",
+                    !isCurrentMonth ? "opacity-10 grayscale pointer-events-none" : isSelected ? "bg-white/[0.05] border-white/10" : "bg-white/[0.01] border-white/5 hover:border-white/10",
+                    isToday(day) && !isSelected && "border-[#6366f1]/20"
                   )}
+                >
+                  <span className={cn(
+                    "text-[11px] font-bold mb-1", 
+                    isToday(day) ? "text-[#6366f1]" : "text-white/40"
+                  )}>
+                    {format(day, 'd')}
+                  </span>
+                  
+                  <div className="flex flex-col gap-1 overflow-hidden">
+                    {dateTasks.slice(0, 2).map((task) => (
+                      <div key={task.id} className="flex items-center gap-1.5 px-1.5 py-0.5 rounded-full bg-white/[0.03] border border-white/[0.05] truncate">
+                        <div className="w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: getPriorityColor(task.prioridade) }} />
+                        <span className="text-[9px] text-white/60 truncate leading-none font-medium">{task.nome}</span>
+                      </div>
+                    ))}
+                    {dateTasks.length > 2 && (
+                      <span className="text-[8px] font-bold text-white/20 pl-1">+{dateTasks.length - 2} mais</span>
+                    )}
+                  </div>
                 </div>
-                
-                <div className="flex flex-col gap-1">
-                  {dateTasks.slice(0, 3).map((task) => (
-                    <div
-                      key={task.id}
-                      className="flex items-center gap-1.5 bg-white/[0.03] border rounded-[20px] px-2 py-0.5 w-full truncate"
-                      style={{ borderColor: getPriorityBorderColor(task.prioridade) }}
-                    >
-                      <div className="w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: getPriorityColor(task.prioridade) }} />
-                      <span className="text-[10px] text-white/80 truncate leading-none">{task.nome}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        )}
       </div>
-      <MonthlyDashboard selectedDate={selectedDate} currentDate={currentDate} tasksData={tasksDataForDashboard} activePriorities={activePriorities} activeWeekDays={activeWeekDays} sideViewMode={sideViewMode} setSideViewMode={setSideViewMode} />
+      <MonthlyDashboard 
+        selectedDate={selectedDate} 
+        currentDate={currentDate} 
+        tasksData={tasksDataForDashboard} 
+        activePriorities={activePriorities} 
+        activeWeekDays={activeWeekDays} 
+        sideViewMode={sideViewMode} 
+        setSideViewMode={setSideViewMode} 
+      />
     </div>
   );
 };

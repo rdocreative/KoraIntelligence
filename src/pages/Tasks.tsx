@@ -324,58 +324,52 @@ export default function TasksPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0 relative">
-      <header className="flex items-center justify-between py-4 shrink-0 px-6">
-        <div className="flex items-center gap-6">
+    <div className="flex-1 flex flex-col h-full animate-in fade-in duration-700 min-h-0 relative p-4">
+      <header className="flex items-center justify-between py-2 shrink-0 px-2 mb-2">
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <button onClick={handlePrevDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronLeft size={18} /></button>
+            <button onClick={handlePrevDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronLeft size={16} /></button>
             <h2 className="flex items-baseline gap-2 text-white tracking-tight">
-              <span className="text-[20px] font-semibold">{dateInfo.month} {viewMode === 'monthly' && dateInfo.year}</span>
-              <span className="text-[11px] font-medium text-white/35 tracking-[0.1em] uppercase">
-                — {viewMode === 'monthly' ? 'Mês' : `Semana ${dateInfo.week}`}
+              <span className="text-[18px] font-semibold">{dateInfo.month} {viewMode === 'monthly' && dateInfo.year}</span>
+              <span className="text-[10px] font-medium text-white/25 tracking-[0.1em] uppercase">
+                — {viewMode === 'monthly' ? 'Mês' : `Sem. ${dateInfo.week}`}
               </span>
             </h2>
-            <button onClick={handleNextDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronRight size={18} /></button>
+            <button onClick={handleNextDate} className="p-1 text-zinc-500 hover:text-white transition-colors"><ChevronRight size={16} /></button>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
           <div 
-            className="flex items-center p-1"
+            className="flex items-center p-0.5"
             style={{ 
-              background: 'rgba(255, 255, 255, 0.04)', 
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              borderRadius: '10px'
+              background: 'rgba(255, 255, 255, 0.03)', 
+              border: '1px solid rgba(255, 255, 255, 0.06)',
+              borderRadius: '8px'
             }}
           >
             <button 
               onClick={() => setViewMode('weekly')}
               className={cn(
-                "flex items-center gap-2 px-3 py-1.5 rounded-[8px] text-[11px] font-medium transition-all",
+                "flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-[10px] font-medium transition-all",
                 viewMode === 'weekly' 
-                  ? "text-white" 
-                  : "text-white/35 hover:text-zinc-300"
+                  ? "text-white bg-white/5" 
+                  : "text-white/30 hover:text-zinc-300"
               )}
-              style={{
-                background: viewMode === 'weekly' ? 'rgba(255, 255, 255, 0.08)' : 'transparent'
-              }}
             >
-              <LayoutGrid size={13} />
+              <LayoutGrid size={12} />
               <span>Semanal</span>
             </button>
             <button 
               onClick={() => setViewMode('monthly')}
               className={cn(
-                "flex items-center gap-2 px-3 py-1.5 rounded-[8px] text-[11px] font-medium transition-all",
+                "flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-[10px] font-medium transition-all",
                 viewMode === 'monthly' 
-                  ? "text-white" 
-                  : "text-white/35 hover:text-zinc-300"
+                  ? "text-white bg-white/5" 
+                  : "text-white/30 hover:text-zinc-300"
               )}
-              style={{
-                background: viewMode === 'monthly' ? 'rgba(255, 255, 255, 0.08)' : 'transparent'
-              }}
             >
-              <CalendarDays size={13} />
+              <CalendarDays size={12} />
               <span>Mensal</span>
             </button>
           </div>
@@ -396,12 +390,8 @@ export default function TasksPage() {
               const walk = (x - startX) * 1.5; 
               scrollRef.current.scrollLeft = scrollLeft - walk;
             }}
-            style={{
-              maskImage: 'linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent)',
-              WebkitMaskImage: 'linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent)'
-            }}
             className={cn(
-              "h-full flex pb-6 overflow-x-auto custom-scrollbar cursor-grab select-none px-6",
+              "h-full flex pb-4 overflow-x-auto custom-scrollbar cursor-grab select-none px-2",
               isScrolling && "cursor-grabbing"
             )}
           >
@@ -411,10 +401,6 @@ export default function TasksPage() {
               onDragStart={handleDragStart}
               onDragOver={handleDragOver}
               onDragEnd={handleDragEnd}
-              autoScroll={{
-                threshold: { x: 0.1, y: 0.1 },
-                acceleration: 3,
-              }}
             >
               <div className="flex gap-4 items-start h-full pr-10">
                 {DISPLAY_ORDER.map((day) => {
@@ -436,18 +422,13 @@ export default function TasksPage() {
                 })}
               </div>
 
-              <DragOverlay dropAnimation={{
-                sideEffects: defaultDropAnimationSideEffects({
-                  styles: { active: { opacity: '0.5' } },
-                }),
-              }}>
+              <DragOverlay>
                 {activeTask ? <TaskCard task={activeTask} /> : null}
               </DragOverlay>
             </DndContext>
           </div>
         ) : (
           <MonthlyView 
-            tasksData={columns} 
             currentDate={currentDate}
           />
         )}
@@ -455,10 +436,9 @@ export default function TasksPage() {
 
       <button
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-8 right-8 w-14 h-14 bg-[#6366f1] hover:bg-[#6366f1]/90 text-white rounded-full shadow-2xl shadow-[#6366f1]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 group z-50"
-        title="Criar nova tarefa"
+        className="fixed bottom-6 right-6 w-11 h-11 bg-[#6366f1] hover:bg-[#6366f1]/90 text-white rounded-full shadow-2xl shadow-[#6366f1]/20 flex items-center justify-center transition-all hover:scale-110 active:scale-95 z-50"
       >
-        <Plus size={28} strokeWidth={2.5} className="group-hover:rotate-90 transition-transform duration-300" />
+        <Plus size={22} strokeWidth={2.5} />
       </button>
 
       <CreateTaskModal 
