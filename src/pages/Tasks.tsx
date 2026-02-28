@@ -167,6 +167,16 @@ export default function TasksPage() {
     toast.success("Tarefa atualizada!");
   };
 
+  const handleDeleteTask = (taskId: string) => {
+    setColumns(prev => {
+      const newColumns = { ...prev };
+      Object.keys(newColumns).forEach(day => {
+        newColumns[day] = newColumns[day].filter(task => task.id !== taskId);
+      });
+      return newColumns;
+    });
+  };
+
   const findDay = (id: string) => {
     if (DISPLAY_ORDER.includes(id)) return id;
     if (id.includes(':')) return id.split(':')[0];
@@ -418,8 +428,9 @@ export default function TasksPage() {
                       tasks={columns[day] || []} 
                       isToday={isToday}
                       lastMovedTaskId={lastMovedTaskId}
-                      onUpdateTaskTime={(taskId, newTime) => handleUpdateTask(taskId, { time: newTime })}
+                      onUpdateTaskStatus={(taskId, status) => handleUpdateTask(taskId, { status })}
                       onUpdateTask={handleUpdateTask}
+                      onDeleteTask={handleDeleteTask}
                     />
                   );
                 })}
