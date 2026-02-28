@@ -18,17 +18,24 @@ import { X, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MonthlyDashboard } from './MonthlyDashboard';
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [expandedDate, setExpandedDate] = useState<Date | null>(null);
-  const [popoverPos, setPopoverPos] = useState<any>(null);
+  
   const [activePriorities, setActivePriorities] = useState<string[]>([]);
   const [activeWeekDays, setActiveWeekDays] = useState<number[]>([]);
   const [sideViewMode, setSideViewMode] = useState<'day' | 'week' | 'month'>('day');
   const [isLoading, setIsLoading] = useState(true);
+
+  // Popover State
+  const [popoverData, setPopoverData] = useState<{
+    x: number;
+    y: number;
+    date: Date;
+    tasks: any[];
+  } | null>(null);
 
   const startDate = startOfWeek(startOfMonth(currentDate));
   const endDate = endOfWeek(endOfMonth(currentDate));
@@ -54,43 +61,180 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [currentDate]);
+  }, [currentDate, startDate, endDate]);
 
   useEffect(() => { fetchMonthlyTasks(); }, [fetchMonthlyTasks]);
 
-  const tasksDataForDashboard = tasks.reduce((acc: any, t) => {
+  // Filtering Logic
+  const getFilteredTasks = () => {
+    return tasks.filter(t => {
+      const priority = t.prioridade === 'Media' ? 'Média' : t.prioridade;
+      const dayOfWeek = getDay(new Date(t.data + 'T12:00:00'));
+
+      const priorityMatch = activePriorities.length === 0 || activePriorities.includes(priority);
+      const dayMatch = activeWeekDays.length === 0 || activeWeekDays.includes(dayOfWeek);
+
+      return priorityMatch && dayMatch;
+    });
+  };
+
+  const filteredTasks = getFilteredTasks();
+
+  const tasksDataForDashboard = filteredTasks.reduce((acc: any, t) => {
     const dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][getDay(new Date(t.data + 'T12:00:00'))];
     if (!acc[dayName]) acc[dayName] = [];
     acc[dayName].push({ id: t.id, name: t.nome, priority: t.prioridade === 'Media' ? 'Média' : t.prioridade, period: t.periodo, time: t.horario, icon: t.emoji });
     return acc;
   }, {});
 
+  const getPriorityColor = (p: string) => {
+    const priority = p === 'Media' ? 'Média' : p;
+    switch(priority) {
+      case 'Extrema': return '#ef4444';
+      case 'Média': return '#f97316';
+      case 'Alta': return '#eab308';
+      case 'Baixa': return '#38bdf8';
+      default: return '#cbd5e1';
+    }
+  };
+
+  const weekDays = [
+    { label: 'D', value: 0 },
+    { label: 'S', value: 1 },
+    { label: 'T', value: 2 },
+    { label: 'Q', value: 3 },
+    { label: 'Q', value: 4 },
+    { label: 'S', value: 5 },
+    { label: 'S', value: 6 },
+  ];
+
+  const priorities = [
+    { label: 'Extrema', value: 'Extrema', activeClass: 'bg-red-500/15 border-red-500/30 text-red-300' },
+    { label: 'Média', value: 'Média', activeClass: 'bg-orange-500/15 border-orange-500/30 text-orange-300' },
+    { label: 'Baixa', value: 'Baixa', activeClass: 'bg-sky-500/15 border-sky-500/30 text-sky-300' },
+  ];
+
+  const handleShowMore = (e: React.MouseEvent, date: Date, tasks: any[]) => {
+    e.stopPropagation();
+    const rect = (e.target as HTMLElement).getBoundingClientRect();
+    setPopoverData({
+      x: rect.left,
+      y: rect.bottom + 8,
+      date,
+      tasks
+    });
+  };
+
   return (
     <div className="flex h-full w-full px-6 relative overflow-hidden">
+      {/* Popover */}
+      {popoverData && (
+        <>
+          <div className="fixed inset-0 z-[9998]" onClick={() => setPopoverData(null)} />
+          <div 
+            className="fixed z-[9999] bg-[#13151f] border border-white/[0.08] rounded-xl p-4 min-w-[200px] shadow-2xl flex flex-col gap-2 animate-in fade-in zoom-in-95 duration-200"
+            style={{ top: popoverData.y, left: popoverData.x }}
+          >
+            <span className="text-[10px] uppercase font-bold text-white/40 tracking-wider">
+              {format(popoverData.date, "dd 'de' MMMM", { locale: ptBR })}
+            </span>
+            <div className="flex flex-col gap-1.5 max-h-[200px] overflow-y-auto custom-scrollbar">
+              {popoverData.tasks.map(t => (
+                <div key={t.id} className="flex items-center gap-2 text-xs text-zinc-300">
+                  <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: getPriorityColor(t.prioridade) }} />
+                  <span className="truncate flex-1">{t.nome}</span>
+                  <span className="text-[10px] text-white/30 font-mono">{t.horario}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
       <div className="flex-1 flex flex-col pr-4">
-        {/* Header e Grid simplificados para brevidade, mantendo lógica Supabase */}
+        {/* Filtros */}
+        <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-2">
+            <Filter size={14} className="text-white/20 mr-1" />
+            {priorities.map(p => {
+              const isActive = activePriorities.includes(p.value);
+              return (
+                <button
+                  key={p.value}
+                  onClick={() => setActivePriorities(prev => isActive ? prev.filter(x => x !== p.value) : [...prev, p.value])}
+                  className={cn(
+                    "px-2.5 py-1 rounded-lg text-[11px] font-medium border transition-all",
+                    isActive ? p.activeClass : "bg-white/[0.03] border-white/[0.06] text-white/40 hover:bg-white/[0.05]"
+                  )}
+                >
+                  {p.label}
+                </button>
+              );
+            })}
+          </div>
+          
+          <div className="w-px h-6 bg-white/[0.06]" />
+
+          <div className="flex items-center gap-1.5">
+            {weekDays.map((d, i) => {
+              const isActive = activeWeekDays.includes(d.value);
+              return (
+                <button
+                  key={i}
+                  onClick={() => setActiveWeekDays(prev => isActive ? prev.filter(x => x !== d.value) : [...prev, d.value])}
+                  className={cn(
+                    "w-7 h-7 flex items-center justify-center rounded-lg text-[11px] font-medium border transition-all",
+                    isActive 
+                      ? "bg-[#6366f1]/15 border-[#6366f1]/30 text-[#a5b4fc]" 
+                      : "bg-white/[0.03] border-white/[0.06] text-white/40 hover:bg-white/[0.05]"
+                  )}
+                >
+                  {d.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="grid grid-cols-7 gap-2 pb-6 overflow-y-auto custom-scrollbar relative">
           {calendarDays.map((day, idx) => {
             const dateStr = format(day, 'yyyy-MM-dd');
-            const dateTasks = tasks.filter(t => t.data === dateStr);
+            const dateTasks = filteredTasks.filter(t => t.data === dateStr);
             const isSelected = isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentDate);
+            
+            const visibleTasks = dateTasks.slice(0, 4);
+            const hiddenCount = dateTasks.length - 4;
 
             return (
               <div
                 key={idx}
                 onClick={() => setSelectedDate(day)}
                 className={cn(
-                  "min-h-[170px] p-2.5 rounded-[22px] border transition-all cursor-pointer flex flex-col",
-                  !isCurrentMonth ? "opacity-5 pointer-events-none" : isSelected ? "bg-white/[0.06] border-white/20" : "bg-white/[0.02] border-white/5",
+                  "min-h-[170px] p-2.5 rounded-[22px] border transition-all cursor-pointer flex flex-col group relative",
+                  !isCurrentMonth ? "opacity-30 grayscale pointer-events-none" : isSelected ? "bg-white/[0.06] border-white/20" : "bg-white/[0.02] border-white/5 hover:border-white/10",
                   isToday(day) && !isSelected && "border-[#6366f1]/40"
                 )}
               >
-                <span className={cn("text-sm font-bold mb-2", isToday(day) ? "text-[#6366f1]" : "text-zinc-200")}>{format(day, 'd')}</span>
+                <div className="flex items-center justify-between mb-2">
+                  <span className={cn("text-sm font-bold", isToday(day) ? "text-[#6366f1]" : "text-zinc-200")}>{format(day, 'd')}</span>
+                  {hiddenCount > 0 && isCurrentMonth && (
+                     <button 
+                       onClick={(e) => handleShowMore(e, day, dateTasks)}
+                       className="text-[10px] font-semibold text-[#6366f1] hover:text-[#818cf8] transition-colors px-1"
+                     >
+                       +{hiddenCount}
+                     </button>
+                  )}
+                </div>
+                
                 <div className="space-y-1">
                   {isLoading ? <div className="h-1 bg-white/5 animate-pulse rounded" /> : 
-                    dateTasks.slice(0, 4).map(t => (
-                      <div key={t.id} className="px-2 py-0.5 rounded-md bg-white/5 text-[8px] truncate">{t.nome}</div>
+                    visibleTasks.map(t => (
+                      <div key={t.id} className="px-2 py-1 rounded-md bg-white/5 border border-white/5 text-[10px] truncate flex items-center gap-1.5 hover:bg-white/10 transition-colors">
+                        <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: getPriorityColor(t.prioridade) }} />
+                        <span className="truncate text-zinc-300">{t.nome}</span>
+                      </div>
                     ))
                   }
                 </div>
