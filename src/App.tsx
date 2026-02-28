@@ -32,7 +32,7 @@ const ProtectedRoute = () => {
 
   if (loading) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-[#080B14]">
+      <div className="h-screen w-full flex items-center justify-center bg-[#0A0C10]">
         <div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-[24px] animate-spin"></div>
       </div>
     );
@@ -43,19 +43,32 @@ const ProtectedRoute = () => {
   }
 
   return (
-    <div className="flex h-screen w-full text-white antialiased bg-[#12141A] overflow-hidden border-none outline-none ring-0 p-[10px]">
-      <SideNav />
-      <div 
-        className="flex-1 flex flex-col relative min-h-0 w-full overflow-hidden border border-white/10" 
-        style={{ 
-          background: 'radial-gradient(ellipse 80% 60% at 60% 0%, rgba(99,102,241,0.06) 0%, transparent 60%), #0A0C10',
-          borderRadius: '20px 10px 10px 20px'
-        }}
+    <div
+      style={{
+        width: '100%',
+        minHeight: '100vh',
+        backgroundColor: '#0A0C10',
+        display: 'flex',
+        justifyContent: 'center'
+      }}
+    >
+      <div
+        className="flex h-screen text-white antialiased overflow-hidden border-none outline-none ring-0 p-[10px]"
+        style={{ width: '100%', maxWidth: '1920px', display: 'flex' }}
       >
-        <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-10 pt-4">
-          <main className="flex-1 flex flex-col">
-            <Outlet />
-          </main>
+        <SideNav />
+        <div
+          className="flex-1 flex flex-col relative min-h-0 w-full overflow-hidden border border-white/10"
+          style={{
+            background: 'radial-gradient(ellipse 80% 60% at 60% 0%, rgba(99,102,241,0.06) 0%, transparent 60%), #0A0C10',
+            borderRadius: '20px 10px 10px 20px'
+          }}
+        >
+          <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-10 pt-4">
+            <main className="flex-1 flex flex-col">
+              <Outlet />
+            </main>
+          </div>
         </div>
       </div>
     </div>
@@ -64,7 +77,7 @@ const ProtectedRoute = () => {
 
 const PublicRoute = () => {
   const { session, loading } = useAuth();
-  if (loading) return <div className="h-screen w-full bg-[#080B14]" />;
+  if (loading) return <div className="h-screen w-full bg-[#0A0C10]" />;
   if (session) return <Navigate to="/" replace />;
   return <Outlet />;
 };
