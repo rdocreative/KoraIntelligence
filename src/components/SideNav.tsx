@@ -28,9 +28,9 @@ const SideNav = () => {
   return (
     <aside 
       className={cn(
-        "h-screen flex flex-col border-r border-white/5 transition-all duration-300 relative z-50",
+        "h-screen flex flex-col transition-all duration-300 relative z-50",
         isCollapsed ? "w-20" : "w-64",
-        "bg-[#080B14]"
+        "bg-[#12141A]"
       )}
     >
       <div className="p-6 flex items-center justify-between">

@@ -1,113 +1,56 @@
 "use client";
 
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { ThemeProvider } from "./components/providers/ThemeProvider";
-import { SettingsProvider } from "./hooks/useSettings"; 
-import { HabitProvider } from "./hooks/useHabitTracker";
-import { AuthProvider, useAuth } from "./components/providers/AuthProvider";
-import { ColorProvider } from "./components/providers/ColorProvider";
-import { SideNav } from "./components/layout/SideNav";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import SideNav from './components/SideNav';
+import Index from './pages/Index';
+import TasksPage from './pages/Tasks';
+import { Toaster } from 'sonner';
 
-// Pages
-import Index from "./pages/Index";
-import HabitsPage from "./pages/HabitsPage";
-import TasksPage from "./pages/Tasks";
-import SettingsPage from "./pages/Settings";
-import MissionsPage from "./pages/Missions";
-import StorePage from "./pages/Store";
-import NotFound from "./pages/NotFound";
-
-// Auth Pages
-import Login from "./pages/auth/Login";
-import SignUp from "./pages/auth/SignUp";
-import ForgotPassword from "./pages/auth/ForgotPassword";
-
-const queryClient = new QueryClient();
-
-const ProtectedRoute = () => {
-  const { session, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center bg-[#080B14]">
-        <div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-[24px] animate-spin"></div>
-      </div>
-    );
-  }
-
-  if (!session) {
-    return <Navigate to="/login" replace />;
-  }
-
+function App() {
   return (
-    <div className="flex h-screen w-full text-white antialiased bg-[#12141A] overflow-hidden border-none outline-none ring-0 p-[10px]">
-      <SideNav />
-      <div 
-        className="flex-1 flex flex-col relative min-h-0 w-full overflow-hidden border border-white/10" 
-        style={{ 
-          background: 'radial-gradient(ellipse 80% 60% at 60% 0%, rgba(99,102,241,0.06) 0%, transparent 60%), #0A0C10',
-          borderRadius: '20px 10px 10px 20px'
-        }}
-      >
-        <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar relative z-10 min-h-0 px-10 pt-4">
-          <main className="flex-1 flex flex-col">
-            <Outlet />
-          </main>
-        </div>
+    <BrowserRouter>
+      {/* Container Pai: Fundo #12141A e Gap 0 */}
+      <div className="flex h-screen overflow-hidden bg-[#12141A]">
+        <SideNav />
+        
+        {/* Container do Conteúdo: Efeito de Card #0A0C10 */}
+        <main 
+          style={{ 
+            background: '#0A0C10', 
+            borderRadius: '20px 0 0 20px', 
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            overflow: 'hidden',
+            position: 'relative'
+          }}
+        >
+          {/* Miolo Centralizado: Trava de 1400px */}
+          <div 
+            style={{ 
+              width: '100%', 
+              maxWidth: '1400px', 
+              margin: '0 auto', 
+              height: '100%', 
+              display: 'flex', 
+              flexDirection: 'column',
+              position: 'relative'
+            }}
+          >
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/calendar" element={<TasksPage />} />
+              {/* Adicione outras rotas conforme necessário */}
+            </Routes>
+          </div>
+        </main>
       </div>
-    </div>
+      <Toaster position="top-right" expand={false} richColors theme="dark" />
+    </BrowserRouter>
   );
-};
-
-const PublicRoute = () => {
-  const { session, loading } = useAuth();
-  if (loading) return <div className="h-screen w-full bg-[#080B14]" />;
-  if (session) return <Navigate to="/" replace />;
-  return <Outlet />;
-};
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider 
-      attribute="class" 
-      defaultTheme="dark" 
-      enableSystem={false}
-      storageKey="nectar-theme"
-    >
-      <AuthProvider>
-        <ColorProvider>
-          <SettingsProvider>
-            <HabitProvider>
-              <TooltipProvider>
-                <Sonner theme="dark" />
-                <BrowserRouter>
-                  <Routes>
-                    <Route element={<PublicRoute />}>
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/cadastro" element={<SignUp />} />
-                      <Route path="/recuperar-senha" element={<ForgotPassword />} />
-                    </Route>
-                    <Route element={<ProtectedRoute />}>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/tarefas" element={<TasksPage />} />
-                      <Route path="/habitos" element={<HabitsPage />} />
-                      <Route path="/missoes" element={<MissionsPage />} />
-                      <Route path="/loja" element={<StorePage />} />
-                      <Route path="/configuracoes" element={<SettingsPage />} />
-                    </Route>
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </BrowserRouter>
-              </TooltipProvider>
-            </HabitProvider>
-          </SettingsProvider>
-        </ColorProvider>
-      </AuthProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+}
 
 export default App;
