@@ -32,60 +32,62 @@ import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
-const INITIAL_DATA: Record<string, any[]> = {
-  'Segunda': [
-    { id: 't1', name: 'Reunião Semanal', time: '09:00', icon: '🤝', priority: 'Extrema', period: 'Morning' },
-    { id: 't2', name: 'Responder E-mails', time: '10:30', icon: '📧', priority: 'Baixa', period: 'Morning' },
-  ],
-  'Terça': [
-    { id: 't3', name: 'Design Review', time: '14:00', icon: '🎨', priority: 'Média', period: 'Afternoon' }
-  ],
-  'Quarta': [
-    { id: 't4', name: 'Deep Work: Backend', time: '08:00', icon: '💻', priority: 'Extrema', period: 'Morning' },
-    { id: 't5', name: 'Treino de Pernas', time: '18:00', icon: '🏋️‍♂️', priority: 'Média', period: 'Evening' }
-  ],
-  'Quinta': [],
-  'Sexta': [
-    { id: 't6', name: 'Happy Hour', time: '19:00', icon: '🍻', priority: 'Baixa', period: 'Evening' }
-  ],
-  'Sábado': [],
-  'Domingo': []
-};
-
 const WEEK_DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 const DISPLAY_ORDER = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
 
 export default function TasksPage() {
   const [columns, setColumns] = useState<Record<string, any[]>>({ 'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': [] });
 
-useEffect(() => {
-  (async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-    const hoje = new Date();
-    const diaSemana = hoje.getDay();
-    const inicioSemana = new Date(hoje);
-    inicioSemana.setDate(hoje.getDate() - diaSemana);
-    const fimSemana = new Date(inicioSemana);
-    fimSemana.setDate(inicioSemana.getDate() + 6);
-    const { data } = await supabase.from('tasks').select('*').eq('user_id', user.id).gte('data', inicioSemana.toISOString().split('T')[0]).lte('data', fimSemana.toISOString().split('T')[0]);
-    if (!data) return;
-    const dayMap: Record<number, string> = { 0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado' };
-    const newColumns: Record<string, any[]> = { 'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': [] };
-    data.forEach(task => {
-      const d = new Date(task.data + 'T12:00:00');
-      const dayName = dayMap[d.getDay()];
-      if (dayName) newColumns[dayName].push({ id: task.id, name: task.nome, time: task.horario, icon: task.emoji || '📝', priority: task.prioridade === 'Media' ? 'Média' : task.prioridade, period: task.periodo, status: task.status, date: task.data });
-    });
-    setColumns(newColumns);
-  })();
-}, []);
+  useEffect(() => {
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const hoje = new Date();
+      const diaSemana = hoje.getDay();
+      const inicioSemana = new Date(hoje);
+      inicioSemana.setDate(hoje.getDate() - diaSemana);
+      const fimSemana = new Date(inicioSemana);
+      fimSemana.setDate(inicioSemana.getDate() + 6);
+      
+      const { data } = await supabase
+        .from('tasks')
+        .select('*')
+        .eq('user_id', user.id)
+        .gte('data', inicioSemana.toISOString().split('T')[0])
+        .lte('data', fimSemana.toISOString().split('T')[0]);
+        
+      if (!data) return;
+      
+      const dayMap: Record<number, string> = { 0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado' };
+      const newColumns: Record<string, any[]> = { 'Segunda': [], 'Terça': [], 'Quarta': [], 'Quinta': [], 'Sexta': [], 'Sábado': [], 'Domingo': [] };
+      
+      data.forEach(task => {
+        const d = new Date(task.data + 'T12:00:00');
+        const dayName = dayMap[d.getDay()];
+        if (dayName) {
+          newColumns[dayName].push({ 
+            id: task.id, 
+            name: task.nome, 
+            time: task.horario, 
+            icon: task.emoji || '📝', 
+            priority: task.prioridade === 'Media' ? 'Média' : task.prioridade, 
+            period: task.periodo, 
+            status: task.status, 
+            date: task.data 
+          });
+        }
+      });
+      setColumns(newColumns);
+    })();
+  }, []);
+
   const [activeTask, setActiveTask] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'weekly' | 'monthly'>('weekly');
   const [currentDate, setCurrentDate] = useState(new Date());
   const [lastMovedTaskId, setLastMovedTaskId] = useState<string | null>(null);
   const [originalTaskState, setOriginalTaskState] = useState<{ day: string; period: string } | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -93,7 +95,7 @@ useEffect(() => {
   const [scrollLeft, setScrollLeft] = useState(0);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -142,11 +144,12 @@ useEffect(() => {
   };
 
   const handleAddTask = (newTask: any) => {
-    const dayMap: Record<number, string> = { 0: 'Domingo', 1: 'Segunda', 2: 'Terça', 3: 'Quarta', 4: 'Quinta', 5: 'Sexta', 6: 'Sábado' };
-    const targetDay = newTask.date ? dayMap[new Date(newTask.date + 'T12:00:00').getDay()] : currentDayName;
+    const dayIndex = newTask.date ? new Date(newTask.date + 'T12:00:00').getDay() : new Date().getDay();
+    const dayName = WEEK_DAYS[dayIndex];
+    
     setColumns(prev => ({
       ...prev,
-      [targetDay]: [...(prev[targetDay] || []), newTask]
+      [dayName]: [...(prev[dayName] || []), newTask]
     }));
   };
 
@@ -178,6 +181,8 @@ useEffect(() => {
       setActiveTask(task);
       setOriginalTaskState({ day, period: task.period });
       setLastMovedTaskId(null);
+      setIsDragging(true);
+      setIsScrolling(false);
     }
   };
 
@@ -236,6 +241,8 @@ useEffect(() => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    setIsDragging(false);
+    
     if (!over) {
       setActiveTask(null);
       setOriginalTaskState(null);
@@ -297,7 +304,7 @@ useEffect(() => {
   };
 
   const onMouseDown = (e: React.MouseEvent) => {
-    if (viewMode !== 'weekly') return;
+    if (viewMode !== 'weekly' || isDragging) return;
     if (!scrollRef.current) return;
     if ((e.target as HTMLElement).closest('button') || (e.target as HTMLElement).closest('[data-draggable]')) return;
     
@@ -373,7 +380,7 @@ useEffect(() => {
             onMouseLeave={() => setIsScrolling(false)}
             onMouseUp={() => setIsScrolling(false)}
             onMouseMove={(e) => {
-              if (!isScrolling || !scrollRef.current) return;
+              if (!isScrolling || !scrollRef.current || isDragging) return;
               e.preventDefault();
               const x = e.pageX - scrollRef.current.offsetLeft;
               const walk = (x - startX) * 1.5; 
@@ -394,8 +401,12 @@ useEffect(() => {
               onDragStart={handleDragStart}
               onDragOver={handleDragOver}
               onDragEnd={handleDragEnd}
+              autoScroll={{
+                threshold: { x: 0.15, y: 0.15 },
+                acceleration: 3,
+              }}
             >
-              <div className="flex gap-5 items-start h-full pr-10">
+              <div className="flex gap-5 items-stretch h-full pr-10">
                 {DISPLAY_ORDER.map((day) => {
                   const isToday = day === currentDayName;
 
