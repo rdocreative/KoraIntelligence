@@ -14,7 +14,7 @@ import {
   getDay
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { X, Filter } from 'lucide-react';
+import { Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MonthlyDashboard } from './MonthlyDashboard';
 import { supabase } from "@/integrations/supabase/client";
@@ -101,13 +101,22 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
   }, [filteredTasks]);
 
   const getPriorityColor = (p: string) => {
-    const priority = p === 'Media' ? 'Média' : p;
+    const priority = p === 'Media' || p === 'Média' ? 'Média' : p;
     switch(priority) {
       case 'Extrema': return '#ef4444';
       case 'Média': return '#f97316';
-      case 'Alta': return '#eab308';
       case 'Baixa': return '#38bdf8';
       default: return '#cbd5e1';
+    }
+  };
+
+  const getPriorityBorderColor = (p: string) => {
+    const priority = p === 'Media' || p === 'Média' ? 'Média' : p;
+    switch(priority) {
+      case 'Extrema': return 'rgba(239, 68, 68, 0.3)';
+      case 'Média': return 'rgba(249, 115, 22, 0.3)';
+      case 'Baixa': return 'rgba(56, 189, 248, 0.3)';
+      default: return 'rgba(255, 255, 255, 0.1)';
     }
   };
 
@@ -210,7 +219,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
         </div>
 
         <div className="grid grid-cols-7 gap-2 pb-6 overflow-y-auto custom-scrollbar relative">
-          {calendarDays.map((day, idx) => {
+          {calendarDays.map((day) => {
             const dateStr = format(day, 'yyyy-MM-dd');
             const dateTasks = tasksByDay[dateStr] || [];
             const isSelected = isSameDay(day, selectedDate);
@@ -243,30 +252,44 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                   )}
                 </div>
                 
-                <div className="space-y-1">
+                <div className="flex flex-col">
                   {dateTasks.slice(0, 4).map((task) => (
                     <div
                       key={task.id}
                       style={{
-                        background: task.prioridade === 'Extrema' 
-                          ? 'linear-gradient(90deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.05) 100%)' 
-                          : (task.prioridade === 'Media' || task.prioridade === 'Média')
-                          ? 'linear-gradient(90deg, rgba(249, 115, 22, 0.2) 0%, rgba(249, 115, 22, 0.05) 100%)'
-                          : 'linear-gradient(90deg, rgba(56, 189, 248, 0.2) 0%, rgba(56, 189, 248, 0.05) 100%)',
-                        borderLeft: `2px solid ${
-                          task.prioridade === 'Extrema' ? '#ef4444' : (task.prioridade === 'Media' || task.prioridade === 'Média') ? '#f97316' : '#38bdf8'
-                        }`,
-                        borderRadius: '4px',
-                        padding: '2px 6px',
-                        marginBottom: '2px',
-                        fontSize: '10px',
-                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        border: `1px solid ${getPriorityBorderColor(task.prioridade)}`,
+                        borderRadius: '20px',
+                        padding: '2px 8px',
+                        marginBottom: '4px',
+                        width: '100%',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {/* Ponto Colorido da Prioridade */}
+                      <div 
+                        style={{
+                          width: '6px',
+                          height: '6px',
+                          borderRadius: '50%',
+                          backgroundColor: getPriorityColor(task.prioridade),
+                          flexShrink: 0
+                        }} 
+                      />
+                      
+                      {/* Nome da Tarefa */}
+                      <span style={{ 
+                        fontSize: '10px', 
+                        color: 'rgba(255, 255, 255, 0.9)',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis'
-                      }}
-                    >
-                      {task.emoji || '📝'} {task.nome}
+                      }}>
+                        {task.nome}
+                      </span>
                     </div>
                   ))}
                 </div>
