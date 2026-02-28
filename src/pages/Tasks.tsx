@@ -95,7 +95,7 @@ export default function TasksPage() {
   const [scrollLeft, setScrollLeft] = useState(0);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }), // Aumentado levemente para evitar gatilhos acidentais
+    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -153,6 +153,16 @@ export default function TasksPage() {
     }));
   };
 
+  const handleDeleteTask = (taskId: string) => {
+    setColumns(prev => {
+      const newColumns = { ...prev };
+      Object.keys(newColumns).forEach(day => {
+        newColumns[day] = newColumns[day].filter(task => task.id !== taskId);
+      });
+      return newColumns;
+    });
+  };
+
   const handleUpdateTask = (taskId: string, updates: any) => {
     setColumns(prev => {
       const newColumns = { ...prev };
@@ -164,7 +174,6 @@ export default function TasksPage() {
       return newColumns;
     });
     setLastMovedTaskId(null);
-    toast.success("Tarefa atualizada!");
   };
 
   const findDay = (id: string) => {
@@ -182,7 +191,7 @@ export default function TasksPage() {
       setOriginalTaskState({ day, period: task.period });
       setLastMovedTaskId(null);
       setIsDragging(true);
-      setIsScrolling(false); // Garante que o scroll manual não comece
+      setIsScrolling(false);
     }
   };
 
@@ -402,8 +411,8 @@ export default function TasksPage() {
               onDragOver={handleDragOver}
               onDragEnd={handleDragEnd}
               autoScroll={{
-                threshold: { x: 0.15, y: 0.15 }, // Inicia scroll automático quando mais perto da borda
-                acceleration: 3, // Movimento de scroll mais calmo
+                threshold: { x: 0.15, y: 0.15 },
+                acceleration: 3,
               }}
             >
               <div className="flex gap-5 items-start h-full pr-10">
@@ -418,8 +427,8 @@ export default function TasksPage() {
                       tasks={columns[day] || []} 
                       isToday={isToday}
                       lastMovedTaskId={lastMovedTaskId}
-                      onUpdateTaskTime={(taskId, newTime) => handleUpdateTask(taskId, { time: newTime })}
                       onUpdateTask={handleUpdateTask}
+                      onDeleteTask={handleDeleteTask}
                     />
                   );
                 })}

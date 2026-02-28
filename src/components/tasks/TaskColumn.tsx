@@ -6,6 +6,8 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { TaskCard } from './TaskCard';
 import { Sun, Moon, Coffee, CloudMoon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface TaskColumnProps {
   id: string;
@@ -15,6 +17,7 @@ interface TaskColumnProps {
   lastMovedTaskId?: string | null;
   onUpdateTaskStatus?: (taskId: string, status: 'pendente' | 'concluido') => void;
   onUpdateTask?: (taskId: string, updates: any) => void;
+  onDeleteTask?: (taskId: string) => void;
   isLoading?: boolean;
 }
 
@@ -25,10 +28,21 @@ const PERIODS = [
   { id: 'Dawn', label: 'Madrugada', time: '00:00 — 06:00', icon: CloudMoon, color: '#818CF8', timeColor: 'rgba(56,189,248,0.7)', background: 'linear-gradient(180deg, rgba(56,189,248,0.08) 0%, rgba(56,189,248,0.01) 100%)', defaultTime: '03:00' },
 ];
 
-const PeriodContainer = ({ dayId, period, tasks, lastMovedTaskId, onUpdateTaskStatus, onUpdateTask, isLoading }: any) => {
+const PeriodContainer = ({ dayId, period, tasks, lastMovedTaskId, onUpdateTaskStatus, onUpdateTask, onDeleteTask, isLoading }: any) => {
   const { setNodeRef, isOver } = useDroppable({ id: `${dayId}:${period.id}` });
   const hasTasks = tasks.length > 0;
   const isExpanded = hasTasks || isOver || isLoading;
+
+  const handleDelete = async (taskId: string) => {
+    try {
+      const { error } = await supabase.from('tasks').delete().eq('id', taskId);
+      if (error) throw error;
+      onDeleteTask?.(taskId);
+      toast.success("Tarefa removida");
+    } catch (err) {
+      toast.error("Erro ao deletar tarefa");
+    }
+  };
 
   return (
     <div 
@@ -46,7 +60,10 @@ const PeriodContainer = ({ dayId, period, tasks, lastMovedTaskId, onUpdateTaskSt
         <span className="text-[11px] font-bold uppercase tracking-tight" style={{ color: period.timeColor }}>{period.time}</span>
       </div>
       
-      <div className={cn("relative flex flex-col gap-3 transition-all", isExpanded ? "opacity-100" : "max-h-0 opacity-0 overflow-hidden")}>
+      <div 
+        className={cn("relative flex flex-col gap-3 transition-all custom-scrollbar", isExpanded ? "opacity-100" : "max-h-0 opacity-0 overflow-hidden")}
+        style={isExpanded ? { maxHeight: '280px', overflowY: 'auto' } : {}}
+      >
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2].map(i => <div key={i} className="h-24 bg-white/5 rounded-[20px] animate-pulse" />)}
@@ -54,7 +71,15 @@ const PeriodContainer = ({ dayId, period, tasks, lastMovedTaskId, onUpdateTaskSt
         ) : (
           <SortableContext items={tasks.map((t: any) => t.id)} strategy={verticalListSortingStrategy}>
             {tasks.map((task: any) => (
-              <TaskCard key={task.id} task={task} isAwaitingTime={lastMovedTaskId === task.id} onUpdateStatus={(status) => onUpdateTaskStatus?.(task.id, status)} onUpdateTask={onUpdateTask} defaultPeriodTime={period.defaultTime} />
+              <TaskCard 
+                key={task.id} 
+                task={task} 
+                isAwaitingTime={lastMovedTaskId === task.id} 
+                onUpdateStatus={(status) => onUpdateTaskStatus?.(task.id, status)} 
+                onUpdateTask={onUpdateTask} 
+                onDelete={handleDelete}
+                defaultPeriodTime={period.defaultTime} 
+              />
             ))}
           </SortableContext>
         )}
@@ -63,7 +88,7 @@ const PeriodContainer = ({ dayId, period, tasks, lastMovedTaskId, onUpdateTaskSt
   );
 };
 
-export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday, lastMovedTaskId, onUpdateTaskStatus, onUpdateTask, isLoading }, ref) => {
+export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, title, tasks, isToday, lastMovedTaskId, onUpdateTaskStatus, onUpdateTask, onDeleteTask, isLoading }, ref) => {
   return (
     <div ref={ref} data-day={id} className="flex flex-col w-72 shrink-0 h-full">
       <div className="flex items-center justify-center mb-4 px-3">
@@ -71,7 +96,17 @@ export const TaskColumn = forwardRef<HTMLDivElement, TaskColumnProps>(({ id, tit
       </div>
       <div className={cn("flex-1 flex flex-col gap-4 p-2 rounded-[28px] overflow-y-auto custom-scrollbar", isToday ? "bg-[#6366f1]/[0.02]" : "bg-white/[0.01]")} style={{ border: '0.5px solid rgba(255,255,255,0.05)' }}>
         {PERIODS.map((period) => (
-          <PeriodContainer key={period.id} dayId={id} period={period} tasks={tasks.filter(t => t.period === period.id)} lastMovedTaskId={lastMovedTaskId} onUpdateTaskStatus={onUpdateTaskStatus} onUpdateTask={onUpdateTask} isLoading={isLoading} />
+          <PeriodContainer 
+            key={period.id} 
+            dayId={id} 
+            period={period} 
+            tasks={tasks.filter(t => t.period === period.id)} 
+            lastMovedTaskId={lastMovedTaskId} 
+            onUpdateTaskStatus={onUpdateTaskStatus} 
+            onUpdateTask={onUpdateTask} 
+            onDeleteTask={onDeleteTask}
+            isLoading={isLoading} 
+          />
         ))}
       </div>
     </div>
