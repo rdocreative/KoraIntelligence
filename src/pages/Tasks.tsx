@@ -95,7 +95,7 @@ export default function TasksPage() {
   const [scrollLeft, setScrollLeft] = useState(0);
 
   const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }), // Aumentado levemente para evitar gatilhos acidentais
+    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -192,7 +192,7 @@ export default function TasksPage() {
       setOriginalTaskState({ day, period: task.period });
       setLastMovedTaskId(null);
       setIsDragging(true);
-      setIsScrolling(false); // Garante que o scroll manual não comece
+      setIsScrolling(false);
     }
   };
 
@@ -412,8 +412,8 @@ export default function TasksPage() {
               onDragOver={handleDragOver}
               onDragEnd={handleDragEnd}
               autoScroll={{
-                threshold: { x: 0.15, y: 0.15 }, // Inicia scroll automático quando mais perto da borda
-                acceleration: 3, // Movimento de scroll mais calmo
+                threshold: { x: 0.15, y: 0.15 },
+                acceleration: 3,
               }}
             >
               <div className="flex gap-5 items-start h-full pr-10">
@@ -425,7 +425,17 @@ export default function TasksPage() {
                       key={day} 
                       id={day} 
                       title={day} 
-                      tasks={columns[day] || []} 
+                      tasks={[...(columns[day] || [])].sort((a, b) => {
+                        const getPeso = (p: string) => {
+                          const normalize = p?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                          if (normalize === 'extrema') return 0;
+                          if (normalize === 'alta') return 1;
+                          if (normalize === 'media') return 2;
+                          if (normalize === 'baixa') return 3;
+                          return 4;
+                        };
+                        return getPeso(a.priority || a.prioridade) - getPeso(b.priority || b.prioridade);
+                      })} 
                       isToday={isToday}
                       lastMovedTaskId={lastMovedTaskId}
                       onUpdateTaskStatus={(taskId, status) => handleUpdateTask(taskId, { status })}

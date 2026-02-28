@@ -28,7 +28,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
   const [sideViewMode, setSideViewMode] = useState<'day' | 'week' | 'month'>('day');
   const [isLoading, setIsLoading] = useState(true);
 
-  // Popover State
   const [popoverData, setPopoverData] = useState<{
     x: number;
     y: number;
@@ -62,12 +61,10 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     }
   }, [startDate, endDate]);
 
-  // Busca inicial e busca ao mudar de mês
   useEffect(() => { 
     fetchMonthlyTasks(true); 
   }, [fetchMonthlyTasks]);
 
-  // Filtros aplicados via useMemo para evitar re-calculo desnecessário
   const filteredTasks = useMemo(() => {
     return tasks.filter(t => {
       const priority = t.prioridade === 'Media' ? 'Média' : t.prioridade;
@@ -80,7 +77,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     });
   }, [tasks, activePriorities, activeWeekDays]);
 
-  // Agrupamento de tarefas por dia memoizado (Elimina flickering nas células)
   const tasksByDay = useMemo(() => {
     const map: Record<string, any[]> = {};
     filteredTasks.forEach(task => {
@@ -89,15 +85,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
       map[dateKey].push(task);
     });
     return map;
-  }, [filteredTasks]);
-
-  const tasksDataForDashboard = useMemo(() => {
-    return filteredTasks.reduce((acc: any, t) => {
-      const dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'][getDay(new Date(t.data + 'T12:00:00'))];
-      if (!acc[dayName]) acc[dayName] = [];
-      acc[dayName].push({ id: t.id, name: t.nome, priority: t.prioridade === 'Media' ? 'Média' : t.prioridade, period: t.periodo, time: t.horario, icon: t.emoji });
-      return acc;
-    }, {});
   }, [filteredTasks]);
 
   const getPriorityColor = (p: string) => {
@@ -149,7 +136,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
 
   return (
     <div className="flex h-full w-full px-6 relative overflow-hidden">
-      {/* Popover */}
       {popoverData && (
         <>
           <div className="fixed inset-0 z-[9998]" onClick={() => setPopoverData(null)} />
@@ -161,7 +147,17 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
               {format(popoverData.date, "dd 'de' MMMM", { locale: ptBR })}
             </span>
             <div className="flex flex-col gap-1.5 max-h-[200px] overflow-y-auto custom-scrollbar">
-              {popoverData.tasks.map(t => (
+              {popoverData.tasks.sort((a, b) => {
+                const getPeso = (p: string) => {
+                  const normalize = p?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                  if (normalize === 'extrema') return 0;
+                  if (normalize === 'alta') return 1;
+                  if (normalize === 'media') return 2;
+                  if (normalize === 'baixa') return 3;
+                  return 4;
+                };
+                return getPeso(a.priority || a.prioridade) - getPeso(b.priority || b.prioridade);
+              }).map(t => (
                 <div key={t.id} className="flex items-center gap-2 text-xs text-zinc-300">
                   <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: getPriorityColor(t.prioridade) }} />
                   <span className="truncate flex-1">{t.nome}</span>
@@ -174,7 +170,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
       )}
 
       <div className="flex-1 flex flex-col pr-4">
-        {/* Filtros */}
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-center gap-2">
             <Filter size={14} className="text-white/20 mr-1" />
@@ -253,7 +248,17 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                 </div>
                 
                 <div className="flex flex-col">
-                  {dateTasks.slice(0, 4).map((task) => (
+                  {[...dateTasks].sort((a, b) => {
+                    const getPeso = (p: string) => {
+                      const normalize = p?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                      if (normalize === 'extrema') return 0;
+                      if (normalize === 'alta') return 1;
+                      if (normalize === 'media') return 2;
+                      if (normalize === 'baixa') return 3;
+                      return 4;
+                    };
+                    return getPeso(a.priority || a.prioridade) - getPeso(b.priority || b.prioridade);
+                  }).slice(0, 4).map((task) => (
                     <div
                       key={task.id}
                       style={{
@@ -269,7 +274,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                         cursor: 'pointer'
                       }}
                     >
-                      {/* Ponto Colorido da Prioridade */}
                       <div 
                         style={{
                           width: '6px',
@@ -279,8 +283,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                           flexShrink: 0
                         }} 
                       />
-                      
-                      {/* Nome da Tarefa */}
                       <span style={{ 
                         fontSize: '10px', 
                         color: 'rgba(255, 255, 255, 0.9)',
@@ -298,7 +300,13 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
           })}
         </div>
       </div>
-      <MonthlyDashboard selectedDate={selectedDate} currentDate={currentDate} tasksData={tasksDataForDashboard} activePriorities={activePriorities} activeWeekDays={activeWeekDays} sideViewMode={sideViewMode} setSideViewMode={setSideViewMode} />
+      <MonthlyDashboard 
+        selectedDate={selectedDate} 
+        currentDate={currentDate} 
+        tasks={filteredTasks} 
+        sideViewMode={sideViewMode} 
+        setSideViewMode={setSideViewMode} 
+      />
     </div>
   );
 };
