@@ -28,7 +28,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
   const [sideViewMode, setSideViewMode] = useState<'day' | 'week' | 'month'>('day');
   const [isLoading, setIsLoading] = useState(true);
 
-  // Popover State
   const [popoverData, setPopoverData] = useState<{
     x: number;
     y: number;
@@ -62,16 +61,15 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     }
   }, [startDate, endDate]);
 
-  // Busca inicial e busca ao mudar de mês
   useEffect(() => { 
     fetchMonthlyTasks(true); 
   }, [fetchMonthlyTasks]);
 
-  // Filtros aplicados via useMemo
   const filteredTasks = useMemo(() => {
     return tasks.filter(t => {
       const priority = t.prioridade === 'Media' ? 'Média' : t.prioridade;
-      const dayOfWeek = getDay(new Date(t.data + 'T12:00:00'));
+      const dateParts = t.data.split('-');
+      const dayOfWeek = getDay(new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2])));
 
       const priorityMatch = activePriorities.length === 0 || activePriorities.includes(priority);
       const dayMatch = activeWeekDays.length === 0 || activeWeekDays.includes(dayOfWeek);
@@ -80,7 +78,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     });
   }, [tasks, activePriorities, activeWeekDays]);
 
-  // Agrupamento de tarefas por dia memoizado
   const tasksByDay = useMemo(() => {
     const map: Record<string, any[]> = {};
     filteredTasks.forEach(task => {
@@ -98,16 +95,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
       case 'Média': return '#f97316';
       case 'Baixa': return '#38bdf8';
       default: return '#cbd5e1';
-    }
-  };
-
-  const getPriorityBorderColor = (p: string) => {
-    const priority = p === 'Media' || p === 'Média' ? 'Média' : p;
-    switch(priority) {
-      case 'Extrema': return 'rgba(239, 68, 68, 0.3)';
-      case 'Média': return 'rgba(249, 115, 22, 0.3)';
-      case 'Baixa': return 'rgba(56, 189, 248, 0.3)';
-      default: return 'rgba(255, 255, 255, 0.1)';
     }
   };
 
@@ -140,7 +127,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
 
   return (
     <div className="flex h-full w-full px-6 relative overflow-hidden">
-      {/* Popover */}
       {popoverData && (
         <>
           <div className="fixed inset-0 z-[9998]" onClick={() => setPopoverData(null)} />
@@ -165,7 +151,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
       )}
 
       <div className="flex-1 flex flex-col pr-4">
-        {/* Filtros */}
         <div className="flex items-center gap-4 mb-4">
           <div className="flex items-center gap-2">
             <Filter size={14} className="text-white/20 mr-1" />
@@ -227,9 +212,6 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                   !isCurrentMonth ? "opacity-30 grayscale pointer-events-none" : isSelected ? "bg-white/[0.06] border-white/20" : "bg-white/[0.02] border-white/5 hover:border-white/10",
                   isToday(day) && !isSelected && "border-[#6366f1]/40"
                 )}
-                style={{
-                  border: isCurrentMonth ? '1px solid rgba(255, 255, 255, 0.05)' : undefined
-                }}
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className={cn("text-sm font-bold", isToday(day) ? "text-[#6366f1]" : "text-zinc-200")}>{format(day, 'd')}</span>
@@ -243,7 +225,7 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                   )}
                 </div>
                 
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-1">
                   {dateTasks.slice(0, 4).map((task) => (
                     <div
                       key={task.id}
@@ -252,33 +234,22 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                         alignItems: 'center',
                         gap: '6px',
                         background: 'rgba(255, 255, 255, 0.03)',
-                        border: `1px solid ${getPriorityBorderColor(task.prioridade)}`,
-                        borderRadius: '20px',
-                        padding: '2px 8px',
-                        marginBottom: '4px',
+                        borderLeft: `2px solid ${getPriorityColor(task.prioridade)}`,
+                        borderRadius: '4px',
+                        padding: '2px 6px',
                         width: '100%',
-                        cursor: 'pointer'
                       }}
                     >
-                      {/* Ponto Colorido da Prioridade */}
                       <div 
                         style={{
-                          width: '6px',
-                          height: '6px',
+                          width: '4px',
+                          height: '4px',
                           borderRadius: '50%',
                           backgroundColor: getPriorityColor(task.prioridade),
                           flexShrink: 0
                         }} 
                       />
-                      
-                      {/* Nome da Tarefa */}
-                      <span style={{ 
-                        fontSize: '10px', 
-                        color: 'rgba(255, 255, 255, 0.9)',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                      }}>
+                      <span className="text-[9px] font-medium text-white/85 truncate">
                         {task.nome}
                       </span>
                     </div>

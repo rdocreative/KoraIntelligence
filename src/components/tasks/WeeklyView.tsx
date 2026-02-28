@@ -1,184 +1,120 @@
 "use client";
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { 
   format, 
   startOfWeek, 
-  addDays, 
-  isToday 
+  endOfWeek, 
+  eachDayOfInterval, 
+  isToday,
+  getDay
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Sun, Coffee, Moon, Plus, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-interface Task {
-  id: string;
-  name: string;
-  time: string;
-  priority: 'Extrema' | 'Média' | 'Baixa';
-  period: 'Morning' | 'Afternoon' | 'Evening' | 'Dawn' | 'LateNight';
-  icon: string;
-}
+import { Clock } from 'lucide-react';
 
 interface WeeklyViewProps {
-  tasksData: Record<string, Task[]>;
   currentDate: Date;
+  tasks?: any[];
 }
 
-const PERIODS = [
-  { id: 'Morning', label: 'Manhã', icon: Sun, color: 'text-orange-400', bg: 'bg-orange-500/5', border: 'border-orange-500/10' },
-  { id: 'Afternoon', label: 'Tarde', icon: Coffee, color: 'text-emerald-400', bg: 'bg-emerald-500/5', border: 'border-emerald-500/10' },
-  { id: 'Evening', label: 'Noite', icon: Moon, color: 'text-indigo-400', bg: 'bg-indigo-500/5', border: 'border-indigo-500/10' },
-] as const;
+const WEEK_DAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
-const WEEK_DAYS_MAP: Record<number, string> = {
-  0: 'Domingo',
-  1: 'Segunda',
-  2: 'Terça',
-  3: 'Quarta',
-  4: 'Quinta',
-  5: 'Sexta',
-  6: 'Sábado'
-};
+export const WeeklyView = ({ currentDate, tasks = [] }: WeeklyViewProps) => {
+  const startDate = startOfWeek(currentDate, { weekStartsOn: 0 });
+  const endDate = endOfWeek(currentDate, { weekStartsOn: 0 });
+  const weekDays = eachDayOfInterval({ start: startDate, end: endDate });
 
-const getTaskBackground = (period: string) => {
-  switch (period) {
-    case 'Morning':
-      return 'linear-gradient(180deg, rgba(251,146,60,0.12) 0%, rgba(251,146,60,0.02) 100%)';
-    case 'Afternoon':
-      return 'linear-gradient(180deg, rgba(74,222,128,0.12) 0%, rgba(74,222,128,0.02) 100%)';
-    case 'Evening':
-      return 'linear-gradient(180deg, rgba(129,140,248,0.12) 0%, rgba(129,140,248,0.02) 100%)';
-    case 'Dawn':
-    case 'LateNight':
-      return 'linear-gradient(180deg, rgba(96,165,250,0.12) 0%, rgba(96,165,250,0.02) 100%)';
-    default:
-      return 'rgba(255,255,255,0.03)';
-  }
-};
+  const tasksByDay = useMemo(() => {
+    const map: Record<string, any[]> = {};
+    
+    // Inicializa o mapa com os nomes dos dias para evitar erros de undefined
+    WEEK_DAYS.forEach(day => map[day] = []);
 
-const getPriorityColor = (priority: string) => {
-  switch (priority) {
-    case 'Extrema': return "text-red-400";
-    case 'Média': return "text-amber-400";
-    default: return "text-blue-400";
-  }
-};
+    tasks.forEach(task => {
+      try {
+        const dateParts = task.data.split('-');
+        const date = new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]));
+        const dayIndex = getDay(date);
+        const dayName = WEEK_DAYS[dayIndex];
+        
+        if (dayName && map[dayName]) {
+          map[dayName].push(task);
+        }
+      } catch (err) {
+        console.error("Erro ao processar tarefa na WeeklyView:", err);
+      }
+    });
+    return map;
+  }, [tasks]);
 
-export const WeeklyView = ({ tasksData, currentDate }: WeeklyViewProps) => {
-  const weekStart = startOfWeek(currentDate, { weekStartsOn: 0 });
-  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+  const getPriorityColor = (p: string) => {
+    switch(p) {
+      case 'Extrema': return 'bg-red-500';
+      case 'Média': case 'Media': return 'bg-orange-500';
+      case 'Baixa': return 'bg-sky-500';
+      default: return 'bg-zinc-500';
+    }
+  };
 
   return (
-    <div className="flex flex-col h-full w-full overflow-hidden animate-in fade-in duration-700 px-6">
-      {/* Header dos Dias */}
-      <div className="grid grid-cols-7 gap-4 mb-4 shrink-0">
+    <div className="flex-1 overflow-x-auto custom-scrollbar pb-6 px-6">
+      <div className="flex gap-4 min-w-[1200px] h-full">
         {weekDays.map((day) => {
-          const isDateToday = isToday(day);
+          const dayName = WEEK_DAYS[getDay(day)];
+          const dayTasks = tasksByDay[dayName] || [];
+          const isTodayDay = isToday(day);
+
           return (
-            <div key={day.toString()} className="flex flex-col items-center py-2">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1">
-                {format(day, 'EEE', { locale: ptBR })}
-              </span>
+            <div key={day.toString()} className="flex-1 flex flex-col min-h-0">
               <div className={cn(
-                "w-10 h-10 rounded-2xl flex items-center justify-center text-sm font-bold transition-all",
-                isDateToday 
-                  ? "bg-[#6366f1] text-white shadow-[0_0_20px_rgba(99,102,241,0.3)]" 
-                  : "text-zinc-300 bg-white/5"
+                "mb-4 p-4 rounded-2xl border transition-all",
+                isTodayDay 
+                  ? "bg-indigo-500/10 border-indigo-500/20 shadow-lg shadow-indigo-500/5" 
+                  : "bg-white/[0.02] border-white/5"
               )}>
-                {format(day, 'd')}
+                <p className={cn(
+                  "text-[10px] font-black uppercase tracking-widest mb-1",
+                  isTodayDay ? "text-indigo-400" : "text-zinc-500"
+                )}>
+                  {format(day, 'EEEE', { locale: ptBR })}
+                </p>
+                <p className="text-xl font-black text-white">
+                  {format(day, 'd')}
+                </p>
+              </div>
+
+              <div className="flex-1 flex flex-col gap-3 overflow-y-auto custom-scrollbar pr-1">
+                {dayTasks.map((task) => (
+                  <div 
+                    key={task.id}
+                    className="group p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-white/10 hover:bg-white/[0.05] transition-all"
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <div className={cn("px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider text-white", getPriorityColor(task.prioridade))}>
+                        {task.prioridade}
+                      </div>
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-500">
+                        <Clock size={10} />
+                        {task.horario}
+                      </div>
+                    </div>
+                    <h4 className="text-sm font-bold text-white leading-tight mb-2 line-clamp-2">{task.nome}</h4>
+                    <div className="text-2xl">{task.emoji}</div>
+                  </div>
+                ))}
+
+                {dayTasks.length === 0 && (
+                  <div className="flex-1 border-2 border-dashed border-white/[0.02] rounded-2xl flex items-center justify-center p-8">
+                    <p className="text-[10px] font-black text-zinc-700 uppercase tracking-widest text-center">
+                      Vazio
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           );
         })}
-      </div>
-
-      {/* Grid de Tarefas por Turno */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 pb-10">
-        <div className="grid grid-cols-7 gap-4">
-          {weekDays.map((day) => {
-            const dayName = WEEK_DAYS_MAP[day.getDay()];
-            const dayTasks = tasksData[dayName] || [];
-
-            return (
-              <div key={day.toString()} className="flex flex-col gap-3">
-                {PERIODS.map((period) => {
-                  const periodTasks = dayTasks.filter(t => t.period === period.id);
-                  const hasTasks = periodTasks.length > 0;
-                  const Icon = period.icon;
-
-                  return (
-                    <div 
-                      key={period.id}
-                      className={cn(
-                        "group rounded-[20px] border transition-all duration-300 relative overflow-hidden",
-                        period.bg,
-                        period.border,
-                        hasTasks 
-                          ? "min-h-[140px] p-3" 
-                          : "h-9 p-0 px-3 flex items-center hover:bg-white/[0.05] hover:border-white/20 cursor-pointer"
-                      )}
-                    >
-                      {/* Cabeçalho do Turno */}
-                      <div className={cn(
-                        "flex items-center gap-2",
-                        hasTasks ? "mb-3" : "w-full"
-                      )}>
-                        <Icon size={hasTasks ? 14 : 12} className={cn(period.color, "shrink-0")} />
-                        <span className={cn(
-                          "font-black tracking-widest uppercase",
-                          hasTasks ? "text-[10px] text-zinc-400" : "text-[8px] text-zinc-500 group-hover:text-zinc-300 transition-colors"
-                        )}>
-                          {period.label}
-                        </span>
-                        {!hasTasks && (
-                          <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Plus size={10} className="text-zinc-500" />
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Lista de Tarefas */}
-                      {hasTasks && (
-                        <div className="space-y-2">
-                          {periodTasks.map((task) => (
-                            <div 
-                              key={task.id}
-                              style={{ background: getTaskBackground(task.period) }}
-                              className="p-3 rounded-2xl flex flex-col gap-2 transition-all hover:scale-[1.02] cursor-grab active:cursor-grabbing border-none"
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="text-base filter drop-shadow-sm">{task.icon}</span>
-                                <div className="flex items-center gap-1 text-[11px] font-bold text-white/75">
-                                  <Clock size={8} />
-                                  {task.time}
-                                </div>
-                              </div>
-                              <h4 className="text-[11px] font-bold leading-tight line-clamp-2 text-white/90">
-                                {task.name}
-                              </h4>
-                              <div className={cn(
-                                "text-[7px] font-black uppercase tracking-widest",
-                                getPriorityColor(task.priority)
-                              )}>
-                                {task.priority}
-                              </div>
-                            </div>
-                          ))}
-                          
-                          <button className="w-full py-2.5 rounded-xl border border-dashed border-white/5 hover:border-white/10 hover:bg-white/5 transition-all flex items-center justify-center gap-2 text-zinc-500 hover:text-zinc-300 mt-1">
-                            <Plus size={12} />
-                            <span className="text-[9px] font-bold uppercase tracking-wider">Novo</span>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
       </div>
     </div>
   );
