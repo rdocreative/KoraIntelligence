@@ -87,15 +87,46 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
     return acc;
   }, {});
 
-  const getPriorityColor = (p: string) => {
+  const getTaskStyle = (p: string) => {
     const priority = p === 'Media' ? 'Média' : p;
+    
+    let background = 'linear-gradient(90deg, rgba(203,213,225,0.25) 0%, rgba(203,213,225,0.05) 100%)';
+    let borderLeft = '2px solid #cbd5e1';
+
     switch(priority) {
-      case 'Extrema': return '#ef4444';
-      case 'Média': return '#f97316';
-      case 'Alta': return '#eab308';
-      case 'Baixa': return '#38bdf8';
-      default: return '#cbd5e1';
+      case 'Extrema':
+        background = 'linear-gradient(90deg, rgba(239,68,68,0.25) 0%, rgba(239,68,68,0.05) 100%)';
+        borderLeft = '2px solid #ef4444';
+        break;
+      case 'Média':
+        background = 'linear-gradient(90deg, rgba(249,115,22,0.25) 0%, rgba(249,115,22,0.05) 100%)';
+        borderLeft = '2px solid #f97316';
+        break;
+      case 'Baixa':
+        background = 'linear-gradient(90deg, rgba(56,189,248,0.25) 0%, rgba(56,189,248,0.05) 100%)';
+        borderLeft = '2px solid #38bdf8';
+        break;
+      case 'Alta':
+        background = 'linear-gradient(90deg, rgba(234,179,8,0.25) 0%, rgba(234,179,8,0.05) 100%)';
+        borderLeft = '2px solid #eab308';
+        break;
     }
+
+    return {
+      background,
+      borderLeft,
+      borderRadius: '6px',
+      padding: '2px 6px',
+      fontSize: '10px',
+      color: 'white',
+      width: '100%',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '4px'
+    } as React.CSSProperties;
   };
 
   const weekDays = [
@@ -140,10 +171,9 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
             </span>
             <div className="flex flex-col gap-1.5 max-h-[200px] overflow-y-auto custom-scrollbar">
               {popoverData.tasks.map(t => (
-                <div key={t.id} className="flex items-center gap-2 text-xs text-zinc-300">
-                  <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: getPriorityColor(t.prioridade) }} />
-                  <span className="truncate flex-1">{t.nome}</span>
-                  <span className="text-[10px] text-white/30 font-mono">{t.horario}</span>
+                <div key={t.id} style={{...getTaskStyle(t.prioridade), justifyContent: 'space-between'}}>
+                  <span className="truncate flex-1">{t.emoji} {t.nome}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.4)' }}>{t.horario}</span>
                 </div>
               ))}
             </div>
@@ -231,9 +261,8 @@ export const MonthlyView = ({ currentDate }: { currentDate: Date }) => {
                 <div className="space-y-1">
                   {isLoading ? <div className="h-1 bg-white/5 animate-pulse rounded" /> : 
                     visibleTasks.map(t => (
-                      <div key={t.id} className="px-2 py-1 rounded-md bg-white/5 border border-white/5 text-[10px] truncate flex items-center gap-1.5 hover:bg-white/10 transition-colors">
-                        <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: getPriorityColor(t.prioridade) }} />
-                        <span className="truncate text-zinc-300">{t.nome}</span>
+                      <div key={t.id} style={getTaskStyle(t.prioridade)}>
+                        <span className="truncate">{t.emoji} {t.nome}</span>
                       </div>
                     ))
                   }
