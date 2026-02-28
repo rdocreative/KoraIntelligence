@@ -4,10 +4,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { DndContext, DragOverlay, useSensor, useSensors, PointerSensor, DragStartEvent, DragEndEvent } from '@dnd-kit/core';
 import { TaskColumn } from './TaskColumn';
 import { TaskCard } from './TaskCard';
-import { format, addDays, startOfWeek, isSameDay, startOfDay, endOfDay } from 'date-fns';
+import { format, addDays, startOfWeek, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 
 interface Task {
   id: string;
@@ -78,7 +78,7 @@ export const WeeklyBoard = () => {
         name: t.nome,
         time: t.horario,
         period: t.periodo,
-        date: new Date(t.data + 'T12:00:00'), // Fix timezone shift
+        date: new Date(t.data + 'T12:00:00'),
         icon: t.emoji,
         priority: t.prioridade as any,
         status: t.status as any
@@ -136,7 +136,6 @@ export const WeeklyBoard = () => {
          newTime = targetPeriod.default;
       }
 
-      // Update Local State
       setTasks(prev => prev.map(t => {
         if (t.id === activeId) {
           return { ...t, period: periodId, date: targetDay, time: newTime };
@@ -144,7 +143,6 @@ export const WeeklyBoard = () => {
         return t;
       }));
 
-      // Update Supabase
       try {
         const { error: updateError } = await supabase
           .from('tasks')
@@ -162,7 +160,7 @@ export const WeeklyBoard = () => {
         }
       } catch (err) {
         toast.error("Erro ao sincronizar movimento");
-        fetchTasks(); // Rollback
+        fetchTasks();
       }
 
       setLastMovedTaskId(activeId);
@@ -189,7 +187,7 @@ export const WeeklyBoard = () => {
     const dbUpdates = {
       nome: updates.name,
       emoji: updates.icon,
-      prioridade: updates.priority,
+      prioridade: updates.priority === 'Média' ? 'Media' : updates.priority,
       horario: updates.time,
       periodo: getPeriodFromTime(updates.time)
     };
