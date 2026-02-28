@@ -4,13 +4,21 @@
 
 @layer base {
   :root {
-    --background: 224 28% 5%; /* #080B14 */
+    --background: 224 28% 5%;
     --foreground: 0 0% 100%;
   }
 
   body {
-    @apply bg-[#080B14] text-white antialiased;
+    @apply text-white antialiased;
+    background-color: #0A0C10;
     background-image: none !important;
+  }
+
+  #root {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    min-height: 100vh;
   }
 }
 

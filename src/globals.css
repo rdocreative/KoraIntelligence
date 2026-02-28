@@ -13,20 +13,27 @@
   }
 
   :root {
-    --background: 224 28% 5%; /* #080B14 */
+    --background: 224 28% 5%;
     --foreground: 0 0% 100%;
-    --primary: 239 84% 67%; /* #6366f1 converted to HSL aprox */
-    --surface: 224 28% 5%; /* #080B14 */
+    --primary: 239 84% 67%;
+    --surface: 224 28% 5%;
     --border-ui: rgba(255, 255, 255, 0.04);
     --radius: 24px;
   }
 
   body {
-    background-color: #080B14;
+    background-color: #0A0C10;
     background-image: none !important;
     color: white;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
+  }
+
+  #root {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+    min-height: 100vh;
   }
 }
 
